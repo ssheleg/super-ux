@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-07-19
+
+### Changed
+
+- Installer menu is now a real multi-select: arrow keys / j k to move, space
+  or number to toggle, `a` selects all three targets at once, enter installs
+  the whole selection in one run (own questions asked up front, the external
+  skills-CLI picker runs last). Non-TTY stdin gets a text fallback
+  (`1,3` / `all` / `q`). Zero dependencies (stdlib raw-mode).
+
 ## [0.4.0] - 2026-07-19
 
 ### Added

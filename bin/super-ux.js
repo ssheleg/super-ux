@@ -2,9 +2,11 @@
 /*
  * super-ux installer CLI.
  *
- * No arguments: interactive menu (skills for any agent via the `skills` CLI
- * picker, Cursor rules into a project, Claude Code plugin user-globally).
- * Flags keep the non-interactive paths: --cursor [dir] [--force].
+ * No arguments: interactive multi-select menu (arrow keys + space, `a` for
+ * all) covering: skills for any agent via the `skills` CLI picker, Cursor
+ * rules into a project, Claude Code plugin user-globally. Non-TTY stdin gets
+ * a text fallback ("1,3" / "all"). Flags keep the non-interactive paths:
+ * --cursor [dir] [--force].
  */
 'use strict';
 
@@ -16,15 +18,21 @@ const { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
 const REPO = 'ssheleg/super-ux';
 
+const MENU_ITEMS = [
+  { key: 'skills', label: 'Skills for any AI agent (Claude Code, Codex, Cursor, 70+ — opens agent picker)' },
+  { key: 'cursor', label: 'Cursor rules (always-on hard rule + docs/ux skeleton) into a project' },
+  { key: 'claude', label: 'Claude Code plugin (skills + /ux commands, user-global)' },
+];
+
 function usage() {
   console.log(`super-ux installer
 
 Usage:
-  npx super-ux                                  interactive menu
+  npx super-ux                                  interactive menu (multi-select)
   npx super-ux --cursor [project-dir] [--force] Cursor rules, non-interactive
   npx super-ux --help
 
-Menu options (also available directly):
+Menu items (select any combination, 'a' = all):
   1. Skills for any AI agent (Claude Code, Codex, Cursor, 70+) — delegates to
      'npx skills add ${REPO}' with its agent/global/project picker.
   2. Cursor rules: cursor/rules/*.mdc -> <project>/.cursor/rules/ plus the
@@ -85,12 +93,13 @@ function run(cmd, args) {
 }
 
 function installSkillsCli() {
-  console.log(`Delegating to the skills CLI (agent/global/project picker)...`);
+  console.log(`\n--- Skills for any agent: delegating to the skills CLI picker ---`);
   const status = run('npx', ['--yes', 'skills', 'add', REPO]);
-  if (status !== 'ok') fail(`'npx skills add ${REPO}' ${status}`);
+  if (status !== 'ok') console.error(`warning: 'npx skills add ${REPO}' ${status}`);
 }
 
 function installClaudePlugin() {
+  console.log(`\n--- Claude Code plugin ---`);
   const probe = spawnSync('claude', ['--version'], { stdio: 'ignore' });
   if (probe.error && probe.error.code === 'ENOENT') {
     console.log(`claude CLI not found. Run inside Claude Code instead:
@@ -104,14 +113,13 @@ function installClaudePlugin() {
   if (run('claude', ['plugin', 'install', 'super-ux@super-ux']) === 'ok') {
     console.log('Claude Code plugin installed (scope: user). Restart sessions to pick it up; then run /ux in any project.');
   } else {
-    fail('claude plugin install failed — see output above');
+    console.error('warning: claude plugin install failed — see output above');
   }
 }
 
 function makePrompter() {
   // A persistent 'line' listener with a buffer: with piped stdin, lines that
-  // arrive between two questions are kept instead of being lost (which is
-  // what plain sequential rl.question() does).
+  // arrive between two questions are kept instead of being lost.
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   const buffered = [];
   let pending = null;
@@ -148,30 +156,131 @@ function makePrompter() {
   };
 }
 
-async function menu() {
-  const prompter = makePrompter();
-  console.log(`super-ux — scenario-driven UI development. What do you want to install?
-
-  1) Skills for any AI agent (Claude Code, Codex, Cursor, 70+ — interactive picker)
-  2) Cursor rules (always-on hard rule + docs/ux skeleton) into a project
-  3) Claude Code plugin (skills + /ux commands, user-global)
-  q) Quit
-`);
-  const choice = (await prompter.ask('Choice [1/2/3/q]: ')).trim().toLowerCase();
-  if (choice === '1') {
-    prompter.close();
-    installSkillsCli();
-  } else if (choice === '2') {
-    const dir = (await prompter.ask('Project directory [.]: ')).trim() || '.';
-    prompter.close();
-    installCursor(path.resolve(dir), false);
-  } else if (choice === '3') {
-    prompter.close();
-    installClaudePlugin();
-  } else {
-    prompter.close();
-    if (choice !== 'q' && choice !== '') fail(`unknown choice '${choice}'`);
+function parseSelection(input, count) {
+  const value = input.trim().toLowerCase();
+  if (value === '' || value === 'q' || value === 'quit') return [];
+  if (value === 'a' || value === 'all' || value === '*') {
+    return Array.from({ length: count }, (_, i) => i);
   }
+  const picked = new Set();
+  for (const part of value.split(/[\s,]+/)) {
+    if (part === '') continue;
+    const n = Number(part);
+    if (!Number.isInteger(n) || n < 1 || n > count) return null;
+    picked.add(n - 1);
+  }
+  return [...picked].sort();
+}
+
+function selectInteractive(items) {
+  // Raw-mode checkbox list: up/down or j/k move, space or 1..9 toggle,
+  // a = toggle all, enter = confirm, q/esc/ctrl+c = quit.
+  return new Promise((resolve) => {
+    const selected = new Set();
+    let cursor = 0;
+    let rendered = false;
+
+    const line = (i) =>
+      `${i === cursor ? '❯' : ' '} ${selected.has(i) ? '◉' : '◯'} ${i + 1}) ${items[i].label}`;
+
+    const render = () => {
+      if (rendered) process.stdout.write(`\x1b[${items.length + 1}A`);
+      for (let i = 0; i < items.length; i += 1) {
+        process.stdout.write(`\x1b[2K${line(i)}\n`);
+      }
+      process.stdout.write(
+        '\x1b[2K  ↑/↓ move · space/number toggle · a all · enter confirm · q quit\n'
+      );
+      rendered = true;
+    };
+
+    const finish = (result) => {
+      process.stdin.setRawMode(false);
+      process.stdin.pause();
+      process.stdin.removeListener('keypress', onKeypress);
+      resolve(result);
+    };
+
+    const onKeypress = (str, key) => {
+      const name = key && key.name;
+      if ((key && key.ctrl && name === 'c') || name === 'escape' || str === 'q') {
+        finish([]);
+        return;
+      }
+      if (name === 'up' || str === 'k') cursor = (cursor - 1 + items.length) % items.length;
+      else if (name === 'down' || str === 'j') cursor = (cursor + 1) % items.length;
+      else if (name === 'space') {
+        if (selected.has(cursor)) selected.delete(cursor);
+        else selected.add(cursor);
+      } else if (str === 'a') {
+        if (selected.size === items.length) selected.clear();
+        else for (let i = 0; i < items.length; i += 1) selected.add(i);
+      } else if (str && /^[1-9]$/.test(str) && Number(str) <= items.length) {
+        const idx = Number(str) - 1;
+        if (selected.has(idx)) selected.delete(idx);
+        else selected.add(idx);
+        cursor = idx;
+      } else if (name === 'return') {
+        finish([...selected].sort());
+        return;
+      }
+      render();
+    };
+
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.on('keypress', onKeypress);
+    render();
+  });
+}
+
+async function selectFallback(items, prompter) {
+  for (let i = 0; i < items.length; i += 1) {
+    console.log(`  ${i + 1}) ${items[i].label}`);
+  }
+  const answer = await prompter.ask(`Select [e.g. 1,3 | all | q]: `);
+  const picked = parseSelection(answer, items.length);
+  if (picked === null) fail(`invalid selection '${answer.trim()}'`);
+  return picked;
+}
+
+async function menu() {
+  console.log('super-ux — scenario-driven UI development. Select what to install:\n');
+  const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+
+  // ONE prompter for the whole flow: with piped stdin, all pending lines are
+  // buffered by its persistent listener; a second prompter would lose them.
+  let prompter = null;
+  let picked;
+  if (interactive) {
+    picked = await selectInteractive(MENU_ITEMS);
+  } else {
+    prompter = makePrompter();
+    picked = await selectFallback(MENU_ITEMS, prompter);
+  }
+
+  if (picked.length === 0) {
+    if (prompter) prompter.close();
+    console.log('Nothing selected.');
+    return;
+  }
+
+  const keys = picked.map((i) => MENU_ITEMS[i].key);
+
+  // Gather all our own questions BEFORE running anything, so they don't
+  // interleave with the external skills-CLI picker.
+  let cursorDir = null;
+  if (keys.includes('cursor')) {
+    if (!prompter) prompter = makePrompter();
+    const dir = (await prompter.ask('Cursor rules — project directory [.]: ')).trim() || '.';
+    cursorDir = path.resolve(dir);
+  }
+  if (prompter) prompter.close();
+
+  if (keys.includes('cursor')) installCursor(cursorDir, false);
+  if (keys.includes('claude')) installClaudePlugin();
+  if (keys.includes('skills')) installSkillsCli();
 }
 
 function main() {

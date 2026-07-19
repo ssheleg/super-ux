@@ -80,9 +80,10 @@ methods below.
 npx super-ux
 ```
 
-Menu: skills for any of 70+ agents (delegates to the `skills` CLI picker —
-choose agents and global/project there), Cursor rules into a project, or the
-Claude Code plugin user-globally.
+Multi-select menu (space to toggle, `a` = everything at once, enter to
+install): skills for any of 70+ agents (delegates to the `skills` CLI picker
+— choose agents and global/project there), Cursor rules into a project, and
+the Claude Code plugin user-globally — any combination in one run.
 
 ### Cursor
 
