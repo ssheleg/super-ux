@@ -60,6 +60,20 @@ Then in your project: `/ux`. That's it — it installs the hard rule, seeds
 `docs/ux/`, builds the scenario base if empty, and on every later run just
 reports status and the next action.
 
+### Any agent via the skills CLI (70+ agents)
+
+```sh
+npx skills add ssheleg/super-ux            # both skills, current project
+npx skills add ssheleg/super-ux -g         # user-global
+npx skills add ssheleg/super-ux --skill ux-audit   # one skill
+```
+
+[vercel-labs/skills](https://github.com/vercel-labs/skills) discovers the
+skills through this repo's marketplace manifest and installs them for Claude
+Code, Cursor, Codex, OpenCode and others. Note: this installs the two skills
+only — the `/ux` commands and the Cursor always-on hard rule come with the
+methods below.
+
 ### Cursor
 
 ```sh
