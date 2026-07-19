@@ -13,6 +13,8 @@ Checks (spec docs/superpowers/specs/2026-07-19-super-ux-design.md, section 9):
 Exit code 0 with "OK (<n> checks)" when clean; 1 with FAIL: lines otherwise.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import sys

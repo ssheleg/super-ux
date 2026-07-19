@@ -1,5 +1,9 @@
 # super-ux
 
+[![npm](https://img.shields.io/npm/v/super-ux)](https://www.npmjs.com/package/super-ux)
+[![CI](https://github.com/ssheleg/super-ux/actions/workflows/validate.yml/badge.svg)](https://github.com/ssheleg/super-ux/actions/workflows/validate.yml)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 Scenario-driven UI development for AI agents (Claude Code + Cursor).
 
 AI agents generate poor interfaces because they build UI without a model of
