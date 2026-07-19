@@ -1,0 +1,34 @@
+---
+description: "Audit the codebase against docs/ux/scenarios.md: apply for UX audits, scenario compliance checks, pre-release UX verification, or when asked to verify that all buttons/states/errors exist"
+alwaysApply: false
+---
+
+# ux-audit — Scenario Audit Loop
+
+Verify the code delivers every scenario in `docs/ux/scenarios.md`. Output: a
+report in `docs/ux/audits/YYYY-MM-DD[-scope].md` + updated `Last audit`
+column in the base. If the base is missing, create it first (ux-scenarios
+rule) — there is nothing to audit against.
+
+**Evidence discipline:** every verdict cites `file:line`. Cannot verify →
+verdict BLOCKED with the exact reason. Never guess, never a courtesy PASS.
+
+## Loop
+
+1. Read the base; scope = all | feature:<name> | ID range; note the git SHA
+   of scenarios.md for the report header; skip retired scenarios.
+2. Batch by feature, ~5–8 scenarios per batch; list batches up front.
+3. Per scenario check against the code: entry point reachable; every step
+   implemented; every listed UI element present and wired; every listed
+   state (loading/empty/error/success) has a rendering branch; every error
+   surfaced honestly (no silent catch, no fake success) with the described
+   recovery; expected result observably occurs. Gaps → findings
+   `[AUD-YYYY-MM-DD-NN] (critical|major|minor) description -> suggested fix`.
+4. Verdicts: PASS (complete), PARTIAL (flow exists, gaps), FAIL (missing or
+   broken), BLOCKED (cannot verify — say why).
+5. Write the report batch by batch: header (scope, method, base SHA),
+   Summary (totals, top issues, prioritized next actions), per-batch
+   verdicts with evidence, findings-register table.
+6. Update the base: `Last audit` = `YYYY-MM-DD VERDICT`; validated →
+   implemented where PASSed. Do not edit scenario content during an audit.
+7. Offer (don't auto-run) to turn FAIL/PARTIAL findings into a work plan.
