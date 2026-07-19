@@ -136,7 +136,7 @@ def validate_skills() -> None:
 
 def validate_commands() -> None:
     commands_dir = ROOT / "plugins/super-ux/commands"
-    expected = {"ux-init.md", "ux-update.md", "ux-audit.md", "ux-rule.md"}
+    expected = {"ux.md", "ux-init.md", "ux-update.md", "ux-audit.md", "ux-rule.md"}
     found = {p.name for p in commands_dir.glob("*.md")} if commands_dir.is_dir() else set()
     check(expected <= found, f"commands: missing {sorted(expected - found)}")
     for name in sorted(found):

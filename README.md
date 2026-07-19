@@ -28,7 +28,8 @@ flowchart LR
 |---|---|
 | skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: init (greenfield interview or existing-code inventory sweep), update on every change, validate for conflicts and coverage |
 | skill `ux-audit` | Batched audit loop: trace every scenario through the code, verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence, report into `docs/ux/audits/` |
-| `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Thin commands over the skills; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
+| `/ux` | **The one command**: sets everything up if missing (rule, `docs/ux/`, initial base), otherwise status report + one suggested next action. Idempotent |
+| `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls over the skills; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
 | `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + two agent-requested rules) |
 | `templates/` | Skeletons for the scenario base, the audit report, and the CLAUDE.md rule snippet |
 
@@ -55,8 +56,9 @@ lifecycle, audit verdicts and severities.
 /plugin install super-ux@super-ux
 ```
 
-Then in your project: `/ux-rule` (installs the hard rule + `docs/ux/`
-skeleton), `/ux-init` (builds the scenario base).
+Then in your project: `/ux`. That's it — it installs the hard rule, seeds
+`docs/ux/`, builds the scenario base if empty, and on every later run just
+reports status and the next action.
 
 ### Cursor
 
@@ -70,12 +72,13 @@ Copies the three rules into `.cursor/rules/` and seeds
 
 ## Typical cycle
 
-1. `/ux-init` — build the base. Greenfield: interview first, UI later.
-   Existing code: inventory sweep, scenarios for everything found, gaps
-   flagged in both directions.
-2. Work normally; every user-facing change goes through `/ux-update` (or the
-   always-on rule catches it).
-3. `/ux-audit` — batched verification of code vs scenarios; report lands in
+1. `/ux` — first run sets everything up and builds the base (greenfield:
+   interview first, UI later; existing code: inventory sweep, scenarios for
+   everything found, gaps flagged in both directions).
+2. Work normally; every user-facing change updates the base in the same
+   change (the always-on rule catches it; `/ux-update` for manual control).
+3. `/ux` any time — status + the one next action; `/ux-audit` — batched
+   verification of code vs scenarios; report lands in
    `docs/ux/audits/YYYY-MM-DD.md`, statuses update in the base.
 4. Turn FAIL/PARTIAL findings into a plan with your planning workflow; build;
    repeat.
@@ -96,7 +99,8 @@ is semver; bump `marketplace.json` + `plugin.json` + `CHANGELOG.md` together
 чек-листом для регулярных аудитов кода (`/ux-audit`) с вердиктами
 PASS/PARTIAL/FAIL/BLOCKED и доказательствами `file:line`. Установка: в
 Claude Code — `/plugin marketplace add ssheleg/super-ux`, в Cursor —
-`./install.sh --cursor <проект>`. Начните с `/ux-rule` и `/ux-init`.
+`./install.sh --cursor <проект>`. Дальше одна команда — `/ux`: сама ставит
+правило и базу, а при повторных запусках показывает статус и следующий шаг.
 
 ## License
 

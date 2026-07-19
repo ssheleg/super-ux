@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-07-19
+
+### Added
+
+- `/ux` — one-command entry point: inspects the project, installs the hard
+  rule and seeds/initializes the scenario base if anything is missing,
+  otherwise prints a status report and suggests exactly one next action.
+  Idempotent; `/ux-init`, `/ux-update`, `/ux-audit`, `/ux-rule` remain as
+  direct controls.
+
 ## [0.1.0] - 2026-07-19
 
 ### Added
