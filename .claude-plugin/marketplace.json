@@ -1,0 +1,18 @@
+{
+  "name": "super-ux",
+  "owner": { "name": "ssheleg", "url": "https://github.com/ssheleg" },
+  "description": "Scenario-driven UI development for AI agents: a maintained UX-scenario base plus recurring scenario audits of the codebase.",
+  "homepage": "https://github.com/ssheleg/super-ux",
+  "repository": "https://github.com/ssheleg/super-ux",
+  "plugins": [
+    {
+      "name": "super-ux",
+      "source": "./plugins/super-ux",
+      "description": "Keeps docs/ux/scenarios.md as the source of truth for all user-facing behavior: scenarios are written and validated before UI is built, updated on every change, and used as the checklist for recurring scenario audits (ux-scenarios + ux-audit skills, /ux-* commands).",
+      "version": "0.1.0",
+      "author": { "name": "ssheleg" },
+      "keywords": ["ux", "scenarios", "audit", "ui", "user-flows", "scenario-driven", "claude-code", "cursor"],
+      "category": "development"
+    }
+  ]
+}

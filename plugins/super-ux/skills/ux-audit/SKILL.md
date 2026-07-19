@@ -1,0 +1,73 @@
+---
+name: ux-audit
+description: Use when verifying the codebase against the UX scenario base - runs a batched, evidence-backed scenario audit and writes a versioned report to docs/ux/audits/. Triggers - "ux audit", "UX-аудит", "прогони по сценариям", pre-release UX verification, "check all buttons/states/errors", scenario compliance check.
+---
+
+# ux-audit — Scenario Audit Loop
+
+Verify that the code actually delivers every scenario in
+`docs/ux/scenarios.md`: every step reachable, every button present, every
+state handled, every error honest. Output: a versioned report in
+`docs/ux/audits/` plus updated audit statuses in the base.
+
+**Format contract:** [scenario-format.md](../references/scenario-format.md)
+— report structure, verdicts (PASS / PARTIAL / FAIL / BLOCKED), severities.
+
+**Precondition:** `docs/ux/scenarios.md` exists. If it doesn't, stop and run
+the `ux-scenarios` skill first — there is nothing to audit against.
+
+## Evidence discipline (non-negotiable)
+
+Every verdict must cite `file:line` evidence. Could not find or verify
+something? The verdict is **BLOCKED** with the exact reason — never a guess,
+never a courtesy PASS. An audit that flatters the codebase is worthless.
+
+## The loop
+
+1. **Scope.** Read the base. Scope is `$ARGUMENTS` if given (`all`,
+   `feature:<name>`, `SCN-010..SCN-020`), default `all`. Note the git SHA of
+   `scenarios.md` — it goes into the report header. Skip `retired`
+   scenarios.
+2. **Batch.** Group scoped scenarios by feature, ~5–8 per batch. List the
+   batches before starting so progress is visible.
+3. **Audit each batch.** For large scopes dispatch parallel subagents — one
+   batch per subagent, each returning per-scenario verdicts with evidence.
+   Per scenario check, against the code:
+   - entry point exists and is reachable;
+   - every numbered step has a corresponding implementation path;
+   - every listed UI element exists and is wired to a handler;
+   - every listed state (loading / empty / error / success) has a rendering
+     branch;
+   - every listed error is surfaced to the user honestly (no silent catch,
+     no fake success) with the described recovery;
+   - the expected result observably occurs.
+   Any gap → PARTIAL (or FAIL if the flow is missing/broken) with a finding
+   `[AUD-YYYY-MM-DD-NN] (severity) description -> suggested fix`.
+4. **Write the report** to `docs/ux/audits/YYYY-MM-DD[-scope].md` per the
+   contract, batch by batch as results arrive — a crashed run must leave the
+   completed batches on disk.
+5. **Summarize.** Totals, top issues (worst user damage first), prioritized
+   recommended actions. The summary must be readable standalone by someone
+   who won't open the batch details.
+6. **Update the base.** `Last audit` column (`YYYY-MM-DD VERDICT`) for every
+   audited scenario; flip `validated` → `implemented` where the audit
+   PASSed; never touch scenario content itself during an audit.
+7. **Offer planning handoff.** Offer — don't auto-run — to turn FAIL/PARTIAL
+   findings into a work plan via the project's planning workflow
+   (superpowers writing-plans, task-pipeline, or the user's framework of
+   choice), findings prioritized by severity.
+
+## Optional live pass
+
+If the project has a runnable dev server and browser tooling is available,
+replay the top scenarios live after the static pass: walk the steps as the
+user, screenshot or transcribe what actually renders, and attach observed
+evidence to the verdicts. Live evidence overrides static evidence when they
+disagree. Off by default; offer it when the tooling is present.
+
+## Definition of done
+
+- Every scoped scenario has a verdict with evidence or an explicit BLOCKED
+  reason — no scenario silently skipped.
+- Report on disk, summary honest, base statuses updated.
+- Findings offered to planning; nothing swallowed.

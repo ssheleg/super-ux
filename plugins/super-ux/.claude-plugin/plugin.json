@@ -1,0 +1,10 @@
+{
+  "name": "super-ux",
+  "description": "Scenario-driven UI development: maintain docs/ux/scenarios.md as the source of truth for all user-facing behavior (ux-scenarios skill), audit the codebase against every scenario in batches with evidence-backed verdicts (ux-audit skill), and enforce the scenario-first hard rule (/ux-rule).",
+  "version": "0.1.0",
+  "author": { "name": "ssheleg" },
+  "homepage": "https://github.com/ssheleg/super-ux",
+  "repository": "https://github.com/ssheleg/super-ux",
+  "license": "MIT",
+  "keywords": ["ux", "scenarios", "audit", "ui", "user-flows", "scenario-driven", "claude-code"]
+}
