@@ -1,7 +1,7 @@
 {
   "name": "super-ux",
   "description": "Scenario-driven UI development: maintain docs/ux/scenarios.md as the source of truth for all user-facing behavior (ux-scenarios skill), audit the codebase against every scenario in batches with evidence-backed verdicts (ux-audit skill), and enforce the scenario-first hard rule (/ux-rule).",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": { "name": "ssheleg" },
   "homepage": "https://github.com/ssheleg/super-ux",
   "repository": "https://github.com/ssheleg/super-ux",

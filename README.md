@@ -63,12 +63,13 @@ reports status and the next action.
 ### Cursor
 
 ```sh
-git clone https://github.com/ssheleg/super-ux
-./super-ux/install.sh --cursor /path/to/your/project
+npx github:ssheleg/super-ux --cursor /path/to/your/project
 ```
 
-Copies the three rules into `.cursor/rules/` and seeds
-`docs/ux/scenarios.md`. An existing scenario base is never overwritten.
+(or clone and run `./install.sh --cursor <dir>` — same behavior.) Copies the
+three rules into `.cursor/rules/` and seeds `docs/ux/scenarios.md`. An
+existing scenario base is never overwritten; re-run with `--force` to update
+rules after a new release.
 
 ## Typical cycle
 
@@ -99,7 +100,7 @@ is semver; bump `marketplace.json` + `plugin.json` + `CHANGELOG.md` together
 чек-листом для регулярных аудитов кода (`/ux-audit`) с вердиктами
 PASS/PARTIAL/FAIL/BLOCKED и доказательствами `file:line`. Установка: в
 Claude Code — `/plugin marketplace add ssheleg/super-ux`, в Cursor —
-`./install.sh --cursor <проект>`. Дальше одна команда — `/ux`: сама ставит
+`npx github:ssheleg/super-ux --cursor <проект>`. Дальше одна команда — `/ux`: сама ставит
 правило и базу, а при повторных запусках показывает статус и следующий шаг.
 
 ## License

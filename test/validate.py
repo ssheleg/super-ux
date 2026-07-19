@@ -94,6 +94,22 @@ def validate_manifests() -> None:
         "plugins/super-ux/.claude-plugin/plugin.json",
         ["name", "description", "version", "license"],
     )
+    package = load_json("package.json", ["name", "version", "bin", "files", "license"])
+    if package:
+        check(package.get("name") == "super-ux", "package.json: name != super-ux")
+        bin_rel = (package.get("bin") or {}).get("super-ux", "")
+        bin_path = ROOT / bin_rel
+        if check(bin_path.is_file(), f"package.json: bin '{bin_rel}' missing"):
+            first_line = (read(bin_path) or "").splitlines()[:1]
+            check(
+                first_line == ["#!/usr/bin/env node"],
+                f"{bin_rel}: missing '#!/usr/bin/env node' shebang",
+            )
+        for entry in ("bin", "cursor", "templates"):
+            check(
+                entry in package.get("files", []),
+                f"package.json: files[] must include '{entry}'",
+            )
     changelog = changelog_version()
     if marketplace:
         entries = marketplace.get("plugins", [])
@@ -106,12 +122,22 @@ def validate_manifests() -> None:
                 (ROOT / source).is_dir(),
                 f"marketplace.json: plugin source '{source}' is not a directory",
             )
-            if plugin and changelog:
-                versions = {entry.get("version"), plugin.get("version"), changelog}
+            if plugin and package and changelog:
+                versions = {
+                    entry.get("version"),
+                    plugin.get("version"),
+                    package.get("version"),
+                    changelog,
+                }
                 check(
                     len(versions) == 1,
-                    "version mismatch: marketplace=%s plugin=%s changelog=%s"
-                    % (entry.get("version"), plugin.get("version"), changelog),
+                    "version mismatch: marketplace=%s plugin=%s package=%s changelog=%s"
+                    % (
+                        entry.get("version"),
+                        plugin.get("version"),
+                        package.get("version"),
+                        changelog,
+                    ),
                 )
 
 
