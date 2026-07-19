@@ -4,6 +4,20 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-07-19
+
+### Added
+
+- Interactive installer menu: bare `npx super-ux` now offers (1) skills for
+  any of 70+ agents via the `skills` CLI picker, (2) Cursor rules into a
+  project, (3) the Claude Code plugin user-globally (runs the `claude plugin`
+  CLI when available). Flag paths (`--cursor [dir] [--force]`) unchanged.
+
+### Fixed
+
+- Prompt handling with piped stdin (persistent line buffer instead of
+  sequential `rl.question`, which dropped pre-buffered answers).
+
 ## [0.3.0] - 2026-07-19
 
 ### Added

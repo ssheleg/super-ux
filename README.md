@@ -74,6 +74,16 @@ Code, Cursor, Codex, OpenCode and others. Note: this installs the two skills
 only — the `/ux` commands and the Cursor always-on hard rule come with the
 methods below.
 
+### Interactive (pick agent + scope)
+
+```sh
+npx super-ux
+```
+
+Menu: skills for any of 70+ agents (delegates to the `skills` CLI picker —
+choose agents and global/project there), Cursor rules into a project, or the
+Claude Code plugin user-globally.
+
 ### Cursor
 
 ```sh

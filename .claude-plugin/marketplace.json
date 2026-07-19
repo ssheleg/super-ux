@@ -9,7 +9,7 @@
       "name": "super-ux",
       "source": "./plugins/super-ux",
       "description": "Keeps docs/ux/scenarios.md as the source of truth for all user-facing behavior: scenarios are written and validated before UI is built, updated on every change, and used as the checklist for recurring scenario audits (ux-scenarios + ux-audit skills, /ux-* commands).",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "author": { "name": "ssheleg" },
       "keywords": ["ux", "scenarios", "audit", "ui", "user-flows", "scenario-driven", "claude-code", "cursor"],
       "category": "development"
