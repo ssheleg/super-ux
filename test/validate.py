@@ -156,10 +156,11 @@ def validate_skills() -> None:
             continue
         check(fm.get("name") == skill.name, f"{rel}/SKILL.md: front-matter name != '{skill.name}'")
         check(bool(fm.get("description")), f"{rel}/SKILL.md: missing description")
-    check(
-        (skills_dir / "references/scenario-format.md").is_file(),
-        "plugins/super-ux/skills/references/scenario-format.md: missing",
-    )
+    for ref in ("scenario-format.md", "best-practices.md"):
+        check(
+            (skills_dir / "references" / ref).is_file(),
+            f"plugins/super-ux/skills/references/{ref}: missing",
+        )
 
 
 def validate_commands() -> None:

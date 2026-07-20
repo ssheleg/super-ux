@@ -46,13 +46,16 @@ user pick (multiple allowed). Full catalog:
    audit.
 6. **Coverage audit** — `ux-audit` scope `coverage` — orphan
    stories/scenarios, journey gaps.
-7. **Plan fixes** — turn the latest audit's FAIL/PARTIAL findings into a
+7. **Best-practices review** — `ux-audit` practices pass: check scenarios
+   and implementation against the tagged best-practices catalog; missed
+   applicable practices become suggestions (`BP-NNN`).
+8. **Plan fixes** — turn the latest audit's FAIL/PARTIAL findings into a
    prioritized work plan (Frequency × Severity × Solvability) via the
    project's planning workflow.
-8. **Nothing** — everything green; rerun `/ux` after the next change.
+9. **Nothing** — everything green; rerun `/ux` after the next change.
 
 Recommend exactly one action as the default (mark it "recommended"), based
 on the state: no foundation → 1; foundation but no scenarios → 3; drafts
-pending → validate/review; never audited or stale → 5; open findings → 7.
+pending → validate/review; never audited or stale → 5; open findings → 8.
 
 Additional context from the user: $ARGUMENTS

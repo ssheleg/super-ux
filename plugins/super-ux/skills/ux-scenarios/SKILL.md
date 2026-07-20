@@ -34,6 +34,14 @@ user choice.
    in the SAME change. New behavior with no scenario is a blocker, not a
    warning.
 
+**Best practices:** when drafting or reviewing scenarios, consult
+[best-practices.md](../references/best-practices.md) — filter by tags
+matching the feature/journey stage (onboarding, paywall, retention, …) and
+the product domain. Apply a practice only when it serves a traced job/story;
+note applied practice IDs (`BP-NNN`) in the scenario's design rationale. The
+catalog is living — new proven practices get appended per its "How to add"
+rules.
+
 ## Choosing a workflow
 
 | Situation | Workflow |

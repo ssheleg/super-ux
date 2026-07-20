@@ -39,6 +39,7 @@ flowchart LR
 | `/ux-foundation` `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
 | `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + three agent-requested rules) |
 | `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |
+| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of proven UX/growth practices (seeded with 48 subscription-app laws); agents filter by stage/domain tags and apply what serves a traced job |
 
 The format all of them share is locked in
 [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md):

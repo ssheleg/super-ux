@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-07-20
+
+### Added
+
+- **Best-practices catalog** (`skills/references/best-practices.md`) — a
+  living, tag-indexed catalog (48 entries seeded from "48 Laws of
+  Subscription App Success", Botsi 2025): each practice has an ID (BP-NNN),
+  own-words summary, mechanism, applicability, and tags (stage / mechanism /
+  domain / effect) so agents can select what fits the product. Growable per
+  in-file rules.
+- Integration: `ux-scenarios` consults the catalog when drafting (practices
+  applied only when they serve a traced job); `ux-foundation` uses it for
+  journey opportunities; `ux-audit` gains an optional practices pass
+  (suggestion findings `[BP-NNN]`, never blockers); `/ux` menu gains a
+  "Best-practices review" action.
+
 ## [0.6.0] - 2026-07-20
 
 ### Added

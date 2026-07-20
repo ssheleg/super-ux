@@ -71,6 +71,15 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
    it's fixed); the plan fixes the worst user damage first, not the easiest
    diff.
 
+## Optional practices pass
+
+On request (or scope `practices`), review scenarios and implementation
+against [best-practices.md](../references/best-practices.md): select
+practices by tags matching the product's stages and domain, check which
+apply-but-are-absent. Report as `suggestion` findings referencing `BP-NNN`
+(e.g. "[BP-013] permission asked without value preview") — practices are
+opportunities, never blockers; they don't change scenario verdicts.
+
 ## Optional live pass
 
 If the project has a runnable dev server and browser tooling is available,

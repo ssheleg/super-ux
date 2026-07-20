@@ -23,7 +23,10 @@ and trace to these IDs — the full chain gives every scenario its context.
   the four forces: push, pull, anxiety, habit.
 - **Journeys** cover the end-to-end experience (before, during, after the
   product), one row per stage: action, touchpoint, emotion (1–5), pain,
-  opportunity. Score opportunities Frequency × Severity × Solvability.
+  opportunity. Score opportunities Frequency × Severity × Solvability. When
+  filling opportunities, consult
+  [best-practices.md](../references/best-practices.md) by stage tags for
+  proven mechanisms.
 - **Stories** pass INVEST; acceptance criteria are Given/When/Then and
   observable. A story that can't be verified is not done being written.
 - Evidence beats opinion: repeated pain across users, observable
