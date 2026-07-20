@@ -14,7 +14,12 @@ Title, then header comment, then: **Index** table
 (`| ID | Title | Feature | Persona | Status | Last audit |`), **Personas**
 (1–3 sentences each), **Scenarios** grouped by feature.
 
-Scenario entry fields (exact names): `Persona`, `Feature`, `Entry point`,
+When `docs/ux/foundation.md` exists, scenarios derive from it: draft per
+user story / journey stage, fill `Traces:` (e.g. `ST-001 (JTBD-01,
+JRN-01/#2)`), enforce traceability — every must/should story covered by ≥1
+scenario, every scenario serves ≥1 story or job.
+
+Scenario entry fields (exact names): `Persona`, `Feature`, `Traces`, `Entry point`,
 `Preconditions`, `Steps` (numbered, one user action each), `Expected result`
 (observable), `UI elements` (every button/field/link/dialog/toast involved —
 this is what audits check), `States covered` (loading|empty|error|success),

@@ -11,10 +11,18 @@ state handled, every error honest. Output: a versioned report in
 `docs/ux/audits/` plus updated audit statuses in the base.
 
 **Format contract:** [scenario-format.md](../references/scenario-format.md)
-— report structure, verdicts (PASS / PARTIAL / FAIL / BLOCKED), severities.
+(ux-contract v2) — report structure, verdicts (PASS / PARTIAL / FAIL /
+BLOCKED), severities.
 
 **Precondition:** `docs/ux/scenarios.md` exists. If it doesn't, stop and run
 the `ux-scenarios` skill first — there is nothing to audit against.
+
+**Full context:** when `docs/ux/foundation.md` exists, audit each scenario
+WITH its chain — load the traced story's acceptance criteria (Given/When/
+Then) as additional checks, and note whether the implementation actually
+serves the job and journey stage, not just renders the elements. A flow
+whose buttons all exist but whose job outcome is unreachable is PARTIAL at
+best.
 
 ## Evidence discipline (non-negotiable)
 
@@ -24,10 +32,13 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
 
 ## The loop
 
-1. **Scope.** Read the base. Scope is `$ARGUMENTS` if given (`all`,
-   `feature:<name>`, `SCN-010..SCN-020`), default `all`. Note the git SHA of
-   `scenarios.md` — it goes into the report header. Skip `retired`
-   scenarios.
+1. **Scope.** Read the base (and foundation, if present). Scope is
+   `$ARGUMENTS` if given (`all`, `feature:<name>`, `SCN-010..SCN-020`,
+   `coverage`), default `all`. Note the git SHA of `docs/ux` — it goes into
+   the report header. Skip `retired` scenarios. Scope `coverage` audits the
+   chain instead of the code: orphan stories/scenarios, journey stages
+   without scenarios, jobs without stories, unused personas — same report
+   format, findings reference layer IDs; skip steps 3's code checks.
 2. **Batch.** Group scoped scenarios by feature, ~5–8 per batch. List the
    batches before starting so progress is visible.
 3. **Audit each batch.** For large scopes dispatch parallel subagents — one
@@ -55,7 +66,10 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
 7. **Offer planning handoff.** Offer — don't auto-run — to turn FAIL/PARTIAL
    findings into a work plan via the project's planning workflow
    (superpowers writing-plans, task-pipeline, or the user's framework of
-   choice), findings prioritized by severity.
+   choice). Prioritize findings by Frequency × Severity × Solvability (how
+   many users/scenarios hit it × how badly it breaks the job × how cheaply
+   it's fixed); the plan fixes the worst user damage first, not the easiest
+   diff.
 
 ## Optional live pass
 

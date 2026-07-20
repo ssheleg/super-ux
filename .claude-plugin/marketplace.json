@@ -4,21 +4,24 @@
     "name": "ssheleg",
     "url": "https://github.com/ssheleg"
   },
-  "description": "Scenario-driven UI development for AI agents: a maintained UX-scenario base plus recurring scenario audits of the codebase.",
+  "description": "Full-cycle UX for AI agents: personas, JTBD, journeys, user stories -> traced UX scenarios -> evidence-backed audits -> prioritized fix plans.",
   "homepage": "https://github.com/ssheleg/super-ux",
   "repository": "https://github.com/ssheleg/super-ux",
   "plugins": [
     {
       "name": "super-ux",
       "source": "./plugins/super-ux",
-      "description": "Keeps docs/ux/scenarios.md as the source of truth for all user-facing behavior: scenarios are written and validated before UI is built, updated on every change, and used as the checklist for recurring scenario audits (ux-scenarios + ux-audit skills, /ux-* commands).",
-      "version": "0.5.0",
+      "description": "Covers UX at every project stage: ux-foundation (personas, JTBD, journeys, user stories), ux-scenarios (docs/ux/scenarios.md as the source of truth, traced to stories), ux-audit (code vs scenarios with acceptance criteria + chain coverage), /ux action-menu entry point, scenario-first hard rule.",
+      "version": "0.6.0",
       "author": {
         "name": "ssheleg"
       },
       "keywords": [
         "ux",
         "scenarios",
+        "jtbd",
+        "customer-journey",
+        "user-stories",
         "audit",
         "ui",
         "user-flows",

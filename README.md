@@ -17,25 +17,28 @@ the codebase.
 
 ```mermaid
 flowchart LR
-    A[Feature idea] --> B[Draft scenarios]
-    B --> C{Validate vs existing base:\nconflicts, overlaps, gaps}
-    C -->|approved| D[Design & build UI]
+    W[Personas + JTBD\n+ journeys + stories] --> B[Derive scenarios\nwith Traces]
+    A[Feature idea] --> V{Which job? Which stage?\nValidate vs base}
+    W --> V
+    V -->|approved| D[Design & build UI]
     D --> E[Update scenarios\nin the same change]
-    E --> F[/ux-audit: batched check\nof code vs every scenario/]
-    F --> G[Audit report + findings]
-    G --> H[Plan fixes] --> D
+    E --> F[/ux-audit: code vs scenarios\nwith story acceptance criteria/]
+    B --> F
+    F --> G[Report + findings]
+    G --> H[Prioritized fix plan\nFreq × Severity × Solvability] --> D
 ```
 
 ## What's inside
 
 | Piece | Purpose |
 |---|---|
-| skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: init (greenfield interview or existing-code inventory sweep), update on every change, validate for conflicts and coverage |
-| skill `ux-audit` | Batched audit loop: trace every scenario through the code, verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence, report into `docs/ux/audits/` |
-| `/ux` | **The one command**: sets everything up if missing (rule, `docs/ux/`, initial base), otherwise status report + one suggested next action. Idempotent |
-| `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls over the skills; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
-| `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + two agent-requested rules) |
-| `templates/` | Skeletons for the scenario base, the audit report, and the CLAUDE.md rule snippet |
+| skill `ux-foundation` | The WHY layer (`docs/ux/foundation.md`): personas, Jobs to Be Done with forces, customer journey maps, user stories with Given/When/Then acceptance criteria |
+| skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: scenarios derived from stories/journeys with `Traces:`, updated on every change, validated for conflicts, coverage, and traceability |
+| skill `ux-audit` | Batched audit loop with full context: code vs every scenario + its story's acceptance criteria; verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence; `coverage` scope audits the chain itself |
+| `/ux` | **The one command**: sets up whatever is missing, then status across all layers + a menu of applicable actions with one recommended default. Idempotent |
+| `/ux-foundation` `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
+| `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + three agent-requested rules) |
+| `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |
 
 The format all of them share is locked in
 [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md):
@@ -103,16 +106,20 @@ rules after a new release.
 
 ## Typical cycle
 
-1. `/ux` — first run sets everything up and builds the base (greenfield:
-   interview first, UI later; existing code: inventory sweep, scenarios for
-   everything found, gaps flagged in both directions).
+1. `/ux` — first run sets everything up: foundation first (greenfield:
+   interview about personas, jobs, journeys; existing code:
+   reverse-engineer them), then scenarios derived from the stories with
+   full traceability.
 2. Work normally; every user-facing change updates the base in the same
    change (the always-on rule catches it; `/ux-update` for manual control).
-3. `/ux` any time — status + the one next action; `/ux-audit` — batched
-   verification of code vs scenarios; report lands in
-   `docs/ux/audits/YYYY-MM-DD.md`, statuses update in the base.
-4. Turn FAIL/PARTIAL findings into a plan with your planning workflow; build;
-   repeat.
+   New feature ideas are validated against the chain first: which job,
+   which journey stage, which story.
+3. `/ux` any time — status across layers + action menu; `/ux-audit` —
+   batched verification of code vs scenarios (with acceptance criteria);
+   `/ux-audit coverage` — chain gaps. Reports land in
+   `docs/ux/audits/YYYY-MM-DD.md`.
+4. Findings become a prioritized fix plan (Frequency × Severity ×
+   Solvability) via your planning workflow; build; repeat.
 
 ## Development
 
@@ -124,11 +131,15 @@ is semver; bump `marketplace.json` + `plugin.json` + `CHANGELOG.md` together
 ## По-русски (коротко)
 
 Проблема: агенты генерируют плохие интерфейсы, потому что строят UI без
-модели поведения пользователя. super-ux делает базу UX-сценариев
-(`docs/ux/scenarios.md`) источником правды: сценарии пишутся и валидируются
-**до** интерфейса, обновляются тем же изменением, что и поведение, и служат
-чек-листом для регулярных аудитов кода (`/ux-audit`) с вердиктами
-PASS/PARTIAL/FAIL/BLOCKED и доказательствами `file:line`. Установка: в
+модели поведения пользователя. super-ux строит цепочку: **персоны → JTBD →
+карта пути → user stories → UX-сценарии → аудиты → планы фиксов**.
+Foundation (`docs/ux/foundation.md`) отвечает на «зачем», сценарии
+(`docs/ux/scenarios.md`) — источник правды поведения, трассируются к
+stories. Всё пишется и валидируется **до** интерфейса, обновляется тем же
+изменением, что и поведение. Аудиты (`/ux-audit`) проверяют код против
+сценариев вместе с acceptance criteria, вердикты PASS/PARTIAL/FAIL/BLOCKED
+с доказательствами `file:line`; `/ux-audit coverage` ищет дыры в самой
+цепочке. Установка: в
 Claude Code — `/plugin marketplace add ssheleg/super-ux`, в Cursor —
 `npx super-ux --cursor <проект>`. Дальше одна команда — `/ux`: сама ставит
 правило и базу, а при повторных запусках показывает статус и следующий шаг.

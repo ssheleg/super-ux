@@ -1,0 +1,47 @@
+---
+description: "Maintain docs/ux/foundation.md (personas, Jobs to Be Done, customer journeys, user stories): apply when defining who the users are and why they use the product, during product discovery, or when scenarios need a WHY layer to trace to"
+alwaysApply: false
+---
+
+# ux-foundation — The WHY Layer
+
+`docs/ux/foundation.md` holds the chain scenarios trace to: **Personas
+(P-NN) → Jobs to Be Done (JTBD-NN) → Customer journeys (JRN-NN) → User
+stories (ST-NNN)**. IDs sequential, never reused; dropped entries kept, not
+deleted.
+
+## Formats (ux-contract v2)
+
+- **Persona `P-NN`:** 1–3 sentences, grounded in data/observation,
+  recognizable by a real user.
+- **JTBD `JTBD-NN`:** `When <situation>, I want to <motivation>, so I can
+  <outcome>` + personas + type (functional|emotional|social) + forces
+  (push/pull/anxiety/habit) + success metric (user outcome, never a
+  feature).
+- **Journey `JRN-NN`** (persona × job): stage table — `# | Stage | User
+  action | Touchpoint | Emotion (1-5) | Pain | Opportunity`; end-to-end
+  (before/during/after product); opportunity priority = Frequency ×
+  Severity × Solvability.
+- **Story `ST-NNN`:** `As <persona>, I want <capability>, so that
+  <benefit>` + Traces (JTBD, JRN/stage) + Given/When/Then acceptance
+  criteria + priority (must|should|could) + status
+  (proposed|validated|delivered|dropped). Quality bar: INVEST.
+
+## Workflows
+
+- **Init (interview):** greenfield — ask one question at a time: who uses
+  it; what situation triggers the job; what outcome = success; walk the
+  path end-to-end; derive stories from pains and outcomes.
+- **Init (reverse):** existing product — reverse-engineer jobs/personas
+  from the UI and scenarios; tag entries observed vs inferred; flag
+  features serving no job and jobs with no support.
+- **Update:** locate by ID, update, mark dropped (never delete), then
+  cascade: list scenarios tracing to changed IDs and update them in the
+  same change.
+- **Validate:** integrity (IDs, references), quality (no features in JTBD,
+  INVEST, observable criteria), coverage (persona→job→journey→story chain
+  complete; must/should stories have scenarios).
+
+Evidence beats opinion: mark unvalidated guesses as assumptions
+(desirability/viability/feasibility/usability) and test risky ones before
+building on them.

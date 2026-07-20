@@ -1,50 +1,58 @@
 ---
-description: One-command entry point — sets up super-ux in this project if anything is missing, otherwise reports scenario-base status and suggests the next action
+description: Single entry point for all UX work — status across foundation/scenarios/audits, then a menu of applicable actions (init, update, validate, audit, plan fixes)
 ---
 
-Single entry point for super-ux. Detect the project state and act. Never ask
-the user which mode they want — decide from the state. Idempotent: safe to
-run any number of times.
+Single entry point for super-ux. Never ask which mode — inspect first, then
+present a status and a menu of applicable actions. Idempotent: safe to run
+any number of times, at any project stage.
 
 ## 1. Inspect state
 
-- Hard rule installed? — project `CLAUDE.md` contains the heading
-  `## UX scenarios — hard rule (super-ux)`.
-- `docs/ux/scenarios.md` exists? `docs/ux/audits/` exists?
-- If the base exists, parse its Index table: scenario count by status
-  (draft / validated / implemented / retired), features covered, `Last
-  audit` values.
-- Latest report in `docs/ux/audits/` (date + Summary totals), if any.
+- Hard rule in project `CLAUDE.md`? (heading `## UX scenarios — hard rule (super-ux)`)
+- `docs/ux/foundation.md`? If yes: counts of personas / JTBD / journeys /
+  stories by status.
+- `docs/ux/scenarios.md`? If yes: scenario counts by status, features,
+  `Traces` filled or not, `Last audit` values.
+- Latest report in `docs/ux/audits/` (date, totals, open findings).
 
-## 2. Repair whatever is missing (in this order)
+## 2. Repair silently (no menu needed for these)
 
-- Rule missing → install it exactly as `/ux-rule` does (append the block to
-  CLAUDE.md, create it if absent).
-- `docs/ux/` or `scenarios.md` missing → create the skeleton, seed
-  `scenarios.md` from the plugin's `templates/scenarios.md`, create
-  `docs/ux/audits/`.
-- Base empty (no scenario entries) → invoke the `ux-scenarios` skill in Init
-  mode right now (auto-detect greenfield vs existing code) and build the
-  base in this same run.
+- Rule missing → install it (as `/ux-rule`).
+- `docs/ux/` missing → create skeleton (seed `scenarios.md` and, for
+  non-trivial products, `foundation.md` from the plugin templates).
 
-Nothing missing → repair step is a no-op; say so in one line.
+## 3. Status report
 
-## 3. Status report (always, last)
+Compact table across all three layers: foundation (present? entry counts,
+assumptions unvalidated), scenarios (total/by status, traced %, features),
+audits (last run, PASS/PARTIAL/FAIL/BLOCKED totals, open findings).
 
-Compact table: rule installed (yes/no→fixed), scenarios total and by status,
-features covered, last audit (date + PASS/PARTIAL/FAIL/BLOCKED totals, or
-"never"), open findings from the latest report.
+## 4. Action menu
 
-## 4. Suggest exactly one next action
+Offer ONLY the applicable actions, numbered, with a one-line why; let the
+user pick (multiple allowed). Full catalog:
 
-Pick the first that applies:
+1. **Build the WHY layer** — `ux-foundation` Init (interview or reverse) —
+   when foundation is missing/empty.
+2. **Update foundation** — `ux-foundation` Update — when user knowledge
+   changed.
+3. **Build/extend scenarios** — `ux-scenarios` Init or Update — when
+   scenarios missing, or stories lack scenario coverage.
+4. **Validate the chain** — `ux-scenarios` Validate (+ `ux-foundation`
+   Validate) — before building a new feature, or when traceability is
+   doubtful.
+5. **Audit code vs scenarios** — `ux-audit` (all / feature:X) — when
+   validated scenarios were never audited, or code changed since the last
+   audit.
+6. **Coverage audit** — `ux-audit` scope `coverage` — orphan
+   stories/scenarios, journey gaps.
+7. **Plan fixes** — turn the latest audit's FAIL/PARTIAL findings into a
+   prioritized work plan (Frequency × Severity × Solvability) via the
+   project's planning workflow.
+8. **Nothing** — everything green; rerun `/ux` after the next change.
 
-- Base was just initialized → "review and validate the draft scenarios".
-- Drafts pending → "review drafts, then they move to validated".
-- Validated scenarios never audited, or audit older than the last
-  user-facing change → "run /ux-audit".
-- Latest audit has FAIL/PARTIAL findings → "plan fixes from
-  docs/ux/audits/<latest>".
-- Everything green → "nothing to do; run /ux again after the next change".
+Recommend exactly one action as the default (mark it "recommended"), based
+on the state: no foundation → 1; foundation but no scenarios → 3; drafts
+pending → validate/review; never audited or stale → 5; open findings → 7.
 
 Additional context from the user: $ARGUMENTS

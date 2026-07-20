@@ -10,9 +10,19 @@ behavior. This skill keeps one: `docs/ux/scenarios.md` in the target project
 is the source of truth for everything the user can do, see, and hit — every
 feature, every button, every state, every error, every result.
 
-**Format contract:** [scenario-format.md](../references/scenario-format.md).
-Read it before writing or editing scenarios. Never deviate from its field
-names, ID rules, statuses, or checklists.
+**Format contract:** [scenario-format.md](../references/scenario-format.md)
+(ux-contract v2). Read it before writing or editing scenarios. Never deviate
+from its field names, ID rules, statuses, or checklists.
+
+**The WHY layer:** when `docs/ux/foundation.md` exists (personas, JTBD,
+journeys, user stories — maintained by the `ux-foundation` skill), scenarios
+are derived FROM it: draft scenarios per user story and journey stage, fill
+the `Traces:` field, and enforce the traceability rules (every must/should
+story covered; every scenario serves a story or job — a scenario serving
+nothing is a candidate for deletion, not implementation). If the foundation
+is missing on a non-trivial product, recommend running `ux-foundation`
+first; proceed in v1 mode (no Traces) only for tiny projects or on explicit
+user choice.
 
 ## The hard rule
 
@@ -95,11 +105,17 @@ idea):
    referenced persona defined; statuses legal.
 2. **Coverage:** every feature meets the per-feature checklist; the product
    meets the per-product checklist. List what's missing.
-3. **Conflicts:** scenarios that contradict each other (same entry point,
+3. **Traceability** (when foundation.md exists): every must/should story has
+   ≥1 scenario; every scenario traces to ≥1 story or job; every journey
+   stage with a product touchpoint has ≥1 scenario. Orphans in either
+   direction are findings.
+4. **Conflicts:** scenarios that contradict each other (same entry point,
    incompatible outcomes; same element, different behavior). For a new
-   feature idea: which existing scenarios it touches, contradicts, or
-   duplicates — propose reconciliation before any UI work.
-4. Report findings as a checklist with per-item fixes; apply approved fixes.
+   feature idea: validate against the foundation first (which job does it
+   serve? which journey stage?), then against existing scenarios — propose
+   reconciliation before any UI work. An idea serving no job is challenged,
+   not silently accepted.
+5. Report findings as a checklist with per-item fixes; apply approved fixes.
 
 ## Definition of done
 

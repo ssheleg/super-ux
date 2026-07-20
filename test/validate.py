@@ -164,7 +164,7 @@ def validate_skills() -> None:
 
 def validate_commands() -> None:
     commands_dir = ROOT / "plugins/super-ux/commands"
-    expected = {"ux.md", "ux-init.md", "ux-update.md", "ux-audit.md", "ux-rule.md"}
+    expected = {"ux.md", "ux-init.md", "ux-update.md", "ux-audit.md", "ux-rule.md", "ux-foundation.md"}
     found = {p.name for p in commands_dir.glob("*.md")} if commands_dir.is_dir() else set()
     check(expected <= found, f"commands: missing {sorted(expected - found)}")
     for name in sorted(found):
@@ -189,7 +189,7 @@ def validate_cursor_rules() -> None:
 
 
 def validate_templates() -> None:
-    for name in ("scenarios.md", "audit-report.md", "claude-rule.md"):
+    for name in ("scenarios.md", "audit-report.md", "claude-rule.md", "foundation.md"):
         path = ROOT / "templates" / name
         text = read(path)
         check(bool(text and text.strip()), f"templates/{name}: missing or empty")

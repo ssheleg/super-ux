@@ -4,6 +4,27 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-07-20
+
+### Added
+
+- **ux-foundation skill** — the WHY layer: personas, Jobs to Be Done (with
+  forces and success metrics), customer journey maps (stage / action /
+  touchpoint / emotion / pain / opportunity), user stories (INVEST,
+  Given/When/Then acceptance criteria). New file contract
+  `docs/ux/foundation.md`, template, `/ux-foundation` command, Cursor rule.
+- **ux-contract v2** — scenarios gain a `Traces:` field (story/job/journey
+  stage) and traceability rules: every must/should story covered, every
+  scenario serves a story or job; orphans are findings.
+- **Full-context audits** — `ux-audit` loads traced acceptance criteria as
+  checks and judges whether the implementation serves the job, not just
+  renders elements; new `coverage` scope audits the chain itself; fix plans
+  prioritized by Frequency × Severity × Solvability.
+- **`/ux` action menu** — single entry point now reports status across all
+  three layers and offers the applicable actions (init/update foundation,
+  build scenarios, validate chain, audit, coverage audit, plan fixes) with
+  one recommended default.
+
 ## [0.5.0] - 2026-07-19
 
 ### Changed
