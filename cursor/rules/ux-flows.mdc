@@ -1,0 +1,47 @@
+---
+description: "Design or improve user flows (docs/ux/flows.md): apply for task analysis, flow diagrams, screen states, wireframes, heuristic UX evaluation, or any 'improve/fix the UX' request"
+alwaysApply: false
+---
+
+# ux-flows — Design HOW Users Move
+
+`docs/ux/flows.md` is the HOW layer between foundation (stories) and
+scenarios: task analysis + mermaid user flows + screen states. IDs
+`FLW-NN`, sequential, never reused; superseded flows kept with a note.
+
+## Flow entry (ux-contract v3)
+
+Fields: `Traces` (story/job IDs), `Goal` (observable end state), `Entry
+points` (ALL of them), `Success exit`, `Task analysis` (numbered
+user-visible micro-steps), mermaid `flowchart` (screens as
+`Screen: <name>`, decisions as diamonds, `*_err` error nodes with labeled
+recovery edges), `Screens & states` table (each screen:
+loading/empty/error/success + key elements, one primary action).
+
+## Design rules
+
+- One flow = one user goal. Task analysis first: cut/merge/default-away
+  every step that doesn't serve the job; pull first value as early as
+  possible; happy path ≤5 steps or justified.
+- Every decision an explicit branch; every error edge lands on recovery —
+  dead ends are defects; all entry points enumerated.
+- Wireframes optional (`docs/ux/wireframes/FLW-NN.md`, ASCII hierarchy +
+  primary action, not pixels); storyboard only when usage context drives
+  design.
+- Backwards mode (existing product): reconstruct flows as they ARE from
+  code with file:line evidence, tag `inferred` until confirmed; gaps
+  between is/should become the improvement backlog.
+
+## Improving existing UX
+
+Walk flows against heuristics: system status visible; user's words not
+jargon; undo/cancel/back everywhere; consistency; error prevention over
+error messages; recognition over recall; shortcuts for frequent users;
+minimalist screens; recovery-oriented error text; help in context;
+progressive disclosure; smart defaults; limited choices; familiar
+patterns; prominent primary targets; polished peaks and endings.
+
+Violations: `[PRN-NN] node — issue — severity`. Redesign proposals MUST
+trace to a pain/job/story, cite the principle/practice, show flow
+before → after, and state the expected observable effect. Prioritize
+Frequency × Severity × Solvability. Cascade approved changes to scenarios.

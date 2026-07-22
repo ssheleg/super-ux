@@ -33,10 +33,12 @@ flowchart LR
 | Piece | Purpose |
 |---|---|
 | skill `ux-foundation` | The WHY layer (`docs/ux/foundation.md`): personas, Jobs to Be Done with forces, customer journey maps, user stories with Given/When/Then acceptance criteria |
-| skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: scenarios derived from stories/journeys with `Traces:`, updated on every change, validated for conflicts, coverage, and traceability |
+| skill `ux-flows` | The HOW layer (`docs/ux/flows.md`): task analysis, mermaid user flows (branches, error recovery, entry points), screen states, optional wireframes; heuristic UX evaluation and traced redesign proposals for existing products |
+| skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: use-case scenarios (action → system response, alt paths) covering every flow node/edge, `Traces:` to stories and flows, validated for conflicts, coverage, and traceability |
 | skill `ux-audit` | Batched audit loop with full context: code vs every scenario + its story's acceptance criteria; verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence; `coverage` scope audits the chain itself |
 | `/ux` | **The one command**: sets up whatever is missing, then status across all layers + a menu of applicable actions with one recommended default. Idempotent |
-| `/ux-foundation` `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
+| `/ux-foundation` `/ux-flows` `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
+| [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward + backwards), task analysis, flow rules, heuristics PRN-01..16, improvement procedure, anti-patterns |
 | `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + three agent-requested rules) |
 | `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |
 | [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of proven UX/growth practices (seeded with 48 subscription-app laws); agents filter by stage/domain tags and apply what serves a traced job |

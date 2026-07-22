@@ -1,24 +1,29 @@
-# UX Contract (v2): Foundation, Scenarios, Audits
+# UX Contract (v3): Foundation, Flows, Scenarios, Audits
 
 This is THE contract for `docs/ux/` in a target project. The `ux-foundation`,
-`ux-scenarios`, and `ux-audit` skills — and the Cursor rules — follow it. Do
-not deviate from field names, ID schemes, statuses, or verdicts; tooling and
-audits key off them.
+`ux-flows`, `ux-scenarios`, and `ux-audit` skills — and the Cursor rules —
+follow it. Do not deviate from field names, ID schemes, statuses, or
+verdicts; tooling and audits key off them. The design reasoning behind the
+formats lives in [ux-design-principles.md](ux-design-principles.md).
 
 ## Files in the target project
 
 ```
 docs/ux/
 ├── foundation.md             # WHY: personas, JTBD, journeys, user stories
-├── scenarios.md              # WHAT: operational UX scenarios (source of truth for behavior)
+├── flows.md                  # HOW: task analysis + user flows (mermaid) + screen states
+├── scenarios.md              # WHAT: use-case scenarios (source of truth for behavior)
+├── wireframes/               # optional: low-fi ASCII wireframes / storyboards per flow
 └── audits/
     └── YYYY-MM-DD[-scope].md # EVIDENCE: one report per audit run
 ```
 
-The chain: **Personas → Jobs (JTBD) → Journeys → User stories → Scenarios →
-Audits → Fix plans.** Every layer traces to the one above it. `foundation.md`
-is optional for tiny projects (scenarios may exist alone, v1 mode), but once
-it exists, traceability rules apply.
+The chain: **Personas → Jobs (JTBD) → Journeys → User stories → Flows →
+Scenarios → Audits → Fix plans.** Every layer traces to the one above it.
+`foundation.md` and `flows.md` are optional for tiny projects (scenarios may
+exist alone, v1 mode), but once a layer exists, its traceability rules
+apply. In backwards mode (existing product) the same files are filled in
+reverse from the code, entries tagged `inferred` until confirmed.
 
 ## `docs/ux/foundation.md`
 
@@ -78,6 +83,59 @@ testable). Acceptance criteria are Given/When/Then and observable.
 dropped/retired entries are kept with a status/strikethrough note, never
 deleted.
 
+## `docs/ux/flows.md`
+
+Header comment: `<!-- Managed with super-ux (ux-contract v3). The HOW layer:
+task analysis and user flows scenarios trace to. -->`
+
+One entry per user goal (one story or a tight story cluster):
+
+```markdown
+### FLW-01: Create first project
+- **Traces:** ST-001 (JTBD-01, JRN-01/#2)
+- **Goal:** user has a named project and sees it on the main screen
+- **Entry points:** first launch; empty-state CTA "Create project"
+- **Success exit:** main screen with the new project visible
+- **Task analysis:**
+  1. Understand what the app is for (value screen)
+  2. Name the project (input; system may suggest a default)
+  3. Confirm and land in the project
+- **Flow:**
+```
+
+````markdown
+```mermaid
+flowchart TD
+  A[Screen: Welcome] -->|tap Create project| B[Screen: Name form]
+  B -->|empty name| B_err[Inline: Name is required]
+  B_err --> B
+  B -->|valid name + Confirm| C{Save OK?}
+  C -->|yes| D[Screen: Main - project visible]
+  C -->|no| C_err[Toast: retry, input preserved]
+  C_err --> B
+```
+````
+
+```markdown
+- **Screens & states:**
+  | Screen | States | Key elements |
+  |--------|--------|--------------|
+  | Welcome | success | value copy, "Create project" button |
+  | Name form | error, success | name field, confirm button, inline error |
+  | Main | loading, empty, success | project list/card |
+- **Wireframe:** wireframes/FLW-01.md (optional)
+```
+
+Flow rules (from the principles doc, enforced by validation and audits):
+
+- Node naming: screens as `Screen: <name>`, decisions as diamonds
+  (`{...?}`), errors as `*_err` nodes with a labeled recovery edge — an
+  error edge that goes nowhere is a defect.
+- Every entry point listed; every screen node's states declared in the
+  table; happy-path steps above five need justification.
+- IDs `FLW-NN`, sequential, never reused; superseded flows kept with a
+  strikethrough note.
+
 ## `docs/ux/scenarios.md`
 
 Ordered structure:
@@ -98,17 +156,22 @@ Ordered structure:
 
 ### Scenario entry
 
+A scenario is a use case: each step pairs the user action with the system's
+observable response.
+
 ```markdown
 ### SCN-001: First-run onboarding — happy path
 - **Persona:** P-01
 - **Feature:** onboarding
-- **Traces:** ST-001 (JTBD-01, JRN-01/#2)
+- **Traces:** ST-001, FLW-01 (JTBD-01, JRN-01/#2)
 - **Entry point:** first launch, no saved state
 - **Preconditions:** none
 - **Steps:**
-  1. User opens the app for the first time and sees the welcome screen
-  2. User taps "Create project", types a name, confirms
-- **Expected result:** user lands on the main screen with the project created and visible
+  1. User opens the app for the first time -> system shows the welcome screen with "Create project"
+  2. User taps "Create project" -> system shows the name form, field focused
+  3. User types a name and confirms -> system saves and lands the user on the main screen
+- **Expected result:** project created and visible on the main screen
+- **Alt paths:** user dismisses welcome -> system keeps the empty state with the same CTA
 - **UI elements:** welcome screen, "Create project" button, name field, confirm button
 - **States covered:** loading, empty, error, success
 - **Errors & recovery:** name empty -> inline "Name is required", field focused; save fails -> toast with retry, input preserved
@@ -119,11 +182,15 @@ Ordered structure:
 Field rules:
 
 - **Persona** — a persona ID defined in the Personas layer.
-- **Traces** — the stories/jobs/journey-stages this scenario serves.
-  Required when `foundation.md` exists; a scenario that serves nothing is a
-  candidate for deletion, not implementation.
+- **Traces** — the stories/flows/jobs/journey-stages this scenario serves.
+  Required when the corresponding layer exists; a scenario that serves
+  nothing is a candidate for deletion, not implementation.
 - **Entry point** — where the user starts (URL, screen, app state).
-- **Steps** — numbered, from the user's point of view, one action per step.
+- **Steps** — numbered, one user action per step, each paired with the
+  system's observable response (`action -> response`).
+- **Alt paths** — meaningful non-error deviations from the main path
+  (skip, dismiss, alternate route) and how the system responds; omit only
+  when none exist.
 - **Expected result** — observable, not internal ("project appears in the
   sidebar", not "record inserted").
 - **UI elements** — every button, field, link, dialog, toast the user
@@ -141,10 +208,13 @@ Field rules:
 - `draft` → `validated` (human approval) → `implemented` (audit PASS) →
   `retired`. Changed scenarios drop back to `draft`.
 
-### Traceability rules (when foundation.md exists)
+### Traceability rules (per existing layer)
 
-- Every `must`/`should` story has ≥1 scenario tracing to it.
-- Every scenario traces to ≥1 story or job.
+- Every `must`/`should` story has ≥1 flow and ≥1 scenario tracing to it.
+- Every flow's nodes and edges are covered by scenarios (happy path, each
+  error edge, each alt branch).
+- Every scenario traces to ≥1 story or job (and its flow, when flows.md
+  exists).
 - Every journey stage with a product touchpoint has ≥1 scenario.
 - Orphans in either direction are findings, reported by Validate and by
   coverage audits — never silently ignored.

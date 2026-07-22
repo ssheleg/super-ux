@@ -102,5 +102,8 @@ Given new knowledge (user feedback, analytics, pivot, new segment):
 
 - Layers consistent, IDs stable, assumptions marked as such.
 - The user approved new/changed entries.
-- Cascading scenario updates identified and handed to `ux-scenarios` — the
-  chain never silently drifts.
+- Cascading updates identified and handed downstream (`ux-flows` for
+  affected flows, `ux-scenarios` for affected scenarios) — the chain never
+  silently drifts.
+- Next layer offered: stories ready → `ux-flows` turns them into user flows
+  before any UI work.

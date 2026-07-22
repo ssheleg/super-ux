@@ -14,15 +14,23 @@ feature, every button, every state, every error, every result.
 (ux-contract v2). Read it before writing or editing scenarios. Never deviate
 from its field names, ID rules, statuses, or checklists.
 
-**The WHY layer:** when `docs/ux/foundation.md` exists (personas, JTBD,
-journeys, user stories — maintained by the `ux-foundation` skill), scenarios
-are derived FROM it: draft scenarios per user story and journey stage, fill
-the `Traces:` field, and enforce the traceability rules (every must/should
-story covered; every scenario serves a story or job — a scenario serving
-nothing is a candidate for deletion, not implementation). If the foundation
-is missing on a non-trivial product, recommend running `ux-foundation`
-first; proceed in v1 mode (no Traces) only for tiny projects or on explicit
-user choice.
+**The WHY and HOW layers:** when `docs/ux/foundation.md` exists (personas,
+JTBD, journeys, stories — `ux-foundation` skill) and/or `docs/ux/flows.md`
+(task analysis, user flows — `ux-flows` skill), scenarios are derived FROM
+them: one scenario set per flow, covering the happy path, every error edge,
+and every alt branch of the flow diagram; `Traces:` filled with story + flow
+IDs; traceability rules enforced (every must/should story covered; every
+flow node/edge covered; every scenario serves a story or job — a scenario
+serving nothing is a candidate for deletion, not implementation). Steps are
+written use-case style: user action -> observable system response. If the
+upper layers are missing on a non-trivial product, recommend `ux-foundation`
+→ `ux-flows` first; proceed in v1 mode (no Traces) only for tiny projects
+or on explicit user choice.
+
+**Design taste:** apply
+[ux-design-principles.md](../references/ux-design-principles.md) — states
+per screen, error recovery, primary-action rules — when writing Expected
+results and Errors & recovery.
 
 ## The hard rule
 

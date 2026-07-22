@@ -22,7 +22,17 @@ WITH its chain — load the traced story's acceptance criteria (Given/When/
 Then) as additional checks, and note whether the implementation actually
 serves the job and journey stage, not just renders the elements. A flow
 whose buttons all exist but whose job outcome is unreachable is PARTIAL at
-best.
+best. When `docs/ux/flows.md` exists, also verify the code implements the
+flow diagram: every node reachable, every edge (including error edges)
+wired, screen states from the flow's table present — unimplemented
+nodes/edges are findings on the traced scenarios.
+
+**Heuristic pass (optional, scope `heuristics`):** walk implemented flows
+against PRN-01..16 from
+[ux-design-principles.md](../references/ux-design-principles.md); record
+violations `[PRN-NN] (severity) node — issue -> fix`. Complements the
+practices pass (`BP-NNN`); same suggestion semantics unless the violation
+breaks a scenario (then it's a normal finding).
 
 ## Evidence discipline (non-negotiable)
 

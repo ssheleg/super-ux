@@ -11,6 +11,8 @@ any number of times, at any project stage.
 - Hard rule in project `CLAUDE.md`? (heading `## UX scenarios — hard rule (super-ux)`)
 - `docs/ux/foundation.md`? If yes: counts of personas / JTBD / journeys /
   stories by status.
+- `docs/ux/flows.md`? If yes: flow count, `inferred` vs confirmed, stories
+  without flows.
 - `docs/ux/scenarios.md`? If yes: scenario counts by status, features,
   `Traces` filled or not, `Last audit` values.
 - Latest report in `docs/ux/audits/` (date, totals, open findings).
@@ -36,26 +38,31 @@ user pick (multiple allowed). Full catalog:
    when foundation is missing/empty.
 2. **Update foundation** — `ux-foundation` Update — when user knowledge
    changed.
-3. **Build/extend scenarios** — `ux-scenarios` Init or Update — when
-   scenarios missing, or stories lack scenario coverage.
-4. **Validate the chain** — `ux-scenarios` Validate (+ `ux-foundation`
+3. **Design user flows** — `ux-flows` Design/Reverse — when stories exist
+   without flows, or an existing product has no flows.md.
+4. **Improve existing UX** — `ux-flows` Improve — heuristic evaluation
+   (PRN-01..16) of current flows → traced before/after redesign proposals.
+5. **Build/extend scenarios** — `ux-scenarios` Init or Update — when
+   scenarios missing, or flows/stories lack scenario coverage.
+6. **Validate the chain** — `ux-scenarios` Validate (+ `ux-foundation`
    Validate) — before building a new feature, or when traceability is
    doubtful.
-5. **Audit code vs scenarios** — `ux-audit` (all / feature:X) — when
-   validated scenarios were never audited, or code changed since the last
-   audit.
-6. **Coverage audit** — `ux-audit` scope `coverage` — orphan
-   stories/scenarios, journey gaps.
-7. **Best-practices review** — `ux-audit` practices pass: check scenarios
-   and implementation against the tagged best-practices catalog; missed
-   applicable practices become suggestions (`BP-NNN`).
-8. **Plan fixes** — turn the latest audit's FAIL/PARTIAL findings into a
-   prioritized work plan (Frequency × Severity × Solvability) via the
-   project's planning workflow.
-9. **Nothing** — everything green; rerun `/ux` after the next change.
+7. **Audit code vs scenarios & flows** — `ux-audit` (all / feature:X) —
+   when validated scenarios were never audited, or code changed since the
+   last audit.
+8. **Coverage audit** — `ux-audit` scope `coverage` — orphan
+   stories/flows/scenarios, journey gaps.
+9. **Best-practices / heuristics review** — `ux-audit` scope `practices` or
+   `heuristics`: tagged catalog (`BP-NNN`) and principles (`PRN-NN`)
+   suggestions.
+10. **Plan fixes** — turn the latest audit's FAIL/PARTIAL findings into a
+    prioritized work plan (Frequency × Severity × Solvability) via the
+    project's planning workflow.
+11. **Nothing** — everything green; rerun `/ux` after the next change.
 
 Recommend exactly one action as the default (mark it "recommended"), based
-on the state: no foundation → 1; foundation but no scenarios → 3; drafts
-pending → validate/review; never audited or stale → 5; open findings → 8.
+on the state: no foundation → 1; stories without flows → 3; flows without
+scenarios → 5; drafts pending → validate/review; never audited or stale →
+7; open findings → 10; user said "UX плохой/improve" → 4.
 
 Additional context from the user: $ARGUMENTS

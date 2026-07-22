@@ -4,6 +4,30 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-07-23
+
+### Added
+
+- **ux-flows skill** — the HOW layer (`docs/ux/flows.md`): task analysis →
+  mermaid user flows (screens, explicit branches, recoverable error edges,
+  all entry points) → screen/state tables → optional ASCII wireframes and
+  storyboards. Workflows: Design (forward), Reverse (backwards mode for
+  existing products, `inferred` tags with file:line evidence), Update,
+  Improve (heuristic evaluation → traced before/after redesign proposals).
+- **ux-design-principles.md** — the agent's thinking playbook: the 7-step
+  pipeline (research → define → structure → specify → visualize → build →
+  verify) with forward and backwards modes, task-analysis method, flow and
+  screen rules, heuristics PRN-01..10 (after Nielsen) and cognitive
+  principles PRN-11..16 with audit questions, the improvement procedure,
+  wireframe/storyboard conventions, anti-patterns.
+- **ux-contract v3** — scenarios become use cases: steps as `user action ->
+  system response`, new `Alt paths` field, `Traces` includes `FLW-NN`;
+  traceability now covers flows (every node and edge needs a scenario).
+- `ux-audit`: verifies code against flow diagrams (nodes reachable, edges
+  wired, states present); new `heuristics` scope (`[PRN-NN]` findings).
+- `/ux-flows` command; `/ux` menu grows to 11 actions including "Improve
+  existing UX"; `/ux-init` now chains foundation → flows → scenarios.
+
 ## [0.7.0] - 2026-07-20
 
 ### Added
