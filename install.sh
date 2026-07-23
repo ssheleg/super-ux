@@ -50,7 +50,7 @@ for rule in "$SRC"/cursor/rules/*.mdc; do
 done
 
 mkdir -p "$TARGET/docs/ux/audits"
-for tpl in scenarios foundation flows screens; do
+for tpl in scenarios foundation flows screens README; do
   if [ -f "$TARGET/docs/ux/$tpl.md" ]; then
     echo "keep:    $TARGET/docs/ux/$tpl.md exists (never overwritten)"
   else
@@ -58,5 +58,9 @@ for tpl in scenarios foundation flows screens; do
     echo "seed:    $TARGET/docs/ux/$tpl.md"
   fi
 done
+
+# The linter is code, not a template — refresh it to the shipped version.
+cp "$SRC/plugins/super-ux/scripts/ux_lint.py" "$TARGET/docs/ux/lint.py"
+echo "sync:    $TARGET/docs/ux/lint.py"
 
 echo "done: $installed installed, $skipped skipped"

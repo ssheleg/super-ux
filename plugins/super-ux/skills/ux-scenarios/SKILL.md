@@ -5,6 +5,11 @@ description: Use when creating or updating UX scenarios, starting ANY new featur
 
 # ux-scenarios — Maintain the Scenario Base
 
+> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> for the whole pipeline and the four sync rules. After changes, run the
+> linter (`python3 docs/ux/lint.py`).
+
+
 AI-generated interfaces go bad when UI is built without a model of user
 behavior. This skill keeps one: `docs/ux/scenarios.md` in the target project
 is the source of truth for everything the user can do, see, and hit — every

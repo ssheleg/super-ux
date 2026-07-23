@@ -37,7 +37,9 @@ flowchart LR
 | skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: use-case scenarios (action → system response, alt paths) covering every flow node/edge, `Traces:` to stories and flows, validated for conflicts, coverage, and traceability |
 | skill `ux-audit` | Batched audit loop with full context: code vs every scenario + its story's acceptance criteria; verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence; `coverage` scope audits the chain itself |
 | `/ux` | **The one command**: sets up whatever is missing, then status across all layers + a menu of applicable actions with one recommended default. Idempotent |
-| `/ux-foundation` `/ux-flows` `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` | Direct controls; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
+| `docs/ux/lint.py` + `/ux-lint` | Deterministic linter: missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, ID gaps, broken links — run after changes and in CI so drift can't merge |
+| [system-map.md](plugins/super-ux/skills/references/system-map.md) | The whole system on one page — pipeline, files, skills, and the four sync rules; every skill points here |
+| `/ux-foundation` `/ux-flows` `/ux-init` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` | Direct controls; `/ux-rule` installs the hard rule into the project's CLAUDE.md |
 | [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward + backwards), task analysis, flow rules, heuristics PRN-01..16, improvement procedure, anti-patterns |
 | `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + three agent-requested rules) |
 | `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |

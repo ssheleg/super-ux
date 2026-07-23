@@ -49,13 +49,16 @@ Routing table (user's words → action from the menu below):
 - `docs/ux/scenarios.md`? If yes: scenario counts by status, features,
   `Traces` filled or not, `Last audit` values.
 - Latest report in `docs/ux/audits/` (date, totals, open findings).
+- **Run the linter** `python3 docs/ux/lint.py` and fold its errors/warnings
+  into the status — it is the fastest, deterministic read of what's stale,
+  drifted, or missing (lost Figma frames, broken traces, orphans).
 
 ## 2. Repair silently (no menu needed for these)
 
 - Rule missing → install it (as `/ux-rule`).
 - `docs/ux/` missing → create skeleton (seed `scenarios.md`,
-  `foundation.md`, `flows.md`, and `screens.md` from the plugin templates;
-  `audits/` dir).
+  `foundation.md`, `flows.md`, `screens.md`, `README.md`; copy `lint.py`;
+  `audits/` dir) — as `/ux-rule` does.
 
 ## 3. Status report
 

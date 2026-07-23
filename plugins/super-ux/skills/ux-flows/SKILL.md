@@ -5,6 +5,11 @@ description: Use when designing or improving HOW users move through the product 
 
 # ux-flows — Design HOW Users Move
 
+> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> for the whole pipeline and the four sync rules. After changes, run the
+> linter (`python3 docs/ux/lint.py`).
+
+
 Turns user stories into user flows AND maintains the UI map: task analysis →
 flow diagram (mermaid) → the screen registry `screens.md` (every screen and
 state with Figma frame, wireframe, coverage, resources) → optional

@@ -4,6 +4,30 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-07-23
+
+### Added
+
+- **Deterministic linter** (`plugins/super-ux/scripts/ux_lint.py`, seeded
+  into projects as `docs/ux/lint.py`, run via `/ux-lint` or
+  `python3 docs/ux/lint.py`) — turns the prose rules into a check that
+  fails: missing Figma frames per screen state (when Figma enabled),
+  flows referencing non-existent `SCR-IDs`, unresolved scenario traces,
+  must/should stories without scenarios, `built` screens without coverage,
+  index↔entry desync, duplicate/gapped IDs, orphan screens, broken relative
+  links. Stdlib-only, tolerant parsing (strips HTML comments so template
+  examples never false-positive), exit codes 0/1/2, `--strict`. Wired into
+  the hard rule, `/ux` inspect, and every skill's "run the linter after
+  changes" pointer; recommended for CI/pre-commit.
+- **System map** (`references/system-map.md`) — the whole pipeline, files,
+  skills, and the four sync rules (chain-first, same-change, no-drift,
+  run-the-linter) on one page; every SKILL.md opens with a pointer to it so
+  an agent entering from any trigger sees the whole system. A project-facing
+  copy (`templates/README.md` → `docs/ux/README.md`) is seeded too.
+- Installers (`install.sh`, `bin/super-ux.js`), `/ux-rule`, and `/ux`
+  repair now seed `docs/ux/README.md` and refresh `docs/ux/lint.py`. The
+  plugin validator compiles the linter.
+
 ## [0.14.0] - 2026-07-23
 
 ### Added

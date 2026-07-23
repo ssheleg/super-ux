@@ -75,7 +75,7 @@ function installCursor(target, force) {
   }
 
   fs.mkdirSync(path.join(target, 'docs', 'ux', 'audits'), { recursive: true });
-  for (const tpl of ['scenarios', 'foundation', 'flows', 'screens']) {
+  for (const tpl of ['scenarios', 'foundation', 'flows', 'screens', 'README']) {
     const dst = path.join(target, 'docs', 'ux', `${tpl}.md`);
     if (fs.existsSync(dst)) {
       console.log(`keep:    ${dst} exists (never overwritten)`);
@@ -84,6 +84,10 @@ function installCursor(target, force) {
       console.log(`seed:    ${dst}`);
     }
   }
+  // The linter is code, not a template — refresh it to the shipped version.
+  const lintDst = path.join(target, 'docs', 'ux', 'lint.py');
+  fs.copyFileSync(path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py'), lintDst);
+  console.log(`sync:    ${lintDst}`);
 
   console.log(`done: ${installed} installed, ${skipped} skipped`);
 }

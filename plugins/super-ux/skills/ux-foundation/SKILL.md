@@ -5,6 +5,12 @@ description: Use when defining or revising WHO the users are and WHY they use th
 
 # ux-foundation — The WHY Layer
 
+> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> for the whole pipeline (foundation → flows → screens → scenarios → audits
+> → plans) and the four sync rules. After changes, run the linter
+> (`python3 docs/ux/lint.py`).
+
+
 Interfaces fail when built without knowing WHO uses them and WHY. This skill
 maintains `docs/ux/foundation.md`: **Personas → Jobs to Be Done → Customer
 journeys → User stories.** Scenarios (`ux-scenarios` skill) are built on top

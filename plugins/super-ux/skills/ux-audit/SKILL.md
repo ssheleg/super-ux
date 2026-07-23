@@ -5,6 +5,12 @@ description: Use when verifying the codebase against the UX scenario base - runs
 
 # ux-audit — Scenario Audit Loop
 
+> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> for the whole pipeline and the four sync rules. Start any audit by running
+> the linter (`python3 docs/ux/lint.py`) — it catches structural drift for
+> free before the code-tracing passes.
+
+
 Verify that the code actually delivers every scenario in
 `docs/ux/scenarios.md`: every step reachable, every button present, every
 state handled, every error honest. Output: a versioned report in

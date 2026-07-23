@@ -31,6 +31,8 @@ twice.
      when Figma is enabled (default) — the UI is mocked up in Figma with
      every screen linked to its frame. Building UI before this is the exact
      mistake super-ux exists to prevent.
+   - After any UX change and before calling the work done, run the linter
+     `python3 docs/ux/lint.py` — it must pass (wire it into CI/pre-commit).
    - Use `/ux` as the entry point; skills: `ux-foundation`, `ux-flows`
      (flows + Figma mockups), `ux-scenarios` for maintenance, `ux-audit`
      for evidence-backed verification.
@@ -40,9 +42,14 @@ twice.
    above, replace the block with this version (it supersedes older ones).
 
 2. If `docs/ux/scenarios.md` does not exist, create `docs/ux/` (including
-   `audits/`) and seed `scenarios.md`, `foundation.md`, `flows.md`, and
-   `screens.md` from the plugin's `templates/`. Never overwrite existing
-   files.
+   `audits/`) and seed `scenarios.md`, `foundation.md`, `flows.md`,
+   `screens.md`, and `README.md` from the plugin's `templates/`. Never
+   overwrite existing files.
 
-3. Report what was installed and suggest `/ux` next if the base is still
+3. Copy the linter to `docs/ux/lint.py` from the plugin's
+   `scripts/ux_lint.py` (refresh it even if present — it's code, not user
+   content). Suggest wiring `python3 docs/ux/lint.py` into the project's CI
+   or pre-commit.
+
+4. Report what was installed and suggest `/ux` next if the base is still
    empty.
