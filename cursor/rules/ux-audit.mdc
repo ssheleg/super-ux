@@ -31,4 +31,9 @@ verdict BLOCKED with the exact reason. Never guess, never a courtesy PASS.
    verdicts with evidence, findings-register table.
 6. Update the base: `Last audit` = `YYYY-MM-DD VERDICT`; validated →
    implemented where PASSed. Do not edit scenario content during an audit.
-7. Offer (don't auto-run) to turn FAIL/PARTIAL findings into a work plan.
+7. With user's go-ahead produce `docs/ux/plans/YYYY-MM-DD-<scope>.md`:
+   target interface per affected screen (elements, states, behavior) +
+   CREATE/MODIFY/DELETE change table, every row traced to
+   scenario/flow/finding IDs, prioritized Frequency × Severity ×
+   Solvability. Then offer autonomous execution via the project's task
+   pipeline; the plan must be executable without the conversation.

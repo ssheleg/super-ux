@@ -55,9 +55,11 @@ user pick (multiple allowed). Full catalog:
 9. **Best-practices / heuristics review** — `ux-audit` scope `practices` or
    `heuristics`: tagged catalog (`BP-NNN`) and principles (`PRN-NN`)
    suggestions.
-10. **Plan fixes** — turn the latest audit's FAIL/PARTIAL findings into a
-    prioritized work plan (Frequency × Severity × Solvability) via the
-    project's planning workflow.
+10. **Plan fixes** — produce `docs/ux/plans/YYYY-MM-DD-<scope>.md` from the
+    latest audit/Improve results: target interface per screen +
+    CREATE/MODIFY/DELETE change table, every row traced, prioritized
+    Frequency × Severity × Solvability; then offer autonomous execution
+    (task-pipeline plugin if installed, else superpowers writing-plans).
 11. **Nothing** — everything green; rerun `/ux` after the next change.
 
 Recommend exactly one action as the default (mark it "recommended"), based

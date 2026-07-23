@@ -78,9 +78,14 @@ Follow the improvement procedure in the principles doc, strictly:
 3. Redesign proposals: trace to a pain/job/story; cite `PRN-NN`/`BP-NNN`;
    show flow before → after (two mermaid diagrams); state the expected
    observable effect. No untraced "make it nicer" changes.
-4. Prioritize Frequency × Severity × Solvability; approved proposals become
-   flow Updates + scenario updates + a plan via the project's planning
-   workflow.
+4. Approved proposals land in THREE places, same session: flow Updates
+   (+ scenario cascade) AND a concrete UX plan
+   (`docs/ux/plans/YYYY-MM-DD-<scope>.md`, contract format): target
+   interface per screen + CREATE/MODIFY/DELETE table, every row traced,
+   prioritized Frequency × Severity × Solvability.
+5. Offer autonomous execution of the plan: task-pipeline plugin
+   (`/task-pipeline` on the plan file) if installed, else superpowers
+   writing-plans → subagent-driven execution.
 
 ## Definition of done
 

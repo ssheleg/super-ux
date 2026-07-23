@@ -27,6 +27,15 @@ follow [SemVer](https://semver.org/spec/v2.0.0.html).
   wired, states present); new `heuristics` scope (`[PRN-NN]` findings).
 - `/ux-flows` command; `/ux` menu grows to 11 actions including "Improve
   existing UX"; `/ux-init` now chains foundation → flows → scenarios.
+- **UX plans** (`docs/ux/plans/YYYY-MM-DD-<scope>.md`) — the actionable
+  output of audits and Improve passes: target interface per affected screen
+  (elements, one primary action, states, behavior notes) + a
+  CREATE/MODIFY/DELETE change table where every row traces to
+  scenario/flow/finding/principle IDs, prioritized by Frequency × Severity
+  × Solvability, with a Definition of Done and an autonomous-execution
+  handoff (task-pipeline plugin if installed, else superpowers
+  writing-plans). Plans are written to be executable without the
+  originating conversation.
 
 ## [0.7.0] - 2026-07-20
 

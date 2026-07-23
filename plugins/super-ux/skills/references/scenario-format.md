@@ -14,8 +14,10 @@ docs/ux/
 ├── flows.md                  # HOW: task analysis + user flows (mermaid) + screen states
 ├── scenarios.md              # WHAT: use-case scenarios (source of truth for behavior)
 ├── wireframes/               # optional: low-fi ASCII wireframes / storyboards per flow
-└── audits/
-    └── YYYY-MM-DD[-scope].md # EVIDENCE: one report per audit run
+├── audits/
+│   └── YYYY-MM-DD[-scope].md # EVIDENCE: one report per audit run
+└── plans/
+    └── YYYY-MM-DD-<scope>.md # ACTION: concrete UX plan (target UI + change list)
 ```
 
 The chain: **Personas → Jobs (JTBD) → Journeys → User stories → Flows →
@@ -288,5 +290,57 @@ stories, personas unused. Same report format; findings reference layer IDs.
 
 - Update `Last audit` in `scenarios.md` (`YYYY-MM-DD VERDICT`).
 - Flip `validated` → `implemented` where the audit confirmed coverage.
-- Offer to turn FAIL/PARTIAL findings into a prioritized fix plan via the
-  project's planning workflow.
+- Offer to turn FAIL/PARTIAL findings into a UX plan (next section).
+
+## UX plan — `docs/ux/plans/YYYY-MM-DD-<scope>.md`
+
+The actionable output of an audit or an Improve pass: what the interface
+must become, and exactly what to create / modify / delete. Written so an
+autonomous agent can execute it without this conversation.
+
+```markdown
+# UX Plan — <scope> — YYYY-MM-DD
+
+- **Sources:** audits/YYYY-MM-DD.md findings AUD-…; Improve proposals; FLW-…
+- **Goal:** <observable user outcome when done>
+
+## Target interface
+
+One section per affected screen:
+
+### Screen: <name> (FLW-01)
+- **Purpose:** <job step this screen serves>
+- **Elements:** <each element; mark the ONE primary action>
+- **States:** loading -> <what shows>; empty -> <…>; error -> <…>; success -> <…>
+- **Behavior notes:** <validation, feedback, undo/confirm rules>
+- **Wireframe:** wireframes/FLW-01.md (when present)
+
+## Changes
+
+| # | Action | Object | Details | Traces | Priority |
+|---|--------|--------|---------|--------|----------|
+| 1 | CREATE | empty state on Projects screen | prompt + "Create project" CTA | SCN-002, AUD-…-01, PRN-01 | P1 |
+| 2 | MODIFY | src/onboarding/Wizard.tsx | preserve input on save failure | SCN-001, PRN-09 | P1 |
+| 3 | DELETE | screen "Advanced setup" | serves no job (coverage audit) | JTBD orphan | P2 |
+
+## Execution order
+
+P1 first, ordered by Frequency × Severity × Solvability; note dependencies.
+
+## Definition of done
+
+- Every change lands with its scenario updated in the same change.
+- Post-implementation `/ux-audit <scope>` verdict PASS on traced scenarios.
+
+## Handoff
+
+Execute autonomously with the project's pipeline: task-pipeline plugin
+(`/task-pipeline` on this file) if installed, else superpowers
+writing-plans → subagent-driven execution.
+```
+
+Rules: `Action` ∈ CREATE / MODIFY / DELETE; every row traces to scenario /
+flow / finding / principle IDs — an untraced change doesn't enter the plan;
+paths named where known, screens named otherwise; DELETE rows carry the
+reason. The plan supersedes nothing: scenarios/flows stay the source of
+truth and are updated by the implementation, same-change rule.

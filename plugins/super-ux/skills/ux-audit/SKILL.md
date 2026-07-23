@@ -73,13 +73,17 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
 6. **Update the base.** `Last audit` column (`YYYY-MM-DD VERDICT`) for every
    audited scenario; flip `validated` → `implemented` where the audit
    PASSed; never touch scenario content itself during an audit.
-7. **Offer planning handoff.** Offer — don't auto-run — to turn FAIL/PARTIAL
-   findings into a work plan via the project's planning workflow
-   (superpowers writing-plans, task-pipeline, or the user's framework of
-   choice). Prioritize findings by Frequency × Severity × Solvability (how
-   many users/scenarios hit it × how badly it breaks the job × how cheaply
-   it's fixed); the plan fixes the worst user damage first, not the easiest
-   diff.
+7. **Produce the UX plan.** With the user's go-ahead, turn FAIL/PARTIAL
+   findings into `docs/ux/plans/YYYY-MM-DD-<scope>.md` per the contract's
+   UX-plan format: target interface per affected screen (elements, states,
+   behavior) + a CREATE/MODIFY/DELETE change table where every row traces
+   to scenario/flow/finding/principle IDs, prioritized by Frequency ×
+   Severity × Solvability (worst user damage first, not the easiest diff).
+8. **Offer autonomous execution.** Point at the plan file and offer — don't
+   auto-run — the project's pipeline: task-pipeline plugin
+   (`/task-pipeline` on the plan) if installed, else superpowers
+   writing-plans → subagent-driven execution. The plan is written to be
+   executable without this conversation.
 
 ## Optional practices pass
 

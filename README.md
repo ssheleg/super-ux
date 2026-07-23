@@ -121,8 +121,10 @@ rules after a new release.
    batched verification of code vs scenarios (with acceptance criteria);
    `/ux-audit coverage` — chain gaps. Reports land in
    `docs/ux/audits/YYYY-MM-DD.md`.
-4. Findings become a prioritized fix plan (Frequency × Severity ×
-   Solvability) via your planning workflow; build; repeat.
+4. Findings become a concrete UX plan (`docs/ux/plans/…`): target interface
+   per screen + traced CREATE/MODIFY/DELETE change table, prioritized by
+   Frequency × Severity × Solvability — offered for autonomous execution
+   via task-pipeline (or your planning workflow); build; repeat.
 
 ## Development
 
