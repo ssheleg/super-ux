@@ -94,7 +94,7 @@ npx skills add ssheleg/super-ux --skill ux-audit   # one skill
 
 [vercel-labs/skills](https://github.com/vercel-labs/skills) discovers the
 skills through this repo's marketplace manifest and installs them for Claude
-Code, Cursor, Codex, OpenCode and others. Note: this installs the two skills
+Code, Cursor, Codex, OpenCode and others. Note: this installs the skills
 only — the `/ux` commands and the Cursor always-on hard rule come with the
 methods below.
 
@@ -117,9 +117,31 @@ npx super-ux --cursor /path/to/your/project
 
 (also works: `npx github:ssheleg/super-ux --cursor <dir>` straight from the
 repo, or clone and run `./install.sh --cursor <dir>` — same behavior.) Copies the
-three rules into `.cursor/rules/` and seeds `docs/ux/scenarios.md`. An
-existing scenario base is never overwritten; re-run with `--force` to update
-rules after a new release.
+rules into `.cursor/rules/` and seeds `docs/ux/`. An existing scenario base
+is never overwritten; re-run with `--force` to update rules after a new
+release.
+
+### Updating everything
+
+Global channels (run after each release, then restart the Claude Code
+session so the plugin reloads):
+
+```sh
+claude plugin marketplace update super-ux && \
+claude plugin update super-ux@super-ux && \
+npx --yes skills update ux-audit ux-flows ux-foundation ux-scenarios --global --yes
+```
+
+Cursor rules + the seeded `docs/ux/lint.py` are per-project (Cursor has no
+global rules dir) — refresh each project you use:
+
+```sh
+npx super-ux@latest --cursor /path/to/your/project --force
+```
+
+`--force` overwrites the rule files and the linter; your scenario base
+(`docs/ux/scenarios.md`) and the rest of `docs/ux/` are never touched.
+Check the published version any time with `npm view super-ux version`.
 
 ## For the user: one command, plain words
 
