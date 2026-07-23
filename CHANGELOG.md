@@ -4,6 +4,27 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-07-23
+
+### Added
+
+- **Catalog expansion from verified sources** (BP-049..BP-066, 18 entries):
+  mobile interfaces (thumb-zone placement, platform tap-target sizes with
+  the WCAG 2.2 24px floor, gesture affordances, visible navigation, current
+  platform design languages — Apple HIG/Liquid Glass 2025, Material 3
+  Expressive — motion-as-feedback); web apps & forms (Baymard-backed field
+  minimization, guest-first flows, address automation, INP ≤200ms feedback
+  budgets, WCAG 2.2 AA baseline); voice & conversational (tiered
+  confirmations, echo-what-was-heard error recovery, barge-in, deviation
+  tolerance, multimodal pairing, short latency-cued turns, honest AI
+  limits). Tag taxonomy extended: voice, ai-chat, web, android, forms,
+  checkout, navigation, accessibility, performance, feedback,
+  error-recovery.
+- **Plain-language routing in `/ux`**: the user never needs to know skills
+  or layers — step 0 asks one everyday-words question (or reads
+  `$ARGUMENTS`) and maps intent to the right workflow via a routing table;
+  README gains a "one command, plain words" section.
+
 ## [0.8.0] - 2026-07-23
 
 ### Added

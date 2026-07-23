@@ -107,6 +107,15 @@ three rules into `.cursor/rules/` and seeds `docs/ux/scenarios.md`. An
 existing scenario base is never overwritten; re-run with `--force` to update
 rules after a new release.
 
+## For the user: one command, plain words
+
+You don't need to know the layers or skills. Run `/ux` and say what you
+want in your own words — "стартуем новый продукт", "добавить фичу", "UX
+неудобный, улучши", "проверь что всё работает", "что чинить в первую
+очередь". The agent asks at most one clarifying question, picks the right
+workflow itself, and only shows you human decisions (approve scenarios,
+pick a plan). Everything below this line is internals for the agent.
+
 ## Typical cycle
 
 1. `/ux` — first run sets everything up: foundation first (greenfield:

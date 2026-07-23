@@ -2,9 +2,31 @@
 description: Single entry point for all UX work — status across foundation/scenarios/audits, then a menu of applicable actions (init, update, validate, audit, plan fixes)
 ---
 
-Single entry point for super-ux. Never ask which mode — inspect first, then
-present a status and a menu of applicable actions. Idempotent: safe to run
-any number of times, at any project stage.
+Single entry point for super-ux. The user is NOT expected to know the
+skills, layers, or commands inside this plugin — routing is your job.
+Idempotent: safe to run any number of times, at any project stage.
+
+## 0. Understand the task (before anything technical)
+
+If `$ARGUMENTS` already states the task, map it via the routing table and
+skip the question. Otherwise ask ONE plain question — "What do you want to
+get done with the product's UX?" — with a few examples in everyday words
+(new product, new feature, "the UX feels bad", "check that everything
+works", "make a fix plan"). Never ask the user to choose between skills or
+layers — that vocabulary is internal.
+
+Routing table (user's words → action from the menu below):
+
+| User says (any language) | Route to |
+|---|---|
+| new product / стартуем проект / "с нуля" | 1 then 3 then 5 (full chain init) |
+| new feature / новая фича / "хочу добавить X" | 6 (validate idea vs chain) then 3/5 for the new parts |
+| "UX плохой", "неудобно", improve/redesign | 4 (Improve) |
+| "проверь что всё работает", audit, "прогони по сценариям" | 7 |
+| "чего не хватает", gaps, coverage | 8 |
+| "как лучше по практикам", best practices | 9 |
+| "что чинить в первую очередь", план | 10 |
+| don't know / "просто посмотри" | run 1–3 of Inspect, recommend from state |
 
 ## 1. Inspect state
 

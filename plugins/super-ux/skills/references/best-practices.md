@@ -14,19 +14,24 @@ attribution. Keep entries under ~6 lines.
 ## Tag taxonomy
 
 - **Stage:** `onboarding` `paywall` `pricing` `post-paywall` `retention`
-  `lifecycle` `winback` `analytics` `testing`
+  `lifecycle` `winback` `analytics` `testing` `checkout` `navigation`
 - **Mechanism:** `personalization` `social-proof` `commitment` `scarcity`
   `anchoring` `friction-reduction` `habit` `reward` `segmentation`
-  `attribution` `activation`
-- **Domain:** `subscription-app` `mobile` `ios` `freemium` `email` `push`
-  `widgets`
+  `attribution` `activation` `feedback` `error-recovery`
+- **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
+  `email` `push` `widgets` `voice` `ai-chat` `forms`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
-  `insight`
+  `insight` `accessibility` `performance`
 
 ## Practices
 
 Source key: **[48Laws]** = "48 Laws of Subscription App Success" (Botsi,
-2025).
+2025); **[HIG]** = Apple Human Interface Guidelines (2025, Liquid Glass era);
+**[M3]** = Material Design 3 / M3 Expressive (Google, 2025); **[NNg]** =
+Nielsen Norman Group research; **[Baymard]** = Baymard Institute large-scale
+usability testing (2025); **[WCAG]** = WCAG 2.2 (W3C, Level AA); **[webdev]**
+= web.dev Core Web Vitals; **[VUI]** = converged voice-interface guidance
+(Amazon/Google conversation-design checklists, 2024–2026).
 
 ### Onboarding & early experience
 
@@ -371,3 +376,135 @@ Source key: **[48Laws]** = "48 Laws of Subscription App Success" (Botsi,
 - **Apply when:** personalization runs on onboarding answers for more than a few weeks.
 - **Tags:** personalization, segmentation, analytics, retention
 - **Source:** [48Laws] L48
+
+### Mobile interfaces
+
+#### BP-049: Primary actions in the thumb zone
+- **Do:** put primary destinations and actions in a bottom tab bar (3–5 items, icon + label); keep destructive/rare actions out of the easy-reach zone.
+- **Why:** one-handed grip reaches bottom-center comfortably, top corners poorly (Hoober's grip research); bottom placement cuts interaction cost.
+- **Apply when:** any mobile app navigation or primary-action placement.
+- **Tags:** mobile, navigation, friction-reduction, engagement
+- **Source:** [NNg]/[M3]/[HIG]
+
+#### BP-050: Tap targets — platform sizes, WCAG floor
+- **Do:** 44×44 pt (iOS) / 48×48 dp (Android) for interactive elements; never below 24×24 CSS px or equivalent spacing (WCAG 2.2 SC 2.5.8, Level AA).
+- **Why:** small targets cause mis-taps and are an accessibility failure, not a style choice.
+- **Apply when:** every interactive element; audits check the floor.
+- **Tags:** mobile, web, accessibility, friction-reduction
+- **Source:** [HIG]/[M3]/[WCAG]
+
+#### BP-051: Never gesture-only for critical actions
+- **Do:** gestures are accelerators, not the only path: every gesture-reachable action has a visible alternative; gesture hints (chevrons, swipe affordances) where gestures matter.
+- **Why:** gestures are invisible — users must know, remember, and execute them; hidden-only interactions kill discoverability.
+- **Apply when:** swipe-to-delete, pull-to-refresh, long-press menus, custom gestures.
+- **Tags:** mobile, navigation, friction-reduction, accessibility
+- **Source:** [NNg]
+
+#### BP-052: Visible navigation beats hidden
+- **Do:** expose primary navigation (tabs, visible labels); hamburger/overflow menus only for secondary content.
+- **Why:** NN/g repeatedly shows hidden navigation drops content discoverability — users assume unseen features don't exist.
+- **Apply when:** information architecture of any app or site.
+- **Tags:** mobile, web, navigation, engagement, insight
+- **Source:** [NNg]
+
+#### BP-053: Follow the platform's current design language
+- **Do:** iOS: clarity/deference/depth, floating adaptive controls, concentric rounded geometry (Liquid Glass era); Android: M3 Expressive — containment in rounded surfaces to group related elements, spring-based motion for feedback, emphasized type scale for hierarchy. Deviate only where the job demands it.
+- **Why:** platform-native patterns are what users already know (Jakob's law), and OS-level components carry accessibility/motion behavior for free.
+- **Apply when:** building or restyling native mobile UI.
+- **Tags:** mobile, ios, android, trust, engagement
+- **Source:** [HIG]/[M3]
+
+#### BP-054: Motion as feedback, not decoration
+- **Do:** animate to confirm actions, show state changes, and direct attention (spring/physical motion, ≤300ms for common transitions); honor reduced-motion settings.
+- **Why:** motion that communicates status supports PRN-01; motion that merely decorates adds latency and vestibular problems.
+- **Apply when:** any transition/animation decision.
+- **Tags:** mobile, web, feedback, accessibility, engagement
+- **Source:** [M3]/[HIG]
+
+### Web apps, forms & performance
+
+#### BP-055: Minimize form fields, ask only what the job needs
+- **Do:** cut every field not required to complete the job; single-column layout; sensible input types and autocomplete attributes.
+- **Why:** checkout complexity alone makes ~18% of users abandon; each field is friction with measurable cost.
+- **Apply when:** any form — signup, checkout, settings.
+- **Tags:** forms, web, mobile, checkout, friction-reduction, conversion
+- **Source:** [Baymard]
+
+#### BP-056: Guest path first, account later
+- **Do:** make guest checkout/usage the most prominent option; offer account creation AFTER the job is done (one tap, data already collected).
+- **Why:** forced account creation is a top abandonment cause; half of e-commerce sites still bury the guest option.
+- **Apply when:** any flow where an account is not strictly required to deliver value.
+- **Tags:** checkout, forms, conversion, friction-reduction, web
+- **Source:** [Baymard]
+
+#### BP-057: Automate address & location input
+- **Do:** autocomplete address lookup; autodetect city/region from postal code; never make users type what the system can infer.
+- **Why:** majority of mobile sites still lack it; typing structured data on mobile is error-prone friction.
+- **Apply when:** any address/location collection.
+- **Tags:** forms, checkout, mobile, friction-reduction, conversion
+- **Source:** [Baymard]
+
+#### BP-058: Respond within perception budgets
+- **Do:** visible response to any interaction ≤200ms (INP "good"); skeletons/progress for longer work; optimistic UI where safe.
+- **Why:** INP is measured on every interaction — slow feedback reads as "broken", and Core Web Vitals gate search visibility at the 75th percentile.
+- **Apply when:** web apps and hybrid views; audits treat >200ms uncued waits as findings.
+- **Tags:** web, performance, feedback, conversion
+- **Source:** [webdev]
+
+#### BP-059: WCAG 2.2 AA as the baseline, not the stretch goal
+- **Do:** contrast ≥4.5:1 text, visible focus states, full keyboard paths, labels tied to inputs, target-size floor (BP-050), no info by color alone; test with a screen reader on key flows.
+- **Why:** accessibility failures exclude users and are increasingly a legal exposure; retrofitting costs more than building in.
+- **Apply when:** every scenario's UI elements; heuristic audits include it.
+- **Tags:** web, mobile, accessibility, trust
+- **Source:** [WCAG]
+
+### Voice & conversational interfaces
+
+#### BP-060: Tiered confirmations by risk
+- **Do:** explicit confirmation only for sensitive/irreversible actions (payments, deletions, bookings); implicit short acknowledgement for routine commands; always an undo path.
+- **Why:** confirming everything adds cognitive load; confirming nothing destroys trust exactly where errors are costly.
+- **Apply when:** designing any voice or chat command set.
+- **Tags:** voice, ai-chat, trust, error-recovery, friction-reduction
+- **Source:** [VUI]
+
+#### BP-061: Error recovery: say what was heard, offer the fix
+- **Do:** on misrecognition, state plainly what the system understood, what went wrong, and one concrete way to fix it; constrained vocabulary for critical commands; context-specific help instead of generic "try again".
+- **Why:** voice errors are invisible — without echoing the system's interpretation the user can't diagnose anything (PRN-09 applied to VUI).
+- **Apply when:** every voice/chat error branch in flows and scenarios.
+- **Tags:** voice, ai-chat, error-recovery, trust
+- **Source:** [VUI]/[NNg]
+
+#### BP-062: Support barge-in and interruption
+- **Do:** let users interrupt TTS/long responses at any time; on interruption stop output immediately, checkpoint dialog state, and treat the interruption as the new intent.
+- **Why:** forcing users to listen to the end violates user control (PRN-03); experienced users know what they want.
+- **Apply when:** any spoken output longer than a short acknowledgement.
+- **Tags:** voice, friction-reduction, engagement
+- **Source:** [VUI]
+
+#### BP-063: Design for deviation, not linear scripts
+- **Do:** every dialog state accepts topic switches, corrections ("no, the other one"), and out-of-scope requests with graceful redirection; never dead-end on "I didn't understand".
+- **Why:** NN/g finds linear-flow bots collapse the moment users deviate — and users always deviate.
+- **Apply when:** conversation design for voice assistants and chatbots.
+- **Tags:** voice, ai-chat, error-recovery, engagement
+- **Source:** [NNg]
+
+#### BP-064: Pair voice with visual state where a screen exists
+- **Do:** on multimodal devices show what was recognized and what's happening on screen while speaking; voice for input speed, screen for confirmation and dense output (lists, comparisons).
+- **Why:** speech is transient and low-bandwidth for output; the screen carries recognition transparency and recall.
+- **Apply when:** voice features in mobile/web apps, smart displays.
+- **Tags:** voice, mobile, web, feedback, trust
+- **Source:** [VUI]
+
+#### BP-065: Keep spoken turns short, latency cued
+- **Do:** one idea per spoken turn, front-load the answer; sub-150ms audio cues to mark turn start/end; fill unavoidable processing gaps with brief, honest status.
+- **Why:** users can't skim audio — long turns overload working memory; uncued silence reads as failure.
+- **Apply when:** writing any TTS/agent response copy.
+- **Tags:** voice, feedback, performance, engagement
+- **Source:** [VUI]
+
+#### BP-066: Show AI limits and control honestly
+- **Do:** in AI-driven interfaces state capability boundaries up front, expose what context the system used, make output editable/regenerable, and keep a human-visible way to verify consequential results.
+- **Why:** trust in conversational AI hinges on context transparency, user control, and clear authority boundaries — overclaiming produces one bad surprise and churn.
+- **Apply when:** any LLM/assistant feature surface.
+- **Tags:** ai-chat, trust, error-recovery, insight
+- **Source:** [NNg]
