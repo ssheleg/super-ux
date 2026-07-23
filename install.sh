@@ -50,7 +50,7 @@ for rule in "$SRC"/cursor/rules/*.mdc; do
 done
 
 mkdir -p "$TARGET/docs/ux/audits"
-for tpl in scenarios foundation flows; do
+for tpl in scenarios foundation flows screens; do
   if [ -f "$TARGET/docs/ux/$tpl.md" ]; then
     echo "keep:    $TARGET/docs/ux/$tpl.md exists (never overwritten)"
   else

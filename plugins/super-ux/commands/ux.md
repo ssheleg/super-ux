@@ -43,6 +43,9 @@ Routing table (user's words → action from the menu below):
   stories by status.
 - `docs/ux/flows.md`? If yes: flow count, `inferred` vs confirmed, stories
   without flows.
+- `docs/ux/screens.md`? If yes: screen count by status
+  (designed/built/drifted), screens missing Figma frames (when Figma on),
+  screens missing coverage.
 - `docs/ux/scenarios.md`? If yes: scenario counts by status, features,
   `Traces` filled or not, `Last audit` values.
 - Latest report in `docs/ux/audits/` (date, totals, open findings).
@@ -51,8 +54,8 @@ Routing table (user's words → action from the menu below):
 
 - Rule missing → install it (as `/ux-rule`).
 - `docs/ux/` missing → create skeleton (seed `scenarios.md`,
-  `foundation.md`, and `flows.md` from the plugin templates; `audits/`
-  dir).
+  `foundation.md`, `flows.md`, and `screens.md` from the plugin templates;
+  `audits/` dir).
 
 ## 3. Status report
 

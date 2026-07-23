@@ -4,6 +4,32 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2026-07-23
+
+### Added
+
+- **UI Screen Registry** (`docs/ux/screens.md`, ux-contract v4) — the
+  canonical design map: one entry per screen with a stable `SCR-NN` id,
+  every state (loading/empty/error/success) carrying its own Figma frame
+  link, plus wireframe, code coverage, scenarios touching it, related
+  UX/UI resources (components, tokens, assets, data deps), and a Status
+  (designed → built → drifted → retired). A Design system block records the
+  Figma library and where tokens/components/assets live in code. Flows now
+  reference screens by `SCR-ID` instead of duplicating specs, so a screen
+  used by many flows is described once.
+- **Same-change update rule extended to the UI**: any interface change must
+  update `screens.md` (and, when Figma is enabled, the Figma frame plus its
+  link) in the same change; code diverging from a screen's record or a
+  stale/broken Figma link is a `drifted` finding. Wired into the hard rule
+  (template, /ux-rule, super-ux.mdc, README), `ux-flows` Update, and
+  `/ux-update`.
+- **Audit drift + coverage** now check code vs the screen registry (states
+  rendered, elements present, coverage accurate → `drifted`), Figma-link
+  presence per state, and registry orphans (screens unused by flows, flows
+  referencing missing SCR-IDs).
+- `ux-flows` owns and maintains `screens.md`; templates, installers
+  (`install.sh`, `bin/super-ux.js`), `/ux` skeleton, and `/ux-rule` seed it.
+
 ## [0.13.0] - 2026-07-23
 
 ### Added

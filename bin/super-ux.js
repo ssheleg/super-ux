@@ -75,7 +75,7 @@ function installCursor(target, force) {
   }
 
   fs.mkdirSync(path.join(target, 'docs', 'ux', 'audits'), { recursive: true });
-  for (const tpl of ['scenarios', 'foundation', 'flows']) {
+  for (const tpl of ['scenarios', 'foundation', 'flows', 'screens']) {
     const dst = path.join(target, 'docs', 'ux', `${tpl}.md`);
     if (fs.existsSync(dst)) {
       console.log(`keep:    ${dst} exists (never overwritten)`);

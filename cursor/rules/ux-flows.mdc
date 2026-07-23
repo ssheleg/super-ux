@@ -6,8 +6,13 @@ alwaysApply: false
 # ux-flows — Design HOW Users Move
 
 `docs/ux/flows.md` is the HOW layer between foundation (stories) and
-scenarios: task analysis + mermaid user flows + screen states. IDs
-`FLW-NN`, sequential, never reused; superseded flows kept with a note.
+scenarios: task analysis + mermaid user flows referencing screens by
+`SCR-ID`. The canonical per-screen spec lives in `docs/ux/screens.md` — the
+UI map: every screen and state with its Figma frame, wireframe, code
+coverage, scenarios, and resources. IDs `FLW-NN`/`SCR-NN`, sequential, never
+reused. Any interface change updates `screens.md` (and the Figma frame when
+enabled) in the same change — a screen whose code diverges from its record
+is `drifted`.
 
 ## Flow entry (ux-contract v3)
 

@@ -40,10 +40,11 @@ data/observation, recognizable by a real user. -->
 ## Design tooling
 
 <!-- Visual mockups in Figma are optional (default on). Ask the user at the
-start of design; record the choice here (see figma-integration).
+start of design; record the choice here (see figma-integration). The Figma
+file and design-system details live in docs/ux/screens.md (the UI map);
+this section just records the on/off choice and the file location.
 - **Figma:** enabled | disabled
 - **Figma file:** <url — one project file, one page per feature/flow group>
-- **Design system:** <library name/url, or "none — platform defaults">
 -->
 
 ## User stories

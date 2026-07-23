@@ -39,19 +39,23 @@ again per flow — the project-level choice holds until the user changes it.
 
 ## Recording the file (foundation.md → Design tooling)
 
+`foundation.md` → Design tooling records the on/off choice and the file
+URL. The **design system** details and all **per-screen/per-state frame
+links** live in `screens.md` (the UI map):
+
 ```markdown
-## Design tooling
-- **Figma:** enabled | disabled
-- **Figma file:** <url>  (the single project file; one page per feature/flow group)
-- **Design system:** <library name/url, or "none — using platform defaults">
+## Design system            (in screens.md)
+- **Figma library:** <url/name, or "none">
+- **Tokens in code:** <src/theme/tokens.ts>
+- **Component source:** <src/components/>
+- **Assets:** <icons/illustrations location>
 ```
 
-**Every screen has a frame link.** The `flows.md` Screens & states table
-gains a `Figma` column — one deep-link per screen (to its frame/node in the
-design), and where states differ visually (empty / error), link those
-frames too. No screen in a Figma-enabled project is without its frame link;
-a screen with `Figma: —` is an incomplete-design finding. The flow entry
-also carries a top-level `Figma:` link to the flow's page for quick access.
+**Every screen state has a frame link.** In `screens.md` each screen's
+States table carries a Figma frame deep-link per state (success / empty /
+error / loading). No state in a Figma-enabled project is without its frame
+link; a state with an empty frame cell is an incomplete-design finding. The
+Index's `Figma` column links the screen's page for quick access.
 
 ## Design loop with Figma (inside ux-flows Design)
 
@@ -73,10 +77,9 @@ For each flow, AFTER the flow diagram + screen/state table are agreed:
 4. Follow the Figma plugin's own skills for the API (`/figma-use` before
    `use_figma`, `/figma-generate-design` for translating a screen spec) —
    don't hand-guess the MCP calls.
-5. Write each screen's frame deep-link into the Screens & states table's
-   `Figma` column (and per-state frames where they differ), plus the flow's
-   top-level `Figma:` page link. Present the mockup for approval alongside
-   the flow.
+5. Write each state's frame deep-link into that screen's States table in
+   `screens.md`, and the screen's page link into the Index `Figma` column.
+   Present the mockup for approval alongside the flow.
 
 The compliance table (practice-selection protocol) records the visual-craft
 BPs as `applied` with the Figma frame as their evidence.
@@ -88,11 +91,22 @@ When improving existing UX and Figma is on: import current screens
 code), produce before → after frames next to the flow's before → after
 diagrams, and cite the same `PRN-NN`/`BP-NNN` on the redesigned frames.
 
+## Keeping Figma in sync (same-change rule)
+
+When an interface changes and Figma is enabled: update the affected frame(s)
+AND their links in `screens.md` in the same change as the code/flow change —
+never leave the map pointing at a stale or deleted frame. A screen whose
+code diverges from its `screens.md` record, or whose Figma link is broken/
+stale, is a `drifted` finding surfaced by audits. The registry (`screens.md`)
+is the index that makes this checkable: one row per screen, one frame per
+state, coverage to code — the single place that ties UX, UI, Figma, and code
+together.
+
 ## Boundaries
 
-- Figma is a rendering of the chain, never a replacement: the flow diagram
+- Figma is a rendering of the chain, never a replacement: flows, screens,
   and scenarios remain the source of truth; a frame that drifts from its
-  flow is a finding.
+  screen record is a finding.
 - Never let a missing/unauthenticated MCP block design — degrade to
   markdown + wireframes and sync later.
 - Don't publish or share the Figma file anywhere; the user owns

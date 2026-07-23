@@ -33,7 +33,7 @@ flowchart LR
 | Piece | Purpose |
 |---|---|
 | skill `ux-foundation` | The WHY layer (`docs/ux/foundation.md`): personas, Jobs to Be Done with forces, customer journey maps, user stories with Given/When/Then acceptance criteria |
-| skill `ux-flows` | The HOW layer (`docs/ux/flows.md`): task analysis, mermaid user flows (branches, error recovery, entry points), screen states, optional wireframes and **Figma mockups** (default on — every screen mirrored to a frame applying the visual-craft practices); heuristic UX evaluation and traced redesign proposals for existing products |
+| skill `ux-flows` | The HOW layer + UI map: `docs/ux/flows.md` (task analysis, mermaid user flows referencing screens) and `docs/ux/screens.md` — the design map: every screen and state with its **Figma frame link**, wireframe, code coverage, scenarios, and resources, kept in sync on every interface change (default-on Figma mockups apply the visual-craft practices); heuristic UX evaluation and traced redesign proposals |
 | skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: use-case scenarios (action → system response, alt paths) covering every flow node/edge, `Traces:` to stories and flows, validated for conflicts, coverage, and traceability |
 | skill `ux-audit` | Batched audit loop with full context: code vs every scenario + its story's acceptance criteria; verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence; `coverage` scope audits the chain itself |
 | `/ux` | **The one command**: sets up whatever is missing, then status across all layers + a menu of applicable actions with one recommended default. Idempotent |
@@ -53,8 +53,11 @@ lifecycle, audit verdicts and severities.
 
 - `docs/ux/scenarios.md` is the source of truth for all user-facing
   behavior; foundation (WHY) and flows (HOW) are the layers it traces to.
-- Any change touching user-facing behavior updates the scenario base (and
-  affected flows) **in the same change**.
+- Any change touching user-facing behavior or interface updates **in the
+  same change**: scenarios, affected flows, the affected screens in
+  `docs/ux/screens.md` (the UI map — states, elements, coverage), and (Figma
+  on) the Figma frames plus their links. Code that diverges from a screen's
+  record, or a stale Figma link, is drift the audit flags.
 - Any new feature or project **starts** with the chain: which job, which
   journey stage, which story — then flows and scenarios, validated and
   approved.

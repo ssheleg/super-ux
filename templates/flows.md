@@ -1,8 +1,9 @@
 # User Flows
 
-<!-- Managed with super-ux (ux-contract v3). The HOW layer: task analysis
-and user flows. Scenarios in scenarios.md trace to FLW-IDs and must cover
-every node and edge. -->
+<!-- Managed with super-ux (ux-contract v4). The HOW layer: task analysis
+and user flows. Flows reference screens by SCR-ID (full specs live in
+screens.md). Scenarios in scenarios.md trace to FLW-IDs and must cover every
+node and edge. -->
 
 <!-- ### FLW-01: <user goal>
 - **Traces:** ST-001 (JTBD-01, JRN-01/#2)
@@ -21,10 +22,9 @@ flowchart TD
   B_err --> A
 ```
 
-- **Screens & states:**
-  | Screen | States | Key elements | Figma |
-  |--------|--------|--------------|-------|
-  | <name> | loading, empty, error, success | <elements, one primary action> | <frame link when Figma enabled> |
-- **Wireframe:** wireframes/FLW-01.md (optional)
-- **Figma:** <flow page link when Figma design is enabled>
+- **Screens traversed:**
+  | Screen | States used here |
+  |--------|------------------|
+  | SCR-01 <name> | success |
+  | SCR-02 <name> | error, success |
 -->

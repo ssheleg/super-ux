@@ -1,4 +1,4 @@
-# UX Contract (v3): Foundation, Flows, Scenarios, Audits
+# UX Contract (v4): Foundation, Flows, Screens, Scenarios, Audits
 
 This is THE contract for `docs/ux/` in a target project. The `ux-foundation`,
 `ux-flows`, `ux-scenarios`, and `ux-audit` skills — and the Cursor rules —
@@ -10,10 +10,11 @@ formats lives in [ux-design-principles.md](ux-design-principles.md).
 
 ```
 docs/ux/
-├── foundation.md             # WHY: personas, JTBD, journeys, user stories
-├── flows.md                  # HOW: task analysis + user flows (mermaid) + screen states
+├── foundation.md             # WHY: personas, JTBD, journeys, user stories, monetization, design tooling
+├── flows.md                  # HOW: task analysis + user flows (mermaid), referencing screens
+├── screens.md                # UI MAP: every screen + state with Figma frame, wireframe, coverage, resources
 ├── scenarios.md              # WHAT: use-case scenarios (source of truth for behavior)
-├── wireframes/               # optional: low-fi ASCII wireframes / storyboards per flow
+├── wireframes/               # optional: low-fi ASCII wireframes / storyboards per screen
 ├── audits/
 │   └── YYYY-MM-DD[-scope].md # EVIDENCE: one report per audit run
 └── plans/
@@ -21,11 +22,25 @@ docs/ux/
 ```
 
 The chain: **Personas → Jobs (JTBD) → Journeys → User stories → Flows →
-Scenarios → Audits → Fix plans.** Every layer traces to the one above it.
-`foundation.md` and `flows.md` are optional for tiny projects (scenarios may
-exist alone, v1 mode), but once a layer exists, its traceability rules
-apply. In backwards mode (existing product) the same files are filled in
-reverse from the code, entries tagged `inferred` until confirmed.
+Screens → Scenarios → Audits → Fix plans.** Every layer traces to the one
+above it. `screens.md` is the canonical **design map**: the single record of
+every screen and every state, each with its Figma frame link, wireframe,
+code coverage, and related UX/UI resources; flows reference screens by ID
+instead of duplicating their specs. `foundation.md`, `flows.md`, and
+`screens.md` are optional for tiny projects (scenarios may exist alone, v1
+mode), but once a layer exists, its traceability and same-change update
+rules apply. In backwards mode (existing product) the same files are filled
+in reverse from the code, entries tagged `inferred` until confirmed.
+
+## Same-change update rule (all layers)
+
+Any change to user-facing behavior or interface updates the affected layers
+**in the same change**: scenarios always; flows when navigation/branches/
+errors change; **`screens.md` whenever a screen's elements, states, or
+coverage change — and, when Figma is enabled, the Figma frame is updated and
+its link re-verified in the same change**. A screen whose code diverges from
+its `screens.md` record (or a stale/broken Figma link) is a `drifted`
+finding, not an acceptable state.
 
 ## `docs/ux/foundation.md`
 
@@ -103,9 +118,9 @@ afterthought edge.
 - **Design system:** <library name/url, or "none — platform defaults">
 ```
 
-When Figma is enabled, each flow's Screens & states table carries a Figma
-frame link per screen. See [figma-integration.md](figma-integration.md) for
-the workflow.
+When Figma is enabled, every screen state in `screens.md` carries its Figma
+frame link. See [figma-integration.md](figma-integration.md) for the
+workflow.
 
 ### ID rules (all layers)
 
@@ -115,7 +130,7 @@ deleted.
 
 ## `docs/ux/flows.md`
 
-Header comment: `<!-- Managed with super-ux (ux-contract v3). The HOW layer:
+Header comment: `<!-- Managed with super-ux (ux-contract v4). The HOW layer:
 task analysis and user flows scenarios trace to. -->`
 
 One entry per user goal (one story or a tight story cluster):
@@ -147,29 +162,87 @@ flowchart TD
 ````
 
 ```markdown
-- **Screens & states:**
-  | Screen | States | Key elements | Figma |
-  |--------|--------|--------------|-------|
-  | Welcome | success | value copy, "Create project" button | <frame link> |
-  | Name form | error, success | name field, confirm button, inline error | <frame link> |
-  | Main | loading, empty, success | project list/card | <frame link> |
-- **Wireframe:** wireframes/FLW-01.md (optional)
-- **Figma:** <flow page link> (when Figma design is enabled)
+- **Screens traversed:**
+  | Screen | States used here |
+  |--------|------------------|
+  | SCR-01 Welcome | success |
+  | SCR-02 Name form | error, success |
+  | SCR-03 Main | loading, empty, success |
+- **Wireframe:** wireframes/FLW-01.md (optional; screen-level wireframes live per SCR-ID)
 ```
+
+The flow references screens by `SCR-ID`; each screen's full spec (elements,
+per-state Figma frames, wireframe, coverage, resources) lives once in
+`screens.md`. A screen used by several flows is described in exactly one
+place; flows just list which of its states they traverse.
 
 Flow rules (from the principles doc, enforced by validation and audits):
 
 - Node naming: screens as `Screen: <name>`, decisions as diamonds
   (`{...?}`), errors as `*_err` nodes with a labeled recovery edge — an
   error edge that goes nowhere is a defect.
-- Every entry point listed; every screen node's states declared in the
-  table; happy-path steps above five need justification.
-- When Figma design is enabled (foundation → Design tooling), every screen
-  row carries its Figma frame deep-link (and per-state frames where they
-  differ visually); a screen without a frame link is an incomplete-design
-  finding. See [figma-integration.md](figma-integration.md).
+- Every entry point listed; every screen the flow touches exists in
+  `screens.md` with the states used here declared there; happy-path steps
+  above five need justification.
 - IDs `FLW-NN`, sequential, never reused; superseded flows kept with a
   strikethrough note.
+
+## `docs/ux/screens.md` — the UI map
+
+The canonical record of every screen and state, with all linked UX/UI
+resources. Header comment: `<!-- Managed with super-ux (ux-contract v4). The
+design map: every screen and state with its Figma frame, wireframe, code
+coverage, and resources. Update in the same change as any interface change;
+when Figma is enabled, update the frame too. -->`
+
+Structure: an Index, a Design system block, then one entry per screen.
+
+```markdown
+## Index
+| ID | Screen | Used by | Figma | Status | Coverage |
+|----|--------|---------|-------|--------|----------|
+| SCR-01 | Welcome | FLW-01 | <page/frame link> | built | src/onboarding/Welcome.tsx:1 |
+
+## Design system
+- **Figma library:** <url/name, or "none">
+- **Tokens in code:** <where color/type/spacing tokens live, e.g. src/theme/tokens.ts>
+- **Component source:** <shared UI components dir, e.g. src/components/>
+- **Assets:** <icons/illustrations location>
+
+## Screens
+
+### SCR-01: Welcome
+- **Used by:** FLW-01 (step 1)
+- **Purpose:** <the job step this screen serves>
+- **Elements:** <each element; mark the ONE primary action>
+- **States:**
+  | State | Trigger | Figma frame | Behavior |
+  |-------|---------|-------------|----------|
+  | success | default | <frame deep-link> | value copy + CTA |
+  | empty | nothing created | <frame deep-link> | "Create your first project" prompt |
+  | error | load failed | <frame deep-link> | inline error + retry |
+- **Wireframe:** wireframes/SCR-01.md (optional)
+- **Coverage:** src/onboarding/Welcome.tsx:1 (or `none yet`)
+- **Scenarios:** SCN-001, SCN-002
+- **Resources:** <related components, shared assets, API/data deps, links>
+- **Status:** designed | built | drifted | retired
+```
+
+Rules:
+
+- IDs `SCR-NN`, sequential, never reused; retired screens kept with a
+  reason.
+- Every state a screen can show gets a row — including empty/error/loading;
+  each state carries its own Figma frame link when Figma is enabled (a
+  state without a frame is an incomplete-design finding).
+- Status lifecycle: `designed` → `built` (coverage confirmed by audit) →
+  `drifted` (code diverged from this record — an audit finding, fix or
+  update) → `retired`.
+- Every screen referenced by any flow exists here; every screen here is
+  used by ≥1 flow (orphans are findings).
+- `Coverage` and `Scenarios` keep the screen wired to code and behavior;
+  `Resources` collects the design-system components, assets, and data
+  dependencies the screen relies on.
 
 ## `docs/ux/scenarios.md`
 

@@ -5,10 +5,16 @@ description: Use when designing or improving HOW users move through the product 
 
 # ux-flows — Design HOW Users Move
 
-Turns user stories into user flows: task analysis → flow diagram (mermaid) →
-screen/state inventory → optional wireframes. Also the home of UX
-improvement: heuristic evaluation of existing flows and traced redesign
-proposals.
+Turns user stories into user flows AND maintains the UI map: task analysis →
+flow diagram (mermaid) → the screen registry `screens.md` (every screen and
+state with Figma frame, wireframe, coverage, resources) → optional
+wireframes/Figma mockups. Also the home of UX improvement: heuristic
+evaluation of existing flows and traced redesign proposals.
+
+**Two files owned:** `flows.md` (flows referencing screens by `SCR-ID`) and
+`screens.md` (the canonical per-screen spec — the design map that ties UX,
+UI, Figma, and code together). A screen used by several flows is described
+once in `screens.md`.
 
 **Contracts:** [scenario-format.md](../references/scenario-format.md)
 (ux-contract v3, `flows.md` section) and
@@ -51,8 +57,12 @@ Per story (or tight cluster):
 2. **Draw the flow** (mermaid, node conventions from the contract): every
    decision an explicit branch; every error edge lands on recovery; all
    entry points enumerated; happy path ≤5 steps or justified.
-3. **Screens & states table:** each screen declares loading/empty/error/
-   success and key elements; exactly one primary action per screen.
+3. **Register screens in `screens.md`:** each screen the flow touches gets
+   (or updates) its `SCR-NN` entry — states (loading/empty/error/success)
+   with per-state behavior, elements with one primary action, coverage,
+   scenarios, resources; the flow's Screens-traversed table just lists the
+   SCR-IDs and states it uses. Fill the Design system block once (Figma
+   library, token/component/asset locations).
 4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
@@ -80,16 +90,24 @@ Per story (or tight cluster):
 1. Inventory routes/screens/navigation from the code; trace real
    transitions including error handling.
 2. Reconstruct flows as they ARE (not as they should be), tag `inferred`;
-   attach `file:line` evidence per node.
+   attach `file:line` evidence per node. Build `screens.md` from the
+   inventory: one `SCR-NN` per real screen, its actual states, `Coverage`
+   pointing at the code; if Figma exists, link existing frames, else leave
+   frames empty and flag as a design gap.
 3. Derive/match stories with `ux-foundation`; mismatches between actual
    flows and jobs are findings, not silent fixes.
 4. Present; confirmed flows lose the `inferred` tag.
 
-## Update
+## Update (same-change rule)
 
-Behavior change → update affected flow nodes/edges + screens table in the
-SAME change; superseded flows kept with a strikethrough note; cascade the
-node/edge diff to `ux-scenarios` (which scenarios now miss coverage?).
+Any interface change → in the SAME change: update the affected flow
+nodes/edges (when navigation changed) AND the affected `screens.md` entries
+(elements, states, coverage — always, whenever a screen changes), AND — when
+Figma is enabled — the Figma frame(s) plus their links in `screens.md`
+(never leave a stale/broken link). Superseded flows/screens kept with a
+note. Cascade to `ux-scenarios` (which scenarios now miss coverage?). Leaving
+`screens.md` or a Figma frame behind is exactly the drift this system
+prevents.
 
 ## Improve (heuristic evaluation → redesign)
 
@@ -124,9 +142,12 @@ run the workflow first; that ordering is the whole point of super-ux.
 
 - Every flow traced to stories; every node states-complete; no dead-end
   error edges; entry points enumerated.
+- Every screen the flows touch exists in `screens.md` with states,
+  elements, coverage, scenarios, resources; no orphan screens either way.
 - Scenarios cover every node and edge (checked with `ux-scenarios`).
-- When Figma enabled: every screen has a frame link; visual-craft practices
-  applied on the frames; foundation Design tooling filled.
+- When Figma enabled: every screen state has a frame link in `screens.md`;
+  visual-craft practices applied on the frames; Design system block filled;
+  foundation Design tooling records the choice + file.
 - Only after all of the above does UI implementation start.
 - Improvements: every proposal traced and cited; nothing applied without
   approval.

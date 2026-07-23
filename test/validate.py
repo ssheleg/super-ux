@@ -190,7 +190,7 @@ def validate_cursor_rules() -> None:
 
 
 def validate_templates() -> None:
-    for name in ("scenarios.md", "audit-report.md", "claude-rule.md", "foundation.md", "flows.md"):
+    for name in ("scenarios.md", "audit-report.md", "claude-rule.md", "foundation.md", "flows.md", "screens.md"):
         path = ROOT / "templates" / name
         text = read(path)
         check(bool(text and text.strip()), f"templates/{name}: missing or empty")

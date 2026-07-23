@@ -12,6 +12,9 @@ challenged, not silently accepted) — then design/extend the affected flows
 If it describes a **change already made or in progress**: run the
 `ux-scenarios` Update workflow against it (use the current git diff when no
 description is given), and cascade to `ux-flows` Update when the change
-touches screens, branches, or error paths.
+touches screens, branches, or error paths — updating `screens.md` (states,
+elements, coverage) and, when Figma is enabled, the Figma frame(s) and their
+links, all in the same change. Leaving `screens.md` or a frame stale is
+drift.
 
 Change / feature to process: $ARGUMENTS

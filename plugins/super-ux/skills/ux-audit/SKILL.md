@@ -44,9 +44,13 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
 Passes:
 
 1. **Scenario pass** — the loop below: code vs every scoped scenario.
-2. **Flow conformance** — code vs flow diagrams: every node reachable,
-   every edge (incl. error edges) wired, screen states from the flow table
-   present.
+2. **Flow & screen conformance** — code vs flow diagrams (every node
+   reachable, every edge incl. error edges wired) AND code vs `screens.md`
+   (every registered screen's states rendered, elements present, `Coverage`
+   accurate). A screen whose code diverges from its record → `drifted`
+   finding; flip its Status to `drifted`. When Figma is enabled, check each
+   state has a frame link and flag empty/obviously-stale links (a link the
+   registry marks but the design lost).
 3. **Heuristic pass** — implemented flows vs PRN-01..16
    ([ux-design-principles.md](../references/ux-design-principles.md));
    findings `[PRN-NN] (severity) node — issue -> fix`.
@@ -56,8 +60,10 @@ Passes:
    output a compliance table (applied / adapted / rejected / deferred /
    **missing** — applicable but absent, as suggestion findings `[BP-NNN]`).
    Respect recorded user-owned rejections — don't re-litigate them.
-5. **Coverage pass** — the chain itself: orphan stories/flows/scenarios,
-   journey stages without scenarios, jobs without stories, unused personas.
+5. **Coverage pass** — the chain itself: orphan stories/flows/screens/
+   scenarios, journey stages without scenarios, jobs without stories, unused
+   personas, screens not used by any flow, flows referencing missing
+   `SCR-IDs`, screen states without Figma frames (when Figma enabled).
 
 ## The loop
 
