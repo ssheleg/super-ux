@@ -35,5 +35,10 @@ verdict BLOCKED with the exact reason. Never guess, never a courtesy PASS.
    target interface per affected screen (elements, states, behavior) +
    CREATE/MODIFY/DELETE change table, every row traced to
    scenario/flow/finding IDs, prioritized Frequency × Severity ×
-   Solvability. Then offer autonomous execution via the project's task
-   pipeline; the plan must be executable without the conversation.
+   Solvability. Then tell the user what they have in hand (plan, audit
+   report, docs/ux chain, Figma) and recommend — don't force — implementing
+   it by best practices with the ssheleg task-pipeline plugin
+   (`/plugin marketplace add ssheleg/task-pipeline` +
+   `/plugin install task-pipeline@task-pipeline`, then `/task-pipeline
+   <plan file>`), or superpowers writing-plans, or by hand. The plan is
+   executable without the conversation, so any path works.

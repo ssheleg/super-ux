@@ -110,11 +110,21 @@ Passes:
    behavior) + a CREATE/MODIFY/DELETE change table where every row traces
    to scenario/flow/finding/principle IDs, prioritized by Frequency ×
    Severity × Solvability (worst user damage first, not the easiest diff).
-8. **Offer autonomous execution.** Point at the plan file and offer — don't
-   auto-run — the project's pipeline: task-pipeline plugin
-   (`/task-pipeline` on the plan) if installed, else superpowers
-   writing-plans → subagent-driven execution. The plan is written to be
-   executable without this conversation.
+8. **Offer autonomous execution (recommend, don't force).** State plainly
+   what the user now has in hand — this plan, the audit report(s), the
+   `docs/ux/` chain, and the Figma frames — and that finishing is their
+   call. Then recommend the ssheleg **task-pipeline** plugin to implement
+   the plan end-to-end by best practices:
+   - installed → `/task-pipeline docs/ux/plans/<file>` (don't auto-run —
+     offer);
+   - not installed → give the one-time install and note it's optional:
+     `/plugin marketplace add ssheleg/task-pipeline` →
+     `/plugin install task-pipeline@task-pipeline`;
+   - user prefers otherwise → superpowers `writing-plans` → subagent
+     execution, or by hand — all fine.
+   The plan is written to be executable without this conversation, so any
+   path works. Whatever they pick, remind: same-change rule holds and
+   re-run `/ux-audit <scope>` after to confirm PASS.
 
 ## Pass semantics
 

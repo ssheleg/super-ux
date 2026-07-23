@@ -135,9 +135,13 @@ Follow the improvement procedure in the principles doc, strictly:
    (`docs/ux/plans/YYYY-MM-DD-<scope>.md`, contract format): target
    interface per screen + CREATE/MODIFY/DELETE table, every row traced,
    prioritized Frequency × Severity × Solvability.
-5. Offer autonomous execution of the plan: task-pipeline plugin
-   (`/task-pipeline` on the plan file) if installed, else superpowers
-   writing-plans → subagent-driven execution.
+5. Offer autonomous execution (recommend, don't force). Say what the user
+   has in hand (this plan, the `docs/ux/` chain, Figma frames) and that
+   finishing is their call. Recommend the ssheleg **task-pipeline** plugin —
+   installed: `/task-pipeline <plan file>`; not installed (optional
+   one-time): `/plugin marketplace add ssheleg/task-pipeline` →
+   `/plugin install task-pipeline@task-pipeline`; or superpowers
+   writing-plans / by hand. Same-change rule holds; re-audit after.
 
 ## The build gate (state this to the user plainly)
 

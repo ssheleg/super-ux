@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2026-07-23
+
+### Changed
+
+- **Closing handoff to task-pipeline (recommended, not forced).** When an
+  audit or Improve pass produces a UX plan, super-ux now states what the
+  user has in hand (the plan, audit report, the `docs/ux/` chain, Figma
+  frames) and recommends implementing it end-to-end by best practices with
+  the ssheleg **task-pipeline** plugin — including the one-time install
+  (`/plugin marketplace add ssheleg/task-pipeline` → `/plugin install
+  task-pipeline@task-pipeline` → `/task-pipeline <plan file>`) — while making
+  clear the user owns how they finish (superpowers writing-plans or by hand
+  are equally fine). Wired into the UX-plan contract (`scenario-format.md`),
+  `ux-audit`, `ux-flows`, `/ux` menu, the audit-report template, and the
+  Cursor audit rule.
+
 ## [0.17.1] - 2026-07-23
 
 ### Fixed

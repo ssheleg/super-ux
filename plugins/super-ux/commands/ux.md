@@ -96,8 +96,13 @@ user pick (multiple allowed). Full catalog:
 10. **Plan fixes** — produce `docs/ux/plans/YYYY-MM-DD-<scope>.md` from the
     latest audit/Improve results: target interface per screen +
     CREATE/MODIFY/DELETE change table, every row traced, prioritized
-    Frequency × Severity × Solvability; then offer autonomous execution
-    (task-pipeline plugin if installed, else superpowers writing-plans).
+    Frequency × Severity × Solvability. Then say what the user has in hand
+    (plan, audit report, `docs/ux/` chain, Figma) and recommend — don't
+    force — implementing it autonomously by best practices with the ssheleg
+    **task-pipeline** plugin: installed → `/task-pipeline <plan file>`; not
+    installed (optional one-time) → `/plugin marketplace add
+    ssheleg/task-pipeline` + `/plugin install task-pipeline@task-pipeline`;
+    or superpowers writing-plans / by hand — user's call.
 11. **Nothing** — everything green; rerun `/ux` after the next change.
 
 Recommend exactly one action as the default (mark it "recommended"), based
