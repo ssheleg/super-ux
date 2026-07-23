@@ -8,8 +8,12 @@
   `docs/ux/scenarios.md` (and affected flows) in the same change.
 - Any new feature or project STARTS with the chain: which job does it
   serve, which journey stage, which story — then flows and scenarios,
-  validated against the existing base, approved — only then design and
-  build UI.
-- Use `/ux` as the entry point; skills: `ux-foundation`, `ux-flows`,
-  `ux-scenarios` for maintenance, `ux-audit` for evidence-backed
-  verification.
+  validated against the existing base, approved.
+- **Do NOT write interface code until the UX workflow is done first:** the
+  foundation → flows → scenarios chain is designed and approved, and — when
+  Figma is enabled (default) — the UI is mocked up in Figma with every
+  screen linked to its frame. Building UI before this is the exact mistake
+  super-ux exists to prevent.
+- Use `/ux` as the entry point; skills: `ux-foundation`, `ux-flows`
+  (flows + Figma mockups), `ux-scenarios` for maintenance, `ux-audit` for
+  evidence-backed verification.

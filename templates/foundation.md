@@ -37,6 +37,15 @@ data/observation, recognizable by a real user. -->
 - **Acquisition coherence:** <the one story ad -> listing -> onboarding tells>
 -->
 
+## Design tooling
+
+<!-- Visual mockups in Figma are optional (default on). Ask the user at the
+start of design; record the choice here (see figma-integration).
+- **Figma:** enabled | disabled
+- **Figma file:** <url — one project file, one page per feature/flow group>
+- **Design system:** <library name/url, or "none — platform defaults">
+-->
+
 ## User stories
 
 <!-- ### ST-001: <short name>

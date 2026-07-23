@@ -15,6 +15,14 @@ get done with the product's UX?" — with a few examples in everyday words
 works", "make a fix plan"). Never ask the user to choose between skills or
 layers — that vocabulary is internal.
 
+**If the task involves designing or improving the interface** (routes 1, 3,
+4), and the foundation's Design tooling section hasn't recorded a Figma
+choice yet, ask one more plain question: "Design the interface visually in
+Figma as we go, or text-only? (Figma is the default.)" Record the answer in
+`foundation.md` → Design tooling. If Figma is chosen and the Figma MCP isn't
+connected, recommend connecting it and proceed text-only until it is (see
+figma-integration reference).
+
 Routing table (user's words → action from the menu below):
 
 | User says (any language) | Route to |

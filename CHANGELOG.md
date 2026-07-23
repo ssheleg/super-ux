@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-07-23
+
+### Added
+
+- **Figma design integration** (`references/figma-integration.md`), an
+  opt-in surface enabled by default: the agent asks once at the start of
+  design whether to mock up in Figma; if yes and the Figma MCP isn't
+  connected it recommends connecting it (never blocks — degrades to
+  markdown + wireframes and syncs later); records the Figma file in
+  `foundation.md` → Design tooling before drawing; during `ux-flows` Design
+  mirrors every screen-state into a Figma frame applying the visual-craft
+  practices (BP-079..090) as hard constraints; **every screen row carries
+  its Figma frame deep-link** (flows.md Screens & states gains a Figma
+  column) — a screen without a frame link is an incomplete-design finding.
+- **Explicit build gate** in the hard rule (templates/claude-rule,
+  /ux-rule, super-ux.mdc, README, ux-flows DoD): do NOT write interface
+  code until the UX workflow is done — chain designed and approved, and
+  (Figma on) the UI mocked up with every screen linked. Stated plainly to
+  the user, who is not expected to know the internals.
+- Foundation gains a Design tooling section; `/ux` step 0 asks the Figma
+  question for design tasks; `/ux-flows` and the Cursor flow rule updated.
+
 ## [0.12.1] - 2026-07-23
 
 ### Fixed

@@ -94,6 +94,19 @@ Money moments are inputs to `flows.md`: each gets a first-class flow
 (paywall, upgrade-at-limit, cancel/winback, rating prompt) — not an
 afterthought edge.
 
+### 6. Design tooling (Figma, optional — default on)
+
+```markdown
+## Design tooling
+- **Figma:** enabled | disabled
+- **Figma file:** <url — the single project file, one page per feature/flow group>
+- **Design system:** <library name/url, or "none — platform defaults">
+```
+
+When Figma is enabled, each flow's Screens & states table carries a Figma
+frame link per screen. See [figma-integration.md](figma-integration.md) for
+the workflow.
+
 ### ID rules (all layers)
 
 `P-NN`, `JTBD-NN`, `JRN-NN`, `ST-NNN` — sequential, **never reused**;
@@ -135,12 +148,13 @@ flowchart TD
 
 ```markdown
 - **Screens & states:**
-  | Screen | States | Key elements |
-  |--------|--------|--------------|
-  | Welcome | success | value copy, "Create project" button |
-  | Name form | error, success | name field, confirm button, inline error |
-  | Main | loading, empty, success | project list/card |
+  | Screen | States | Key elements | Figma |
+  |--------|--------|--------------|-------|
+  | Welcome | success | value copy, "Create project" button | <frame link> |
+  | Name form | error, success | name field, confirm button, inline error | <frame link> |
+  | Main | loading, empty, success | project list/card | <frame link> |
 - **Wireframe:** wireframes/FLW-01.md (optional)
+- **Figma:** <flow page link> (when Figma design is enabled)
 ```
 
 Flow rules (from the principles doc, enforced by validation and audits):
@@ -150,6 +164,10 @@ Flow rules (from the principles doc, enforced by validation and audits):
   error edge that goes nowhere is a defect.
 - Every entry point listed; every screen node's states declared in the
   table; happy-path steps above five need justification.
+- When Figma design is enabled (foundation → Design tooling), every screen
+  row carries its Figma frame deep-link (and per-state frames where they
+  differ visually); a screen without a frame link is an incomplete-design
+  finding. See [figma-integration.md](figma-integration.md).
 - IDs `FLW-NN`, sequential, never reused; superseded flows kept with a
   strikethrough note.
 

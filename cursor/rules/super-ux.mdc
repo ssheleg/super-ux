@@ -13,8 +13,14 @@ alwaysApply: true
   coverage). New user-facing behavior with no scenario is a blocker, not a
   warning.
 - Any new feature or project STARTS with the chain: which job does it serve,
-  which journey stage, which story — then scenarios, validated against the
-  existing base (conflicts, overlaps, gaps), approved — only then design and
-  build UI. An idea serving no job is challenged, not silently accepted.
-- Workflows: `ux-foundation` rule (WHY layer), `ux-scenarios` rule
-  (scenario base), `ux-audit` rule (evidence-backed audits).
+  which journey stage, which story — then flows and scenarios, validated
+  against the existing base (conflicts, overlaps, gaps), approved. An idea
+  serving no job is challenged, not silently accepted.
+- Do NOT write interface code until the UX workflow is done first: the
+  foundation → flows → scenarios chain is designed and approved, and — when
+  Figma is enabled (default) — the UI is mocked up in Figma with every
+  screen linked to its frame. Building UI before this is the exact mistake
+  super-ux exists to prevent.
+- Workflows: `ux-foundation` rule (WHY), `ux-flows` rule (flows + Figma
+  mockups), `ux-scenarios` rule (scenario base), `ux-audit` rule
+  (evidence-backed audits).

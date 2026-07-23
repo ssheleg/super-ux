@@ -1,6 +1,6 @@
 ---
 name: ux-flows
-description: Use when designing or improving HOW users move through the product - task analysis, user flows (screens, branches, error paths), screen states, low-fi wireframes, heuristic UX evaluation and redesign proposals. Maintains docs/ux/flows.md between foundation (stories) and scenarios. Triggers - "user flow", "юзер флоу", "флоу экранов", "поток пользователя", "task analysis", "улучши UX", "почини UX", "redesign flow", "wireframe", "вайрфрейм".
+description: Use when designing or improving HOW users move through the product - task analysis, user flows (screens, branches, error paths), screen states, low-fi wireframes, Figma mockups, heuristic UX evaluation and redesign proposals. Maintains docs/ux/flows.md between foundation (stories) and scenarios. Triggers - "user flow", "юзер флоу", "флоу экранов", "поток пользователя", "task analysis", "улучши UX", "почини UX", "redesign flow", "wireframe", "вайрфрейм", "figma", "фигма", "нарисуй дизайн", "мокап".
 ---
 
 # ux-flows — Design HOW Users Move
@@ -56,6 +56,15 @@ Per story (or tight cluster):
 4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
+   **Figma mockups** (default on — see
+   [figma-integration.md](../references/figma-integration.md)): if Design
+   tooling has Figma enabled, build a frame per screen-state applying the
+   visual-craft practices (BP-079..090) as hard constraints, and write the
+   frame deep-link into every screen row's `Figma` column. If Figma is
+   chosen but the MCP isn't connected, recommend connecting it and continue
+   text-only (flows/wireframes stay the source of truth, sync later). Ask
+   the Figma yes/no question once at the start and record it in the
+   foundation.
 5. **Practice pass** (mandatory, per
    [practice-selection.md](../references/practice-selection.md)): build the
    product profile from the foundation, pull the mandatory sets + this
@@ -91,7 +100,9 @@ Follow the improvement procedure in the principles doc, strictly:
    `[PRN-NN] node — what breaks — severity (4..1)`.
 3. Redesign proposals: trace to a pain/job/story; cite `PRN-NN`/`BP-NNN`;
    show flow before → after (two mermaid diagrams); state the expected
-   observable effect. No untraced "make it nicer" changes.
+   observable effect. No untraced "make it nicer" changes. When Figma is
+   enabled, produce before → after frames beside the diagrams
+   ([figma-integration.md](../references/figma-integration.md)).
 4. Approved proposals land in THREE places, same session: flow Updates
    (+ scenario cascade) AND a concrete UX plan
    (`docs/ux/plans/YYYY-MM-DD-<scope>.md`, contract format): target
@@ -101,10 +112,21 @@ Follow the improvement procedure in the principles doc, strictly:
    (`/task-pipeline` on the plan file) if installed, else superpowers
    writing-plans → subagent-driven execution.
 
+## The build gate (state this to the user plainly)
+
+Interface code does not get written until this workflow is done: the chain
+(foundation → flows → scenarios) is designed and approved, and — when Figma
+is enabled (default) — the UI is mocked up in Figma with every screen linked
+to its frame. When a user jumps straight to "build the screen", say so and
+run the workflow first; that ordering is the whole point of super-ux.
+
 ## Definition of done
 
 - Every flow traced to stories; every node states-complete; no dead-end
   error edges; entry points enumerated.
 - Scenarios cover every node and edge (checked with `ux-scenarios`).
+- When Figma enabled: every screen has a frame link; visual-craft practices
+  applied on the frames; foundation Design tooling filled.
+- Only after all of the above does UI implementation start.
 - Improvements: every proposal traced and cited; nothing applied without
   approval.

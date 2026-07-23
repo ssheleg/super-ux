@@ -33,7 +33,7 @@ flowchart LR
 | Piece | Purpose |
 |---|---|
 | skill `ux-foundation` | The WHY layer (`docs/ux/foundation.md`): personas, Jobs to Be Done with forces, customer journey maps, user stories with Given/When/Then acceptance criteria |
-| skill `ux-flows` | The HOW layer (`docs/ux/flows.md`): task analysis, mermaid user flows (branches, error recovery, entry points), screen states, optional wireframes; heuristic UX evaluation and traced redesign proposals for existing products |
+| skill `ux-flows` | The HOW layer (`docs/ux/flows.md`): task analysis, mermaid user flows (branches, error recovery, entry points), screen states, optional wireframes and **Figma mockups** (default on — every screen mirrored to a frame applying the visual-craft practices); heuristic UX evaluation and traced redesign proposals for existing products |
 | skill `ux-scenarios` | Maintain `docs/ux/scenarios.md`: use-case scenarios (action → system response, alt paths) covering every flow node/edge, `Traces:` to stories and flows, validated for conflicts, coverage, and traceability |
 | skill `ux-audit` | Batched audit loop with full context: code vs every scenario + its story's acceptance criteria; verdicts PASS/PARTIAL/FAIL/BLOCKED with `file:line` evidence; `coverage` scope audits the chain itself |
 | `/ux` | **The one command**: sets up whatever is missing, then status across all layers + a menu of applicable actions with one recommended default. Idempotent |
@@ -57,7 +57,12 @@ lifecycle, audit verdicts and severities.
   affected flows) **in the same change**.
 - Any new feature or project **starts** with the chain: which job, which
   journey stage, which story — then flows and scenarios, validated and
-  approved — only then design and build UI.
+  approved.
+- **Do not write interface code until the UX workflow is done first** — the
+  foundation → flows → scenarios chain designed and approved, and (when
+  Figma is enabled, the default) the UI mocked up in Figma with every screen
+  linked to its frame. Building UI before this is the mistake super-ux
+  exists to prevent.
 
 ## Install
 

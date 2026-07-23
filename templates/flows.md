@@ -22,8 +22,9 @@ flowchart TD
 ```
 
 - **Screens & states:**
-  | Screen | States | Key elements |
-  |--------|--------|--------------|
-  | <name> | loading, empty, error, success | <elements, one primary action> |
+  | Screen | States | Key elements | Figma |
+  |--------|--------|--------------|-------|
+  | <name> | loading, empty, error, success | <elements, one primary action> | <frame link when Figma enabled> |
 - **Wireframe:** wireframes/FLW-01.md (optional)
+- **Figma:** <flow page link when Figma design is enabled>
 -->

@@ -28,6 +28,10 @@ loading/empty/error/success + key elements, one primary action).
 - Wireframes optional (`docs/ux/wireframes/FLW-NN.md`, ASCII hierarchy +
   primary action, not pixels); storyboard only when usage context drives
   design.
+- Figma mockups optional (default on): if the foundation's Design tooling
+  enables Figma and a Figma MCP is available, mirror each screen into a
+  frame applying visual-craft practices (BP-079..090), and link every
+  screen row to its frame; ask the user once at the start of design.
 - Backwards mode (existing product): reconstruct flows as they ARE from
   code with file:line evidence, tag `inferred` until confirmed; gaps
   between is/should become the improvement backlog.
