@@ -19,7 +19,8 @@ attribution. Keep entries under ~6 lines.
   `anchoring` `friction-reduction` `habit` `reward` `segmentation`
   `attribution` `activation` `feedback` `error-recovery`
 - **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
-  `email` `push` `widgets` `voice` `ai-chat` `forms`
+  `email` `push` `widgets` `voice` `ai-chat` `forms` `figma` `design-system`
+  `handoff` `maintainability`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
   `insight` `accessibility` `performance`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
@@ -689,3 +690,81 @@ USWDS, Bringhurst, Dyson & Haselgrove reading-speed research).
 - **Apply when:** visual polish passes and audits — count separation devices per boundary.
 - **Tags:** layout, visual-hierarchy, readability, engagement
 - **Source:** [M3]/[NNg]
+
+### Figma structure & design-file maintenance
+
+Full navigation/build guide: [figma-structure.md](figma-structure.md).
+Source key here: **[FigBP]** = Figma official Best Practices;
+**[FigLearn]** = Figma Learn help center; **[DSC]** = Design Systems
+Collective (Figma Variables playbook, 2025/26); **[ZH]** = zeroheight
+design-system org guides.
+
+#### BP-091: Cover + index as the first two pages
+- **Do:** page 1 is a Cover (file name, status, owner, last-updated) built as a component; page 2 is an Index mapping every subsequent page to its flow/feature. Everything else follows.
+- **Why:** a file opens on its cover — the agent (and humans) identify and navigate it at a glance instead of scanning frames.
+- **Apply when:** every Figma file the project maintains.
+- **Tags:** figma, design-system, maintainability, handoff
+- **Source:** [FigBP]/[ZH]
+
+#### BP-092: One page per flow/feature, named to match the chain
+- **Do:** group frames by flow or feature, one Figma page each, page name carrying the `FLW-ID`/feature (e.g. `FLW-01 · Create project`); keep drafts on a separate "Scratch" page or file so the working file stays lean.
+- **Why:** page structure that mirrors `flows.md` lets an agent jump straight to the right page from a flow ID; draft clutter slows file load and confuses navigation.
+- **Apply when:** organizing any multi-flow file.
+- **Tags:** figma, maintainability, handoff
+- **Source:** [FigBP]/[ZH]/[loopstudio]
+
+#### BP-093: Frame names keyed to SCR-ID and state
+- **Do:** name each screen frame `SCR-NN/<Screen>/<state>` (slash-nested), e.g. `SCR-01/Welcome/empty`; one frame per screen-state that matters. This is the exact key stored in `screens.md`.
+- **Why:** deterministic 1:1 mapping between the `screens.md` States table and Figma frames — the agent finds and updates the right frame without guessing, and drift becomes checkable.
+- **Apply when:** every screen mockup in a super-ux project (the anti-confusion backbone).
+- **Tags:** figma, maintainability, handoff, design-system
+- **Source:** [FigBP] + super-ux contract
+
+#### BP-094: Purpose-based, code-matched naming (not appearance)
+- **Do:** name components and variables by role, not looks: `button/primary` not `button/blue`, `color/background/subtle` not `color/gray-100`; match the name developers use in code (`size=small` in Figma == `size="small"` in code).
+- **Why:** appearance names rot the moment the value changes; shared vocabulary removes the biggest design-to-code handoff friction.
+- **Apply when:** naming any component, variant, or token.
+- **Tags:** figma, design-system, handoff, maintainability
+- **Source:** [DSC]/[FigLearn]/[ZH]
+
+#### BP-095: Variables as tokens — primitive → semantic → component
+- **Do:** define primitive values, alias them to semantic tokens, then reference semantics from components; group into named collections (color, spacing, typography); use modes for light/dark and density. Never hardcode a raw value on a component.
+- **Why:** a three-tier token graph is what lets one change propagate everywhere and what maps cleanly to code tokens; raw values scattered on components can't be themed or synced.
+- **Apply when:** building or maintaining the design system layer.
+- **Tags:** figma, design-system, dark-mode, maintainability
+- **Source:** [DSC]/[FigLearn]
+
+#### BP-096: Variants for states of one object; separate components for different objects
+- **Do:** use variants to hold states/sizes of a single component (button: default/hover/active/disabled/loading); make a new component when it's a different object. Every interactive component ships hover, active, disabled, loading, and error variants, not just default.
+- **Why:** over-merged variants become unusable matrices; missing state variants mean the states never get designed — and PRN-01/PRN-09 fail in code.
+- **Apply when:** building any component with states.
+- **Tags:** figma, design-system, maintainability
+- **Source:** [FigLearn]/[artofstyleframe]
+
+#### BP-097: Auto layout on every container
+- **Do:** wrap every frame and component in auto layout with hug/fill sizing, explicit padding and gap from spacing tokens; avoid absolute positioning except for genuine overlays.
+- **Why:** auto layout makes components responsive and content-resilient, and produces structure that translates to real layout code; hand-placed frames break on any content change.
+- **Apply when:** every frame and component.
+- **Tags:** figma, design-system, maintainability, layout
+- **Source:** [FigLearn]/[devot]
+
+#### BP-098: Build on the existing library, don't reinvent
+- **Do:** before creating anything, pull the project's Figma library / design system (`get_libraries`/`search_design_system`) and use its components and tokens; detach or fork only with a recorded reason.
+- **Why:** parallel one-off components fragment the system and guarantee drift between screens and between design and code.
+- **Apply when:** the project has any existing library; every new screen.
+- **Tags:** figma, design-system, maintainability, handoff
+- **Source:** [FigBP]/[ZH]
+
+#### BP-099: Layer hygiene — name what matters, group meaningfully
+- **Do:** rename layers that carry meaning (nav, primary-cta, error-text); group by structure not by accident; delete hidden/orphan layers; keep the layer tree shallow. Skip renaming purely decorative leaves.
+- **Why:** an agent (and Figma AI / code-gen) reads the layer tree — meaningful names produce meaningful code and let others find things; "Frame 47 › Group 12" is noise.
+- **Apply when:** before handoff and in maintenance passes.
+- **Tags:** figma, maintainability, handoff
+- **Source:** [FigLearn]/[FigBP]
+
+#### BP-100: One naming convention + a governance owner
+- **Do:** agree ONE naming/structure convention up front (pages, frames, components, tokens) and record it in `screens.md` Design system; name an owner responsible for keeping the file and the code tokens in sync. Start simple; evolve only when the team feels friction.
+- **Why:** the best structure is the one the team actually keeps; convention without an owner rots, and over-engineered structure fails from complexity.
+- **Apply when:** setting up the design file; revisited each audit.
+- **Tags:** figma, design-system, maintainability, handoff
+- **Source:** [FigBP]/[DSC]/[ZH]

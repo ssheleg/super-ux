@@ -37,6 +37,12 @@ again per flow — the project-level choice holds until the user changes it.
    pull it (`get_libraries` / `search_design_system`) and build on its
    components and tokens instead of inventing new ones.
 
+**File structure & naming:** organize the file and name pages, frames,
+components, and tokens per [figma-structure.md](figma-structure.md)
+(BP-091..BP-100). The key rule: frames are named `SCR-NN/<Screen>/<state>`
+to match `screens.md` exactly, so lookup is deterministic and drift is
+checkable.
+
 ## Recording the file (foundation.md → Design tooling)
 
 `foundation.md` → Design tooling records the on/off choice and the file
@@ -74,9 +80,13 @@ For each flow, AFTER the flow diagram + screen/state table are agreed:
 3. One primary action per frame, visually dominant (screen rules in
    [ux-design-principles.md](ux-design-principles.md)); every interactive
    element meets the target-size floor.
-4. Follow the Figma plugin's own skills for the API (`/figma-use` before
-   `use_figma`, `/figma-generate-design` for translating a screen spec) —
-   don't hand-guess the MCP calls.
+4. Structure the file and name every frame per
+   [figma-structure.md](figma-structure.md): the flow's page named
+   `FLW-NN · <name>`, each frame `SCR-NN/<Screen>/<state>`, built on the
+   library's components and token variables (BP-093..BP-098). Follow the
+   Figma plugin's own skills for the API (`/figma-use` before `use_figma`,
+   `/figma-generate-design` for translating a screen spec) — don't
+   hand-guess the MCP calls.
 5. Write each state's frame deep-link into that screen's States table in
    `screens.md`, and the screen's page link into the Index `Figma` column.
    Present the mockup for approval alongside the flow.

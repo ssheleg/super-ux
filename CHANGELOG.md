@@ -4,6 +4,23 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2026-07-23
+
+### Added
+
+- **Figma file-structure guide** (`references/figma-structure.md`) + 10
+  practices (BP-091..BP-100) from verified sources (Figma Best Practices,
+  Figma Learn, Design Systems Collective's 2025/26 Variables playbook,
+  zeroheight): cover+index pages, one page per flow, **frames named
+  `SCR-NN/<Screen>/<state>` to match `screens.md` exactly** (deterministic
+  lookup, checkable drift), purpose-based code-matched naming, variables as
+  three-tier tokens (primitive → semantic → component) with modes,
+  variants-for-states vs components-for-objects, auto layout everywhere,
+  build-on-the-library, layer hygiene, one-convention-plus-an-owner
+  governance. Taxonomy gains `figma`/`design-system`/`handoff`/
+  `maintainability`. Wired into `figma-integration.md`, the `ux-flows`
+  design loop, and the system map.
+
 ## [0.15.0] - 2026-07-23
 
 ### Added
