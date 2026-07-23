@@ -31,7 +31,10 @@ Source key: **[48Laws]** = "48 Laws of Subscription App Success" (Botsi,
 Nielsen Norman Group research; **[Baymard]** = Baymard Institute large-scale
 usability testing (2025); **[WCAG]** = WCAG 2.2 (W3C, Level AA); **[webdev]**
 = web.dev Core Web Vitals; **[VUI]** = converged voice-interface guidance
-(Amazon/Google conversation-design checklists, 2024–2026).
+(Amazon/Google conversation-design checklists, 2024–2026); **[RC25]** =
+RevenueCat State of Subscription Apps 2025 (75k+ apps, $10B revenue);
+**[PLG25]** = OpenView / ProductLed 2025 SaaS benchmarks; **[ASO25]** =
+converged ASO industry guidance 2025 (AppTweak/AppFollow/asomobile).
 
 ### Onboarding & early experience
 
@@ -508,3 +511,91 @@ usability testing (2025); **[WCAG]** = WCAG 2.2 (W3C, Level AA); **[webdev]**
 - **Apply when:** any LLM/assistant feature surface.
 - **Tags:** ai-chat, trust, error-recovery, insight
 - **Source:** [NNg]
+
+### Monetization models & conversion economics
+
+#### BP-067: Choose the monetization model with data, not ideology
+- **Do:** decide hard paywall vs freemium vs hybrid explicitly, in the foundation: hard paywalls convert downloads-to-paid ~5× better than freemium (12.1% vs 2.2% median) with similar year-one retention; freemium wins only when free users feed growth loops (virality, content, network) or ads.
+- **Why:** the model dictates every downstream flow; picking freemium "to be nice" without a growth loop just burns conversion.
+- **Apply when:** foundation stage of any monetized product; challenge inherited models during Improve.
+- **Tags:** pricing, paywall, freemium, revenue, conversion, subscription-app
+- **Source:** [RC25]
+
+#### BP-068: Hybrid monetization beats subscription-only
+- **Do:** offer consumables, one-time unlocks, or lifetime alongside subscriptions where the product allows; route subscription-averse segments to one-time purchases (see BP-028).
+- **Why:** 2025 data shows apps mixing purchase types earn and retain more; subscription-only is fading.
+- **Apply when:** revenue design for apps with separable value units (credits, packs, features).
+- **Tags:** pricing, revenue, subscription-app, segmentation
+- **Source:** [RC25]
+
+#### BP-069: Show the paywall in the first session
+- **Do:** paywall appears during onboarding, after the value promise is established — not hidden behind days of usage. Trial starts overwhelmingly happen on day 0; design the first session as the primary conversion surface.
+- **Why:** >80% of trial starts occur immediately upon download; the "let them fall in love first" strategy mostly means never showing the offer.
+- **Apply when:** onboarding + paywall flow design (with BP-002/BP-005/BP-010 priming).
+- **Tags:** onboarding, paywall, conversion, subscription-app
+- **Source:** [RC25]
+
+#### BP-070: Trial design: friction and length are levers
+- **Do:** pick trial type consciously: opt-out (card required) converts ~31% vs opt-in ~9% but suppresses volume; longer trials (17–32 days) show the highest trial-to-paid (~46%) ONLY when paired with engagement during the trial — extension without activation does nothing.
+- **Why:** trial parameters are conversion levers with measured trade-offs, not defaults to copy.
+- **Apply when:** designing or A/B-testing any trial.
+- **Tags:** pricing, paywall, testing, conversion, subscription-app
+- **Source:** [RC25]/[PLG25]
+
+#### BP-071: The first 14 days decide conversion
+- **Do:** concentrate activation nudges, value proof, and conversion offers in days 0–14; ~60% of SaaS conversions happen there, ~80% by day 30. After day 30, switch to winback economics (BP-035).
+- **Why:** effort spent on late-funnel persuasion has a hard data ceiling.
+- **Apply when:** lifecycle design, email/push sequencing, trial length choice.
+- **Tags:** lifecycle, activation, conversion, retention
+- **Source:** [PLG25]
+
+#### BP-072: Activation before monetization pressure
+- **Do:** define and instrument the activation metric (BP-040) and drive users to it BEFORE heavy upsell pressure; winners hold 60%+ activation. Monetization prompts on unactivated users → discounts and churn.
+- **Why:** paying users who never activated refund and cancel; activation is the strongest conversion predictor across models.
+- **Apply when:** sequencing onboarding steps vs monetization asks.
+- **Tags:** activation, onboarding, conversion, retention, analytics
+- **Source:** [PLG25]
+
+#### BP-073: Freemium boundary = value metric, visibly metered
+- **Do:** gate the paid tier on the product's value metric (projects, seats, usage, exports — what scales with the job), keep the free tier genuinely useful for the core job at small scale, and show consumption progress (e.g. "2/3 free projects") BEFORE the wall hits.
+- **Why:** median freemium→paid is only 2.6% — the boundary placement is the whole game; invisible limits convert as anger, visible ones as anticipation.
+- **Apply when:** splitting free vs paid functionality; with BP-024/BP-025/BP-026 for surfacing.
+- **Tags:** freemium, pricing, scarcity, conversion, trust
+- **Source:** [PLG25]
+
+#### BP-074: Upgrade prompts at the moment of hitting value limits
+- **Do:** trigger the upgrade offer exactly when the user attempts the gated action (4th project, locked export), with the offer framed around finishing THAT job; one tap from limit to paywall to done.
+- **Why:** intent peaks at the blocked action — contextual upgrade beats scheduled campaigns (BP-025 generalized with a trigger rule).
+- **Apply when:** every gated feature's flow — the limit branch is a first-class flow edge, not a dead end.
+- **Tags:** freemium, paywall, conversion, friction-reduction
+- **Source:** [PLG25]/[48Laws]
+
+### Store listing, ratings & acquisition coherence
+
+#### BP-075: Store listing is the first screen of onboarding
+- **Do:** treat the listing as part of the UX chain: 5–8 screenshots ordered benefit → USP → social proof → core scenarios; first 2 must work standalone (5–10 seconds of attention decide install); preview video where motion sells; A/B via store tools.
+- **Why:** screenshots alone move page conversion 20–35%; the listing sets the expectation onboarding must then confirm.
+- **Apply when:** any store-distributed product; audits compare listing promises vs actual first-session scenarios.
+- **Tags:** onboarding, conversion, mobile, social-proof
+- **Source:** [ASO25]
+
+#### BP-076: Engineer the 4.0+ rating loop
+- **Do:** ask for a rating only right after a success moment (goal completed, streak, aha) and never mid-task or after an error; intercept negatives first ("Enjoying? no → feedback form, yes → store prompt"); reply to reviews; fix top review complaints as UX findings.
+- **Why:** below 4.0 acquisition stalls (90% of featured apps are 4.0+), and stores rank on rating + retention signals; the prompt moment decides the score.
+- **Apply when:** every product with store ratings — the rating prompt is a scenario with its own flow, states, and timing rules.
+- **Tags:** retention, trust, conversion, mobile, lifecycle
+- **Source:** [ASO25]
+
+#### BP-077: Ad-to-onboarding message coherence
+- **Do:** the creative's promise, the store listing, and the first onboarding screens must tell one story: same benefit, same words, same visual; segment onboarding by acquisition source/campaign where volumes justify (with BP-043 HDYHAU to verify).
+- **Why:** ROAS dies at the seams — a user sold "X" who lands in generic "welcome" churns before the paywall; funnel coherence is a UX property, not a marketing one.
+- **Apply when:** any paid acquisition; audits check first-session scenarios against live creatives' promises.
+- **Tags:** onboarding, attribution, conversion, revenue, trust
+- **Source:** [ASO25]/[48Laws]
+
+#### BP-078: Web-to-app funnels for owned conversion
+- **Do:** where economics matter, run the quiz/onboarding + payment on the web BEFORE the store (web2app): full attribution, ~3–4% processing fees vs 15–30% IAP, flexible pricing/trials; app then starts already-paid with a login handoff scenario.
+- **Why:** the highest-grossing subscription apps increasingly convert on web and use the app for delivery; store rules for external flows keep loosening (BP-030).
+- **Apply when:** paid-acquisition-heavy products with LTV to protect; design the web funnel with the same scenario rigor as the app.
+- **Tags:** onboarding, pricing, revenue, web, attribution, subscription-app
+- **Source:** [RC25]/[48Laws]

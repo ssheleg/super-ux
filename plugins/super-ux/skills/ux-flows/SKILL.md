@@ -23,6 +23,14 @@ stage tags.
 edge with scenarios. If foundation is missing on a non-trivial product,
 recommend `ux-foundation` first.
 
+**Money moments are first-class flows:** when the foundation declares a
+Monetization section, design dedicated flows for each money moment —
+paywall (first-session placement, BP-069), upgrade-at-limit (the gated
+action's limit branch is a flow edge to the offer, BP-074), trial start/end,
+cancel + winback, rating prompt after success moments (BP-076). Filter the
+best-practices catalog by `paywall`/`pricing`/`freemium` tags while
+designing them.
+
 ## Choosing a workflow
 
 | Situation | Workflow |

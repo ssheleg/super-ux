@@ -61,7 +61,11 @@ One question at a time; user's answers are the data:
 4. Derive user stories from journey pains and job outcomes; write
    acceptance criteria; prioritize must/should/could against the job's
    success metric.
-5. Present layer by layer for approval; mark unvalidated guesses as
+5. If the product earns money, fill the Monetization section: model chosen
+   with data (BP-067..070 — hard paywall vs freemium vs hybrid, trial type
+   and length), value metric, free boundary, money moments, acquisition
+   coherence. Money moments become dedicated flows downstream.
+6. Present layer by layer for approval; mark unvalidated guesses as
    assumptions with a risk note.
 
 ## Init (reverse) — existing product

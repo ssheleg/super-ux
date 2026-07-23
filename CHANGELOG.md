@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-07-23
+
+### Added
+
+- **Monetization economics in the catalog** (BP-067..BP-078, sourced from
+  RevenueCat State of Subscription Apps 2025, OpenView/ProductLed 2025
+  benchmarks, converged ASO 2025 guidance): model choice with data (hard
+  paywall ~5× freemium download-to-paid; hybrid beats subscription-only),
+  first-session paywall placement (>80% of trials start day 0), trial
+  design levers (opt-out ~31% vs opt-in ~9%; 17–32-day trials ~46% only
+  with engagement), the 14-day conversion window, activation before
+  monetization pressure, visible value-metric freemium boundaries,
+  upgrade-at-limit triggers, store listing as onboarding screen zero
+  (screenshots move conversion 20–35%), the 4.0+ rating loop,
+  ad→listing→onboarding coherence, web-to-app funnels.
+- **Monetization as a foundation layer**: `foundation.md` gains a
+  Monetization section (model + reason, value metric, free boundary, money
+  moments, acquisition coherence); money moments become first-class flows
+  (paywall, upgrade-at-limit, trial start/end, cancel/winback, rating
+  prompt); per-product scenario checklist extended accordingly;
+  `ux-foundation` interview asks how the product earns.
+
 ## [0.9.0] - 2026-07-23
 
 ### Added

@@ -79,6 +79,21 @@ One journey per persona × job that matters:
 Quality bar: INVEST (independent, negotiable, valuable, estimable, small,
 testable). Acceptance criteria are Given/When/Then and observable.
 
+### 5. Monetization model (when the product earns money)
+
+```markdown
+## Monetization
+- **Model:** hard paywall | freemium | hybrid | trial (opt-in/opt-out, length) — chosen per BP-067..070, reason noted
+- **Value metric:** <what the paid tier meters: projects, seats, usage, exports>
+- **Free boundary:** <what stays genuinely useful free, where the visible limit sits>
+- **Money moments:** <paywall placement, upgrade triggers, rating prompt moments, winback points>
+- **Acquisition coherence:** <the one story ad -> listing -> onboarding must tell>
+```
+
+Money moments are inputs to `flows.md`: each gets a first-class flow
+(paywall, upgrade-at-limit, cancel/winback, rating prompt) — not an
+afterthought edge.
+
 ### ID rules (all layers)
 
 `P-NN`, `JTBD-NN`, `JRN-NN`, `ST-NNN` — sequential, **never reused**;
@@ -229,7 +244,10 @@ differs.
 
 Per product: first-run onboarding; every core feature flow; settings;
 multi-entity flows (e.g. second project, switching); account/data lifecycle
-where applicable.
+where applicable; monetization flows where the product earns money —
+paywall (first-session placement), trial start/end, upgrade-at-limit,
+cancel + winback, rating prompt after success moments, store-listing/ad
+coherence with the first session.
 
 ## Audit report — `docs/ux/audits/YYYY-MM-DD[-scope].md`
 

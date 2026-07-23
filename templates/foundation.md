@@ -27,6 +27,16 @@ data/observation, recognizable by a real user. -->
 |---|-------|------------|------------|---------------|------|-------------|
 -->
 
+## Monetization
+
+<!-- When the product earns money (choose with data, BP-067..070):
+- **Model:** hard paywall | freemium | hybrid | trial (type, length) — and why
+- **Value metric:** <what the paid tier meters>
+- **Free boundary:** <what stays free, where the visible limit sits>
+- **Money moments:** <paywall placement, upgrade triggers, rating prompts, winback>
+- **Acquisition coherence:** <the one story ad -> listing -> onboarding tells>
+-->
+
 ## User stories
 
 <!-- ### ST-001: <short name>

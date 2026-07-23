@@ -41,7 +41,7 @@ flowchart LR
 | [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward + backwards), task analysis, flow rules, heuristics PRN-01..16, improvement procedure, anti-patterns |
 | `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + three agent-requested rules) |
 | `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |
-| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of proven UX/growth practices (seeded with 48 subscription-app laws); agents filter by stage/domain tags and apply what serves a traced job |
+| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 78 proven UX/growth practices — subscription-app laws, mobile/web/voice interface guidance (HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries, web2app); agents filter by tags and apply what serves a traced job |
 
 The format all of them share is locked in
 [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md):
