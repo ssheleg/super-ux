@@ -254,8 +254,9 @@ coherence with the first session.
 ```markdown
 # UX Audit — YYYY-MM-DD
 
-- **Scope:** all | feature:<name> | SCN-001..SCN-020 | coverage
-- **Method:** static code trace [+ live run]
+- **Scope:** all | feature:<name> | SCN-001..SCN-020 | coverage | practices | heuristics
+- **Depth:** quick | standard | deep (passes run listed in Method)
+- **Method:** static code trace [+ live run]; passes: scenario [, flow conformance, heuristics, practices, coverage]
 - **Base version:** <git SHA of docs/ux at audit time>
 
 ## Summary
@@ -280,7 +281,16 @@ coherence with the first session.
 
 | # | Scenario | Severity | Finding | Suggested fix |
 |---|----------|----------|---------|---------------|
+
+## Practice compliance (deep audits)
+
+| Practice | Verdict | How / why not |
+|----------|---------|---------------|
 ```
+
+The Practice compliance table follows the practice-selection protocol:
+verdicts `applied` / `adapted` / `rejected` (reason) / `deferred`
+(trigger) / `missing` (applicable but absent → suggestion finding).
 
 ### Verdicts
 

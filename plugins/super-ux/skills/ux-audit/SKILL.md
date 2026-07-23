@@ -27,28 +27,47 @@ flow diagram: every node reachable, every edge (including error edges)
 wired, screen states from the flow's table present — unimplemented
 nodes/edges are findings on the traced scenarios.
 
-**Heuristic pass (optional, scope `heuristics`):** walk implemented flows
-against PRN-01..16 from
-[ux-design-principles.md](../references/ux-design-principles.md); record
-violations `[PRN-NN] (severity) node — issue -> fix`. Complements the
-practices pass (`BP-NNN`); same suggestion semantics unless the violation
-breaks a scenario (then it's a normal finding).
-
 ## Evidence discipline (non-negotiable)
 
 Every verdict must cite `file:line` evidence. Could not find or verify
 something? The verdict is **BLOCKED** with the exact reason — never a guess,
 never a courtesy PASS. An audit that flatters the codebase is worthless.
 
+## Depth levels
+
+| Depth | Passes run |
+|---|---|
+| `quick` | 1. Scenario pass only |
+| `standard` (default) | 1. Scenario pass + 2. Flow conformance |
+| `deep` | 1–2 + 3. Heuristic pass (PRN-01..16) + 4. Practice pass (selection protocol) + 5. Coverage pass |
+
+Passes:
+
+1. **Scenario pass** — the loop below: code vs every scoped scenario.
+2. **Flow conformance** — code vs flow diagrams: every node reachable,
+   every edge (incl. error edges) wired, screen states from the flow table
+   present.
+3. **Heuristic pass** — implemented flows vs PRN-01..16
+   ([ux-design-principles.md](../references/ux-design-principles.md));
+   findings `[PRN-NN] (severity) node — issue -> fix`.
+4. **Practice pass** — per
+   [practice-selection.md](../references/practice-selection.md): profile →
+   mandatory sets + per-artifact checklists (money flows get their rows);
+   output a compliance table (applied / adapted / rejected / deferred /
+   **missing** — applicable but absent, as suggestion findings `[BP-NNN]`).
+   Respect recorded user-owned rejections — don't re-litigate them.
+5. **Coverage pass** — the chain itself: orphan stories/flows/scenarios,
+   journey stages without scenarios, jobs without stories, unused personas.
+
 ## The loop
 
-1. **Scope.** Read the base (and foundation, if present). Scope is
+1. **Scope.** Read the base (and foundation/flows, if present). Scope is
    `$ARGUMENTS` if given (`all`, `feature:<name>`, `SCN-010..SCN-020`,
-   `coverage`), default `all`. Note the git SHA of `docs/ux` — it goes into
-   the report header. Skip `retired` scenarios. Scope `coverage` audits the
-   chain instead of the code: orphan stories/scenarios, journey stages
-   without scenarios, jobs without stories, unused personas — same report
-   format, findings reference layer IDs; skip steps 3's code checks.
+   `coverage`, `practices`, `heuristics`), default `all`; depth keyword
+   (`quick`/`deep`) selects the depth, default `standard`. Single-pass
+   scopes (`coverage`/`practices`/`heuristics`) run just that pass. Note
+   the git SHA of `docs/ux` — it goes into the report header. Skip
+   `retired` scenarios.
 2. **Batch.** Group scoped scenarios by feature, ~5–8 per batch. List the
    batches before starting so progress is visible.
 3. **Audit each batch.** For large scopes dispatch parallel subagents — one
@@ -85,14 +104,13 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
    writing-plans → subagent-driven execution. The plan is written to be
    executable without this conversation.
 
-## Optional practices pass
+## Pass semantics
 
-On request (or scope `practices`), review scenarios and implementation
-against [best-practices.md](../references/best-practices.md): select
-practices by tags matching the product's stages and domain, check which
-apply-but-are-absent. Report as `suggestion` findings referencing `BP-NNN`
-(e.g. "[BP-013] permission asked without value preview") — practices are
-opportunities, never blockers; they don't change scenario verdicts.
+Heuristic (`PRN-NN`) and practice (`BP-NNN`) findings are suggestions —
+opportunities, never blockers; they don't change scenario verdicts, unless
+the violation breaks a scenario (then it's a normal finding on that
+scenario). Practices are opportunities selected by the protocol, not a
+style gate.
 
 ## Optional live pass
 

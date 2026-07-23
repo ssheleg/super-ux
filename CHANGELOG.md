@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-07-23
+
+### Added
+
+- **Practice Selection Protocol** (`references/practice-selection.md`) —
+  the deterministic bridge between the catalogs (BP-001..078, PRN-01..16)
+  and the design/audit functions: product profile (platform, money model,
+  distribution, acquisition, forms, analytics) → mandatory consideration
+  sets → per-artifact checklists (onboarding, paywall, upgrade-at-limit,
+  trial, winback, rating prompt, forms, navigation, permissions,
+  lifecycle, voice/chat, empty states, store listing, experiments) →
+  compliance table with verdicts applied/adapted/rejected(reason)/
+  deferred(trigger)/missing. No silent skips; no cargo-culting
+  (consideration is mandatory, adoption only when a traced job is served);
+  user-owned rejections recorded and not re-litigated.
+- **Design function**: `ux-flows` Design gains a mandatory Practice pass —
+  compliance table attached to every flow entry before approval.
+- **Audit depth levels**: `quick` (scenarios), `standard` (+ flow
+  conformance, default), `deep` (+ heuristic pass, practice pass via the
+  protocol, chain coverage) — five ordered passes; report format gains
+  Depth and a Practice compliance section.
+
 ## [0.10.0] - 2026-07-23
 
 ### Added

@@ -69,9 +69,10 @@ user pick (multiple allowed). Full catalog:
 6. **Validate the chain** — `ux-scenarios` Validate (+ `ux-foundation`
    Validate) — before building a new feature, or when traceability is
    doubtful.
-7. **Audit code vs scenarios & flows** — `ux-audit` (all / feature:X) —
-   when validated scenarios were never audited, or code changed since the
-   last audit.
+7. **Audit code vs scenarios & flows** — `ux-audit` (all / feature:X;
+   depth `deep` adds heuristic + practice + coverage passes) — when
+   validated scenarios were never audited, or code changed since the last
+   audit; recommend `deep` before releases and after big UX changes.
 8. **Coverage audit** — `ux-audit` scope `coverage` — orphan
    stories/flows/scenarios, journey gaps.
 9. **Best-practices / heuristics review** — `ux-audit` scope `practices` or

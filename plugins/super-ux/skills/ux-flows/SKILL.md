@@ -27,9 +27,9 @@ recommend `ux-foundation` first.
 Monetization section, design dedicated flows for each money moment —
 paywall (first-session placement, BP-069), upgrade-at-limit (the gated
 action's limit branch is a flow edge to the offer, BP-074), trial start/end,
-cancel + winback, rating prompt after success moments (BP-076). Filter the
-best-practices catalog by `paywall`/`pricing`/`freemium` tags while
-designing them.
+cancel + winback, rating prompt after success moments (BP-076). Each money
+flow uses its checklist row from
+[practice-selection.md](../references/practice-selection.md) step 3.
 
 ## Choosing a workflow
 
@@ -56,9 +56,15 @@ Per story (or tight cluster):
 4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
-5. Check against PRN-01..16 and applicable `BP-NNN` practices before
-   presenting; present for approval; hand off to `ux-scenarios` to cover
-   nodes/edges.
+5. **Practice pass** (mandatory, per
+   [practice-selection.md](../references/practice-selection.md)): build the
+   product profile from the foundation, pull the mandatory sets + this
+   artifact's checklist row, give every pulled practice a verdict
+   (applied / adapted / rejected+reason / deferred+trigger) in a compliance
+   table attached to the flow entry. No silent skips; applied practices
+   must be visible in the flow/scenario artifacts.
+6. Present for approval (flow + compliance table); hand off to
+   `ux-scenarios` to cover nodes/edges.
 
 ## Reverse (backwards mode)
 

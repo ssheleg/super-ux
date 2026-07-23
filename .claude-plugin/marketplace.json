@@ -12,7 +12,7 @@
       "name": "super-ux",
       "source": "./plugins/super-ux",
       "description": "Covers UX at every project stage: ux-foundation (personas, JTBD, journeys, user stories), ux-scenarios (docs/ux/scenarios.md as the source of truth, traced to stories), ux-audit (code vs scenarios with acceptance criteria + chain coverage), /ux action-menu entry point, scenario-first hard rule.",
-      "version": "0.10.0",
+      "version": "0.11.0",
       "author": {
         "name": "ssheleg"
       },
