@@ -61,6 +61,10 @@ The gaps between "is" and "should" become the improvement backlog.
 - Forms: validate inline at the field, preserve input on error, label errors
   with what to DO, not what went wrong internally.
 - Empty states sell the next action, never just state emptiness.
+- Visual craft at build time — type system, contrast floors, palette
+  discipline, spacing grid, alignment, microcopy — follows BP-079..090 in
+  the best-practices catalog; the audit's heuristic and practice passes
+  check them per the selection protocol.
 
 ## Heuristics checklist (PRN-01..PRN-10, after Nielsen)
 

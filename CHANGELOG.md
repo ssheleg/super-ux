@@ -4,6 +4,24 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-07-23
+
+### Added
+
+- **Visual craft in the catalog** (BP-079..BP-090): body-text baseline
+  (16px / 1.5 line height / 45–75 CPL, target ~66 — Baymard, USWDS, Dyson &
+  Haselgrove research chain), single type system (≤2 faces, 1.3–1.6×
+  heading scale), contrast floors with softened extremes (WCAG 4.5:1, no
+  harsh #000-on-#FFF), 60-30-10 palette with one scarce accent, semantic
+  colors as a contract (never repurposed, never color-only), dark mode as a
+  designed palette (gray surfaces, desaturated accents, tonal elevation),
+  4/8pt spacing grid with proximity-as-grouping, whitespace-as-hierarchy,
+  single-grid alignment, tabular figures for data, microcopy rules (verbs,
+  sentence case, stable action names), decoration subtraction. New tag
+  group "Visual craft".
+- Selection protocol: "any graphical UI" mandatory set (BP-079..090) +
+  artifact rows for screen build/polish, reading surfaces, data tables.
+
 ## [0.11.0] - 2026-07-23
 
 ### Added

@@ -22,6 +22,8 @@ attribution. Keep entries under ~6 lines.
   `email` `push` `widgets` `voice` `ai-chat` `forms`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
   `insight` `accessibility` `performance`
+- **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
+  `visual-hierarchy` `microcopy`
 
 ## Practices
 
@@ -34,7 +36,9 @@ usability testing (2025); **[WCAG]** = WCAG 2.2 (W3C, Level AA); **[webdev]**
 (Amazon/Google conversation-design checklists, 2024–2026); **[RC25]** =
 RevenueCat State of Subscription Apps 2025 (75k+ apps, $10B revenue);
 **[PLG25]** = OpenView / ProductLed 2025 SaaS benchmarks; **[ASO25]** =
-converged ASO industry guidance 2025 (AppTweak/AppFollow/asomobile).
+converged ASO industry guidance 2025 (AppTweak/AppFollow/asomobile);
+**[Type]** = converged typography research (Baymard line-length studies,
+USWDS, Bringhurst, Dyson & Haselgrove reading-speed research).
 
 ### Onboarding & early experience
 
@@ -599,3 +603,89 @@ converged ASO industry guidance 2025 (AppTweak/AppFollow/asomobile).
 - **Apply when:** paid-acquisition-heavy products with LTV to protect; design the web funnel with the same scenario rigor as the app.
 - **Tags:** onboarding, pricing, revenue, web, attribution, subscription-app
 - **Source:** [RC25]/[48Laws]
+
+### Visual design, typography & color
+
+#### BP-079: Body text baseline: 16px / 1.5 / 45–75 CPL
+- **Do:** body text ≥16px (or platform equivalent), line height ≥1.5× font size, measure 45–75 characters per line (target ~66; raise line height to 1.6–1.7 when lines run long); enforce via max-width on text containers.
+- **Why:** eye-tracking and reading-speed research (Dyson & Haselgrove; Baymard) converge on this window — shorter lines break scanning rhythm, longer lines lose the return sweep.
+- **Apply when:** any reading surface — articles, descriptions, settings copy, empty states.
+- **Tags:** typography, readability, web, mobile, accessibility
+- **Source:** [Type]
+
+#### BP-080: One type system: ≤2 typefaces, consistent scale
+- **Do:** one body face + optionally one display face; headings 1.3–1.6× of body per level on a fixed scale; hierarchy via size + weight + spacing, not via new fonts; define the scale once and reuse everywhere.
+- **Why:** every extra face/size is a new visual rule the reader must learn; a consistent scale makes hierarchy legible pre-attentively.
+- **Apply when:** any product; audits flag ad-hoc font sizes outside the scale.
+- **Tags:** typography, visual-hierarchy, readability, trust
+- **Source:** [Type]/[M3]/[HIG]
+
+#### BP-081: Contrast floors, softened extremes
+- **Do:** text contrast ≥4.5:1 (≥3:1 for ≥24px/bold ≥19px); avoid pure #000-on-#FFF for long reading — near-black on near-white reads softer at identical compliance; secondary text stays ≥4.5:1, "muted" is not an excuse.
+- **Why:** WCAG floors are the legal/perceptual minimum; maximal harshness causes fatigue and halation for astigmatic readers.
+- **Apply when:** every text/background pair, both themes.
+- **Tags:** color, typography, accessibility, readability
+- **Source:** [WCAG]/[Type]
+
+#### BP-082: 60-30-10 palette, one scarce accent
+- **Do:** ~60% dominant neutral, ~30% secondary, ~10% accent; ONE saturated accent reserved for primary actions and key states — the accent appears exactly where you want the eye to go; extend the palette with tints/shades of existing hues before adding new ones.
+- **Why:** accent scarcity IS the visual hierarchy — an accent used everywhere ranks nothing; limited palettes read as intentional and calm.
+- **Apply when:** defining or auditing any color system; audits flag accent-colored non-primary elements.
+- **Tags:** color, visual-hierarchy, engagement, trust
+- **Source:** [M3]/[HIG]
+
+#### BP-083: Semantic colors are a contract
+- **Do:** red = destructive/error, green = success, amber = warning, accent = action — assigned once, never repurposed (no red sale banners next to red delete buttons); meaning never carried by color alone (icon/label always present).
+- **Why:** users build a color→meaning map in minutes; one violation poisons trust in every other color signal (and color-only fails color-blind users).
+- **Apply when:** any state/feedback design; audits check for repurposed semantics.
+- **Tags:** color, feedback, accessibility, trust, error-recovery
+- **Source:** [M3]/[WCAG]
+
+#### BP-084: Dark mode is a designed palette, not inversion
+- **Do:** surfaces in dark gray (not pure black), depth via lighter-surface elevation; desaturate accents for dark backgrounds (saturated colors vibrate on dark); re-verify every contrast pair per theme; respect the OS theme by default.
+- **Why:** inverted light palettes fail contrast and vibrate; tonal elevation replaces shadows that darkness eats.
+- **Apply when:** any dark theme; audits run the contrast pass in both themes.
+- **Tags:** color, dark-mode, accessibility, readability
+- **Source:** [M3]/[HIG]
+
+#### BP-085: Spacing system on a 4/8pt grid
+- **Do:** all paddings, gaps, and sizes from one scale (multiples of 4/8); spacing encodes grouping — related elements sit measurably closer than unrelated ones (proximity beats borders); pick per-level spacing once, reuse everywhere.
+- **Why:** a spacing system makes layouts feel coherent without anyone knowing why; proximity is the strongest free grouping signal (Gestalt).
+- **Apply when:** every layout; audits flag off-scale one-off values.
+- **Tags:** layout, visual-hierarchy, readability
+- **Source:** [M3]/[HIG]
+
+#### BP-086: Whitespace is hierarchy, density is a mode
+- **Do:** generous space around the primary content/action; increase density only where the job is scanning many items (tables, lists) — and then be uniformly dense; never fill freed space with decoration.
+- **Why:** space signals importance pre-attentively; mixed density reads as clutter even when aligned.
+- **Apply when:** screen layout decisions, dashboard vs reading surfaces.
+- **Tags:** layout, visual-hierarchy, readability, engagement
+- **Source:** [Type]/[M3]
+
+#### BP-087: One grid, honest alignment
+- **Do:** single layout grid per screen; left-align body text (RTL-aware); center only short display lines; every element's edge aligns with something — no orphan offsets.
+- **Why:** the eye detects misalignment faster than it reads; centered long text destroys the return sweep.
+- **Apply when:** any layout; audits flag multi-grid screens and centered paragraphs.
+- **Tags:** layout, typography, readability
+- **Source:** [Type]
+
+#### BP-088: Tabular figures for data
+- **Do:** numbers in tables, timers, counters, and prices use tabular (monospaced-figure) variants and consistent decimal places; align numeric columns right.
+- **Why:** proportional figures jitter as values change and misalign columns — comparison becomes work.
+- **Apply when:** any numeric UI; dashboards, carts, timers.
+- **Tags:** typography, readability, insight
+- **Source:** [Type]
+
+#### BP-089: Microcopy: verbs, sentence case, stable names
+- **Do:** buttons say what happens ("Save changes", not "Submit"/"OK"); sentence case throughout; an action keeps one name across the whole flow (button "Publish" → toast "Published"); labels label, examples demonstrate — one job per string.
+- **Why:** interface vocabulary is navigation signage; renamed actions and vague verbs force re-reading and erode confidence.
+- **Apply when:** every user-facing string; part of scenario UI-elements review.
+- **Tags:** microcopy, readability, trust, friction-reduction
+- **Source:** [NNg]/[HIG]
+
+#### BP-090: Subtract decoration until only signal remains
+- **Do:** separate content with spacing or background shifts before reaching for borders; one separation device per boundary; cut ornaments that encode nothing (gratuitous gradients, shadows, dividers stacked on gaps).
+- **Why:** every visual element competes for attention; decoration that carries no information taxes the elements that do (PRN-08 applied to pixels).
+- **Apply when:** visual polish passes and audits — count separation devices per boundary.
+- **Tags:** layout, visual-hierarchy, readability, engagement
+- **Source:** [M3]/[NNg]

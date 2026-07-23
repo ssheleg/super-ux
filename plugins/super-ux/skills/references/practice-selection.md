@@ -28,6 +28,7 @@ answers in the foundation):
 
 | Profile fact | Mandatory consideration set |
 |---|---|
+| any graphical UI | BP-079..090 (visual craft: typography, color, layout) |
 | mobile-* | BP-049..054 |
 | mobile-ios | + BP-031, BP-033 (OS surfaces, widgets — as opportunities) |
 | web | BP-052, BP-058, BP-059 |
@@ -65,6 +66,9 @@ the Step-2 sets:
 | Empty / first-use states | BP-004, BP-012; screen rules (principles doc) |
 | Store listing | BP-075, BP-077 |
 | Analytics / experiment design | BP-040..048 |
+| Screen build / visual polish | BP-079..090; PRN-08, PRN-15 |
+| Reading surfaces (articles, docs, long copy) | BP-079, BP-081, BP-086, BP-087 |
+| Data tables / dashboards | BP-086, BP-088; PRN-06 |
 
 ## Step 4 — Compliance table (the record)
 
