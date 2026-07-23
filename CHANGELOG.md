@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.2] - 2026-07-23
+
+### Fixed
+
+- Marketplace/plugin descriptions now reflect the full system (flows, the
+  screens.md UI map with Figma frames, the linter, the practice catalog) —
+  they had lagged at the foundation/scenarios/audit-only wording.
+
 ## [0.16.1] - 2026-07-23
 
 ### Fixed
