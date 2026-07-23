@@ -16,7 +16,7 @@ is the source of truth for everything the user can do, see, and hit — every
 feature, every button, every state, every error, every result.
 
 **Format contract:** [scenario-format.md](../references/scenario-format.md)
-(ux-contract v2). Read it before writing or editing scenarios. Never deviate
+(ux-contract v4). Read it before writing or editing scenarios. Never deviate
 from its field names, ID rules, statuses, or checklists.
 
 **The WHY and HOW layers:** when `docs/ux/foundation.md` exists (personas,

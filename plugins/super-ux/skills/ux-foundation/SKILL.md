@@ -17,7 +17,7 @@ journeys → User stories.** Scenarios (`ux-scenarios` skill) are built on top
 and trace to these IDs — the full chain gives every scenario its context.
 
 **Format contract:** [scenario-format.md](../references/scenario-format.md)
-(ux-contract v2). Never deviate from ID schemes or field names.
+(ux-contract v4). Never deviate from ID schemes or field names.
 
 ## Quality bars (non-negotiable)
 

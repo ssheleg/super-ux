@@ -1,6 +1,6 @@
 # UX Scenarios
 
-<!-- Managed with super-ux (ux-contract v3). Update in the same change as any user-facing behavior change. -->
+<!-- Managed with super-ux (ux-contract v4). Update in the same change as any user-facing behavior change. -->
 
 ## Index
 
@@ -16,7 +16,7 @@ know, what they want. -->
 ## Scenarios
 
 <!-- Group scenarios by feature under "## <feature>" headings. Entry shape
-(see ux-contract v3 for field rules); steps are use-case style — one user
+(see ux-contract v4 for field rules); steps are use-case style — one user
 action per step paired with the observable system response:
 
 ### SCN-001: <Title>

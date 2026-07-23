@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.1] - 2026-07-23
+
+### Fixed
+
+- Consistency pass across all docs: unified every contract stamp to
+  `ux-contract v4` (were mixed v2/v3/v4); added the `screens.md` MAP step
+  and Figma mockups to the pipeline in `ux-design-principles.md` (8 steps,
+  aligned with the v4 chain); `practice-selection.md` now spans the full
+  catalog (BP-001..100) and routes Figma-enabled products to BP-091..100;
+  README reflects 100 practices and links the Figma references. No
+  behavioral change — documentation coherence only.
+
 ## [0.16.0] - 2026-07-23
 
 ### Added

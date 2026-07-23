@@ -12,11 +12,13 @@ audits cite its principle IDs. This is the "taste" layer — formats live in
 1. RESEARCH      personas, JTBD, journeys        -> foundation.md   (WHY)
 2. DEFINE        user stories + acceptance       -> foundation.md   (WHAT FOR)
 3. STRUCTURE     task analysis -> user flows     -> flows.md        (HOW)
-4. SPECIFY       scenarios: action -> response,  -> scenarios.md    (WHAT EXACTLY)
+4. MAP           screens + states registry       -> screens.md      (UI MAP)
+5. SPECIFY       scenarios: action -> response,  -> scenarios.md    (WHAT EXACTLY)
                  alt & error paths (use cases)
-5. VISUALIZE     wireframes / storyboards        -> optional, per flow
-6. BUILD UI      only now
-7. VERIFY        audits -> prioritized fix plans -> audits/
+6. VISUALIZE     wireframes / storyboards / Figma -> optional, per screen
+                 mockups (frames named SCR-NN/<Screen>/<state>)
+7. BUILD UI      only now
+8. VERIFY        audits -> prioritized fix plans -> audits/, plans/
 ```
 
 **Forward mode** (new product/feature): run 1→7 in order. Never design a
@@ -52,7 +54,7 @@ The gaps between "is" and "should" become the improvement backlog.
 - Count steps on the happy path; challenge every step above five.
 - Every screen node declares its states: loading / empty / error / success.
 
-## Screen & interaction rules (method for steps 4–6)
+## Screen & interaction rules (method for steps 4–7)
 
 - Every user action gets visible feedback within the same screen.
 - Destructive actions: confirmation AND undo where feasible; undo beats

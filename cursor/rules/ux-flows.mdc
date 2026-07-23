@@ -14,7 +14,7 @@ reused. Any interface change updates `screens.md` (and the Figma frame when
 enabled) in the same change — a screen whose code diverges from its record
 is `drifted`.
 
-## Flow entry (ux-contract v3)
+## Flow entry (ux-contract v4)
 
 Fields: `Traces` (story/job IDs), `Goal` (observable end state), `Entry
 points` (ALL of them), `Success exit`, `Task analysis` (numbered

@@ -10,7 +10,7 @@ alwaysApply: false
 stories (ST-NNN)**. IDs sequential, never reused; dropped entries kept, not
 deleted.
 
-## Formats (ux-contract v2)
+## Formats (ux-contract v4)
 
 - **Persona `P-NN`:** 1–3 sentences, grounded in data/observation,
   recognizable by a real user.

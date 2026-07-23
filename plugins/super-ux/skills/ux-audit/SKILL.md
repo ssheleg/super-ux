@@ -17,7 +17,7 @@ state handled, every error honest. Output: a versioned report in
 `docs/ux/audits/` plus updated audit statuses in the base.
 
 **Format contract:** [scenario-format.md](../references/scenario-format.md)
-(ux-contract v2) — report structure, verdicts (PASS / PARTIAL / FAIL /
+(ux-contract v4) — report structure, verdicts (PASS / PARTIAL / FAIL /
 BLOCKED), severities.
 
 **Precondition:** `docs/ux/scenarios.md` exists. If it doesn't, stop and run

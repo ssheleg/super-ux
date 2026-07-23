@@ -44,7 +44,7 @@ finding, not an acceptable state.
 
 ## `docs/ux/foundation.md`
 
-Header comment: `<!-- Managed with super-ux (ux-contract v2). The WHY layer:
+Header comment: `<!-- Managed with super-ux (ux-contract v4). The WHY layer:
 update when the understanding of users changes. -->`
 
 ### 1. Personas
@@ -248,7 +248,7 @@ Rules:
 
 Ordered structure:
 
-1. **Header comment:** `<!-- Managed with super-ux (ux-contract v2). Update
+1. **Header comment:** `<!-- Managed with super-ux (ux-contract v4). Update
    in the same change as any user-facing behavior change. -->`
 2. **Index** — one row per scenario:
 

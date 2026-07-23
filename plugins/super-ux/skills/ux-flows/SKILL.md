@@ -22,7 +22,7 @@ UI, Figma, and code together). A screen used by several flows is described
 once in `screens.md`.
 
 **Contracts:** [scenario-format.md](../references/scenario-format.md)
-(ux-contract v3, `flows.md` section) and
+(ux-contract v4, `flows.md` section) and
 [ux-design-principles.md](../references/ux-design-principles.md) — read the
 principles doc before designing; it is the thinking playbook (task-analysis
 method, flow rules, PRN-01..16 heuristics, improvement procedure).

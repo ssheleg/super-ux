@@ -1,6 +1,6 @@
 # UX Foundation
 
-<!-- Managed with super-ux (ux-contract v2). The WHY layer: personas, jobs
+<!-- Managed with super-ux (ux-contract v4). The WHY layer: personas, jobs
 to be done, customer journeys, user stories. Update when the understanding
 of users changes; scenarios in scenarios.md trace to the IDs defined here. -->
 
