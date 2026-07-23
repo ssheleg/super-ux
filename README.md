@@ -41,7 +41,7 @@ flowchart LR
 | [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward + backwards), task analysis, flow rules, heuristics PRN-01..16, improvement procedure, anti-patterns |
 | `cursor/rules/*.mdc` | The same methodology for Cursor (always-on hard rule + three agent-requested rules) |
 | `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |
-| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 78 proven UX/growth practices — subscription-app laws, mobile/web/voice interface guidance (HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries, web2app); agents filter by tags and apply what serves a traced job |
+| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 90 proven UX/growth practices — subscription-app laws, mobile/web/voice interface guidance (HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries, web2app), visual craft (typography, color, spacing, microcopy); selected deterministically via [practice-selection.md](plugins/super-ux/skills/references/practice-selection.md) |
 
 The format all of them share is locked in
 [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md):
@@ -51,11 +51,13 @@ lifecycle, audit verdicts and severities.
 
 ## The hard rule
 
-- `docs/ux/scenarios.md` is the source of truth for all user-facing behavior.
-- Any change touching user-facing behavior updates the scenario base **in the
-  same change**.
-- Any new feature or project **starts** with scenarios: draft, validate
-  against the existing base, approve — only then design and build UI.
+- `docs/ux/scenarios.md` is the source of truth for all user-facing
+  behavior; foundation (WHY) and flows (HOW) are the layers it traces to.
+- Any change touching user-facing behavior updates the scenario base (and
+  affected flows) **in the same change**.
+- Any new feature or project **starts** with the chain: which job, which
+  journey stage, which story — then flows and scenarios, validated and
+  approved — only then design and build UI.
 
 ## Install
 

@@ -1,7 +1,7 @@
 {
   "name": "super-ux",
   "description": "Full-cycle UX for AI agents: build the WHY layer (personas, JTBD, customer journeys, user stories with acceptance criteria), derive and maintain traced UX scenarios as the source of truth, audit the codebase against every scenario with evidence-backed verdicts, and turn findings into prioritized fix plans. /ux is the single action-menu entry point.",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "author": {
     "name": "ssheleg"
   },

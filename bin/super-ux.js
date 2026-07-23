@@ -74,13 +74,15 @@ function installCursor(target, force) {
     }
   }
 
-  const base = path.join(target, 'docs', 'ux', 'scenarios.md');
-  if (fs.existsSync(base)) {
-    console.log(`keep:    ${base} exists (never overwritten)`);
-  } else {
-    fs.mkdirSync(path.join(target, 'docs', 'ux', 'audits'), { recursive: true });
-    fs.copyFileSync(path.join(ROOT, 'templates', 'scenarios.md'), base);
-    console.log(`seed:    ${base}`);
+  fs.mkdirSync(path.join(target, 'docs', 'ux', 'audits'), { recursive: true });
+  for (const tpl of ['scenarios', 'foundation', 'flows']) {
+    const dst = path.join(target, 'docs', 'ux', `${tpl}.md`);
+    if (fs.existsSync(dst)) {
+      console.log(`keep:    ${dst} exists (never overwritten)`);
+    } else {
+      fs.copyFileSync(path.join(ROOT, 'templates', `${tpl}.md`), dst);
+      console.log(`seed:    ${dst}`);
+    }
   }
 
   console.log(`done: ${installed} installed, ${skipped} skipped`);

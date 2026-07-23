@@ -49,12 +49,14 @@ for rule in "$SRC"/cursor/rules/*.mdc; do
   fi
 done
 
-if [ -f "$TARGET/docs/ux/scenarios.md" ]; then
-  echo "keep:    $TARGET/docs/ux/scenarios.md exists (never overwritten)"
-else
-  mkdir -p "$TARGET/docs/ux/audits"
-  cp "$SRC/templates/scenarios.md" "$TARGET/docs/ux/scenarios.md"
-  echo "seed:    $TARGET/docs/ux/scenarios.md"
-fi
+mkdir -p "$TARGET/docs/ux/audits"
+for tpl in scenarios foundation flows; do
+  if [ -f "$TARGET/docs/ux/$tpl.md" ]; then
+    echo "keep:    $TARGET/docs/ux/$tpl.md exists (never overwritten)"
+  else
+    cp "$SRC/templates/$tpl.md" "$TARGET/docs/ux/$tpl.md"
+    echo "seed:    $TARGET/docs/ux/$tpl.md"
+  fi
+done
 
 echo "done: $installed installed, $skipped skipped"

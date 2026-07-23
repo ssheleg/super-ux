@@ -42,8 +42,9 @@ Routing table (user's words → action from the menu below):
 ## 2. Repair silently (no menu needed for these)
 
 - Rule missing → install it (as `/ux-rule`).
-- `docs/ux/` missing → create skeleton (seed `scenarios.md` and, for
-  non-trivial products, `foundation.md` from the plugin templates).
+- `docs/ux/` missing → create skeleton (seed `scenarios.md`,
+  `foundation.md`, and `flows.md` from the plugin templates; `audits/`
+  dir).
 
 ## 3. Status report
 

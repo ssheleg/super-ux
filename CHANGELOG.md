@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.1] - 2026-07-23
+
+### Fixed
+
+- Consistency audit across all documents: `templates/scenarios.md` and
+  `templates/audit-report.md` brought up to ux-contract v3 (Traces column,
+  action→response steps, Alt paths; Depth/passes header, Context line,
+  Practice compliance section); hard-rule text unified across
+  `templates/claude-rule.md` and `/ux-rule` (chain wording, all four
+  skills, `/ux` entry point; `/ux-rule` now replaces outdated rule blocks);
+  `/ux-update` routes feature ideas through the full chain and cascades to
+  flows; Cursor `ux-scenarios` rule Index gains Traces; README practice
+  count corrected to 90 and hard-rule section aligned; installers
+  (`install.sh`, `bin/super-ux.js`, `/ux` repair, `/ux-rule`) now seed all
+  three templates (scenarios, foundation, flows), never overwriting.
+
 ## [0.12.0] - 2026-07-23
 
 ### Added

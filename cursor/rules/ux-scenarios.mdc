@@ -11,8 +11,9 @@ every feature, button, state, error, result. Keep it true.
 ## File structure (scenario-format v1)
 
 Title, then header comment, then: **Index** table
-(`| ID | Title | Feature | Persona | Status | Last audit |`), **Personas**
-(1–3 sentences each), **Scenarios** grouped by feature.
+(`| ID | Title | Feature | Persona | Traces | Status | Last audit |`),
+**Personas** (pointer to foundation.md when it exists, else defined here),
+**Scenarios** grouped by feature.
 
 When `docs/ux/foundation.md` exists, scenarios derive from it: draft per
 user story / journey stage, fill `Traces:` (e.g. `ST-001 (JTBD-01,
