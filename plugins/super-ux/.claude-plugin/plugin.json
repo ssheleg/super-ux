@@ -1,7 +1,7 @@
 {
   "name": "super-ux",
-  "description": "Covers UX at every project stage: ux-foundation (personas, JTBD, journeys, user stories, monetization), ux-flows (user flows + the docs/ux/screens.md UI map with Figma frames), ux-scenarios (use-case scenarios traced to flows/stories), ux-audit (code vs the chain, evidence-backed verdicts + fix plans). /ux is the single plain-language entry point; a docs/ux linter enforces no-drift; 100 tag-indexed best practices + PRN heuristics guide design.",
-  "version": "0.17.0",
+  "description": "Covers UX at every project stage: ux-foundation (personas, JTBD, journeys, user stories, monetization), ux-flows (user flows + the docs/ux/screens.md UI map with Figma frames), ux-scenarios (use-case scenarios traced to flows/stories), ux-audit (code vs the chain, evidence-backed verdicts + fix plans). /ux is the single plain-language entry point; a docs/ux linter enforces no-drift; a tag-indexed best-practices catalog + PRN heuristics + component guidelines guide design.",
+  "version": "0.17.1",
   "author": {
     "name": "ssheleg"
   },

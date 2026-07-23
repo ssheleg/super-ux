@@ -4,6 +4,15 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.1] - 2026-07-23
+
+### Fixed
+
+- Manifest descriptions no longer hardcode a practice count ("100" was
+  already stale at 115) — they now say "a tag-indexed best-practices
+  catalog + PRN heuristics + component guidelines", so the catalog can grow
+  without a description bump.
+
 ## [0.17.0] - 2026-07-23
 
 ### Added
