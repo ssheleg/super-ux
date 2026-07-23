@@ -60,6 +60,10 @@ The gaps between "is" and "should" become the improvement backlog.
 - Destructive actions: confirmation AND undo where feasible; undo beats
   confirmation when both are possible.
 - Primary action per screen: exactly one, visually dominant.
+- Pick the right control for the job (radios vs checkboxes vs select,
+  sheet vs alert, modal vs disclosure, nav bar vs rail) and use the
+  platform's standard component — see
+  [component-guidelines.md](component-guidelines.md) (BP-101..115).
 - Forms: validate inline at the field, preserve input on error, label errors
   with what to DO, not what went wrong internally.
 - Empty states sell the next action, never just state emptiness.

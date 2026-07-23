@@ -4,6 +4,23 @@ All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.0] - 2026-07-23
+
+### Added
+
+- **Component & control guidelines** (`references/component-guidelines.md`)
+  + 15 practices (BP-101..115) from verified design systems (Apple HIG,
+  Material Design 3, W3C ARIA Authoring Practices Guide, GOV.UK Design
+  System): a "which control for the job" decision table (radios vs
+  checkboxes vs select, switch vs checkbox, action sheet vs alert, modal vs
+  disclosure, combobox, bottom nav vs rail, FAB budget, dates, toasts) plus
+  platform rules (one-primary/never-destructive-primary, focus-trap+ESC+
+  return for modals, APG combobox roles/keys, every-control-ships-all-states)
+  and the "use the platform component of record" stance. Taxonomy gains a
+  Components group; practice-selection routes every graphical UI to
+  BP-101..115; wired into `ux-flows` screen registration, the principles
+  doc, and the system map.
+
 ## [0.16.2] - 2026-07-23
 
 ### Fixed

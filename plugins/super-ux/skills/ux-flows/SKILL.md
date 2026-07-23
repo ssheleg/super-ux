@@ -67,7 +67,11 @@ Per story (or tight cluster):
    with per-state behavior, elements with one primary action, coverage,
    scenarios, resources; the flow's Screens-traversed table just lists the
    SCR-IDs and states it uses. Fill the Design system block once (Figma
-   library, token/component/asset locations).
+   library, token/component/asset locations). Choose each element's control
+   by the job via
+   [component-guidelines.md](../references/component-guidelines.md)
+   (radios vs select, sheet vs alert, modal vs disclosure, nav bar vs
+   rail, FAB budget) and note the platform component of record.
 4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.

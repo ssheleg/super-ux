@@ -1,9 +1,10 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..100 — behavioral BP-001..078,
-visual craft BP-079..090, Figma structure BP-091..100;
-[ux-design-principles.md](ux-design-principles.md) PRN-01..16) and the two
+([best-practices.md](best-practices.md) BP-001..115 — behavioral BP-001..078,
+visual craft BP-079..090, Figma structure BP-091..100, components & controls
+BP-101..115; [ux-design-principles.md](ux-design-principles.md) PRN-01..16)
+and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
 **audit** (`ux-audit`). Purpose: the right practices get considered at the
 right step every time — nothing relevant silently skipped, nothing
@@ -30,6 +31,7 @@ answers in the foundation):
 | Profile fact | Mandatory consideration set |
 |---|---|
 | any graphical UI | BP-079..090 (visual craft: typography, color, layout) |
+| any graphical UI (controls) | BP-101..115 (which control for the job; states; platform component of record) — see [component-guidelines.md](component-guidelines.md) |
 | Figma enabled | BP-091..100 (file structure, SCR-ID frame naming, tokens, variants, auto layout) |
 | mobile-* | BP-049..054 |
 | mobile-ios | + BP-031, BP-033 (OS surfaces, widgets — as opportunities) |

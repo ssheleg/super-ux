@@ -1,6 +1,6 @@
 {
   "name": "super-ux",
-  "version": "0.16.2",
+  "version": "0.17.0",
   "description": "Scenario-driven UI development for AI agents (Claude Code + Cursor): scenario base, scenario-first hard rule, evidence-backed UX audits. This package is the installer CLI.",
   "bin": {
     "super-ux": "bin/super-ux.js"

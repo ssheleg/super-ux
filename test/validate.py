@@ -156,7 +156,7 @@ def validate_skills() -> None:
             continue
         check(fm.get("name") == skill.name, f"{rel}/SKILL.md: front-matter name != '{skill.name}'")
         check(bool(fm.get("description")), f"{rel}/SKILL.md: missing description")
-    for ref in ("scenario-format.md", "best-practices.md", "ux-design-principles.md", "practice-selection.md", "figma-integration.md", "figma-structure.md", "system-map.md"):
+    for ref in ("scenario-format.md", "best-practices.md", "ux-design-principles.md", "practice-selection.md", "figma-integration.md", "figma-structure.md", "component-guidelines.md", "system-map.md"):
         check(
             (skills_dir / "references" / ref).is_file(),
             f"plugins/super-ux/skills/references/{ref}: missing",

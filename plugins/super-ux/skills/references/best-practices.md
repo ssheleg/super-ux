@@ -25,6 +25,8 @@ attribution. Keep entries under ~6 lines.
   `insight` `accessibility` `performance`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
   `visual-hierarchy` `microcopy`
+- **Components:** `component` `control` `navigation-ui` `dialog` `forms-ui`
+  `selection` `feedback-ui`
 
 ## Practices
 
@@ -768,3 +770,115 @@ design-system org guides.
 - **Apply when:** setting up the design file; revisited each audit.
 - **Tags:** figma, design-system, maintainability, handoff
 - **Source:** [FigBP]/[DSC]/[ZH]
+
+### Components & controls (when to use what)
+
+Decision reference + platform rules: [component-guidelines.md](component-guidelines.md).
+Source key: **[HIG]** Apple Human Interface Guidelines; **[M3]** Material
+Design 3; **[APG]** W3C ARIA Authoring Practices Guide; **[GOVUK]** GOV.UK
+Design System.
+
+#### BP-101: Use the platform's standard component before inventing one
+- **Do:** reach for the host system's component of record (HIG on Apple, M3 on Android, the project's design system / ARIA APG patterns on web) before building a custom control.
+- **Why:** standard components ship with accessibility, all interaction states, and motion behavior that a custom one silently omits (Jakob's law, PRN-14).
+- **Apply when:** specifying any control; a custom control needs an explicit reason and equivalent keyboard/SR behavior.
+- **Tags:** component, control, accessibility, maintainability
+- **Source:** [HIG]/[M3]/[APG]
+
+#### BP-102: One primary action, never destructive-as-primary
+- **Do:** exactly one visually dominant primary action per screen, assigned to the most likely choice; a destructive action never gets the primary role even when it's the likely tap — style it destructive.
+- **Why:** two primaries = no primary; a destructive primary invites costly mis-taps.
+- **Apply when:** every screen with actions.
+- **Tags:** control, visual-hierarchy, error-recovery
+- **Source:** [HIG]/[M3]
+
+#### BP-103: Radios for one-of-few, checkboxes for any-of, select for one-of-many
+- **Do:** 2–5 visible mutually-exclusive options → radio group; zero-or-more → checkboxes; 6+ exclusive → select or searchable combobox. Add a hint stating how many can be picked; don't rely on shape alone.
+- **Why:** matching the control to the selection cardinality is what makes the choice legible; users don't infer cardinality from radio-vs-checkbox shape (GOV.UK).
+- **Apply when:** any selection input.
+- **Tags:** selection, forms-ui, friction-reduction
+- **Source:** [GOVUK]/[M3]
+
+#### BP-104: Avoid select boxes where a small visible set works
+- **Do:** prefer visible radios/segmented controls to a dropdown when the option set is small; reserve selects for genuinely long lists.
+- **Why:** dropdowns hide choices and are hard for many users (motor, screen-magnifier, cognitive) — GOV.UK's field data.
+- **Apply when:** ≤5 options, or whenever choices benefit from being seen.
+- **Tags:** selection, forms-ui, accessibility
+- **Source:** [GOVUK]
+
+#### BP-105: Switch = immediate; checkbox = staged
+- **Do:** use a switch for a setting that takes effect instantly; a checkbox for options confirmed on submit. Don't mix the two metaphors in one form.
+- **Why:** the control signals when the change happens — a switch that needs a Save button, or a checkbox that acts instantly, breaks the user's model.
+- **Apply when:** any toggle.
+- **Tags:** control, selection, feedback-ui
+- **Source:** [HIG]/[M3]
+
+#### BP-106: Action sheet for action-choices, alert for unexpected confirms
+- **Do:** action sheet = choices related to an action the user initiated; alert = unexpected info or a destructive confirm with no extra choices. Use sheets sparingly.
+- **Why:** conflating them either buries confirmations or interrupts needlessly.
+- **Apply when:** mobile choice/confirm moments.
+- **Tags:** dialog, control, error-recovery
+- **Source:** [HIG]
+
+#### BP-107: Action sheets stay short, destructive placed safely
+- **Do:** ≤4 buttons including Cancel (aim ≤3 choices + Cancel); style the destructive choice and place it where it's noticed but NOT adjacent to the likely tap.
+- **Why:** long sheets can't be scanned at once; a destructive button next to the common one gets fat-fingered.
+- **Apply when:** any action sheet / bottom-sheet menu.
+- **Tags:** dialog, control, error-recovery
+- **Source:** [HIG]
+
+#### BP-108: Modal dialogs — trap focus, ESC closes, return focus
+- **Do:** `role="dialog"` + `aria-modal="true"`; background inert; focus moves into the dialog on open, is trapped while open, returns to the trigger on close; ESC closes; Tab cycles within.
+- **Why:** without focus management a modal is unusable by keyboard/SR users and leaks interaction to the inert background (APG).
+- **Apply when:** any blocking overlay on web.
+- **Tags:** dialog, accessibility, control
+- **Source:** [APG]
+
+#### BP-109: Don't stack modals; don't modal what a disclosure handles
+- **Do:** one modal at a time; show/hide secondary content inline with a disclosure/accordion instead of a dialog.
+- **Why:** stacked modals trap and disorient; over-modaling turns quick reveals into interruptions (PRN-11 progressive disclosure).
+- **Apply when:** reveal/subtask decisions.
+- **Tags:** dialog, component, friction-reduction
+- **Source:** [APG]/[M3]
+
+#### BP-110: Combobox — correct roles + full keyboard
+- **Do:** `role="combobox"` owning a textbox; popup listbox/grid/tree/dialog with matching `aria-haspopup`; arrow keys move, Enter selects, ESC closes; the field reflects the selection.
+- **Why:** an autocomplete without the APG roles/keys is invisible to assistive tech and unusable without a mouse.
+- **Apply when:** any autocomplete/typeahead/searchable select.
+- **Tags:** control, forms-ui, accessibility
+- **Source:** [APG]
+
+#### BP-111: Bottom nav for phones, rail for tablets, sized right
+- **Do:** bottom navigation bar for compact widths (<600dp), 3–5 destinations, at the bottom; navigation rail for 600–839dp, 3–7 items. Primary destinations always visible.
+- **Why:** matches thumb reach (BP-049) and window size; the wrong nav for the width wastes reach or space.
+- **Apply when:** responsive app navigation.
+- **Tags:** navigation-ui, mobile, component
+- **Source:** [M3]
+
+#### BP-112: FAB only for the screen's single most important action
+- **Do:** use a FAB for the one primary create/compose action; a FAB menu (not stacked mini-FABs) for a few related actions; extended FAB when a label adds clarity.
+- **Why:** the FAB's prominence is a budget — more than one destroys the "this is THE action" signal.
+- **Apply when:** mobile screens with a dominant creative action.
+- **Tags:** control, navigation-ui, mobile
+- **Source:** [M3]
+
+#### BP-113: Memorable dates as 3 fields, browsable dates as a picker
+- **Do:** birthdays / known dates → a 3-field day/month/year text input; dates the user must look up or browse → a date picker.
+- **Why:** forcing a calendar widget for a birthday is slow and error-prone; free-text parsing for a browsed date is fragile (GOV.UK).
+- **Apply when:** any date entry — pick by whether the date is recalled or discovered.
+- **Tags:** forms-ui, control, friction-reduction
+- **Source:** [GOVUK]
+
+#### BP-114: Transient feedback in toasts, required actions never only in a toast
+- **Do:** toast/snackbar for brief, non-blocking confirmations; anything the user must act on goes in persistent UI or a dialog.
+- **Why:** toasts auto-dismiss — a required action hidden there is missed (PRN-01 vs PRN-06).
+- **Apply when:** success/undo/status messaging.
+- **Tags:** feedback-ui, component, error-recovery
+- **Source:** [M3]/[HIG]
+
+#### BP-115: Every interactive component ships all its states
+- **Do:** provide default, hover, focus (visible ring), active/pressed, disabled (reason discoverable), loading (async), error (fallible), selected (where applicable) — in code and as Figma variants.
+- **Why:** missing states are exactly where system-status (PRN-01) and error-recovery (PRN-09) silently fail; "default only" is an unfinished control.
+- **Apply when:** every control; the audit checks the state set.
+- **Tags:** component, control, accessibility, feedback-ui
+- **Source:** [M3]/[HIG]/[APG]

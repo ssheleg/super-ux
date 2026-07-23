@@ -32,7 +32,8 @@ after this chain is designed and approved (and, with Figma on, mocked up).
 Formats: [scenario-format.md](scenario-format.md). Design reasoning:
 [ux-design-principles.md](ux-design-principles.md). Practices:
 [best-practices.md](best-practices.md) selected via
-[practice-selection.md](practice-selection.md). Figma workflow:
+[practice-selection.md](practice-selection.md); control choice:
+[component-guidelines.md](component-guidelines.md). Figma workflow:
 [figma-integration.md](figma-integration.md); Figma file structure &
 naming: [figma-structure.md](figma-structure.md).
 
