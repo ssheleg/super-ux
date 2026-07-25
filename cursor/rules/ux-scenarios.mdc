@@ -8,7 +8,7 @@ alwaysApply: false
 `docs/ux/scenarios.md` describes everything the user can do, see, and hit —
 every feature, button, state, error, result. Keep it true.
 
-## File structure (scenario-format v1)
+## File structure (ux-contract v4)
 
 Title, then header comment, then: **Index** table
 (`| ID | Title | Feature | Persona | Traces | Status | Last audit |`),

@@ -5,7 +5,7 @@ description: Use when designing or improving HOW users move through the product 
 
 # ux-flows — Design HOW Users Move
 
-> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> Part of **super-ux** — see [system-map.md](references/system-map.md)
 > for the whole pipeline and the four sync rules. After changes, run the
 > linter (`python3 docs/ux/lint.py`).
 
@@ -21,12 +21,12 @@ evaluation of existing flows and traced redesign proposals.
 UI, Figma, and code together). A screen used by several flows is described
 once in `screens.md`.
 
-**Contracts:** [scenario-format.md](../references/scenario-format.md)
+**Contracts:** [scenario-format.md](references/scenario-format.md)
 (ux-contract v4, `flows.md` section) and
-[ux-design-principles.md](../references/ux-design-principles.md) — read the
+[ux-design-principles.md](references/ux-design-principles.md) — read the
 principles doc before designing; it is the thinking playbook (task-analysis
 method, flow rules, PRN-01..16 heuristics, improvement procedure).
-Proven tactics: [best-practices.md](../references/best-practices.md) by
+Proven tactics: [best-practices.md](references/best-practices.md) by
 stage tags.
 
 **Position in the chain:** foundation (WHY) → **flows (HOW)** → scenarios
@@ -40,7 +40,7 @@ paywall (first-session placement, BP-069), upgrade-at-limit (the gated
 action's limit branch is a flow edge to the offer, BP-074), trial start/end,
 cancel + winback, rating prompt after success moments (BP-076). Each money
 flow uses its checklist row from
-[practice-selection.md](../references/practice-selection.md) step 3.
+[practice-selection.md](references/practice-selection.md) step 3.
 
 ## Choosing a workflow
 
@@ -69,14 +69,14 @@ Per story (or tight cluster):
    SCR-IDs and states it uses. Fill the Design system block once (Figma
    library, token/component/asset locations). Choose each element's control
    by the job via
-   [component-guidelines.md](../references/component-guidelines.md)
+   [component-guidelines.md](references/component-guidelines.md)
    (radios vs select, sheet vs alert, modal vs disclosure, nav bar vs
    rail, FAB budget) and note the platform component of record.
 4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
    **Figma mockups** (default on — see
-   [figma-integration.md](../references/figma-integration.md)): if Design
+   [figma-integration.md](references/figma-integration.md)): if Design
    tooling has Figma enabled, build a frame per screen-state applying the
    visual-craft practices (BP-079..090) as hard constraints, and write the
    frame deep-link into every screen row's `Figma` column. If Figma is
@@ -85,7 +85,7 @@ Per story (or tight cluster):
    the Figma yes/no question once at the start and record it in the
    foundation.
 5. **Practice pass** (mandatory, per
-   [practice-selection.md](../references/practice-selection.md)): build the
+   [practice-selection.md](references/practice-selection.md)): build the
    product profile from the foundation, pull the mandatory sets + this
    artifact's checklist row, give every pulled practice a verdict
    (applied / adapted / rejected+reason / deferred+trigger) in a compliance
@@ -129,7 +129,7 @@ Follow the improvement procedure in the principles doc, strictly:
    show flow before → after (two mermaid diagrams); state the expected
    observable effect. No untraced "make it nicer" changes. When Figma is
    enabled, produce before → after frames beside the diagrams
-   ([figma-integration.md](../references/figma-integration.md)).
+   ([figma-integration.md](references/figma-integration.md)).
 4. Approved proposals land in THREE places, same session: flow Updates
    (+ scenario cascade) AND a concrete UX plan
    (`docs/ux/plans/YYYY-MM-DD-<scope>.md`, contract format): target

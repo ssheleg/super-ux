@@ -230,6 +230,49 @@ def validate_links() -> None:
             )
 
 
+def validate_shipped_references() -> None:
+    """Every skill must carry its OWN copy of the contracts it links.
+
+    The skills CLI ships only a skill's own directory, so a sibling
+    `skills/references/` reaches Claude Code plugins but arrives BROKEN on every
+    other agent. Each `skills/<skill>/references/*.md` must therefore exist and be
+    byte-identical to the source of truth in `skills/references/`.
+    """
+    root = ROOT / "plugins/super-ux/skills"
+    src = root / "references"
+    for skill_dir in sorted(p for p in root.iterdir() if p.is_dir() and p.name != "references"):
+        skill_md = skill_dir / "SKILL.md"
+        text = read(skill_md) or ""
+        check(
+            "../references/" not in text,
+            f"{skill_dir.name}/SKILL.md links ../references/ — contracts must live INSIDE the skill dir "
+            f"(a sibling dir is not shipped by the skills CLI)",
+        )
+        linked = sorted(set(re.findall(r"\]\(references/([a-z0-9-]+\.md)\)", text)))
+        for name in linked:
+            local = skill_dir / "references" / name
+            if not check(local.is_file(), f"{skill_dir.name}: missing shipped contract references/{name}"):
+                continue
+            origin = src / name
+            if origin.is_file():
+                check(
+                    local.read_bytes() == origin.read_bytes(),
+                    f"{skill_dir.name}/references/{name} has drifted from skills/references/{name} "
+                    f"(re-sync: python3 test/sync_references.py)",
+                )
+        # contracts referenced by the copies themselves must resolve locally too
+        refdir = skill_dir / "references"
+        if refdir.is_dir():
+            for f in sorted(refdir.glob("*.md")):
+                for target in re.findall(r"\]\(([^)\s]+)\)", f.read_text(encoding="utf-8")):
+                    if target.startswith(("http://", "https://", "mailto:", "#")):
+                        continue
+                    check(
+                        (refdir / target.split("#")[0]).exists(),
+                        f"{skill_dir.name}/references/{f.name}: dangling link {target}",
+                    )
+
+
 def main() -> int:
     validate_manifests()
     validate_skills()
@@ -238,6 +281,7 @@ def main() -> int:
     validate_templates()
     validate_linter()
     validate_links()
+    validate_shipped_references()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")

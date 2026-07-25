@@ -5,7 +5,7 @@ description: Use when creating or updating UX scenarios, starting ANY new featur
 
 # ux-scenarios — Maintain the Scenario Base
 
-> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> Part of **super-ux** — see [system-map.md](references/system-map.md)
 > for the whole pipeline and the four sync rules. After changes, run the
 > linter (`python3 docs/ux/lint.py`).
 
@@ -15,7 +15,7 @@ behavior. This skill keeps one: `docs/ux/scenarios.md` in the target project
 is the source of truth for everything the user can do, see, and hit — every
 feature, every button, every state, every error, every result.
 
-**Format contract:** [scenario-format.md](../references/scenario-format.md)
+**Format contract:** [scenario-format.md](references/scenario-format.md)
 (ux-contract v4). Read it before writing or editing scenarios. Never deviate
 from its field names, ID rules, statuses, or checklists.
 
@@ -33,7 +33,7 @@ upper layers are missing on a non-trivial product, recommend `ux-foundation`
 or on explicit user choice.
 
 **Design taste:** apply
-[ux-design-principles.md](../references/ux-design-principles.md) — states
+[ux-design-principles.md](references/ux-design-principles.md) — states
 per screen, error recovery, primary-action rules — when writing Expected
 results and Errors & recovery.
 
@@ -48,7 +48,7 @@ results and Errors & recovery.
    warning.
 
 **Best practices:** when drafting or reviewing scenarios, consult
-[best-practices.md](../references/best-practices.md) — filter by tags
+[best-practices.md](references/best-practices.md) — filter by tags
 matching the feature/journey stage (onboarding, paywall, retention, …) and
 the product domain. Apply a practice only when it serves a traced job/story;
 note applied practice IDs (`BP-NNN`) in the scenario's design rationale. The

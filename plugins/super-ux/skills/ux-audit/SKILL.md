@@ -5,7 +5,7 @@ description: Use when verifying the codebase against the UX scenario base - runs
 
 # ux-audit — Scenario Audit Loop
 
-> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> Part of **super-ux** — see [system-map.md](references/system-map.md)
 > for the whole pipeline and the four sync rules. Start any audit by running
 > the linter (`python3 docs/ux/lint.py`) — it catches structural drift for
 > free before the code-tracing passes.
@@ -16,7 +16,7 @@ Verify that the code actually delivers every scenario in
 state handled, every error honest. Output: a versioned report in
 `docs/ux/audits/` plus updated audit statuses in the base.
 
-**Format contract:** [scenario-format.md](../references/scenario-format.md)
+**Format contract:** [scenario-format.md](references/scenario-format.md)
 (ux-contract v4) — report structure, verdicts (PASS / PARTIAL / FAIL /
 BLOCKED), severities.
 
@@ -58,10 +58,10 @@ Passes:
    state has a frame link and flag empty/obviously-stale links (a link the
    registry marks but the design lost).
 3. **Heuristic pass** — implemented flows vs PRN-01..16
-   ([ux-design-principles.md](../references/ux-design-principles.md));
+   ([ux-design-principles.md](references/ux-design-principles.md));
    findings `[PRN-NN] (severity) node — issue -> fix`.
 4. **Practice pass** — per
-   [practice-selection.md](../references/practice-selection.md): profile →
+   [practice-selection.md](references/practice-selection.md): profile →
    mandatory sets + per-artifact checklists (money flows get their rows);
    output a compliance table (applied / adapted / rejected / deferred /
    **missing** — applicable but absent, as suggestion findings `[BP-NNN]`).

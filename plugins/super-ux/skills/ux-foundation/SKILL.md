@@ -5,7 +5,7 @@ description: Use when defining or revising WHO the users are and WHY they use th
 
 # ux-foundation — The WHY Layer
 
-> Part of **super-ux** — see [system-map.md](../references/system-map.md)
+> Part of **super-ux** — see [system-map.md](references/system-map.md)
 > for the whole pipeline (foundation → flows → screens → scenarios → audits
 > → plans) and the four sync rules. After changes, run the linter
 > (`python3 docs/ux/lint.py`).
@@ -16,7 +16,7 @@ maintains `docs/ux/foundation.md`: **Personas → Jobs to Be Done → Customer
 journeys → User stories.** Scenarios (`ux-scenarios` skill) are built on top
 and trace to these IDs — the full chain gives every scenario its context.
 
-**Format contract:** [scenario-format.md](../references/scenario-format.md)
+**Format contract:** [scenario-format.md](references/scenario-format.md)
 (ux-contract v4). Never deviate from ID schemes or field names.
 
 ## Quality bars (non-negotiable)
@@ -31,7 +31,7 @@ and trace to these IDs — the full chain gives every scenario its context.
   product), one row per stage: action, touchpoint, emotion (1–5), pain,
   opportunity. Score opportunities Frequency × Severity × Solvability. When
   filling opportunities, consult
-  [best-practices.md](../references/best-practices.md) by stage tags for
+  [best-practices.md](references/best-practices.md) by stage tags for
   proven mechanisms.
 - **Stories** pass INVEST; acceptance criteria are Given/When/Then and
   observable. A story that can't be verified is not done being written.

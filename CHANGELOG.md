@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.19.0 — 2026-07-25
+
+Review pass — the contracts were not reaching non-Claude agents.
+
+- **FIX (distribution): shared contracts now ship with every skill.** The skills
+  CLI copies only a skill's OWN directory, so the sibling `skills/references/`
+  reached Claude Code plugins but arrived **dangling on Cursor / Codex / OpenCode /
+  OpenClaw / …** — `~/.agents/skills/ux-audit/` held nothing but `SKILL.md` while
+  its SKILL.md called `scenario-format.md` a contract to "never deviate" from.
+  Each skill now carries its own `references/` (the transitive closure of what it
+  links) and links them `references/…`. `skills/references/` stays the source of
+  truth; `test/sync_references.py` re-syncs; the validator fails on drift, on a
+  missing shipped contract, on any `../references/` link, and on dangling links
+  inside the copies.
+- Cursor always-on rule gains the `screens.md` and linter bullets it was missing
+  (it was two canon versions behind the Claude rule).
+- `ux-scenarios.mdc` contract stamp corrected `scenario-format v1` → `ux-contract v4`.
+- `system-map.md` lists `/ux-init`; README fixes "both skills" → "all four",
+  "three agent-requested rules" → "four", and the release note now names
+  `package.json` in the version-sync set (the validator has always enforced it).
+
 All notable changes to this project are documented in this file. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
 follow [SemVer](https://semver.org/spec/v2.0.0.html).

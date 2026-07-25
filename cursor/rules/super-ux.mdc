@@ -8,6 +8,11 @@ alwaysApply: true
 - `docs/ux/scenarios.md` is the source of truth for all user-facing behavior;
   `docs/ux/foundation.md` (personas, JTBD, journeys, user stories) is the WHY
   layer scenarios trace to.
+- `docs/ux/screens.md` is the UI map: every screen + state with its wireframe
+  and (Figma on) its frame link. A screen that changes in code changes here in
+  the SAME change.
+- Run the linter after any UX change and before calling work done:
+  `python3 docs/ux/lint.py` (or `/ux-lint`). It must pass — drift must not merge.
 - Any change that touches user-facing behavior MUST update
   `docs/ux/scenarios.md` in the same change (add/adjust scenarios, statuses,
   coverage). New user-facing behavior with no scenario is a blocker, not a
