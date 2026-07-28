@@ -158,11 +158,11 @@ Follow the improvement procedure in the principles doc, strictly:
 ## The build gate (state this to the user plainly)
 
 Interface code does not get written until this workflow is done: the chain
-(foundation → flows → screens → scenarios) is designed and approved, and —
-when Figma
-is enabled (default) — the UI is mocked up in Figma with every screen linked
-to its frame. When a user jumps straight to "build the screen", say so and
-run the workflow first; that ordering is the whole point of super-ux.
+(foundation → flows → screens → scenarios) is designed and approved, the
+style pack is recorded, and — when Figma is enabled (default) — the UI is
+mocked up with every screen linked to its frame. When a user jumps straight
+to "build the screen", say so and run the workflow first; that ordering is
+the whole point of super-ux.
 
 ## Definition of done
 

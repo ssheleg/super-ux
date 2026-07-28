@@ -182,7 +182,7 @@ def main() -> int:
         for m in re.finditer(r"^###\s+(ST-\d+):", foundation, re.MULTILINE):
             sid = m.group(1)
             # Only this story's own body: stop at the next heading, so a
-            # neighbour's Priority line is never read as this story's.
+            # neighbor's Priority line is never read as this story's.
             tail = re.split(r"^#{2,3}\s", foundation[m.end():], maxsplit=1, flags=re.MULTILINE)[0]
             if re.search(r"\*\*Priority:\*\*\s*(must|should)", tail, re.IGNORECASE):
                 if sid not in traced:

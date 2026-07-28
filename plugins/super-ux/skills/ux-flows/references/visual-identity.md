@@ -14,7 +14,7 @@ prevent. So when the chain reaches VISUALIZE (Figma frames, wireframes) or
 BUILD UI, the visual layer comes from a **locked style pack**, and the
 ssheleg **sheleg-design** skill is where those packs live.
 
-## Division of labour (state it to the user this way)
+## Division of labor (state it to the user this way)
 
 | Question | Owner |
 |---|---|
@@ -80,7 +80,7 @@ screen/state table are agreed and **before** frames get drawn:
   `SCR-NN/<Screen>/<state>` frame — the visual-craft practices are then
   satisfied *by construction*, and the compliance table records them
   `applied` with the pack as evidence;
-- honour the pack's **bans** (each pack names what it never does) — a banned
+- honor the pack's **bans** (each pack names what it never does) — a banned
   effect on a frame is a finding, not taste;
 - the pack's light/dark twin (where it ships one) means the dark variant is a
   designed palette, not an inversion (BP-084).

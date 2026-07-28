@@ -2,11 +2,10 @@
 
 super-ux designs the UX chain in markdown (foundation → flows → screens →
 scenarios). When the user wants visual mockups, the same design work is
-mirrored into
-**Figma** via the Figma MCP — every frame built from the flow's screen/state
-spec and the visual-craft practices (BP-079..090). This is an opt-in
-capability, **enabled by default**; text-only design is always a valid
-fallback.
+mirrored into **Figma** via the Figma MCP — every frame built from the flow's
+screen/state spec, the recorded style pack, and the visual-craft practices
+(BP-079..090). This is an opt-in capability, **enabled by default**;
+text-only design is always a valid fallback.
 
 ## When to ask
 
@@ -42,7 +41,7 @@ again per flow — the project-level choice holds until the user changes it.
    and when it's empty use the **sheleg-design** companion skill to pick one
    (or offer its one-time install once, then continue either way). Its token
    file becomes the Figma variable collections. Full protocol and the
-   division of labour: [visual-identity.md](visual-identity.md).
+   division of labor: [visual-identity.md](visual-identity.md).
 
 **File structure & naming:** organize the file and name pages, frames,
 components, and tokens per [figma-structure.md](figma-structure.md)

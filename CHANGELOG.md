@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.23.1 — 2026-07-28
+
+### Changed
+- Consistent American spelling across every agent-facing file (`labour` →
+  `labor`, `honour` → `honor`, `neighbouring` → `neighboring`) — the docs
+  were mixing both, which reads as sloppy in a repo whose whole pitch is that
+  small inconsistencies compound.
+- Reflowed three paragraphs left ragged by the previous pass's mechanical
+  edits (`figma-integration.md` intro, the `ux-flows` build gate), and the
+  build gate now names the style pack alongside the chain and the Figma
+  mockups.
+
 ## 0.23.0 — 2026-07-28
 
 Production pass over the public repo: every file read again, the remaining
@@ -111,7 +123,7 @@ contract, the skills, the Cursor rules, the templates, and the tooling fixed.
   script is now in `files[]`, and a missing linter degrades to a warning with
   a download link instead of a crash.
 - **The linter mis-read story priorities.** `ST-NNN` bodies were scanned with
-  a fixed 600-character window, so a neighbouring story's `**Priority:**`
+  a fixed 600-character window, so a neighboring story's `**Priority:**`
   line leaked into the previous story and produced false "must/should story
   has no scenario" warnings. The scan now stops at the next heading.
 - **The UX-plan example rendered broken.** The `` ```markdown `` block in the

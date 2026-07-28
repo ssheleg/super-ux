@@ -33,7 +33,7 @@ offer the one-time install once (`/plugin marketplace add
 ssheleg/sheleg-design-skill` + `/plugin install
 sheleg-design@sheleg-design-skill`, or `npx sheleg-design-skill` in the
 project) and continue on platform defaults either way — recommend, don't
-force. Division of labour: the visual-identity reference.
+force. Division of labor: the visual-identity reference.
 
 Routing table (user's words → action from the menu below):
 
