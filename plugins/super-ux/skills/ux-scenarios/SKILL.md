@@ -1,6 +1,6 @@
 ---
 name: ux-scenarios
-description: Use when creating or updating UX scenarios, starting ANY new feature or project, making ANY change to user-facing behavior, or onboarding an existing codebase into scenario-driven development. Maintains docs/ux/scenarios.md as the source of truth for all user-facing behavior. Triggers - "ux scenarios", "сценарии использования", "новая фича", new feature/project planning, UI changes.
+description: Use when creating or updating UX scenarios, starting ANY new feature or project, making ANY change to user-facing behavior, or onboarding an existing codebase into scenario-driven development. Maintains docs/ux/scenarios.md as the source of truth for all user-facing behavior. Triggers - "ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича", new feature or project planning, UI changes.
 ---
 
 # ux-scenarios — Maintain the Scenario Base

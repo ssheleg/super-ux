@@ -27,14 +27,14 @@ Routing table (user's words → action from the menu below):
 
 | User says (any language) | Route to |
 |---|---|
-| new product / стартуем проект / "с нуля" | 1 then 3 then 5 (full chain init) |
-| new feature / новая фича / "хочу добавить X" | 6 (validate idea vs chain) then 3/5 for the new parts |
-| "UX плохой", "неудобно", improve/redesign | 4 (Improve) |
-| "проверь что всё работает", audit, "прогони по сценариям" | 7 |
-| "чего не хватает", gaps, coverage | 8 |
-| "как лучше по практикам", best practices | 9 |
-| "что чинить в первую очередь", план | 10 |
-| don't know / "просто посмотри" | run 1–3 of Inspect, recommend from state |
+| "new product", "from scratch" / "стартуем проект", "с нуля" | 1 then 3 then 5 (full chain init) |
+| "new feature", "I want to add X" / "новая фича", "хочу добавить X" | 6 (validate idea vs chain) then 3/5 for the new parts |
+| "the UX is bad", "clunky", improve, redesign / "UX плохой", "неудобно" | 4 (Improve) |
+| "check everything works", audit, "run the scenarios" / "проверь что всё работает", "прогони по сценариям" | 7 |
+| "what is missing", gaps, coverage / "чего не хватает" | 8 |
+| "what do best practices say" / "как лучше по практикам" | 9 |
+| "what to fix first", plan / "что чинить в первую очередь", "план" | 10 |
+| "don't know", "just take a look" / "просто посмотри" | run 1–3 of Inspect, recommend from state |
 
 ## 1. Inspect state
 
@@ -108,6 +108,6 @@ user pick (multiple allowed). Full catalog:
 Recommend exactly one action as the default (mark it "recommended"), based
 on the state: no foundation → 1; stories without flows → 3; flows without
 scenarios → 5; drafts pending → validate/review; never audited or stale →
-7; open findings → 10; user said "UX плохой/improve" → 4.
+7; open findings → 10; user said "the UX is bad" / "UX плохой" → 4.
 
 Additional context from the user: $ARGUMENTS

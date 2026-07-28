@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.20.0 — 2026-07-28
+
+### Changed
+- Skill descriptions restructured English-first: every Russian trigger now sits
+  beside its English equivalent (`"user flow" / "юзер флоу"`) instead of forming
+  a Russian-only tail, and the `/ux` routing table follows the same pairing.
+- README is English-only: the Russian section is gone, replaced by a plain
+  statement of what the skill gives you and an author/links block.
+
+### Added
+- Validator enforces the three description canon rules on every skill —
+  `Use when` opening, Russian trigger aliases present, front-matter under 1024
+  characters. Twelve new checks; all four skills pass.
+
 ## 0.19.0 — 2026-07-25
 
 Review pass — the contracts were not reaching non-Claude agents.

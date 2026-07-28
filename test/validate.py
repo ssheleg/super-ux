@@ -41,6 +41,33 @@ def read(path: Path) -> str | None:
         return None
 
 
+
+def raw_front_matter(path) -> str:
+    """The front-matter block verbatim -- what an agent host actually loads."""
+    text = read(path) or ""
+    if not text.startswith("---"):
+        return ""
+    end = text.find("\n---", 3)
+    return "" if end == -1 else text[4:end]
+
+
+def check_description_canon(rel, path, desc: str) -> None:
+    """The three canon rules every skill description must satisfy."""
+    check(
+        desc.startswith("Use when"),
+        f"{rel}/SKILL.md: description must start with 'Use when' (canon)",
+    )
+    check(
+        bool(re.search(r"[а-яё]", desc, re.I)),
+        f"{rel}/SKILL.md: description must carry Russian trigger aliases beside the English ones (canon)",
+    )
+    raw = raw_front_matter(path)
+    check(
+        len(raw) <= 1024,
+        f"{rel}/SKILL.md: front-matter is {len(raw)} chars, must be under 1024 (canon)",
+    )
+
+
 def front_matter(path: Path) -> dict | None:
     """Parse a leading ----delimited front-matter block into a flat dict."""
     text = read(path)
@@ -156,6 +183,7 @@ def validate_skills() -> None:
             continue
         check(fm.get("name") == skill.name, f"{rel}/SKILL.md: front-matter name != '{skill.name}'")
         check(bool(fm.get("description")), f"{rel}/SKILL.md: missing description")
+        check_description_canon(rel, skill / "SKILL.md", fm.get("description") or "")
     for ref in ("scenario-format.md", "best-practices.md", "ux-design-principles.md", "practice-selection.md", "figma-integration.md", "figma-structure.md", "component-guidelines.md", "system-map.md"):
         check(
             (skills_dir / "references" / ref).is_file(),

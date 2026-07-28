@@ -145,12 +145,13 @@ Check the published version any time with `npm view super-ux version`.
 
 ## For the user: one command, plain words
 
-You don't need to know the layers or skills. Run `/ux` and say what you
-want in your own words — "стартуем новый продукт", "добавить фичу", "UX
-неудобный, улучши", "проверь что всё работает", "что чинить в первую
-очередь". The agent asks at most one clarifying question, picks the right
-workflow itself, and only shows you human decisions (approve scenarios,
-pick a plan). Everything below this line is internals for the agent.
+You don't need to know the layers or skills. Run `/ux` and say what you want
+in your own words — "starting a new product", "add a feature", "the UX is
+clunky, improve it", "check everything still works", "what should I fix
+first". The agent asks at most one clarifying question, picks the right
+workflow itself, and only shows you human decisions (approve scenarios, pick a
+plan). Russian phrasings route the same way. Everything below this line is
+internals for the agent.
 
 ## Typical cycle
 
@@ -178,21 +179,40 @@ front-matter, templates, links); CI runs it on every push and PR. Versioning
 is semver; bump `marketplace.json` + `plugin.json` + `CHANGELOG.md` together
 — the validator enforces the sync.
 
-## По-русски (коротко)
+## What this gives you
 
-Проблема: агенты генерируют плохие интерфейсы, потому что строят UI без
-модели поведения пользователя. super-ux строит цепочку: **персоны → JTBD →
-карта пути → user stories → UX-сценарии → аудиты → планы фиксов**.
-Foundation (`docs/ux/foundation.md`) отвечает на «зачем», сценарии
-(`docs/ux/scenarios.md`) — источник правды поведения, трассируются к
-stories. Всё пишется и валидируется **до** интерфейса, обновляется тем же
-изменением, что и поведение. Аудиты (`/ux-audit`) проверяют код против
-сценариев вместе с acceptance criteria, вердикты PASS/PARTIAL/FAIL/BLOCKED
-с доказательствами `file:line`; `/ux-audit coverage` ищет дыры в самой
-цепочке. Установка: в
-Claude Code — `/plugin marketplace add ssheleg/super-ux`, в Cursor —
-`npx super-ux --cursor <проект>`. Дальше одна команда — `/ux`: сама ставит
-правило и базу, а при повторных запусках показывает статус и следующий шаг.
+Vibe coding breaks in the same place every time. The agent builds a screen, you
+like it, three prompts later it quietly rewrites the empty state — and nobody
+notices until a user does. `super-ux` makes user-facing behavior a written
+contract the agent has to honor.
+
+- **Context stops evaporating.** You describe who the product is for and what
+  job it does once; every later prompt inherits that instead of re-deriving it
+  from the diff.
+- **Scenarios become acceptance criteria.** "Make it nicer" can no longer mean
+  "silently change the error handling" — there is a file that says what the
+  error handling does.
+- **Drift gets caught.** `/ux` runs an audit of the code against the scenario
+  base and reports what no longer matches, with `file:line` evidence. That is
+  the review pass you would otherwise never run.
+- **You get designer artifacts without being a designer.** Personas, Jobs to Be
+  Done, journeys, flows, screen states — produced in your repo, in the
+  vocabulary a design review actually uses.
+
+## Author
+
+Built by ssheleg — [svlab.online](https://svlab.online)
+
+- X / Twitter — [@fuck_this_year](https://x.com/fuck_this_year)
+- Telegram — [@sshlg](https://t.me/sshlg)
+
+Part of the [ssheleg skill family](https://github.com/ssheleg/sshlg-skills):
+`super-ux`, `task-pipeline`, `make-skill`, `sheleg-design`, `seo-aeo-audit`.
+One command installs all five for every agent you use:
+
+```bash
+npx sshlg-skills install
+```
 
 ## License
 
