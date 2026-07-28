@@ -156,6 +156,14 @@ def validate_manifests() -> None:
                 (ROOT / source).is_dir(),
                 f"marketplace.json: plugin source '{source}' is not a directory",
             )
+            if plugin:
+                # The ecosystem requires the description in both manifests; the
+                # duplication is structural, so it gets a check instead of trust.
+                check(
+                    entry.get("description") == plugin.get("description"),
+                    "marketplace.json plugin description differs from plugin.json's "
+                    "(same text in both, or the listing and the installed plugin disagree)",
+                )
             if plugin and package and changelog:
                 versions = {
                     entry.get("version"),

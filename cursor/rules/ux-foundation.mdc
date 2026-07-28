@@ -42,6 +42,13 @@ deleted.
   INVEST, observable criteria), coverage (persona→job→journey→story chain
   complete; must/should stories have scenarios).
 
+Two more sections this file owns, filled when they apply: **Monetization**
+(model + value metric + free boundary + money moments + acquisition
+coherence — each money moment becomes a first-class flow) and **Design
+tooling** (the Figma on/off choice, default on, plus the project's Figma file
+URL — asked once per project). Everything else about the visual layer, the
+design system and the style pack, lives in `docs/ux/screens.md`.
+
 Evidence beats opinion: mark unvalidated guesses as assumptions
 (desirability/viability/feasibility/usability) and test risky ones before
 building on them.

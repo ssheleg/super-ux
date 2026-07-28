@@ -1,5 +1,60 @@
 # Changelog
 
+## 0.23.0 — 2026-07-28
+
+Production pass over the public repo: every file read again, the remaining
+contradictions fixed, and the front door rewritten for people who have never
+seen this project.
+
+### Fixed
+- **The hard rule described a three-layer chain.** The most-copied text in the
+  project — the rule installed into every `CLAUDE.md`, the always-on Cursor
+  rule, the README, `/ux-rule`, the `ux-flows` build gate — said
+  "foundation → flows → scenarios" while `screens.md` has been a first-class
+  layer with its own same-change rule since 0.16.0. All five copies now say
+  foundation → flows → **screens** → scenarios.
+- **`ux-foundation` didn't know about a section it owns.** The contract gives
+  `foundation.md` a Design tooling block (Figma on/off + file URL), but
+  neither the skill nor its Cursor rule ever mentioned it, so the field was
+  only ever filled by whoever happened to read the template. Both now cover it
+  — and state that everything else visual (design system, style pack, frame
+  links) belongs to `screens.md`.
+- The README's mermaid diagram used `\n` for line breaks, which GitHub renders
+  literally; it is `<br/>` now — and the diagram shows the current chain
+  (foundation → flows → screens → scenarios → build → audit → plan) instead of
+  the pre-flows one.
+- `/ux`'s own description advertised "foundation/scenarios/audits"; menu item 3
+  said "design user flows" without mentioning that it also registers screens.
+  Inspect now also reports unexecuted plans in `docs/ux/plans/`.
+- `ux-flows` Design had visual identity, wireframes, and Figma crammed into one
+  numbered step; identity is now its own step, before anything gets drawn.
+
+### Added
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — repo layout (including *why* the
+  contracts are duplicated per skill), the edit → sync → validate loop, the
+  conventions, how to test a change from a packed tarball rather than the
+  working tree, and the release checklist.
+- Issue templates for bug reports and ideas, both asking for the thing that
+  actually resolves a report: the file that says otherwise, and the check that
+  would fail.
+- Validator check: the plugin description in `marketplace.json` must equal the
+  one in `plugin.json` — the ecosystem requires both copies, so the duplication
+  gets a check instead of trust.
+- `package.json` gains a `bugs` URL; `.gitignore` covers `npm pack` tarballs.
+
+### Changed
+- **README restructured for a first-time reader**: what goes wrong and what
+  super-ux does about it, the chain diagram, what you get, quick start per
+  channel, the hard rule, the typical cycle, companions, then the internals
+  (skills, commands, and a second table for the contracts). Value first,
+  reference last.
+- Manifest descriptions rewritten to describe the current system — the whole
+  chain, the four skills, the linter, and the style pack — instead of the
+  0.17-era feature list.
+- The historical `docs/superpowers/` spec and plan carry a banner marking them
+  as v0.1.0 provenance, with pointers to the live contract; they described two
+  skills and four commands and are not maintained.
+
 ## 0.22.0 — 2026-07-28
 
 ### Added

@@ -31,10 +31,10 @@ stage tags. Visual identity (which style pack the frames and the built UI
 obey, via the **sheleg-design** companion):
 [visual-identity.md](references/visual-identity.md).
 
-**Position in the chain:** foundation (WHY) → **flows (HOW)** → scenarios
-(WHAT). Stories in, flows out; `ux-scenarios` then covers every node and
-edge with scenarios. If foundation is missing on a non-trivial product,
-recommend `ux-foundation` first.
+**Position in the chain:** foundation (WHY) → **flows (HOW) + screens (UI
+map)** → scenarios (WHAT). Stories in, flows and screens out; `ux-scenarios`
+then covers every node and edge with scenarios. If foundation is missing on
+a non-trivial product, recommend `ux-foundation` first.
 
 **Money moments are first-class flows:** when the foundation declares a
 Monetization section, design dedicated flows for each money moment —
@@ -74,37 +74,36 @@ Per story (or tight cluster):
    [component-guidelines.md](references/component-guidelines.md)
    (radios vs select, sheet vs alert, modal vs disclosure, nav bar vs
    rail, FAB budget) and note the platform component of record.
-4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
+4. **Settle the visual identity** — before any frame is drawn, see
+   [visual-identity.md](references/visual-identity.md). Read `Style pack` in
+   `screens.md` → Design system. Empty, and the project has no design system
+   of its own? Pick the pack with the **sheleg-design** companion skill
+   (`workbench` for product UI/dashboards/tools, `instrument-console`,
+   `editorial-luxury`, or a new pack against its contract) and record the
+   pack + its token file; a cinematic scroll-driven landing also takes that
+   skill's motion methodology. Companion not installed → offer the one-time
+   install once and continue on platform defaults either way. Never invent a
+   palette, type pairing, or motion per screen.
+5. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
-   **Visual identity** (before any frame is drawn — see
-   [visual-identity.md](references/visual-identity.md)): read the `Style
-   pack` in `screens.md` → Design system; if none is recorded and the
-   **sheleg-design** companion skill is available, use it to pick the pack
-   for this product (`workbench` for product UI/dashboards/tools,
-   `instrument-console`, `editorial-luxury`, or a new pack against its
-   contract) and record the pack + its token file. Not installed → offer the
-   one-time install once, then continue on platform defaults either way. A
-   cinematic scroll-driven landing also takes that skill's motion
-   methodology. Never invent a palette/type/motion per screen.
    **Figma mockups** (default on — see
    [figma-integration.md](references/figma-integration.md)): if Design
    tooling has Figma enabled, build a frame per screen-state on the recorded
    pack's tokens, applying the visual-craft practices (BP-079..090) as hard
    constraints, and write the frame deep-link into every screen row's
-   `Figma` column. If Figma is
-   chosen but the MCP isn't connected, recommend connecting it and continue
-   text-only (flows/wireframes stay the source of truth, sync later). Ask
-   the Figma yes/no question once at the start and record it in the
-   foundation.
-5. **Practice pass** (mandatory, per
+   `Figma` column. If Figma is chosen but the MCP isn't connected, recommend
+   connecting it and continue text-only (flows/wireframes stay the source of
+   truth, sync later). Ask the Figma yes/no question once at the start and
+   record it in the foundation.
+6. **Practice pass** (mandatory, per
    [practice-selection.md](references/practice-selection.md)): build the
    product profile from the foundation, pull the mandatory sets + this
    artifact's checklist row, give every pulled practice a verdict
    (applied / adapted / rejected+reason / deferred+trigger) in a compliance
    table attached to the flow entry. No silent skips; applied practices
    must be visible in the flow/scenario artifacts.
-6. Present for approval (flow + compliance table); hand off to
+7. Present for approval (flow + compliance table); hand off to
    `ux-scenarios` to cover nodes/edges.
 
 ## Reverse (backwards mode)
@@ -159,7 +158,8 @@ Follow the improvement procedure in the principles doc, strictly:
 ## The build gate (state this to the user plainly)
 
 Interface code does not get written until this workflow is done: the chain
-(foundation → flows → scenarios) is designed and approved, and — when Figma
+(foundation → flows → screens → scenarios) is designed and approved, and —
+when Figma
 is enabled (default) — the UI is mocked up in Figma with every screen linked
 to its frame. When a user jumps straight to "build the screen", say so and
 run the workflow first; that ordering is the whole point of super-ux.

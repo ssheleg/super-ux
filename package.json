@@ -1,7 +1,7 @@
 {
   "name": "super-ux",
-  "version": "0.22.0",
-  "description": "Scenario-driven UI development for AI agents (Claude Code + Cursor): scenario base, scenario-first hard rule, evidence-backed UX audits. This package is the installer CLI.",
+  "version": "0.23.0",
+  "description": "Scenario-driven UI development for AI agents (Claude Code, Cursor, 70+ agents): a versioned design chain in docs/ux/, a scenario-first hard rule, a deterministic drift linter, and evidence-backed UX audits. This package is the installer CLI.",
   "bin": {
     "super-ux": "bin/super-ux.js"
   },
@@ -16,6 +16,9 @@
   ],
   "repository": "github:ssheleg/super-ux",
   "homepage": "https://github.com/ssheleg/super-ux",
+  "bugs": {
+    "url": "https://github.com/ssheleg/super-ux/issues"
+  },
   "license": "MIT",
   "author": "ssheleg",
   "engines": {

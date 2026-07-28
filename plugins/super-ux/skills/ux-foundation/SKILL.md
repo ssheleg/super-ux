@@ -67,11 +67,18 @@ One question at a time; user's answers are the data:
 4. Derive user stories from journey pains and job outcomes; write
    acceptance criteria; prioritize must/should/could against the job's
    success metric.
-5. If the product earns money, fill the Monetization section: model chosen
+5. Record **Design tooling** when design work is about to start: the Figma
+   on/off choice (default on) and the project's Figma file URL — the two
+   fields this file owns. Everything else about the visual layer (design
+   system, style pack, per-state frame links) lives in `screens.md`; see
+   [figma-integration.md](references/figma-integration.md) and
+   [visual-identity.md](references/visual-identity.md). Ask the Figma
+   question once per project, never per flow.
+6. If the product earns money, fill the Monetization section: model chosen
    with data (BP-067..070 — hard paywall vs freemium vs hybrid, trial type
    and length), value metric, free boundary, money moments, acquisition
    coherence. Money moments become dedicated flows downstream.
-6. Present layer by layer for approval; mark unvalidated guesses as
+7. Present layer by layer for approval; mark unvalidated guesses as
    assumptions with a risk note.
 
 ## Init (reverse) — existing product

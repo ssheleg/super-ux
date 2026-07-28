@@ -1,7 +1,8 @@
 # Figma Integration (optional design surface, default ON)
 
-super-ux designs the UX chain in markdown (foundation → flows → scenarios).
-When the user wants visual mockups, the same design work is mirrored into
+super-ux designs the UX chain in markdown (foundation → flows → screens →
+scenarios). When the user wants visual mockups, the same design work is
+mirrored into
 **Figma** via the Figma MCP — every frame built from the flow's screen/state
 spec and the visual-craft practices (BP-079..090). This is an opt-in
 capability, **enabled by default**; text-only design is always a valid

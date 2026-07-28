@@ -14,10 +14,10 @@
   serve, which journey stage, which story — then flows and scenarios,
   validated against the existing base, approved.
 - **Do NOT write interface code until the UX workflow is done first:** the
-  foundation → flows → scenarios chain is designed and approved, and — when
-  Figma is enabled (default) — the UI is mocked up in Figma with every
-  screen linked to its frame. Building UI before this is the exact mistake
-  super-ux exists to prevent.
+  foundation → flows → screens → scenarios chain is designed and approved,
+  and — when Figma is enabled (default) — the UI is mocked up in Figma with
+  every screen linked to its frame. Building UI before this is the exact
+  mistake super-ux exists to prevent.
 - Visual identity is ONE locked style pack, recorded in `docs/ux/screens.md`
   → Design system and obeyed by every Figma frame and every built screen —
   picked with the **sheleg-design** companion skill when the project has no

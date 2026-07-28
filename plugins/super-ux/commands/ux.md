@@ -1,5 +1,5 @@
 ---
-description: Single entry point for all UX work — status across foundation/scenarios/audits, then a menu of applicable actions (init, update, validate, audit, plan fixes)
+description: Single entry point for all UX work — status across every layer (foundation, flows, screens, scenarios, audits), then a menu of applicable actions (init, design, update, validate, audit, plan fixes)
 ---
 
 Single entry point for super-ux. The user is NOT expected to know the
@@ -60,7 +60,8 @@ Routing table (user's words → action from the menu below):
   screens missing coverage.
 - `docs/ux/scenarios.md`? If yes: scenario counts by status, features,
   `Traces` filled or not, `Last audit` values.
-- Latest report in `docs/ux/audits/` (date, totals, open findings).
+- Latest report in `docs/ux/audits/` (date, totals, open findings) and any
+  unexecuted plan in `docs/ux/plans/`.
 - **Run the linter** `python3 docs/ux/lint.py` and fold its errors/warnings
   into the status — it is the fastest, deterministic read of what's stale,
   drifted, or missing (lost Figma frames, broken traces, orphans).
@@ -89,8 +90,10 @@ user pick (multiple allowed). Full catalog:
    when foundation is missing/empty.
 2. **Update foundation** — `ux-foundation` Update — when user knowledge
    changed.
-3. **Design user flows** — `ux-flows` Design/Reverse — when stories exist
-   without flows, or an existing product has no flows.md.
+3. **Design flows & screens** — `ux-flows` Design/Reverse — when stories
+   exist without flows, or an existing product has no `flows.md`; registers
+   every screen and state in `screens.md` (and its Figma frames when Figma
+   is on).
 4. **Improve existing UX** — `ux-flows` Improve — heuristic evaluation
    (PRN-01..16) of current flows → traced before/after redesign proposals.
 5. **Build/extend scenarios** — `ux-scenarios` Init or Update — when

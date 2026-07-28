@@ -1,5 +1,12 @@
 # super-ux — Scenario-Driven UI Development for AI Agents (Design Spec)
 
+> **Historical document — kept for provenance, not as documentation.**
+> This describes the original v0.1.0 design (two skills, four commands) and is
+> deliberately not updated as the plugin evolves. The current contract lives in
+> [`plugins/super-ux/skills/references/scenario-format.md`](../../../plugins/super-ux/skills/references/scenario-format.md);
+> the whole system on one page is
+> [`system-map.md`](../../../plugins/super-ux/skills/references/system-map.md).
+
 - **Date:** 2026-07-19
 - **Status:** Approved (variant A: full plugin marketplace repo)
 - **Repo:** `ssheleg/super-ux` (public, MIT)
