@@ -30,7 +30,7 @@ answers in the foundation):
 
 | Profile fact | Mandatory consideration set |
 |---|---|
-| any graphical UI | BP-079..090 (visual craft: typography, color, layout) |
+| any graphical UI | BP-079..090 (visual craft: typography, color, layout) — the **floor**; the concrete palette/type/motion come from the recorded style pack ([visual-identity.md](visual-identity.md)) |
 | any graphical UI (controls) | BP-101..115 (which control for the job; states; platform component of record) — see [component-guidelines.md](component-guidelines.md) |
 | Figma enabled | BP-091..100 (file structure, SCR-ID frame naming, tokens, variants, auto layout) |
 | mobile-* | BP-049..054 |
@@ -107,3 +107,8 @@ never the adoption. When two practices conflict (e.g. BP-069 first-session
 paywall vs a deliberate freemium-led motion per BP-067), the foundation's
 Monetization section decides — and the conflict + decision goes into the
 compliance table.
+
+Style pack vs practices: the pack owns identity (palette, type pairing,
+motion tokens, bans) and wins on look; the practices own floors (contrast,
+tap targets, line length, spacing rhythm) and win on safety. Record any
+conflict and its resolution in the table like any other.

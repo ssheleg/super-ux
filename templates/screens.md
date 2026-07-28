@@ -13,6 +13,11 @@ whose code diverges from its record here is a "drifted" finding. -->
 
 ## Design system
 
+<!-- Style pack = the locked visual identity every frame and built screen obeys.
+Pick it with the sheleg-design companion skill (workbench for product UI /
+dashboards / tools, instrument-console, editorial-luxury, or a new pack on its
+contract) before drawing anything; record its token file below. -->
+- **Style pack:** <pack name, or "none — platform defaults">
 - **Figma library:** <url/name, or "none — platform defaults">
 - **Tokens in code:** <where color/type/spacing tokens live, e.g. src/theme/tokens.ts>
 - **Component source:** <shared UI components dir, e.g. src/components/>

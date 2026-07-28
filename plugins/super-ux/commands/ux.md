@@ -23,6 +23,18 @@ Figma as we go, or text-only? (Figma is the default.)" Record the answer in
 connected, recommend connecting it and proceed text-only until it is (see
 figma-integration reference).
 
+**Visual identity, same moment:** if `screens.md` → Design system has no
+`Style pack` and the project has no design system of its own, use the
+**sheleg-design** companion skill to pick one (`workbench` for product UI /
+dashboards / tools, `instrument-console`, `editorial-luxury`, or a new pack
+on its contract) and record the pack + its token file; a cinematic
+scroll-driven landing also takes its motion methodology. Not installed →
+offer the one-time install once (`/plugin marketplace add
+ssheleg/sheleg-design-skill` + `/plugin install
+sheleg-design@sheleg-design-skill`, or `npx sheleg-design-skill` in the
+project) and continue on platform defaults either way — recommend, don't
+force. Division of labour: the visual-identity reference.
+
 Routing table (user's words → action from the menu below):
 
 | User says (any language) | Route to |

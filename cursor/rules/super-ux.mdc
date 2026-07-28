@@ -27,6 +27,11 @@ alwaysApply: true
   Figma is enabled (default) — the UI is mocked up in Figma with every
   screen linked to its frame. Building UI before this is the exact mistake
   super-ux exists to prevent.
+- Visual identity is one locked style pack, recorded once in `screens.md` →
+  Design system and used by every frame and every built screen — picked with
+  the **sheleg-design** companion skill (`npx sheleg-design-skill`) when the
+  project has no design system of its own. Recommended, never forced; a
+  palette invented per screen is visual drift.
 - Workflows: `ux-foundation` rule (WHY), `ux-flows` rule (flows + Figma
-  mockups), `ux-scenarios` rule (scenario base), `ux-audit` rule
+  mockups + style pack), `ux-scenarios` rule (scenario base), `ux-audit` rule
   (evidence-backed audits).

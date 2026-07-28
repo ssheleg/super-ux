@@ -66,6 +66,13 @@ Passes:
    output a compliance table (applied / adapted / rejected / deferred /
    **missing** — applicable but absent, as suggestion findings `[BP-NNN]`).
    Respect recorded user-owned rejections — don't re-litigate them.
+   When `screens.md` → Design system records a `Style pack`
+   ([visual-identity.md](references/visual-identity.md)), check the built UI
+   honors it: tokens referenced instead of raw values, the pack's bans
+   respected, dark mode from its twin — a screen ignoring the recorded pack
+   is `drifted`, not a taste debate. No pack recorded and the visual layer
+   looks improvised → suggest the **sheleg-design** companion once, as an
+   opportunity finding.
 5. **Coverage pass** — the chain itself: orphan stories/flows/screens/
    scenarios, journey stages without scenarios, jobs without stories, unused
    personas, screens not used by any flow, flows referencing missing

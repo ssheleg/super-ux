@@ -36,6 +36,12 @@ again per flow — the project-level choice holds until the user changes it.
 3. **Design system?** If the project has a Figma library / design system,
    pull it (`get_libraries` / `search_design_system`) and build on its
    components and tokens instead of inventing new ones.
+4. **Style pack?** If there is no design system yet, settle the visual
+   identity BEFORE drawing: read `screens.md` → Design system → `Style pack`,
+   and when it's empty use the **sheleg-design** companion skill to pick one
+   (or offer its one-time install once, then continue either way). Its token
+   file becomes the Figma variable collections. Full protocol and the
+   division of labour: [visual-identity.md](visual-identity.md).
 
 **File structure & naming:** organize the file and name pages, frames,
 components, and tokens per [figma-structure.md](figma-structure.md)
@@ -51,6 +57,7 @@ links** live in `screens.md` (the UI map):
 
 ```markdown
 ## Design system            (in screens.md)
+- **Style pack:** <sheleg-design pack, or "none — platform defaults">
 - **Figma library:** <url/name, or "none">
 - **Tokens in code:** <src/theme/tokens.ts>
 - **Component source:** <src/components/>
@@ -70,7 +77,11 @@ For each flow, AFTER the flow diagram + screen/state table are agreed:
 1. Build the mockup in Figma from the flow's screen list and each screen's
    declared states (loading / empty / error / success) — one frame per
    screen-state that matters, on the flow's page.
-2. Apply the visual-craft practices as hard constraints, not suggestions:
+2. Build on the recorded **style pack** (visual-identity.md): its tokens
+   become the file's variable collections, its type scale/spacing/motion the
+   frame defaults, its bans hard limits. Then apply the visual-craft
+   practices as hard constraints, not suggestions — the pack supplies the
+   values, the practices are the floor they must clear:
    type system and 16/1.5/45–75 reading spec (BP-079..081), 60-30-10
    palette with one scarce accent and semantic-color contract
    (BP-082..083), dark-mode palette if in scope (BP-084), 4/8pt spacing and

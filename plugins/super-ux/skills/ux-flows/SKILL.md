@@ -27,7 +27,9 @@ once in `screens.md`.
 principles doc before designing; it is the thinking playbook (task-analysis
 method, flow rules, PRN-01..16 heuristics, improvement procedure).
 Proven tactics: [best-practices.md](references/best-practices.md) by
-stage tags.
+stage tags. Visual identity (which style pack the frames and the built UI
+obey, via the **sheleg-design** companion):
+[visual-identity.md](references/visual-identity.md).
 
 **Position in the chain:** foundation (WHY) → **flows (HOW)** → scenarios
 (WHAT). Stories in, flows out; `ux-scenarios` then covers every node and
@@ -75,11 +77,22 @@ Per story (or tight cluster):
 4. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
+   **Visual identity** (before any frame is drawn — see
+   [visual-identity.md](references/visual-identity.md)): read the `Style
+   pack` in `screens.md` → Design system; if none is recorded and the
+   **sheleg-design** companion skill is available, use it to pick the pack
+   for this product (`workbench` for product UI/dashboards/tools,
+   `instrument-console`, `editorial-luxury`, or a new pack against its
+   contract) and record the pack + its token file. Not installed → offer the
+   one-time install once, then continue on platform defaults either way. A
+   cinematic scroll-driven landing also takes that skill's motion
+   methodology. Never invent a palette/type/motion per screen.
    **Figma mockups** (default on — see
    [figma-integration.md](references/figma-integration.md)): if Design
-   tooling has Figma enabled, build a frame per screen-state applying the
-   visual-craft practices (BP-079..090) as hard constraints, and write the
-   frame deep-link into every screen row's `Figma` column. If Figma is
+   tooling has Figma enabled, build a frame per screen-state on the recorded
+   pack's tokens, applying the visual-craft practices (BP-079..090) as hard
+   constraints, and write the frame deep-link into every screen row's
+   `Figma` column. If Figma is
    chosen but the MCP isn't connected, recommend connecting it and continue
    text-only (flows/wireframes stay the source of truth, sync later). Ask
    the Figma yes/no question once at the start and record it in the
@@ -159,8 +172,9 @@ run the workflow first; that ordering is the whole point of super-ux.
   elements, coverage, scenarios, resources; no orphan screens either way.
 - Scenarios cover every node and edge (checked with `ux-scenarios`).
 - When Figma enabled: every screen state has a frame link in `screens.md`;
-  visual-craft practices applied on the frames; Design system block filled;
-  foundation Design tooling records the choice + file.
+  visual-craft practices applied on the frames; Design system block filled
+  (including `Style pack` — a named pack or an explicit "none — platform
+  defaults"); foundation Design tooling records the choice + file.
 - Only after all of the above does UI implementation start.
 - Improvements: every proposal traced and cited; nothing applied without
   approval.

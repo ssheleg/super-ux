@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.22.0 — 2026-07-28
+
+### Added
+- **The visual layer has an owner: the `sheleg-design` companion.** super-ux
+  decided what every screen must contain and which craft floors it had to
+  clear, then left the actual look to be invented frame by frame — the visual
+  half of the drift this system exists to prevent. New reference
+  [`visual-identity.md`](plugins/super-ux/skills/references/visual-identity.md)
+  makes one **style pack** the identity for the whole product: picked with the
+  sheleg-design skill (`workbench` for product UI, dashboards and tools;
+  `instrument-console`; `editorial-luxury`; or a new pack authored on its
+  contract), recorded once, obeyed everywhere. A cinematic scroll-driven
+  landing also takes that skill's motion methodology.
+- **`Style pack` field** in `screens.md` → Design system (contract + template).
+  One owner per fact: the pack is named there and referenced from everywhere
+  else, with its token file location beside it.
+- **Wired into every design entry point** — `ux-flows` Design (before a frame
+  is drawn, not after), `/ux` step 0 beside the Figma question, `/ux-flows`,
+  the Figma design loop (pack tokens become the Figma variable collections),
+  the Cursor `ux-flows` rule, the hard rule in `templates/claude-rule.md` and
+  `/ux-rule`, and the seeded `docs/ux/README.md`.
+- **Audited like any other record.** When a `Style pack` is recorded, the deep
+  audit's practice pass checks the built UI honors it — tokens referenced
+  instead of raw values, the pack's bans respected, dark mode from its twin;
+  a screen ignoring the recorded pack is `drifted`. No pack and an improvised
+  visual layer → the companion is suggested once, as an opportunity finding.
+- Validator guard: the hard rule embedded in `/ux-rule` must be byte-identical
+  to `templates/claude-rule.md`. They had already drifted apart in wording —
+  two copies of a rule is the exact failure the plugin preaches against.
+
+### Changed
+- Recommendation, not dependency, in both directions: one offer with its
+  one-time install, then the user's answer stands and the chain continues on
+  platform defaults. A project that already has a design system records that
+  instead — two identities are worse than any one.
+- Conflict rule stated where both sides live (`practice-selection.md`,
+  `ux-design-principles.md`): the style pack owns identity and wins on look;
+  BP-079..090 are floors (contrast, tap targets, line length, spacing rhythm)
+  and win on safety. The conflict and its resolution go in the compliance
+  table.
+- README gains a Companions table (sheleg-design at VISUALIZE/BUILD,
+  task-pipeline after a plan) and the hard rule gains its style-pack bullet.
+
 ## 0.21.0 — 2026-07-28
 
 Full-repo consistency pass: every file read, every contradiction between the

@@ -18,6 +18,11 @@
   Figma is enabled (default) — the UI is mocked up in Figma with every
   screen linked to its frame. Building UI before this is the exact mistake
   super-ux exists to prevent.
+- Visual identity is ONE locked style pack, recorded in `docs/ux/screens.md`
+  → Design system and obeyed by every Figma frame and every built screen —
+  picked with the **sheleg-design** companion skill when the project has no
+  design system of its own (recommended, not required). Inventing a palette,
+  type pairing, or motion per screen is visual drift.
 - After any UX change and before calling the work done, run the linter
   `python3 docs/ux/lint.py` — it must pass (errors are drift/broken
   structure; wire it into CI/pre-commit).

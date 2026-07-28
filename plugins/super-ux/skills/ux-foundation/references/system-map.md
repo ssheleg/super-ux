@@ -35,7 +35,9 @@ Formats: [scenario-format.md](scenario-format.md). Design reasoning:
 [practice-selection.md](practice-selection.md); control choice:
 [component-guidelines.md](component-guidelines.md). Figma workflow:
 [figma-integration.md](figma-integration.md); Figma file structure &
-naming: [figma-structure.md](figma-structure.md).
+naming: [figma-structure.md](figma-structure.md). Visual identity (style
+pack via the **sheleg-design** companion):
+[visual-identity.md](visual-identity.md).
 
 ## Skills & the one entry point
 
@@ -60,6 +62,20 @@ naming: [figma-structure.md](figma-structure.md).
 4. **Run the linter.** After any UX change and before calling work done,
    run `python3 docs/ux/lint.py` (or `/ux-lint`). It must pass; wire it into
    the project's CI/pre-commit so drift can't merge.
+
+## Companions (recommended, never forced)
+
+- **sheleg-design** — the visual identity: one locked style pack (palette,
+  type, texture, motion tokens, bans) + ready token CSS, plus the motion
+  methodology for cinematic scroll-driven pages. Used at VISUALIZE/BUILD,
+  recorded once in `screens.md` → Design system.
+  [visual-identity.md](visual-identity.md).
+- **task-pipeline** — implements a finished UX plan end-to-end (spec → plan →
+  subagent build → tests → deploy → docs). Offered after audits and Improve
+  passes.
+
+Both are offers, not dependencies: one recommendation with its one-time
+install, then the user's answer stands.
 
 ## When entering mid-project
 

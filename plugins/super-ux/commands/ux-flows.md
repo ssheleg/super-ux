@@ -10,6 +10,12 @@ recorded, ask once whether to mock up in Figma (default yes); when enabled,
 mirror each screen into a Figma frame applying the visual-craft practices
 and link every screen row to its frame.
 
+Settle the visual identity before drawing anything: read `screens.md` →
+Design system → `Style pack`, and when it's empty pick one with the
+**sheleg-design** companion skill (offer its one-time install if missing —
+recommend, don't force) and record the pack + its token file. Frames and
+built screens use that pack's tokens instead of a per-screen palette.
+
 Pick the workflow from state and `$ARGUMENTS`: stories exist but flows
 don't → Design; existing product without flows.md → Reverse; `$ARGUMENTS`
 says improve/fix/redesign → Improve (heuristic evaluation PRN-01..16 →

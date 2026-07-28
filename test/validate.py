@@ -227,7 +227,7 @@ def validate_skills() -> None:
         check(fm.get("name") == skill.name, f"{rel}/SKILL.md: front-matter name != '{skill.name}'")
         check(bool(fm.get("description")), f"{rel}/SKILL.md: missing description")
         check_description_canon(rel, skill / "SKILL.md", fm.get("description") or "")
-    for ref in ("scenario-format.md", "best-practices.md", "ux-design-principles.md", "practice-selection.md", "figma-integration.md", "figma-structure.md", "component-guidelines.md", "system-map.md"):
+    for ref in ("scenario-format.md", "best-practices.md", "ux-design-principles.md", "practice-selection.md", "figma-integration.md", "figma-structure.md", "component-guidelines.md", "system-map.md", "visual-identity.md"):
         check(
             (skills_dir / "references" / ref).is_file(),
             f"plugins/super-ux/skills/references/{ref}: missing",
@@ -265,6 +265,29 @@ def validate_templates() -> None:
         path = ROOT / "templates" / name
         text = read(path)
         check(bool(text and text.strip()), f"templates/{name}: missing or empty")
+
+
+def validate_hard_rule_copies() -> None:
+    """The hard rule lives in two Claude-facing places — they must be one text.
+
+    `templates/claude-rule.md` seeds new projects; `/ux-rule` appends its own
+    embedded copy to an existing CLAUDE.md. Two copies of a rule is exactly the
+    drift this plugin exists to prevent, and neither file looks wrong alone.
+    """
+    template = (read(ROOT / "templates/claude-rule.md") or "").strip()
+    command = read(ROOT / "plugins/super-ux/commands/ux-rule.md") or ""
+    match = re.search(r"```markdown\n(.*?)\n   ```", command, re.DOTALL)
+    if not check(bool(match) and bool(template), "ux-rule.md: no embedded ```markdown rule block"):
+        return
+    embedded = "\n".join(
+        line[3:] if line.startswith("   ") else line
+        for line in match.group(1).splitlines()
+    ).strip()
+    check(
+        embedded == template,
+        "ux-rule.md's embedded rule block differs from templates/claude-rule.md "
+        "(one rule, one text — re-copy the template into the command)",
+    )
 
 
 def validate_linter() -> None:
@@ -351,6 +374,7 @@ def main() -> int:
     validate_commands()
     validate_cursor_rules()
     validate_templates()
+    validate_hard_rule_copies()
     validate_linter()
     validate_links()
     validate_shipped_references()

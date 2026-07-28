@@ -45,6 +45,7 @@ flowchart LR
 | `templates/` | Skeletons for the foundation, scenario base, audit report, and the CLAUDE.md rule snippet |
 | [component-guidelines.md](plugins/super-ux/skills/references/component-guidelines.md) | When to use which control (radios/select/switch, sheet/alert, modal/disclosure, combobox, nav bar/rail, FAB, dates, toasts) + platform rules — from Apple HIG, Material 3, W3C ARIA APG, GOV.UK (BP-101..115) |
 | [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 115 proven UX/growth practices — subscription-app laws, mobile/web/voice interface guidance (HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries, web2app), visual craft (typography, color, spacing, microcopy), Figma file structure (BP-091..100); selected deterministically via [practice-selection.md](plugins/super-ux/skills/references/practice-selection.md) |
+| [visual-identity.md](plugins/super-ux/skills/references/visual-identity.md) | The visual layer, owned by the **sheleg-design** companion: one locked style pack (palette, type, texture, motion tokens, bans) + its token CSS, recorded once in `screens.md` → Design system and obeyed by every Figma frame and every built screen — plus the division of labour (super-ux owns structure, behavior and the craft floors; the pack owns the look) |
 | [figma-integration.md](plugins/super-ux/skills/references/figma-integration.md) · [figma-structure.md](plugins/super-ux/skills/references/figma-structure.md) | Optional Figma surface (default-on): when/how to mock up, and how to structure the file so frames named `SCR-NN/<Screen>/<state>` map 1:1 to `screens.md` — deterministic lookup, checkable drift |
 
 The format all of them share is locked in
@@ -70,6 +71,26 @@ lifecycle, audit verdicts and severities.
   Figma is enabled, the default) the UI mocked up in Figma with every screen
   linked to its frame. Building UI before this is the mistake super-ux
   exists to prevent.
+- One **style pack** is the visual identity for the whole product, recorded
+  in `docs/ux/screens.md` → Design system. Inventing a palette, type pairing
+  or motion per screen is drift too.
+
+## Companions (recommended, never required)
+
+super-ux owns structure and behavior; two sibling skills cover the ends it
+deliberately doesn't. Each is offered once, with its one-time install, and
+the chain works fine without either.
+
+| When | Companion | What it adds |
+|---|---|---|
+| At VISUALIZE / BUILD — a Figma frame or a screen is about to be drawn | **[sheleg-design](https://github.com/ssheleg/sheleg-design-skill)** | The look: one locked style pack (palette, type, texture, motion tokens, bans) with ready token CSS — `workbench` for product UI/dashboards/tools, `instrument-console`, `editorial-luxury`, or a new pack on its contract; plus the motion methodology for cinematic scroll-driven landings. Pack goes into `screens.md`; its tokens become the Figma variables and the code tokens. `npx sheleg-design-skill` |
+| After an audit or an Improve pass produced a UX plan | **[task-pipeline](https://github.com/ssheleg/task-pipeline)** | Executes the plan end-to-end: spec → plan → subagent build → tests → deploy → docs, with gates. `/task-pipeline docs/ux/plans/<file>` |
+
+Boundary that keeps them from fighting: BP-079..090 are craft **floors**
+(contrast, line length, tap targets, spacing rhythm) and always win on
+safety; the style pack owns **identity** and wins on look. Both get recorded
+in the compliance table. Full protocol:
+[visual-identity.md](plugins/super-ux/skills/references/visual-identity.md).
 
 ## Install
 

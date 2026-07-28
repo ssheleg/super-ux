@@ -15,8 +15,9 @@ audits cite its principle IDs. This is the "taste" layer — formats live in
 4. MAP           screens + states registry       -> screens.md      (UI MAP)
 5. SPECIFY       scenarios: action -> response,  -> scenarios.md    (WHAT EXACTLY)
                  alt & error paths (use cases)
-6. VISUALIZE     wireframes / storyboards / Figma -> optional, per screen
-                 mockups (frames named SCR-NN/<Screen>/<state>)
+6. VISUALIZE     style pack first, then wireframes  -> optional, per screen
+                 / storyboards / Figma mockups
+                 (frames named SCR-NN/<Screen>/<state>)
 7. BUILD UI      only now
 8. VERIFY        audits -> prioritized fix plans -> audits/, plans/
 ```
@@ -70,7 +71,11 @@ The gaps between "is" and "should" become the improvement backlog.
 - Visual craft at build time — type system, contrast floors, palette
   discipline, spacing grid, alignment, microcopy — follows BP-079..090 in
   the best-practices catalog; the audit's heuristic and practice passes
-  check them per the selection protocol.
+  check them per the selection protocol. Those are floors, not an identity:
+  the concrete palette/type/motion come from one locked style pack recorded
+  in `screens.md`, picked with the **sheleg-design** companion when it's
+  available — see [visual-identity.md](visual-identity.md). Inventing a look
+  per screen is visual drift.
 
 ## Heuristics checklist (PRN-01..PRN-10, after Nielsen)
 

@@ -205,6 +205,7 @@ Structure: an Index, a Design system block, then one entry per screen.
 | SCR-01 | Welcome | FLW-01 | <page/frame link> | built | src/onboarding/Welcome.tsx:1 |
 
 ## Design system
+- **Style pack:** <sheleg-design pack name (workbench | instrument-console | editorial-luxury | custom), or "none — platform defaults">
 - **Figma library:** <url/name, or "none">
 - **Tokens in code:** <where color/type/spacing tokens live, e.g. src/theme/tokens.ts>
 - **Component source:** <shared UI components dir, e.g. src/components/>
@@ -244,6 +245,10 @@ Rules:
 - `Coverage` and `Scenarios` keep the screen wired to code and behavior;
   `Resources` collects the design-system components, assets, and data
   dependencies the screen relies on.
+- `Style pack` names the visual identity every frame and every built screen
+  obeys — recorded ONCE here, referenced everywhere else. Chosen with the
+  **sheleg-design** companion skill when it's available; see
+  [visual-identity.md](visual-identity.md).
 
 ## `docs/ux/scenarios.md`
 

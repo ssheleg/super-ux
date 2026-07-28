@@ -29,7 +29,9 @@ Personas · JTBD · Journeys · Stories  →  Flows  →  Screens  →  Scenario
    `scenarios.md`, affected flows, the affected screens in `screens.md`,
    and (Figma on) the Figma frame plus its link — together, not later.
 3. **No drift.** Code that diverges from a screen's record, or a stale Figma
-   link, is a bug to fix.
+   link, is a bug to fix. The same goes for the look: one style pack is
+   recorded in `screens.md` → Design system (pick it with the
+   **sheleg-design** skill) and every screen obeys it.
 4. **Lint it.** Run `python3 docs/ux/lint.py` after changes and in CI.
 
 Maintained with the super-ux plugin. In Claude Code, run `/ux`.
