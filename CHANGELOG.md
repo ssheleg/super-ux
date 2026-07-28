@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.23.2 — 2026-07-28
+
+Open-source hygiene pass — the repo is public, so the files a first-time
+contributor looks for now exist.
+
+### Added
+- `SECURITY.md` — what the skill and its installer actually run (two `claude`
+  calls, explicit argv, no network from the linter), what they write, and private
+  reporting.
+- `CODE_OF_CONDUCT.md` and a pull-request template that asks for the command
+  output rather than a "tests pass" claim.
+- README now points at the security policy and the code of conduct alongside
+  contributing.
+
 ## 0.23.1 — 2026-07-28
 
 ### Changed

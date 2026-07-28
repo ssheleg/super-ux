@@ -215,7 +215,9 @@ rest of `docs/ux/` are never touched. Check the published version with
 ## Contributing
 
 Issues and pull requests are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)
-for the repo layout, the validator, and the release checklist. In short:
+for the repo layout, the validator, and the release checklist. Everyone taking
+part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md); to report a
+vulnerability, see [SECURITY.md](SECURITY.md). In short:
 `python3 test/validate.py` must pass (CI runs it on every push and PR), and
 edits to `plugins/super-ux/skills/references/` need
 `python3 test/sync_references.py` to refresh the per-skill copies.
