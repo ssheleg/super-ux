@@ -74,7 +74,9 @@ function installCursor(target, force) {
     }
   }
 
-  fs.mkdirSync(path.join(target, 'docs', 'ux', 'audits'), { recursive: true });
+  for (const dir of ['audits', 'plans']) {
+    fs.mkdirSync(path.join(target, 'docs', 'ux', dir), { recursive: true });
+  }
   for (const tpl of ['scenarios', 'foundation', 'flows', 'screens', 'README']) {
     const dst = path.join(target, 'docs', 'ux', `${tpl}.md`);
     if (fs.existsSync(dst)) {
@@ -85,9 +87,19 @@ function installCursor(target, force) {
     }
   }
   // The linter is code, not a template — refresh it to the shipped version.
+  // Shipped via package.json files[]; if that ever regresses, warn instead of
+  // dying on an ENOENT stack trace after the rules are already installed.
+  const lintSrc = path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py');
   const lintDst = path.join(target, 'docs', 'ux', 'lint.py');
-  fs.copyFileSync(path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py'), lintDst);
-  console.log(`sync:    ${lintDst}`);
+  if (fs.existsSync(lintSrc)) {
+    fs.copyFileSync(lintSrc, lintDst);
+    console.log(`sync:    ${lintDst}`);
+  } else {
+    console.error(
+      `warning: linter not found in this package (${lintSrc}); docs/ux/lint.py was not installed.\n` +
+        `         Get it from https://github.com/${REPO}/blob/main/plugins/super-ux/scripts/ux_lint.py`
+    );
+  }
 
   console.log(`done: ${installed} installed, ${skipped} skipped`);
 }

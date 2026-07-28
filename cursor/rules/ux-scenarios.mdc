@@ -21,8 +21,10 @@ JRN-01/#2)`), enforce traceability — every must/should story covered by ≥1
 scenario, every scenario serves ≥1 story or job.
 
 Scenario entry fields (exact names): `Persona`, `Feature`, `Traces`, `Entry point`,
-`Preconditions`, `Steps` (numbered, one user action each), `Expected result`
-(observable), `UI elements` (every button/field/link/dialog/toast involved —
+`Preconditions`, `Steps` (numbered, one user action each, paired with the
+observable system response), `Expected result` (observable), `Alt paths`
+(meaningful non-error deviations — skip/dismiss/alternate route — omit only
+when none exist), `UI elements` (every button/field/link/dialog/toast involved —
 this is what audits check), `States covered` (loading|empty|error|success),
 `Errors & recovery` (each failure: what the user sees, how they recover),
 `Status` (draft|validated|implemented|retired), `Coverage` (file:line or
@@ -35,7 +37,10 @@ never deleted. Lifecycle: draft → validated (human approval) → implemented
 Per-feature completeness: happy path, every error path, empty state, visible
 loading, destructive-action confirmation, returning-user variant.
 Per-product: first-run onboarding, every core flow, settings, multi-entity
-flows (e.g. second project), account/data lifecycle.
+flows (e.g. second project), account/data lifecycle, and — when the product
+earns money — the monetization flows: paywall (first-session placement),
+trial start/end, upgrade-at-limit, cancel + winback, rating prompt after
+success moments.
 
 ## Workflows
 

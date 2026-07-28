@@ -15,8 +15,9 @@ verdict BLOCKED with the exact reason. Never guess, never a courtesy PASS.
 
 ## Loop
 
-1. Read the base; scope = all | feature:<name> | ID range; note the git SHA
-   of scenarios.md for the report header; skip retired scenarios.
+1. Read the base (and foundation/flows/screens when they exist); scope =
+   all | feature:<name> | ID range | coverage; note the git SHA of `docs/ux`
+   for the report header; skip retired scenarios.
 2. Batch by feature, ~5–8 scenarios per batch; list batches up front.
 3. Per scenario check against the code: entry point reachable; every step
    implemented; every listed UI element present and wired; every listed
@@ -26,6 +27,12 @@ verdict BLOCKED with the exact reason. Never guess, never a courtesy PASS.
    `[AUD-YYYY-MM-DD-NN] (critical|major|minor) description -> suggested fix`.
 4. Verdicts: PASS (complete), PARTIAL (flow exists, gaps), FAIL (missing or
    broken), BLOCKED (cannot verify — say why).
+   When `flows.md`/`screens.md` exist, also check conformance: every flow
+   node reachable and every edge (error edges included) wired; every
+   registered screen's states rendered and its `Coverage` accurate — code
+   that diverges from a screen's record is a `drifted` finding. Scope
+   `coverage` audits the chain itself (orphan stories/flows/screens/
+   scenarios, journey stages without scenarios, personas unused).
 5. Write the report batch by batch: header (scope, method, base SHA),
    Summary (totals, top issues, prioritized next actions), per-batch
    verdicts with evidence, findings-register table.

@@ -20,8 +20,14 @@ Fields: `Traces` (story/job IDs), `Goal` (observable end state), `Entry
 points` (ALL of them), `Success exit`, `Task analysis` (numbered
 user-visible micro-steps), mermaid `flowchart` (screens as
 `Screen: <name>`, decisions as diamonds, `*_err` error nodes with labeled
-recovery edges), `Screens & states` table (each screen:
-loading/empty/error/success + key elements, one primary action).
+recovery edges), `Screens traversed` table (`| Screen | States used here |`
+— SCR-IDs only; the full per-screen spec lives once in `screens.md`).
+
+Each screen entry in `screens.md`: `Used by`, `Purpose`, `Elements` (mark
+the ONE primary action), `States` table (`| State | Trigger | Figma frame |
+Behavior |` — a row per loading/empty/error/success that applies),
+`Wireframe`, `Coverage` (file:line), `Scenarios`, `Resources`, `Status`
+(designed|built|drifted|retired).
 
 ## Design rules
 

@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.21.0 — 2026-07-28
+
+Full-repo consistency pass: every file read, every contradiction between the
+contract, the skills, the Cursor rules, the templates, and the tooling fixed.
+
+### Fixed
+- **`npx super-ux --cursor` crashed for every npm user.** `package.json`
+  `files[]` never shipped `plugins/super-ux/scripts/ux_lint.py`, so the CLI
+  installed the rules and templates and then died with an ENOENT stack trace
+  while copying the linter (reproduced against a packed 0.20.0 tarball). The
+  script is now in `files[]`, and a missing linter degrades to a warning with
+  a download link instead of a crash.
+- **The linter mis-read story priorities.** `ST-NNN` bodies were scanned with
+  a fixed 600-character window, so a neighbouring story's `**Priority:**`
+  line leaked into the previous story and produced false "must/should story
+  has no scenario" warnings. The scan now stops at the next heading.
+- **The UX-plan example rendered broken.** The `` ```markdown `` block in the
+  contract contained a nested three-backtick fence, which closed the outer
+  block early and inverted the rest of the section; it is a four-backtick
+  fence now.
+- Duplicate `refs(flows, "SCR")` computation in the linter collapsed into one.
+- `release.yml` referenced a `pipeline.example.json` path that does not exist
+  in this repo and installed `jsonschema` the stdlib-only validator never
+  used.
+
+### Changed
+- **One owner per fact:** `**Design system:**` is gone from `foundation.md` →
+  Design tooling (it contradicted `screens.md`, `figma-integration.md`, and
+  the templates). Foundation records the Figma on/off choice and the file
+  URL; `screens.md` → Design system records the library, tokens, components,
+  and assets. `figma-structure.md` and `system-map.md` say the same thing.
+- Cursor rules resynced with ux-contract v4: `ux-flows` documented a stale
+  `Screens & states` table (it is `Screens traversed` + the `screens.md`
+  entry shape); `ux-scenarios` was missing the `Alt paths` field and the
+  monetization entries of the per-product checklist; `ux-audit` said "git SHA
+  of scenarios.md" (the contract says `docs/ux`) and never mentioned
+  flow/screen conformance or the `coverage` scope; `super-ux` told Cursor
+  users to run `/ux-lint`, a Claude-Code-only command.
+- `/ux` reports every layer (it said "all three"); `/ux-init` is incremental —
+  existing layers are left untouched and only the missing ones initialized,
+  instead of talking about "both files" from a two-file era; README no longer
+  says the skills CLI installs "both skills".
+- `docs/ux/plans/` is created by the installers, `/ux-rule`, and `/ux`
+  alongside `audits/` — the contract has required the directory since v4.
+- `install.sh --help` described seeding one file; it seeds the whole skeleton
+  plus the linter. README's Development section documents the four-way
+  version sync and the `sync_references.py` step.
+
+### Added
+- Validator check: every asset `bin/super-ux.js` copies must be covered by
+  `package.json` `files[]`, parsed from the CLI source rather than a
+  hand-kept list — the packaging regression above cannot come back silently.
+- `templates/flows.md` carries the contract's `Wireframe` field.
+
 ## 0.20.0 — 2026-07-28
 
 ### Changed

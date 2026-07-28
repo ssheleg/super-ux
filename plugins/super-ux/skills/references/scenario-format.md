@@ -115,12 +115,13 @@ afterthought edge.
 ## Design tooling
 - **Figma:** enabled | disabled
 - **Figma file:** <url — the single project file, one page per feature/flow group>
-- **Design system:** <library name/url, or "none — platform defaults">
 ```
 
-When Figma is enabled, every screen state in `screens.md` carries its Figma
-frame link. See [figma-integration.md](figma-integration.md) for the
-workflow.
+Exactly two fields: the on/off choice and the file location. The **design
+system** (library, tokens in code, component source, assets) belongs to
+`screens.md` → Design system — one owner per fact, never both. When Figma is
+enabled, every screen state in `screens.md` carries its Figma frame link. See
+[figma-integration.md](figma-integration.md) for the workflow.
 
 ### ID rules (all layers)
 
@@ -417,7 +418,7 @@ The actionable output of an audit or an Improve pass: what the interface
 must become, and exactly what to create / modify / delete. Written so an
 autonomous agent can execute it without this conversation.
 
-```markdown
+````markdown
 # UX Plan — <scope> — YYYY-MM-DD
 
 - **Sources:** audits/YYYY-MM-DD.md findings AUD-…; Improve proposals; FLW-…
@@ -481,7 +482,7 @@ you'd rather not install it → superpowers `writing-plans` →
 subagent-driven execution, or implement by hand. Either way, keep the
 same-change rule: each change updates its scenario (and `screens.md` / Figma)
 as it lands, then re-run `/ux-audit <scope>` to confirm PASS.
-```
+````
 
 Rules: `Action` ∈ CREATE / MODIFY / DELETE; every row traces to scenario /
 flow / finding / principle IDs — an untraced change doesn't enter the plan;

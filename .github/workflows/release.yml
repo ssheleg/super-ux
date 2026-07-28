@@ -7,10 +7,9 @@ name: release
 # project that copies this workflow decides for itself whether to arm it — no
 # code change needed to enable/disable, just the variable.
 #
-# This is the concrete instance of the generic `release` config declared in
-# plugins/super-ux/skills/super-ux/pipeline.example.json (trigger:
-# tag; steps: GitHub release + npm publish; verify: CI + npx smoke + npm view).
-# npm publish stays a human 2FA step and is intentionally NOT run here.
+# Trigger: a v* tag. Steps: validate -> four-way version check -> GitHub
+# release with the CHANGELOG section -> npx smoke test from a clean cwd.
+# `npm publish` stays a human 2FA step and is intentionally NOT run here.
 
 on:
   push:
@@ -26,10 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install jsonschema
-        run: python3 -m pip install --quiet jsonschema
-
-      - name: Structural validator (gate the release on a valid repo)
+      - name: Structural validator (gate the release on a valid repo — stdlib only)
         run: python3 test/validate.py
 
       - name: Derive version from tag

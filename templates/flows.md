@@ -27,4 +27,6 @@ flowchart TD
   |--------|------------------|
   | SCR-01 <name> | success |
   | SCR-02 <name> | error, success |
+- **Wireframe:** wireframes/FLW-01.md (optional; per-screen wireframes live
+  under the screen's SCR-ID in screens.md)
 -->

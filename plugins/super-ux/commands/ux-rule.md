@@ -42,9 +42,9 @@ twice.
    above, replace the block with this version (it supersedes older ones).
 
 2. If `docs/ux/scenarios.md` does not exist, create `docs/ux/` (including
-   `audits/`) and seed `scenarios.md`, `foundation.md`, `flows.md`,
-   `screens.md`, and `README.md` from the plugin's `templates/`. Never
-   overwrite existing files.
+   `audits/` and `plans/`) and seed `scenarios.md`, `foundation.md`,
+   `flows.md`, `screens.md`, and `README.md` from the plugin's `templates/`.
+   Never overwrite existing files.
 
 3. Copy the linter to `docs/ux/lint.py` from the plugin's
    `scripts/ux_lint.py` (refresh it even if present — it's code, not user

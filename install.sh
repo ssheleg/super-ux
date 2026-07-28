@@ -12,9 +12,12 @@ super-ux installer
 Usage:
   ./install.sh --cursor <project-dir> [--force]
 
-Copies cursor/rules/*.mdc into <project-dir>/.cursor/rules/ and seeds
-docs/ux/scenarios.md from templates/ if absent. An existing scenario base is
-NEVER overwritten. Existing rule files are skipped unless --force is given.
+Copies cursor/rules/*.mdc into <project-dir>/.cursor/rules/, seeds the
+docs/ux/ skeleton (scenarios.md, foundation.md, flows.md, screens.md,
+README.md + audits/ and plans/) from templates/ where absent, and refreshes
+docs/ux/lint.py. Existing docs/ux files are NEVER overwritten; existing rule
+files are skipped unless --force is given (--force replaces rules and the
+linter only, never your docs).
 
 Claude Code (no installer needed):
   /plugin marketplace add ssheleg/super-ux
@@ -49,7 +52,7 @@ for rule in "$SRC"/cursor/rules/*.mdc; do
   fi
 done
 
-mkdir -p "$TARGET/docs/ux/audits"
+mkdir -p "$TARGET/docs/ux/audits" "$TARGET/docs/ux/plans"
 for tpl in scenarios foundation flows screens README; do
   if [ -f "$TARGET/docs/ux/$tpl.md" ]; then
     echo "keep:    $TARGET/docs/ux/$tpl.md exists (never overwritten)"

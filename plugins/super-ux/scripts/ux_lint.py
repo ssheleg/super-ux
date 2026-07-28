@@ -157,10 +157,9 @@ def main() -> int:
     # --- Flows reference existing screens ---
     if has_flows and has_screens:
         screen_ids = set(ids(screens, "SCR"))
-        flow_refs = refs(flows, "SCR")
-        for miss in sorted(flow_refs - screen_ids):
-            err(f"flows.md references {miss} but screens.md has no such screen")
         used = refs(flows, "SCR")
+        for miss in sorted(used - screen_ids):
+            err(f"flows.md references {miss} but screens.md has no such screen")
         for orphan in sorted(screen_ids - used):
             warn(f"screens.md: {orphan} is used by no flow (orphan)")
 
@@ -182,7 +181,9 @@ def main() -> int:
         traced = refs(scenarios, "ST")
         for m in re.finditer(r"^###\s+(ST-\d+):", foundation, re.MULTILINE):
             sid = m.group(1)
-            tail = foundation[m.end(): m.end() + 600]
+            # Only this story's own body: stop at the next heading, so a
+            # neighbour's Priority line is never read as this story's.
+            tail = re.split(r"^#{2,3}\s", foundation[m.end():], maxsplit=1, flags=re.MULTILINE)[0]
             if re.search(r"\*\*Priority:\*\*\s*(must|should)", tail, re.IGNORECASE):
                 if sid not in traced:
                     warn(f"foundation.md: {sid} (must/should) has no scenario tracing to it")

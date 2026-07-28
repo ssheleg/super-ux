@@ -12,7 +12,8 @@ alwaysApply: true
   and (Figma on) its frame link. A screen that changes in code changes here in
   the SAME change.
 - Run the linter after any UX change and before calling work done:
-  `python3 docs/ux/lint.py` (or `/ux-lint`). It must pass — drift must not merge.
+  `python3 docs/ux/lint.py`. It must pass — drift must not merge; wire it
+  into CI/pre-commit.
 - Any change that touches user-facing behavior MUST update
   `docs/ux/scenarios.md` in the same change (add/adjust scenarios, statuses,
   coverage). New user-facing behavior with no scenario is a blocker, not a

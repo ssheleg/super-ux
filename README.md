@@ -87,7 +87,7 @@ reports status and the next action.
 ### Any agent via the skills CLI (70+ agents)
 
 ```sh
-npx skills add ssheleg/super-ux            # both skills, current project
+npx skills add ssheleg/super-ux            # all four skills, current project
 npx skills add ssheleg/super-ux -g         # user-global
 npx skills add ssheleg/super-ux --skill ux-audit   # one skill
 ```
@@ -175,9 +175,13 @@ internals for the agent.
 ## Development
 
 `python3 test/validate.py` checks repo consistency (manifests, versions,
-front-matter, templates, links); CI runs it on every push and PR. Versioning
-is semver; bump `marketplace.json` + `plugin.json` + `CHANGELOG.md` together
-— the validator enforces the sync.
+front-matter + description canon, templates, links, the contract copies
+shipped inside each skill, and that every asset the installer CLI copies is
+covered by `package.json` `files[]`); CI runs it on every push and PR.
+Versioning is semver, four-way: bump `package.json` + `marketplace.json` +
+`plugin.json` + `CHANGELOG.md` together — the validator enforces the sync.
+After editing anything in `plugins/super-ux/skills/references/`, run
+`python3 test/sync_references.py` to refresh the per-skill copies.
 
 ## What this gives you
 
@@ -201,7 +205,7 @@ contract the agent has to honor.
 
 ## Author
 
-Built by ssheleg — [svlab.online](https://svlab.online)
+Built by ssheleg — [sshlg.me](https://sshlg.me)
 
 - X / Twitter — [@fuck_this_year](https://x.com/fuck_this_year)
 - Telegram — [@sshlg](https://t.me/sshlg)

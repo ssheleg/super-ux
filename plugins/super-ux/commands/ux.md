@@ -58,13 +58,15 @@ Routing table (user's words → action from the menu below):
 - Rule missing → install it (as `/ux-rule`).
 - `docs/ux/` missing → create skeleton (seed `scenarios.md`,
   `foundation.md`, `flows.md`, `screens.md`, `README.md`; copy `lint.py`;
-  `audits/` dir) — as `/ux-rule` does.
+  `audits/` and `plans/` dirs) — as `/ux-rule` does.
 
 ## 3. Status report
 
-Compact table across all three layers: foundation (present? entry counts,
-assumptions unvalidated), scenarios (total/by status, traced %, features),
-audits (last run, PASS/PARTIAL/FAIL/BLOCKED totals, open findings).
+Compact table across every layer: foundation (present? entry counts,
+assumptions unvalidated), flows (count, `inferred` vs confirmed), screens
+(by status, missing frames/coverage), scenarios (total/by status, traced %,
+features), audits (last run, PASS/PARTIAL/FAIL/BLOCKED totals, open
+findings), plus the linter's error/warning count.
 
 ## 4. Action menu
 

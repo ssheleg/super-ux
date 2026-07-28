@@ -20,9 +20,9 @@ after this chain is designed and approved (and, with Figma on, mocked up).
 
 | File | Layer | Owner skill | Holds |
 |------|-------|-------------|-------|
-| `foundation.md` | WHY | `ux-foundation` | personas, JTBD, journeys, user stories, monetization, Figma on/off |
+| `foundation.md` | WHY | `ux-foundation` | personas, JTBD, journeys, user stories, monetization, Figma on/off + file URL |
 | `flows.md` | HOW | `ux-flows` | task analysis + user-flow diagrams, referencing screens by `SCR-ID` |
-| `screens.md` | UI map | `ux-flows` | every screen + state with Figma frame, wireframe, coverage, scenarios, resources |
+| `screens.md` | UI map | `ux-flows` | the design system block + every screen and state with Figma frame, wireframe, coverage, scenarios, resources |
 | `scenarios.md` | WHAT | `ux-scenarios` | use-case scenarios (source of truth for behavior) |
 | `audits/…` | evidence | `ux-audit` | one report per audit run |
 | `plans/…` | action | `ux-audit`/`ux-flows` | target-interface + CREATE/MODIFY/DELETE plan |

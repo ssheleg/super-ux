@@ -18,7 +18,9 @@ Initialize the UX chain, WHY → HOW → WHAT:
    use-case scenarios, `Traces:` filled with story + flow IDs.
 4. Finish with the traceability check (Validate) and a status summary.
 
-If both files already exist and are non-empty, do NOT reinitialize — say so
-and suggest `/ux` for the action menu instead.
+If `foundation.md`, `flows.md`, and `scenarios.md` already exist with
+entries, do NOT reinitialize — say so and suggest `/ux` for the action menu
+instead. If only some layers exist, initialize the missing ones and leave
+the rest untouched.
 
 Additional context from the user: $ARGUMENTS

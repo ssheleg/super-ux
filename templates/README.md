@@ -12,7 +12,7 @@ Personas · JTBD · Journeys · Stories  →  Flows  →  Screens  →  Scenario
 
 | File | Holds |
 |------|-------|
-| `foundation.md` | WHO & WHY: personas, jobs-to-be-done, journeys, user stories, monetization, Figma on/off |
+| `foundation.md` | WHO & WHY: personas, jobs-to-be-done, journeys, user stories, monetization, Figma on/off + file URL |
 | `flows.md` | HOW: user-flow diagrams (screens, branches, error paths), referencing screens by `SCR-ID` |
 | `screens.md` | THE UI MAP: every screen and state with its Figma frame link, wireframe, code coverage, scenarios, resources |
 | `scenarios.md` | WHAT EXACTLY: use-case scenarios — the source of truth for behavior |

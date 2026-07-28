@@ -81,9 +81,11 @@ meaningful code. Skip renaming purely decorative leaves.
 
 ## Recording the convention (BP-100)
 
-`screens.md` → Design system records: the Figma library/file URL, the token
-locations (Figma collections ↔ code token files), the naming convention in
-force, and the governance owner who keeps Figma and code tokens in sync.
+`screens.md` → Design system records: the Figma library, the token locations
+(Figma collections ↔ code token files), the naming convention in force, and
+the governance owner who keeps Figma and code tokens in sync. (The project's
+Figma *file* URL and the on/off choice live in `foundation.md` → Design
+tooling — one owner per fact.)
 One convention, agreed up front, one owner — start simple, evolve on
 friction.
 

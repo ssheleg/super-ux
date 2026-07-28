@@ -2,6 +2,7 @@
 """Consistency validator for the super-ux repo (stdlib only).
 
 Checks (spec docs/superpowers/specs/2026-07-19-super-ux-design.md, section 9):
+  0. Every asset bin/super-ux.js copies is shipped by package.json files[].
   1. Manifests parse, required fields present, versions in sync with CHANGELOG.
   2. Every skill has front-matter: name (matching its directory), description.
   3. Every command has front-matter: description.
@@ -109,9 +110,13 @@ def changelog_version() -> str | None:
     text = read(ROOT / "CHANGELOG.md")
     if not check(text is not None, "CHANGELOG.md: missing"):
         return None
-    match = re.search(r"^## \[?(\d+\.\d+\.\d+)\]?", text, re.MULTILINE)
-    check(match is not None, "CHANGELOG.md: no '## [x.y.z]' release heading")
-    return match.group(1) if match else None
+    headings = re.findall(r"^## \[?(\d+\.\d+\.\d+)\]?", text or "", re.MULTILINE)
+    check(bool(headings), "CHANGELOG.md: no '## [x.y.z]' release heading")
+    # A version documented twice silently truncates the release notes: the
+    # release workflow extracts the FIRST matching section and stops there.
+    duplicates = sorted({v for v in headings if headings.count(v) > 1})
+    check(not duplicates, f"CHANGELOG.md: duplicate release heading(s) {duplicates}")
+    return headings[0] if headings else None
 
 
 def validate_manifests() -> None:
@@ -168,6 +173,44 @@ def validate_manifests() -> None:
                         changelog,
                     ),
                 )
+
+
+def validate_npm_payload() -> None:
+    """Everything the installer CLI copies must be inside the npm tarball.
+
+    `npm publish` ships only package.json `files[]`. A path the CLI reads that
+    is not covered there exists in the repo, passes every local test, and then
+    dies with ENOENT for every `npx super-ux` user — so the coverage is checked
+    from the CLI source itself, not from a hand-kept list.
+    """
+    package = load_json("package.json", [])
+    if not package:
+        return
+    patterns = [p.strip("/") for p in package.get("files", [])]
+
+    def covered(rel: str) -> bool:
+        return any(rel == pat or rel.startswith(pat + "/") for pat in patterns)
+
+    source = read(ROOT / "bin/super-ux.js") or ""
+    reads: set[str] = set()
+    for call in re.findall(r"path\.join\(\s*ROOT\s*,([^)]*)\)", source):
+        segments: list[str] = []
+        for part in call.split(","):
+            literal = re.fullmatch(r"\s*'([^']*)'\s*", part)
+            if not literal:  # template literal / variable — stop at the last static segment
+                break
+            segments.append(literal.group(1))
+        if segments:
+            reads.add("/".join(segments))
+    check(bool(reads), "bin/super-ux.js: no ROOT-relative asset paths found (parser out of date?)")
+    for rel in sorted(reads):
+        if not check((ROOT / rel).exists(), f"bin/super-ux.js reads '{rel}' which does not exist"):
+            continue
+        check(
+            covered(rel),
+            f"package.json: files[] does not ship '{rel}', which bin/super-ux.js copies "
+            f"(npx super-ux would fail with ENOENT)",
+        )
 
 
 def validate_skills() -> None:
@@ -303,6 +346,7 @@ def validate_shipped_references() -> None:
 
 def main() -> int:
     validate_manifests()
+    validate_npm_payload()
     validate_skills()
     validate_commands()
     validate_cursor_rules()
