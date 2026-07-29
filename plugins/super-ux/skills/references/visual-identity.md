@@ -23,6 +23,8 @@ ssheleg **sheleg-design** skill is where those packs live.
 | Craft floors: 16/1.5/45–75, contrast, 4/8pt grid, verb microcopy | super-ux (BP-079..090) — the floor, never the identity |
 | Palette, type pairing, texture, motion tokens, motifs, bans | **sheleg-design** style pack |
 | Scroll-driven / particle / cinematic landing motion | **sheleg-design** (one clock, hold-then-redeploy, degrade to calm) |
+| Motion floors: a token scale exists, reduced motion branches, content readable with no scroll effects | super-ux (BP-130..132) — the pack picks the values, not whether the floors apply |
+| Whether a trend is adopted at all: its mechanism, its accessibility and weight cost, its review date, its compensation | super-ux (BP-145, BP-146) — recorded in the pack, never per screen |
 
 The pack supplies concrete values for what the practices state as floors. On
 conflict the pack wins on *identity* (its palette, its ease, its bans); the
@@ -106,6 +108,14 @@ hard-coded colors in code. A screen that ignores
 the recorded pack is a `drifted` finding like any other divergence — an
 identity chosen once and then abandoned per screen is exactly the drift this
 companion exists to remove.
+
+Where the pack — or the product's own taste — leans on a style with
+documented debt (soft-shadow surfaces, deliberately raw layouts,
+unconventional navigation, immersive 3D), the same pass checks that the
+compensation BP-146 requires exists in the built UI: real boundaries and
+visible focus states, a conventional path to every destination, the
+reduced-motion branch, the weight budget. The look is the user's call; the
+compensation is not optional.
 
 ## Boundaries
 

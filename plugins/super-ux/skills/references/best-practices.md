@@ -18,14 +18,15 @@ attribution. Keep entries under ~6 lines.
   `navigation`
 - **Mechanism:** `personalization` `social-proof` `commitment` `scarcity`
   `anchoring` `friction-reduction` `habit` `reward` `segmentation`
-  `attribution` `activation` `feedback` `error-recovery`
+  `attribution` `activation` `feedback` `error-recovery` `gamification`
+  `trend-governance`
 - **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
   `landing-page` `web2app` `email` `push` `widgets` `voice` `ai-chat` `forms`
-  `figma` `design-system` `handoff` `maintainability`
+  `responsive` `figma` `design-system` `handoff` `maintainability`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
-  `insight` `accessibility` `performance`
+  `insight` `accessibility` `performance` `page-weight` `legal`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
-  `visual-hierarchy` `microcopy`
+  `visual-hierarchy` `microcopy` `motion`
 - **Components:** `component` `control` `navigation-ui` `dialog` `forms-ui`
   `selection` `feedback-ui`
 
@@ -47,11 +48,23 @@ converged web-funnel and billing benchmarks 2026 (Baymard checkout research,
 ChartMogul/Paddle trial and failed-payment data, landing- and pricing-page
 A/B aggregations); **[W2A26]** = converged web2app practitioner guidance 2026
 (RevenueCat/Adapty/Superwall funnel benchmarks; Apple and Google storefront
-policy after the April 2025 US anti-steering ruling).
+policy after the April 2025 US anti-steering ruling); **[WebAIM]** = WebAIM
+Million 2025 (automated accessibility scan of the top 1,000,000 home pages);
+**[HTTPArchive]** = HTTP Archive / CrUX 2025–26 field data (page weight,
+Core Web Vitals, font and viewport share, incl. Statcounter resolution
+share); **[CSq]** = digital-experience benchmarks 2025 (Contentsquare
+session/frustration data, FullStory rage-click reporting, PwC experience
+survey); **[A11yLaw]** = accessibility-compliance reporting 2025 (Level
+Access State of Digital Accessibility, UsableNet litigation tracking, the
+European Accessibility Act in force since June 2025); **[WSG]** = W3C Web
+Sustainability Guidelines 1.0; **[SDT]** = self-determination-theory
+motivation research and published gamification post-mortems.
 
-Figures from `[CRO26]`/`[W2A26]` are industry aggregates, not laws: they
-justify the *shape* of a practice, and the product's own numbers overrule
-them the moment they exist.
+Figures from `[CRO26]`/`[W2A26]`/`[CSq]`/`[HTTPArchive]` are industry
+aggregates, not laws: they justify the *shape* of a practice, and the
+product's own numbers overrule them the moment they exist. Vendor-published
+survey figures (design-tool and marketing-suite "state of" reports) are
+treated as directional only and never as a practice's sole justification.
 
 ### Onboarding & early experience
 
@@ -437,16 +450,16 @@ them the moment they exist.
 #### BP-054: Motion as feedback, not decoration
 - **Do:** animate to confirm actions, show state changes, and direct attention (spring/physical motion, ≤300ms for common transitions); honor reduced-motion settings.
 - **Why:** motion that communicates status supports PRN-01; motion that merely decorates adds latency and vestibular problems.
-- **Apply when:** any transition/animation decision.
-- **Tags:** mobile, web, feedback, accessibility, engagement
+- **Apply when:** any transition/animation decision; the system behind it — duration/easing tokens, reduced motion, scroll-driven surfaces — is BP-130..132.
+- **Tags:** mobile, web, feedback, accessibility, engagement, motion
 - **Source:** [M3]/[HIG]
 
 ### Web apps, forms & performance
 
 #### BP-055: Minimize form fields, ask only what the job needs
 - **Do:** cut every field not required to complete the job; single-column layout; sensible input types and autocomplete attributes.
-- **Why:** checkout complexity alone makes ~18% of users abandon; each field is friction with measurable cost.
-- **Apply when:** any form — signup, checkout, settings.
+- **Why:** checkout complexity alone makes ~18% of users abandon; each field is friction with measurable cost, and checkout-design work measures among the highest-yield UX changes there is (Baymard puts a well-executed rebuild at roughly a third more completed orders).
+- **Apply when:** any form — signup, checkout, settings; what to ask *later* instead of now is BP-143.
 - **Tags:** forms, web, mobile, checkout, friction-reduction, conversion
 - **Source:** [Baymard]
 
@@ -467,16 +480,16 @@ them the moment they exist.
 #### BP-058: Respond within perception budgets
 - **Do:** visible response to any interaction ≤200ms (INP "good"); skeletons/progress for longer work; optimistic UI where safe.
 - **Why:** INP is measured on every interaction — slow feedback reads as "broken", and Core Web Vitals gate search visibility at the 75th percentile.
-- **Apply when:** web apps and hybrid views; audits treat >200ms uncued waits as findings.
+- **Apply when:** web apps and hybrid views; audits treat >200ms uncued waits as findings. What you ship over the wire to make that budget reachable is BP-133.
 - **Tags:** web, performance, feedback, conversion
 - **Source:** [webdev]
 
 #### BP-059: WCAG 2.2 AA as the baseline, not the stretch goal
 - **Do:** contrast ≥4.5:1 text, visible focus states, full keyboard paths, labels tied to inputs, target-size floor (BP-050), no info by color alone; test with a screen reader on key flows.
-- **Why:** accessibility failures exclude users and are increasingly a legal exposure; retrofitting costs more than building in.
-- **Apply when:** every scenario's UI elements; heuristic audits include it.
+- **Why:** accessibility failures exclude users, and they are the norm rather than the exception — automated scans of the top million home pages fail ~95% of them, on a small number of repeating defects. The legal side is no longer hypothetical either (BP-138).
+- **Apply when:** every scenario's UI elements; heuristic audits include it. How it fails in practice, and what actually fixes it: BP-136..138.
 - **Tags:** web, mobile, accessibility, trust
-- **Source:** [WCAG]
+- **Source:** [WCAG]/[WebAIM]
 
 ### Voice & conversational interfaces
 
@@ -606,7 +619,7 @@ them the moment they exist.
 #### BP-077: Ad-to-onboarding message coherence
 - **Do:** the creative's promise, the store listing, and the first onboarding screens must tell one story: same benefit, same words, same visual; segment onboarding by acquisition source/campaign where volumes justify (with BP-043 HDYHAU to verify).
 - **Why:** ROAS dies at the seams — a user sold "X" who lands in generic "welcome" churns before the paywall; funnel coherence is a UX property, not a marketing one.
-- **Apply when:** any paid acquisition; audits check first-session scenarios against live creatives' promises.
+- **Apply when:** any paid acquisition; audits check first-session scenarios against live creatives' promises. Segmenting by what the user told you, over time, is BP-143/BP-144.
 - **Tags:** onboarding, attribution, conversion, revenue, trust
 - **Source:** [ASO25]/[48Laws]
 
@@ -635,7 +648,7 @@ them the moment they exist.
 
 #### BP-081: Contrast floors, softened extremes
 - **Do:** text contrast ≥4.5:1 (≥3:1 for ≥24px/bold ≥19px); avoid pure #000-on-#FFF for long reading — near-black on near-white reads softer at identical compliance; secondary text stays ≥4.5:1, "muted" is not an excuse.
-- **Why:** WCAG floors are the legal/perceptual minimum; maximal harshness causes fatigue and halation for astigmatic readers.
+- **Why:** WCAG floors are the legal/perceptual minimum; maximal harshness causes fatigue and halation for astigmatic readers. This is also the single most common accessibility defect in the field — roughly four out of five scanned home pages carry low-contrast text — so it is the first thing to check, not the last.
 - **Apply when:** every text/background pair, both themes.
 - **Tags:** color, typography, accessibility, readability
 - **Source:** [WCAG]/[Type]
@@ -1003,3 +1016,142 @@ conversion unless every branch across it is specified.
 - **Apply when:** any web2app or web-checkout funnel that is live (with BP-040..048).
 - **Tags:** web2app, analytics, attribution, activation, insight
 - **Source:** [W2A26]/[PLG25]
+
+### Motion & animation
+
+BP-054 states the stance (motion communicates or it goes). These three are
+the system that makes the stance auditable.
+
+#### BP-130: Motion is a token scale, not a per-element decision
+- **Do:** define durations and easings once as named tokens by role (instant/short/medium/long; standard, decelerate, accelerate, emphasized) and use only those; entering elements decelerate, leaving elements accelerate; distance scales duration, mass does not — big surfaces get one step longer, never three times longer.
+- **Why:** ad-hoc timings are the motion twin of ad-hoc spacing (BP-085) — the interface reads as several products animating at once, and nothing can be tuned centrally.
+- **Apply when:** any product with more than a handful of transitions; the concrete values come from the recorded style pack ([visual-identity.md](visual-identity.md)), the requirement to have a scale does not.
+- **Tags:** motion, design-system, visual-hierarchy, feedback, maintainability
+- **Source:** [M3]/[HIG]
+
+#### BP-131: Reduced motion is a supported mode, not a courtesy
+- **Do:** honor the OS reduced-motion setting — replace movement with cross-fades or instant state changes, never simply keep the animation and shorten it; anything that auto-plays, loops, or scrolls for more than five seconds gets a visible pause/stop control; large-transform effects (parallax, zoom-through, spin) are the first to go.
+- **Why:** vestibular disorders make gratuitous motion genuinely disabling, and WCAG 2.2 treats this as normative (2.2.2 pause/stop/hide, 2.3.3 animation from interactions) — a decorative effect that cannot be turned off is a defect, not a flourish.
+- **Apply when:** every animated surface; audits verify the reduced-motion branch actually exists in code rather than being assumed.
+- **Tags:** motion, accessibility, web, mobile, trust
+- **Source:** [WCAG]/[M3]
+
+#### BP-132: Scroll-driven storytelling never owns the content
+- **Do:** build the page so the full content is present and readable with no scroll effects at all, then add scroll-linked motion as enhancement; never reveal information only on scroll-trigger; keep one clock (a single scroll driver, not competing observers) and cap simultaneous animated layers.
+- **Why:** content locked behind animation disappears for reduced-motion users, assistive tech, print, and any device where the effect janks — and the layered-effect pages that fail this are exactly the ones that also blow the weight budget (BP-133).
+- **Apply when:** landing pages, cinematic hero sections, "scrollytelling" narratives — the cinematic craft itself belongs to the **sheleg-design** companion; this is the floor it may not go under.
+- **Tags:** motion, landing-page, accessibility, performance, web
+- **Source:** [WCAG]/[webdev]
+
+### Page weight, responsiveness & device reality
+
+#### BP-133: Set a page-weight budget and enforce it in review
+- **Do:** state a per-page byte and script budget in the project docs and check it like a test; images in modern formats at the size actually displayed, explicit dimensions, lazy below the fold; one variable font, subset, self-hosted; no autoplay video hero; 3D/WebGL behind a static poster with its own budget and a no-WebGL path; watch DOM element count as a proxy for markup bloat.
+- **Why:** the field median mobile page is now measured in megabytes with hundreds of kilobytes of script, and roughly half of sites fail Core Web Vitals — the median is the competition, not the target. Weight is felt as slowness first (BP-058), cost second, and carbon third.
+- **Apply when:** any web surface, landing pages first; audits treat a missing/unenforced budget as a finding on the pages that miss it.
+- **Tags:** performance, page-weight, web, landing-page, conversion
+- **Source:** [HTTPArchive]/[webdev]/[WSG]
+
+#### BP-134: Design at the real baseline viewport, break on content
+- **Do:** design and review the small viewport first — a ~360×800 CSS-pixel phone is the most common screen on the web, not an edge case — then let breakpoints fall where the content breaks, not at device names; verify the layout at 320px width and at 200% browser zoom (WCAG 1.4.10 reflow: no two-dimensional scrolling, no clipped content).
+- **Why:** mobile carries the majority of traffic and, in retail, of orders; "desktop first, then squeeze" produces layouts whose primary action lands below the fold exactly where most users are — and the reflow requirement fails silently until someone zooms.
+- **Apply when:** any responsive web surface; audits check the narrow viewport and the zoom case explicitly.
+- **Tags:** responsive, web, layout, accessibility, conversion
+- **Source:** [HTTPArchive]/[WCAG]
+
+#### BP-135: Input capability is not a device class
+- **Do:** treat hover, fine pointer, and touch as independent capabilities: never put information or an affordance behind hover alone, keep focus styles distinct from hover styles, size targets for touch wherever touch is possible (BP-050), and test with a keyboard on the "mobile" layout and a finger on the "desktop" one.
+- **Why:** touch laptops, tablets with trackpads, and phones with keyboards break the device→input assumption; a hover-only menu or tooltip simply does not exist for the users who cannot hover.
+- **Apply when:** any web surface with hover affordances, tooltips, or hover-revealed controls.
+- **Tags:** responsive, accessibility, web, control, friction-reduction
+- **Source:** [WCAG]/[M3]/[HIG]
+
+### Accessibility as it actually fails
+
+BP-059 sets the standard. These three describe how real products miss it —
+the defects are few and repetitive, which is what makes them checkable.
+
+#### BP-136: Native semantics first, ARIA only for what HTML cannot say
+- **Do:** reach for the native element (`button`, `a`, `label`, `input`, `dialog`, headings, lists) before any role; add ARIA only where no native equivalent exists (BP-107, BP-110 patterns); never label an element with the role it already has; every `aria-*` reference must resolve to an existing id, and every custom widget must carry its keyboard behavior — no exceptions.
+- **Why:** field scans find pages using ARIA average roughly twice the detected errors of pages without it — ARIA is a promise the author must implement by hand, and a broken promise is worse than no promise: it overrides working native behavior.
+- **Apply when:** any custom control, any component built without a platform library; audits flag roles applied on top of native semantics.
+- **Tags:** accessibility, web, component, control, trust
+- **Source:** [WebAIM]/[APG]
+
+#### BP-137: Overlays are not remediation, and scanners are not coverage
+- **Do:** fix the source markup; do not install an accessibility overlay/widget and call the product compliant; run automated checks for the mechanical defects, then walk the top flows by keyboard and by screen reader — that walkthrough is the actual evidence an audit cites.
+- **Why:** overlays sit on top of broken markup, sometimes breaking assistive tech further, and businesses running them have been sued anyway; automated tools detect only the subset of criteria a machine can judge, so a clean scan means "no detected defects", never "accessible".
+- **Apply when:** any accessibility claim, any remediation plan, any audit's accessibility evidence.
+- **Tags:** accessibility, web, trust, legal
+- **Source:** [A11yLaw]/[WebAIM]
+
+#### BP-138: Accessibility is decided in the chain, not retrofitted after build
+- **Do:** state the keyboard path, focus order, announcements, and contrast pairs in the scenario and the screen record, while the design is still text; treat the applicable regime (European Accessibility Act since June 2025 for in-scope products sold in the EU, ADA litigation exposure in the US) as a ship requirement with a named owner, like any other compliance constraint.
+- **Why:** most teams still touch accessibility only after the UI exists, which is where it becomes expensive rework — deciding it in the chain costs a few lines per scenario, and it is the same artifact the audit later verifies.
+- **Apply when:** every scenario touching interactive UI; a product with EU/US market reach records the regime decision in the foundation.
+- **Tags:** accessibility, legal, trust, web, mobile
+- **Source:** [A11yLaw]/[WCAG]
+
+### Frustration telemetry
+
+#### BP-139: Instrument frustration, not only conversion
+- **Do:** capture the friction signals alongside the funnel — rage clicks, dead clicks, repeated failed submits, error loops, rapid back-and-forth navigation, field-level form abandonment — and segment them by screen, platform, and cohort (BP-045, BP-046); watch them on the flows where the money is (search, filters, product detail, checkout).
+- **Why:** conversion tells you that something is wrong somewhere; frustration signals tell you which element on which screen; reducing them tracks with materially lower churn and deeper sessions in benchmark data, and a single bad experience is enough to lose a meaningful share of users outright.
+- **Apply when:** any product with analytics; goes into the analytics plan with BP-040..048, not after launch.
+- **Tags:** analytics, insight, feedback, conversion, web
+- **Source:** [CSq]
+
+#### BP-140: A recurring signal becomes a scenario, or it is decoration
+- **Do:** route every repeating frustration cluster back into the chain — name the screen and scenario it belongs to, file it as a finding with a severity and an owner, and re-check it in the next audit; if no scenario covers the surface, that gap is the first finding.
+- **Why:** dashboards accumulate signals nobody owns; the chain is what turns "rage clicks on the filter bar" into a fixed flow with a verdict, and closing the loop is what makes the telemetry worth its instrumentation cost.
+- **Apply when:** any product where BP-139 signals are collected.
+- **Tags:** analytics, insight, error-recovery, maintainability
+- **Source:** [CSq]/[NNg]
+
+### Engagement mechanics (gamification)
+
+#### BP-141: Gamification amplifies the core job, never substitutes for it
+- **Do:** attach points, levels, badges, or progress to the behavior that already delivers the product's value, and make the reward legible in the user's own terms ("3 lessons to your weekly goal"), not just a number going up; leaderboards only among comparable peers, and never as the sole framing.
+- **Why:** extrinsic rewards bolted onto a job the user does not care about crowd out the intrinsic motive and stop working the moment the novelty fades; global leaderboards demotivate everyone outside the top, which is most of the audience.
+- **Apply when:** any proposal to add game mechanics; each mechanic names the traced job/story it reinforces (BP-001 discipline) or it does not ship.
+- **Tags:** gamification, retention, engagement, habit, reward
+- **Source:** [SDT]/[48Laws]
+
+#### BP-142: Loss-aversion mechanics need a recovery valve
+- **Do:** pair any streak, tier, or accumulating-progress mechanic with a designed way back — a repair/freeze item, a grace window, a "resume where you left" path — and never make the loss moment the loudest notification the product sends.
+- **Why:** the same loss aversion that drives daily return turns into a quit trigger the moment the streak breaks; without a valve the mechanic manufactures churn exactly at the point of highest engagement.
+- **Apply when:** streaks, ladders, tiers, expiring progress; the recovery path is a first-class flow with its own scenario.
+- **Tags:** gamification, retention, habit, winback, engagement
+- **Source:** [SDT]/[48Laws]
+
+### Personalization & progressive profiling
+
+#### BP-143: Ask progressively — later, fewer, and only what unlocks something
+- **Do:** split what you need to know across sessions instead of one long form: ask at the moment the answer changes what the user gets, remember it, and never ask again; derive what can be derived (locale, timezone, plan, device) rather than asking; each surviving question states what it unlocks.
+- **Why:** every field costs completion (BP-055), but the answers still have to arrive — spreading the ask keeps the first conversion cheap while the profile fills over time, and re-asking known facts reads as a product that does not remember its users.
+- **Apply when:** signup, onboarding, lead capture, anything currently trying to collect a full profile up front.
+- **Tags:** forms, onboarding, personalization, friction-reduction, conversion
+- **Source:** [Baymard]/[CRO26]
+
+#### BP-144: Personalization is visible, correctable, and off by choice
+- **Do:** show why the user is seeing something ("because you chose 'beginner'"), give a one-tap way to correct or reset the inference, and keep the unpersonalized path reachable; never let a wrong inference become unfixable state.
+- **Why:** users expect personalization and mostly do not get it, but silent personalization is worse than none — an unexplained wrong guess reads as surveillance, and with no correction path the product keeps being wrong at the user forever.
+- **Apply when:** recommendations, adaptive onboarding, segmented offers, any content ordered by inferred preference.
+- **Tags:** personalization, trust, segmentation, engagement, insight
+- **Source:** [NNg]/[48Laws]
+
+### Trend adoption & visual debt
+
+#### BP-145: Adopt a visual trend through its mechanism, with a review date
+- **Do:** before adopting a trend (immersive 3D, maximalism, retro/neo-brutalist styling, an experimental navigation), write down four things: the mechanism it serves for this audience, its fit with the recorded identity, its cost in accessibility and weight, and the date it gets re-judged; then record it in the style pack rather than in one screen.
+- **Why:** this is BP-001 applied to looks — trends are mechanisms with an expiry date, and a look adopted without one becomes debt nobody has the authority to remove; a trend applied per screen instead of per pack is drift by definition.
+- **Apply when:** any "let's make it look like X" proposal, any redesign framed by a trend list rather than by a job.
+- **Tags:** trend-governance, design-system, visual-hierarchy, maintainability
+- **Source:** [NNg]/[48Laws]
+
+#### BP-146: Trend styles with known debt ship only with the compensation named
+- **Do:** for styles whose cost is documented, pay it explicitly — soft-shadow/neumorphic surfaces still need real ≥3:1 boundaries and visible focus states; deliberately raw "anti-design" keeps conventional labels, order, and target sizes; experimental navigation keeps a conventional path to every destination; immersive/3D obeys BP-131..133. If the compensation cannot be named, the style is rejected, not "tested in production".
+- **Why:** these looks fail on the same two axes every time — affordance and contrast — and they fail for the users least able to work around it; naming the compensation is what separates a deliberate aesthetic from an accessibility regression.
+- **Apply when:** any of these styles is proposed; audits check the compensation exists in the built UI, not just in the discussion.
+- **Tags:** trend-governance, accessibility, visual-hierarchy, control, trust
+- **Source:** [WCAG]/[NNg]/[WebAIM]

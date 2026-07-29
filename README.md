@@ -155,9 +155,11 @@ fine without either.
 | At VISUALIZE / BUILD — a frame or a screen is about to be drawn | **[sheleg-design](https://github.com/ssheleg/sheleg-design-skill)** | The look: one locked style pack (palette, type, texture, motion tokens, bans) with ready token CSS — `workbench` for product UI, dashboards and tools; `instrument-console`; `editorial-luxury`; or a new pack on its contract. Plus the motion methodology for cinematic scroll-driven landings. The pack is recorded in `screens.md`; its tokens become the Figma variables *and* the code tokens. `npx sheleg-design-skill` |
 | After an audit or an Improve pass produced a UX plan | **[task-pipeline](https://github.com/ssheleg/task-pipeline)** | Executes the plan end-to-end through gated stages: spec → plan → subagent build → tests → deploy → docs. `/task-pipeline docs/ux/plans/<file>` |
 
-The boundary that keeps them from fighting: BP-079..090 are craft **floors**
-(contrast, line length, tap targets, spacing rhythm) and always win on safety;
-the style pack owns **identity** and wins on look. Both decisions land in the
+The boundary that keeps them from fighting: BP-079..090 and BP-130..135 are
+craft **floors** (contrast, line length, tap targets, spacing rhythm, a motion
+token scale, reduced motion, the narrow viewport) and always win on safety;
+the style pack owns **identity** and wins on look. Whether a trend is adopted
+at all — its mechanism, its cost, its review date — is BP-145/BP-146. Both decisions land in the
 compliance table. Full protocol:
 [visual-identity.md](plugins/super-ux/skills/references/visual-identity.md).
 
@@ -184,7 +186,7 @@ The contracts every skill reads:
 | [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md) | **The contract (ux-contract v4).** File layout, every field name, stable IDs (`P` `JTBD` `JRN` `ST` `FLW` `SCR` `SCN`), completeness checklists, the `draft → validated → implemented` lifecycle, audit verdicts and severities, the UX-plan format |
 | [system-map.md](plugins/super-ux/skills/references/system-map.md) | The whole system on one page — pipeline, files, skills, companions, and the four sync rules; every skill points here |
 | [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward and backwards), task analysis, flow rules, heuristics PRN-01..16, the improvement procedure, anti-patterns |
-| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 129 proven practices — subscription-app laws, mobile/web/voice guidance (Apple HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries), web funnels end to end (landing, pricing, checkout, dunning, cancel) and web2app (paid handoff, deferred deep links, storefront rules), visual craft, Figma structure |
+| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 146 proven practices — subscription-app laws, mobile/web/voice guidance (Apple HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries), web funnels end to end (landing, pricing, checkout, dunning, cancel) and web2app (paid handoff, deferred deep links, storefront rules), motion and page weight (HTTP Archive field data, W3C sustainability), accessibility as it actually fails (WebAIM Million, EAA/ADA exposure), frustration telemetry, gamification and trend governance, visual craft, Figma structure |
 | [practice-selection.md](plugins/super-ux/skills/references/practice-selection.md) | The deterministic bridge: product profile → mandatory consideration sets → per-artifact checklists → a compliance table where every pulled practice gets a verdict. No silent skips, no cargo cult |
 | [component-guidelines.md](plugins/super-ux/skills/references/component-guidelines.md) | Which control for which job (radios/select/switch, sheet/alert, modal/disclosure, combobox, nav bar/rail, FAB, dates, toasts) and the platform rules — Apple HIG, Material 3, W3C ARIA APG, GOV.UK |
 | [visual-identity.md](plugins/super-ux/skills/references/visual-identity.md) | The visual layer and its owner: one style pack for the whole product, where it's recorded, how it meets Figma and code, and the division of labor with the craft floors |

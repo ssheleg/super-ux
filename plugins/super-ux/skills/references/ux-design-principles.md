@@ -68,6 +68,15 @@ The gaps between "is" and "should" become the improvement backlog.
 - Forms: validate inline at the field, preserve input on error, label errors
   with what to DO, not what went wrong internally.
 - Empty states sell the next action, never just state emptiness.
+- Accessibility is decided here, in text, not after the UI exists: each
+  scenario states its keyboard path, focus order, what gets announced, and
+  the contrast pairs it depends on (BP-136..138). Retrofitting is the
+  expensive way to reach the same place.
+- Motion is specified like any other behavior — what it communicates, from a
+  token scale, and what happens under reduced motion (BP-130..132). An
+  effect with no reduced-motion branch is unfinished, not polished.
+- Responsiveness starts narrow: the small viewport is the majority case, and
+  breakpoints follow the content, not device names (BP-134, BP-135).
 - Visual craft at build time — type system, contrast floors, palette
   discipline, spacing grid, alignment, microcopy — follows BP-079..090 in
   the best-practices catalog; the audit's heuristic and practice passes
@@ -138,6 +147,10 @@ question; violations get the principle ID as evidence.
 - A flow node with no error edge ("nothing can fail" must be stated and
   justified in the scenario, not assumed).
 - Copying a competitor mechanic without naming its mechanism (BP-001).
+- Adopting a look because it is current — a trend with no named mechanism,
+  no owner, and no review date is debt on arrival (BP-145, BP-146).
+- Treating accessibility, motion behavior, or page weight as a post-build
+  polish pass rather than part of the spec.
 - Redesign proposals without a traced pain or principle.
 - Optimizing a step that shouldn't exist (task analysis first).
 - Treating the paywall/conversion moment as exempt from honesty rules —

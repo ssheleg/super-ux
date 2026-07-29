@@ -87,5 +87,8 @@ checks the state set, and Figma variants (BP-096) must carry them.
 - Respect the host platform's component of record (HIG on Apple, M3 on
   Android, the project's design system on web). On web with no system, ARIA
   APG patterns are the accessibility contract and GOV.UK is a sound default
-  for forms. Deviate only when the job demands it, and then keep keyboard +
+  for forms — but reach for the native element first and add ARIA only for
+  what HTML cannot express (BP-136): pages carrying ARIA measure worse than
+  pages without it, because every role is behavior the author must then
+  implement by hand. Deviate only when the job demands it, and then keep keyboard +
   screen-reader behavior equivalent to the standard pattern.

@@ -68,6 +68,15 @@ Passes:
    output a compliance table (applied / adapted / rejected / deferred /
    **missing** — applicable but absent, as suggestion findings `[BP-NNN]`).
    Respect recorded user-owned rejections — don't re-litigate them.
+   Four dimensions this pass verifies in code rather than by discussion,
+   because they fail silently: the reduced-motion branch exists for every
+   animated surface and content survives without scroll effects (BP-131,
+   BP-132); the page-weight budget is stated somewhere and the heavy pages
+   meet it (BP-133); the narrow viewport and 200% zoom reflow hold, with no
+   hover-only affordance (BP-134, BP-135); roles sit only where no native
+   element says it, with every `aria-*` reference resolving (BP-136). An
+   accessibility claim backed only by a scanner is BLOCKED, not PASS — the
+   evidence is a keyboard and screen-reader walk of the top flows (BP-137).
    When `screens.md` → Design system records a `Style pack`
    ([visual-identity.md](references/visual-identity.md)), check the built UI
    honors it: tokens referenced instead of raw values, the pack's bans

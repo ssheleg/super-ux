@@ -1,5 +1,88 @@
 # Changelog
 
+## 0.26.0 — 2026-07-29
+
+A pass over what the catalog could not answer about the *surface* of a
+product. Motion existed as one line of stance (BP-054) with no system behind
+it. Page weight, the narrow viewport, and input capability were absent
+entirely. Accessibility had a standard (BP-059) but nothing about how real
+products miss it — which is a short, repetitive list. Nothing measured
+frustration, nothing governed adopting a look, and personalization was
+implied by the paywall practices without ever being designed. Seventeen
+practices close those gaps, all anchored to field data rather than to trend
+copy.
+
+### Added
+- **Motion — BP-130..132**: durations and easings as a named token scale
+  (the motion twin of BP-085's spacing grid); reduced motion as a supported
+  mode with a real branch in code, pause/stop for anything auto-playing past
+  five seconds, large-transform effects first to go; scroll-driven
+  storytelling as enhancement only — the content is complete and readable
+  with every effect removed, one scroll clock, capped animated layers.
+- **Page weight, responsiveness & device reality — BP-133..135**: a stated,
+  enforced byte and script budget (field medians are the competition, not
+  the target), image/font/video/WebGL policy, DOM bloat watched; the small
+  viewport designed first with breakpoints from content and a verified 320px
+  / 200%-zoom reflow; hover, fine pointer and touch treated as independent
+  capabilities — no hover-only affordances.
+- **Accessibility as it actually fails — BP-136..138**: native semantics
+  first with ARIA only for what HTML cannot say (pages carrying ARIA measure
+  roughly twice the detected errors); overlays are not remediation and a
+  clean scan is not coverage — the evidence is a keyboard and screen-reader
+  walk; accessibility decided in the chain, with the applicable regime
+  (European Accessibility Act since June 2025, ADA litigation exposure) as a
+  ship requirement with an owner.
+- **Frustration telemetry — BP-139..140**: rage/dead clicks, failed submits,
+  error loops and field-level abandonment instrumented next to the funnel
+  and segmented; every recurring cluster routed back into the chain as a
+  scenario or a finding with an owner — telemetry nobody owns is decoration.
+- **Gamification — BP-141..142**: mechanics amplify the traced core job or
+  they don't ship (extrinsic rewards crowd out the intrinsic motive;
+  leaderboards demotivate everyone outside the top); every streak, tier or
+  expiring-progress mechanic ships a recovery valve, because the loss moment
+  is otherwise a churn trigger at peak engagement.
+- **Personalization & progressive profiling — BP-143..144**: split the ask
+  across sessions, derive what can be derived, never re-ask what is known;
+  personalization shown with its reason, correctable in one tap, with the
+  unpersonalized path still reachable.
+- **Trend governance — BP-145..146**: BP-001 applied to looks — a trend is
+  adopted through its mechanism, its identity fit, its accessibility and
+  weight cost, and a review date, recorded in the style pack rather than in
+  one screen; styles with documented debt (neumorphic surfaces, deliberate
+  anti-design, unconventional navigation, immersive 3D) ship only with the
+  compensation named, and the audit checks the compensation in the built UI.
+- Six source keys — **[WebAIM]**, **[HTTPArchive]**, **[CSq]**,
+  **[A11yLaw]**, **[WSG]**, **[SDT]** — plus an explicit note that
+  vendor-published "state of" survey figures are directional only and never
+  a practice's sole justification.
+
+### Changed
+- `practice-selection.md`: two new profile dimensions (personalization,
+  engagement mechanics); motion, look, weight, responsiveness and
+  accessibility routed from the profile; five new per-artifact rows
+  (animated/scroll-driven surface, responsive layout pass, accessibility
+  pass, gamified/streak surface, personalized/adaptive surface).
+- `ux-design-principles.md`: accessibility, motion behavior and
+  responsiveness are specified in the chain, in text, before the UI exists;
+  two anti-patterns added (a look adopted with no mechanism or review date;
+  treating accessibility, motion or weight as post-build polish).
+- `ux-audit`: the practice pass now verifies in code the four things that
+  fail silently — the reduced-motion branch and content-without-effects, the
+  weight budget, narrow-viewport/zoom reflow and hover-only affordances, and
+  ARIA sitting only where no native element says it. An accessibility claim
+  backed by a scanner alone is BLOCKED, not PASS.
+- `visual-identity.md`: motion floors and trend adoption added to the
+  division of labor — the pack picks the values, super-ux decides whether the
+  floors apply and whether the trend is adopted at all; the audit checks the
+  BP-146 compensation in the built UI.
+- `component-guidelines.md`: the cross-platform stance now states the
+  native-element-first rule ahead of the ARIA APG patterns.
+- Existing entries updated with field prevalence and cross-links: BP-054
+  (points to the motion system), BP-055 (checkout-rebuild yield, defers to
+  BP-143), BP-058 (points to the weight budget), BP-059 and BP-081 (the
+  ~95% failure rate and low contrast as the single most common defect),
+  BP-077 (points to progressive profiling).
+
 ## 0.25.0 — 2026-07-29
 
 The catalog knew how to sell inside an app and almost nothing about selling

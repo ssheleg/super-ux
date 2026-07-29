@@ -1,9 +1,12 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..129 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..146 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
-BP-101..115, web funnels BP-116..123, web2app BP-124..129;
+BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
+BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
+BP-136..138, frustration telemetry BP-139..140, gamification BP-141..142,
+personalization BP-143..144, trend governance BP-145..146;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..16)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -25,6 +28,8 @@ answers in the foundation):
 | Acquisition | paid-ads, organic, both |
 | Forms present | yes/no (signup, checkout, data entry) |
 | Analytics present | yes/no |
+| Personalization | none, rule-based, inferred/model-driven |
+| Engagement mechanics | none, streaks/tiers, points/badges/leaderboards |
 
 ## Step 2 — Mandatory sets from the profile
 
@@ -34,11 +39,13 @@ answers in the foundation):
 |---|---|
 | any graphical UI | BP-079..090 (visual craft: typography, color, layout) — the **floor**; the concrete palette/type/motion come from the recorded style pack ([visual-identity.md](visual-identity.md)) |
 | any graphical UI (controls) | BP-101..115 (which control for the job; states; platform component of record) — see [component-guidelines.md](component-guidelines.md) |
+| any graphical UI (motion) | BP-054, BP-130..132 (token scale, reduced motion, scroll-driven floors) |
+| any graphical UI (look) | BP-145, BP-146 (trend adopted through its mechanism, with the compensation named) |
 | Figma enabled | BP-091..100 (file structure, SCR-ID frame naming, tokens, variants, auto layout) |
 | mobile-* | BP-049..054 |
 | mobile-ios | + BP-031, BP-033 (OS surfaces, widgets — as opportunities) |
-| web | BP-052, BP-058, BP-059 |
-| forms: yes | BP-050, BP-055..057 |
+| web | BP-052, BP-058, BP-059, BP-133..138 (weight budget, baseline viewport, input capability, native semantics, real evidence, regime) |
+| forms: yes | BP-050, BP-055..057, BP-143 |
 | voice | BP-060..065 |
 | ai-chat | BP-063..066 |
 | money ≠ none | BP-067..074 |
@@ -49,7 +56,9 @@ answers in the foundation):
 | web-direct / both, money ≠ none | BP-116..123 (landing → pricing → checkout → billing → cancel) |
 | purchase surface: web checkout or web2app | + BP-127, BP-128 (storefront rules, billing duties) |
 | purchase surface: web2app | + BP-124..126, BP-129 (funnel, handoff, deferred deep link, whole-chain measurement) |
-| analytics: yes | BP-040..048 |
+| analytics: yes | BP-040..048, BP-139, BP-140 |
+| personalization ≠ none | BP-143, BP-144 |
+| engagement mechanics ≠ none | BP-141, BP-142, BP-032 |
 
 "Mandatory consideration" = each practice in the set gets an explicit
 verdict (Step 4), not automatic adoption.
@@ -67,8 +76,8 @@ the Step-2 sets:
 | Trial start/end | BP-070, BP-071, BP-072, BP-019 (trial anxiety) |
 | Cancel / winback flow | BP-017, BP-027, BP-035, BP-123; PRN-03 |
 | Rating prompt flow | BP-076; PRN-16 |
-| Forms / checkout | BP-050, BP-055..057, BP-119, BP-120; PRN-05, PRN-09 |
-| Landing / campaign page | BP-116, BP-117, BP-077; PRN-08 |
+| Forms / checkout | BP-050, BP-055..057, BP-119, BP-120, BP-143; PRN-05, PRN-09 |
+| Landing / campaign page | BP-116, BP-117, BP-077, BP-132, BP-133; PRN-08 |
 | Pricing page (web) | BP-118, BP-022, BP-073; PRN-08 |
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
@@ -80,9 +89,14 @@ the Step-2 sets:
 | Empty / first-use states | BP-004, BP-012; screen rules (principles doc) |
 | Store listing | BP-075, BP-077 |
 | Analytics / experiment design | BP-040..048 |
-| Screen build / visual polish | BP-079..090; PRN-08, PRN-15 |
+| Screen build / visual polish | BP-079..090, BP-130, BP-145, BP-146; PRN-08, PRN-15 |
 | Reading surfaces (articles, docs, long copy) | BP-079, BP-081, BP-086, BP-087 |
 | Data tables / dashboards | BP-086, BP-088; PRN-06 |
+| Animated / scroll-driven surface | BP-054, BP-130..132, BP-133; PRN-01, PRN-08 |
+| Responsive layout pass | BP-134, BP-135, BP-050, BP-087 |
+| Accessibility pass | BP-059, BP-081, BP-083, BP-136..138; PRN-01, PRN-04 |
+| Gamified / streak surface | BP-141, BP-142, BP-032, BP-035; PRN-16 |
+| Personalized / adaptive surface | BP-143, BP-144, BP-077; PRN-02, PRN-12 |
 
 ## Step 4 — Compliance table (the record)
 
