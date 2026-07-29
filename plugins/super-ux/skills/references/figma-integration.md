@@ -20,23 +20,35 @@ again per flow — the project-level choice holds until the user changes it.
 
 ## Preflight (only when Figma is chosen)
 
-1. **MCP present?** Check for Figma MCP tools (e.g. `use_figma`,
-   `generate_figma_design`, `create_new_file`, `get_design_context`). If
-   absent, recommend connecting it — do NOT block the chain:
+1. **MCP present?** Check for the official Figma MCP tools (`use_figma`,
+   `get_design_context`, `get_metadata`, `create_new_file`). If absent,
+   recommend connecting it — do NOT block the chain:
    > "Figma design needs the Figma MCP connected. Add it via /mcp (or your
    > claude.ai connectors), then I'll mirror mockups as we design. Until
    > then I'll keep the markdown flows and wireframes, and sync to Figma
    > once it's connected."
    Continue text-only; the flows/wireframes are the source of truth and
    Figma catches up later.
-2. **File location recorded?** If Design tooling has no Figma file yet,
-   create one (`create_new_file`) or ask the user for the target file URL,
-   then write it into `foundation.md` immediately — before drawing anything,
-   so the location is never lost.
-3. **Design system?** If the project has a Figma library / design system,
+2. **Load Figma's own skill first — every time.** The MCP gates its main
+   tools behind guidance skills, and skipping them is the most common cause
+   of hard-to-debug failures. Before `use_figma` → `/figma-use`; before
+   `create_new_file` → `/figma-create-new-file`; before `get_design_context`
+   → `/figma-design-to-code`. If the slash-command form isn't installed,
+   read the equivalent MCP resource (`skill://figma/<name>/SKILL.md`, listed
+   by the server's own skill tools). These are the API's rules, not
+   super-ux's — follow them verbatim and don't hand-guess the calls.
+3. **File location recorded?** If Design tooling has no Figma file yet,
+   create one — `whoami` first for the plan key (ask which team/org when the
+   user has several), then `create_new_file` with `editorType: "design"` —
+   or ask the user for the target file URL. Write the URL into
+   `foundation.md` immediately, before drawing anything, so the location is
+   never lost.
+4. **Design system?** If the project has a Figma library / design system,
    pull it (`get_libraries` / `search_design_system`) and build on its
-   components and tokens instead of inventing new ones.
-4. **Style pack?** If there is no design system yet, settle the visual
+   components and tokens instead of inventing new ones. `get_variable_defs`
+   reads the variables (tokens) already defined on a node — use it to check
+   what exists before creating a parallel set.
+5. **Style pack?** If there is no design system yet, settle the visual
    identity BEFORE drawing: read `screens.md` → Design system → `Style pack`,
    and when it's empty use the **sheleg-design** companion skill to pick one
    (or offer its one-time install once, then continue either way). Its token
@@ -48,6 +60,30 @@ components, and tokens per [figma-structure.md](figma-structure.md)
 (BP-091..BP-100). The key rule: frames are named `SCR-NN/<Screen>/<state>`
 to match `screens.md` exactly, so lookup is deterministic and drift is
 checkable.
+
+## Which tool for which job
+
+Names from the official Figma MCP. Treat the list as a map, not a contract:
+if a tool is missing in the user's setup, degrade to what is there and say
+so — never invent a call.
+
+| Need | Tool |
+|---|---|
+| Write anything into Figma (frames, components, variables, layout, fixes) | `use_figma` — runs JS against the Plugin API; **load `/figma-use` first** |
+| Capture a *web app* page pixel-perfect the first time | `generate_figma_design` where the setup exposes it (run beside `use_figma`, which rebuilds it on design-system components). Non-web and from-scratch work: `use_figma` only |
+| A new file to work in | `whoami` → `create_new_file` (`editorType` design / figjam / slides); **load `/figma-create-new-file` first** |
+| Read a design for implementation (code + screenshot + context) | `get_design_context`; **load `/figma-design-to-code` first** |
+| Cheap structure read — does the frame exist, is it named right | `get_metadata` (node ids, names, types, sizes; omit `nodeId` to list pages) |
+| Just the picture | `get_screenshot` |
+| Tokens already defined on a node | `get_variable_defs` |
+| The project's library / design system | `get_libraries`, `search_design_system` |
+| Icons, illustrations, exports in or out | `download_assets`, `upload_assets` |
+| Figma ↔ code component mapping (deepens `Coverage`) | `get_code_connect_map`, `get_code_connect_suggestions`, `add_code_connect_map` — `get_design_context` already uses Code Connect when it's set up |
+| Mirror a flow onto a FigJam board | `get_figjam`, `generate_diagram` (`/figma-use-figjam`) |
+
+`node-id` comes from the frame's URL (`?node-id=1-2` → `1:2`); a file key
+from `figma.com/design/:fileKey/...`. Both live in `screens.md` links
+already, which is why the deep-links are worth keeping accurate.
 
 ## Recording the file (foundation.md → Design tooling)
 
@@ -95,9 +131,10 @@ For each flow, AFTER the flow diagram + screen/state table are agreed:
    [figma-structure.md](figma-structure.md): the flow's page named
    `FLW-NN · <name>`, each frame `SCR-NN/<Screen>/<state>`, built on the
    library's components and token variables (BP-093..BP-098). Follow the
-   Figma plugin's own skills for the API (`/figma-use` before `use_figma`,
-   `/figma-generate-design` for translating a screen spec) — don't
-   hand-guess the MCP calls.
+   Figma MCP's own skills for the API — `/figma-use` before every
+   `use_figma` call, `/figma-generate-design` when translating a whole page
+   or view, `/figma-create-new-file` before creating a file. Don't
+   hand-guess the calls.
 5. Write each state's frame deep-link into that screen's States table in
    `screens.md`, and the screen's page link into the Index `Figma` column.
    Present the mockup for approval alongside the flow.
@@ -108,9 +145,10 @@ BPs as `applied` with the Figma frame as their evidence.
 ## Improve mode with Figma
 
 When improving existing UX and Figma is on: import current screens
-(`get_design_context` / `get_screenshot` from a provided file, or build from
-code), produce before → after frames next to the flow's before → after
-diagrams, and cite the same `PRN-NN`/`BP-NNN` on the redesigned frames.
+(`get_design_context` — load `/figma-design-to-code` first — or
+`get_screenshot` from a provided file, or build from code), produce
+before → after frames next to the flow's before → after diagrams, and cite
+the same `PRN-NN`/`BP-NNN` on the redesigned frames.
 
 ## Keeping Figma in sync (same-change rule)
 

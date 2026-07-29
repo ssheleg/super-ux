@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.24.0 — 2026-07-29
+
+Checked what the plugin claims about Figma against the official Figma MCP's
+actual tools and their contracts. Several instructions would have failed.
+
+### Fixed
+- **The MCP gates its own tools behind guidance skills, and super-ux ignored
+  two of the three gates.** `use_figma` requires `/figma-use` first,
+  `create_new_file` requires `/figma-create-new-file`, `get_design_context`
+  requires `/figma-design-to-code` — skipping them is the server's documented
+  cause of hard-to-debug failures. Only the first was mentioned, and only in
+  one step of the design loop; the preflight told the agent to call
+  `create_new_file` and Improve mode to call `get_design_context` with no gate
+  at all. All three are now stated where the call is made, with the
+  `skill://figma/<name>/SKILL.md` fallback for setups without the slash
+  commands.
+- **"Create a Figma file" was an unrunnable instruction.** `create_new_file`
+  needs a plan key (from `whoami`, asking the user when there are several
+  teams/orgs) and an `editorType`; neither was mentioned.
+- `generate_figma_design` was listed as a plain alternative for mockups. It is
+  narrower than that — the server's own guidance reserves it for capturing a
+  *web app* page pixel-perfect the first time, run beside `use_figma`; for
+  non-web and from-scratch design, `use_figma` only. Stated as such, and as
+  "where the setup exposes it", since not every install has it.
+
+### Added
+- **A tool map in `figma-integration.md`** — need → tool, for the whole
+  surface the chain actually touches: writes (`use_figma`), structure reads
+  (`get_metadata`), implementation reads (`get_design_context`), screenshots,
+  variables (`get_variable_defs`), libraries, assets
+  (`download_assets` / `upload_assets`), Code Connect, and FigJam. Explicitly
+  a map, not a contract: a missing tool degrades to what is there, and the
+  agent never invents a call. Plus how `node-id` and `fileKey` come out of the
+  links `screens.md` already stores.
+- **Drift checks that use the cheap tool.** Frame existence and naming are
+  verified with `get_metadata` (ids, names, types, sizes — no full design
+  context needed), in both directions: a listed state without a frame, and a
+  frame whose `SCR-ID`/state is in no `screens.md` row.
+- **Token parity is now checkable, not assumed.** `get_variable_defs` reads
+  what a frame actually references, so "built on the style pack's tokens"
+  becomes a verdict with evidence — a frame full of raw hexes is the
+  design-side twin of hard-coded colors in code.
+
 ## 0.23.2 — 2026-07-28
 
 Open-source hygiene pass — the repo is public, so the files a first-time

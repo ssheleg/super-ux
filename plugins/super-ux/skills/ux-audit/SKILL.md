@@ -56,7 +56,9 @@ Passes:
    accurate). A screen whose code diverges from its record → `drifted`
    finding; flip its Status to `drifted`. When Figma is enabled, check each
    state has a frame link and flag empty/obviously-stale links (a link the
-   registry marks but the design lost).
+   registry marks but the design lost); with the Figma MCP connected,
+   `get_metadata` confirms the frame still exists under its expected
+   `SCR-NN/<Screen>/<state>` name without pulling full design context.
 3. **Heuristic pass** — implemented flows vs PRN-01..16
    ([ux-design-principles.md](references/ux-design-principles.md));
    findings `[PRN-NN] (severity) node — issue -> fix`.

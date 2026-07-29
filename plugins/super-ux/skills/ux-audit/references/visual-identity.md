@@ -75,7 +75,10 @@ screen/state table are agreed and **before** frames get drawn:
 - take the pack's tokens as the **Figma variable collections** (primitive →
   semantic → component, per BP-095) instead of hand-picking colors per frame;
   the pack's ready-made token CSS is the same source the code will use, so
-  Figma and code start from one vocabulary;
+  Figma and code start from one vocabulary. Creating them is a `use_figma`
+  call (load `/figma-use` first); `get_variable_defs` reads back what a node
+  actually references, which is how token parity gets verified instead of
+  assumed;
 - apply the pack's type scale, spacing, texture and motion tokens to every
   `SCR-NN/<Screen>/<state>` frame — the visual-craft practices are then
   satisfied *by construction*, and the compliance table records them
@@ -96,7 +99,10 @@ decides structure and behavior; the pack decides how it looks.
 
 When a `Style pack` is recorded, the deep audit's practice pass verifies the
 built UI actually uses it: tokens referenced rather than raw values, the
-pack's bans respected, dark mode from the pack's twin. A screen that ignores
+pack's bans respected, dark mode from the pack's twin. On the Figma side the
+same question is answered by `get_variable_defs` on the frame — a frame
+carrying raw hexes where the pack has variables is the design-side twin of
+hard-coded colors in code. A screen that ignores
 the recorded pack is a `drifted` finding like any other divergence — an
 identity chosen once and then abandoned per screen is exactly the drift this
 companion exists to remove.

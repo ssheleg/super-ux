@@ -92,9 +92,14 @@ friction.
 ## What the agent checks (maintenance)
 
 - Every `screens.md` screen-state has a matching, correctly-named frame with
-  a live deep-link (the linter flags empty frame cells; frame existence and
-  naming are verified against Figma when the MCP is connected).
-- No orphan frames (a frame whose `SCR-ID`/state isn't in `screens.md`).
-- New screens build on library components/tokens, not one-offs.
+  a live deep-link. The linter flags empty frame cells offline; with the MCP
+  connected, `get_metadata` is the cheap read that confirms a frame still
+  exists under the expected name (it returns ids, names, types and sizes
+  only — no need to pull full design context for a naming check).
+- No orphan frames (a frame whose `SCR-ID`/state isn't in `screens.md`) —
+  the same `get_metadata` page dump, compared the other way.
+- New screens build on library components/tokens, not one-offs;
+  `get_variable_defs` on a frame shows which variables it actually
+  references, so "built on the tokens" is checkable rather than assumed.
 - Page and frame names still match the current `flows.md`/`screens.md` IDs
   after any rename.
