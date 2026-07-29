@@ -232,12 +232,18 @@ Built by ssheleg — [sshlg.me](https://sshlg.me)
 - Telegram — [@sshlg](https://t.me/sshlg)
 
 Part of the [ssheleg skill family](https://github.com/ssheleg/sshlg-skills):
-`super-ux`, `task-pipeline`, `make-skill`, `sheleg-design`, `seo-aeo-audit`.
-One command installs all five for every agent you use:
+`super-ux`, `task-pipeline`, `agent-sync`, `make-skill`, `sheleg-design`, `seo-aeo-audit`.
+**The family installs and updates as one package**, for every agent you use — a bundle with one
+member current and the rest stale is a combination nobody tested:
 
 ```bash
-npx sshlg-skills install
+npx sshlg-skills install              # nothing installed yet — the whole family, any agent
+npx sshlg-skills update               # installed but behind — updates everything
+npx --yes sshlg-skills@latest list    # what the current release of each member is
 ```
+
+Restart your agent afterwards: skills and hooks load at session start, so the session that
+updates is not the session that gets the new ones.
 
 ## License
 
