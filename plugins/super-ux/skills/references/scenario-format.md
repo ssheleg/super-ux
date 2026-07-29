@@ -101,13 +101,18 @@ testable). Acceptance criteria are Given/When/Then and observable.
 - **Model:** hard paywall | freemium | hybrid | trial (opt-in/opt-out, length) — chosen per BP-067..070, reason noted
 - **Value metric:** <what the paid tier meters: projects, seats, usage, exports>
 - **Free boundary:** <what stays genuinely useful free, where the visible limit sits>
-- **Money moments:** <paywall placement, upgrade triggers, rating prompt moments, winback points>
-- **Acquisition coherence:** <the one story ad -> listing -> onboarding must tell>
+- **Purchase surface:** in-app (IAP) | web checkout | web2app (web funnel -> app) — per BP-030/BP-078/BP-127, with the storefronts each applies to
+- **Money moments:** <paywall placement, upgrade triggers, checkout, failed payment, cancel, rating prompt moments, winback points>
+- **Acquisition coherence:** <the one story ad -> landing/listing -> onboarding must tell>
 ```
 
 Money moments are inputs to `flows.md`: each gets a first-class flow
-(paywall, upgrade-at-limit, cancel/winback, rating prompt) — not an
-afterthought edge.
+(paywall, upgrade-at-limit, checkout, dunning/failed payment, cancel +
+winback, rating prompt) — not an afterthought edge. When the purchase
+surface is web checkout or web2app, the web funnel (landing → pricing →
+signup → checkout) and the paid handoff (install → identify → entitlement
+restore, with its failure branches) are flows of this product too, held to
+the same rigor as in-app screens — see BP-116..129.
 
 ### 6. Design tooling (Figma, optional — default on)
 
@@ -344,7 +349,10 @@ multi-entity flows (e.g. second project, switching); account/data lifecycle
 where applicable; monetization flows where the product earns money —
 paywall (first-session placement), trial start/end, upgrade-at-limit,
 cancel + winback, rating prompt after success moments, store-listing/ad
-coherence with the first session.
+coherence with the first session; and, when money is taken on the web,
+the funnel steps (landing, pricing, signup, checkout with the total price
+shown, abandonment recovery, failed payment) plus — for web2app — the paid
+handoff and each of its failure branches.
 
 ## Audit report — `docs/ux/audits/YYYY-MM-DD[-scope].md`
 

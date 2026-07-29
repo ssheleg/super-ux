@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.25.0 — 2026-07-29
+
+The catalog knew how to sell inside an app and almost nothing about selling
+on the web. Two funnels were missing: web-to-web (landing → pricing →
+checkout → recurring billing → cancel) had only generic form advice, and
+web2app was a single entry (BP-078) stating the economics with none of the
+design work. Both are now full sets, and the chain routes to them from the
+foundation's purchase surface.
+
+### Added
+- **Web funnels — BP-116..123** (`best-practices.md`): one promise from ad to
+  landing to first product screen; one page, one job, with proof beside each
+  CTA rather than in a bottom section most visitors never reach; pricing page
+  as three tiers with one visibly recommended and annual framed in absolute
+  money; signup asking the smallest identity that unblocks value (card only
+  when the trial is deliberately opt-out); total price — currency, tax, fees —
+  shown before the last step, wallets above the card form; abandonment as a
+  designed branch with surviving state and a resume link, not a leak; dunning
+  as a UX surface (pre-expiry notice, one-tap in-product card update, retries
+  that end in a real message); cancel self-serve and honest with exactly one
+  save offer.
+- **Web-to-app funnels — BP-124..129**: the web funnel replaces onboarding,
+  not just the paywall; the paid handoff is a first-class scenario with its
+  failure branches (wrong account, mail never arrived, purchase not yet
+  propagated, second device, refunded) — a paying user must never meet a
+  paywall; context carried across the store gap by deferred deep link with a
+  deliberately designed magic-link fallback; storefront rules as a per-region
+  variable re-checked each ship (US external links after the April 2025
+  ruling, entitlement elsewhere, EU its own regime, IAP as fallback); the tax,
+  SCA, refund and invoice duties the store used to absorb; and one funnel
+  measured web session → purchase → install → activation, not stopping at the
+  sale.
+- Two source keys — **[CRO26]** (Baymard checkout research, ChartMogul/Paddle
+  trial and failed-payment data, landing/pricing-page A/B aggregations) and
+  **[W2A26]** (RevenueCat/Adapty/Superwall funnel benchmarks, Apple/Google
+  storefront policy after the 2025 US anti-steering ruling) — with an explicit
+  note that their figures are industry aggregates the product's own numbers
+  overrule.
+- Tag taxonomy: `billing`, `cancel` (stage), `landing-page`, `web2app`
+  (domain).
+
+### Changed
+- **`practice-selection.md` routes to the new sets.** New profile dimension
+  **Purchase surface** (none / IAP / web checkout / web2app); Step-2 mandatory
+  sets for web-direct money products (BP-116..123), for any off-store purchase
+  (BP-127, BP-128) and for web2app (BP-124..126, BP-129); Step-3 checklists
+  for landing/campaign page, web pricing page, abandonment recovery, dunning,
+  and the web2app funnel + paid handoff, with the existing forms/checkout and
+  cancel rows extended.
+- **The foundation now declares where the money is taken.** `Purchase surface`
+  added to the Monetization section (`scenario-format.md`,
+  `templates/foundation.md`, `ux-foundation` skill and Cursor rule); money
+  moments now name checkout, failed payment and cancel; when the surface is
+  web or web2app, the web funnel and the paid handoff are flows of this
+  product, held to the same rigor as in-app screens (`ux-flows`,
+  `ux-scenarios` completeness checklists and Cursor rule).
+- Plugin/marketplace descriptions de-numbered again — a practice count had
+  crept back in and gone stale; they now say "a tag-indexed best-practices
+  catalog". README says 129 and names the two new areas.
+
 ## 0.24.0 — 2026-07-29
 
 Checked what the plugin claims about Figma against the official Figma MCP's

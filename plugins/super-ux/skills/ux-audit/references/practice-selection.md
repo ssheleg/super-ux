@@ -1,9 +1,10 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..115 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..129 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
-BP-101..115; [ux-design-principles.md](ux-design-principles.md) PRN-01..16)
+BP-101..115, web funnels BP-116..123, web2app BP-124..129;
+[ux-design-principles.md](ux-design-principles.md) PRN-01..16)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
 **audit** (`ux-audit`). Purpose: the right practices get considered at the
@@ -20,6 +21,7 @@ answers in the foundation):
 | Platform | mobile-ios, mobile-android, web, voice, ai-chat (multi-select) |
 | Money model | none, subscription, freemium, hybrid, one-time |
 | Distribution | app-store, web-direct, both |
+| Purchase surface | none, in-app (IAP), web checkout, web2app (web funnel → app) |
 | Acquisition | paid-ads, organic, both |
 | Forms present | yes/no (signup, checkout, data entry) |
 | Analytics present | yes/no |
@@ -44,6 +46,9 @@ answers in the foundation):
 | freemium / hybrid | + BP-024..027, BP-073, BP-074 |
 | app-store | BP-075, BP-076 |
 | paid-ads | BP-043, BP-077, BP-078 |
+| web-direct / both, money ≠ none | BP-116..123 (landing → pricing → checkout → billing → cancel) |
+| purchase surface: web checkout or web2app | + BP-127, BP-128 (storefront rules, billing duties) |
+| purchase surface: web2app | + BP-124..126, BP-129 (funnel, handoff, deferred deep link, whole-chain measurement) |
 | analytics: yes | BP-040..048 |
 
 "Mandatory consideration" = each practice in the set gets an explicit
@@ -60,9 +65,14 @@ the Step-2 sets:
 | Paywall flow | BP-016..023, BP-028..030, BP-069, BP-070; PRN-08; honesty anti-pattern (principles doc) |
 | Upgrade-at-limit flow | BP-024..026, BP-073, BP-074 |
 | Trial start/end | BP-070, BP-071, BP-072, BP-019 (trial anxiety) |
-| Cancel / winback flow | BP-017, BP-027, BP-035; PRN-03 |
+| Cancel / winback flow | BP-017, BP-027, BP-035, BP-123; PRN-03 |
 | Rating prompt flow | BP-076; PRN-16 |
-| Forms / checkout | BP-050, BP-055..057; PRN-05, PRN-09 |
+| Forms / checkout | BP-050, BP-055..057, BP-119, BP-120; PRN-05, PRN-09 |
+| Landing / campaign page | BP-116, BP-117, BP-077; PRN-08 |
+| Pricing page (web) | BP-118, BP-022, BP-073; PRN-08 |
+| Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
+| Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
+| Web2app funnel + paid handoff | BP-124..129, BP-030, BP-078; PRN-01, PRN-09 |
 | Navigation / IA | BP-049, BP-051..053; PRN-06, PRN-14 |
 | Permissions / notifications | BP-013, BP-036..038 |
 | Lifecycle / email sequences | BP-034, BP-039, BP-071 |

@@ -40,7 +40,9 @@ Per-product: first-run onboarding, every core flow, settings, multi-entity
 flows (e.g. second project), account/data lifecycle, and — when the product
 earns money — the monetization flows: paywall (first-session placement),
 trial start/end, upgrade-at-limit, cancel + winback, rating prompt after
-success moments.
+success moments, plus the web funnel (landing, pricing, signup, checkout,
+abandonment, failed payment) and the paid handoff with its failure branches
+when money is taken on the web.
 
 ## Workflows
 

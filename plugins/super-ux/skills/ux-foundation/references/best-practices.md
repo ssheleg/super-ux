@@ -14,13 +14,14 @@ attribution. Keep entries under ~6 lines.
 ## Tag taxonomy
 
 - **Stage:** `onboarding` `paywall` `pricing` `post-paywall` `retention`
-  `lifecycle` `winback` `analytics` `testing` `checkout` `navigation`
+  `lifecycle` `winback` `analytics` `testing` `checkout` `billing` `cancel`
+  `navigation`
 - **Mechanism:** `personalization` `social-proof` `commitment` `scarcity`
   `anchoring` `friction-reduction` `habit` `reward` `segmentation`
   `attribution` `activation` `feedback` `error-recovery`
 - **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
-  `email` `push` `widgets` `voice` `ai-chat` `forms` `figma` `design-system`
-  `handoff` `maintainability`
+  `landing-page` `web2app` `email` `push` `widgets` `voice` `ai-chat` `forms`
+  `figma` `design-system` `handoff` `maintainability`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
   `insight` `accessibility` `performance`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
@@ -41,7 +42,16 @@ RevenueCat State of Subscription Apps 2025 (75k+ apps, $10B revenue);
 **[PLG25]** = OpenView / ProductLed 2025 SaaS benchmarks; **[ASO25]** =
 converged ASO industry guidance 2025 (AppTweak/AppFollow/asomobile);
 **[Type]** = converged typography research (Baymard line-length studies,
-USWDS, Bringhurst, Dyson & Haselgrove reading-speed research).
+USWDS, Bringhurst, Dyson & Haselgrove reading-speed research); **[CRO26]** =
+converged web-funnel and billing benchmarks 2026 (Baymard checkout research,
+ChartMogul/Paddle trial and failed-payment data, landing- and pricing-page
+A/B aggregations); **[W2A26]** = converged web2app practitioner guidance 2026
+(RevenueCat/Adapty/Superwall funnel benchmarks; Apple and Google storefront
+policy after the April 2025 US anti-steering ruling).
+
+Figures from `[CRO26]`/`[W2A26]` are industry aggregates, not laws: they
+justify the *shape* of a practice, and the product's own numbers overrule
+them the moment they exist.
 
 ### Onboarding & early experience
 
@@ -882,3 +892,114 @@ Design System.
 - **Apply when:** every control; the audit checks the state set.
 - **Tags:** component, control, accessibility, feedback-ui
 - **Source:** [M3]/[HIG]/[APG]
+
+### Web funnels — landing, pricing, checkout, billing
+
+The web-to-web money path: traffic → landing → signup → checkout → recurring
+billing → cancel. Each step below is a flow with states and failure branches,
+not a marketing page; treat them with the same scenario rigor as in-product
+screens.
+
+#### BP-116: One promise from ad to landing to first product screen
+- **Do:** the ad headline, the landing hero, the signup screen, and the first in-product screen repeat the same benefit in the same words; one landing per campaign promise, never one landing for all traffic.
+- **Why:** the relevance gap between ad and page is the most common cause of below-median landing conversion — the web twin of BP-077, and it sets CAC before any UI detail can.
+- **Apply when:** any paid or campaign traffic entering a web funnel.
+- **Tags:** landing-page, attribution, conversion, trust, web
+- **Source:** [CRO26]/[ASO25]
+
+#### BP-117: One page, one job — single CTA, proof at the decision point
+- **Do:** one primary action per landing page, repeated down the page; place social proof (logos, numbers, testimonials) beside each CTA rather than only in a section at the bottom; secondary links must not compete with the CTA.
+- **Why:** a large share of visitors never scroll to a bottom testimonial block, so proof placed there never enters the decision; competing CTAs split intent instead of stacking it.
+- **Apply when:** every marketing or landing page inside a conversion funnel.
+- **Tags:** landing-page, social-proof, visual-hierarchy, conversion, web
+- **Source:** [CRO26]/[NNg]
+
+#### BP-118: Pricing page — three tiers, one visibly recommended, annual framed in money
+- **Do:** three tiers (five-plus creates decision fatigue), one marked recommended with a real visual anchor, monthly/annual toggle stating the annual saving as an absolute amount ("save $240/year"), and annual plans also shown as their monthly equivalent.
+- **Why:** an unhighlighted lineup gives no entry point and measurably underconverts; absolute savings trigger loss aversion harder than a percentage, and monthly-equivalent framing lifts annual selection.
+- **Apply when:** any self-serve pricing page — the web sibling of BP-022.
+- **Tags:** pricing, anchoring, revenue, conversion, web
+- **Source:** [CRO26]/[PLG25]
+
+#### BP-119: Signup asks for the smallest identity that unblocks value
+- **Do:** ask only what the next step actually consumes (email + SSO; name/company only if used immediately); require a card only when the trial is deliberately opt-out (BP-070), and say so before the form starts.
+- **Why:** every field past the minimum costs conversion — opt-out signup collapses as the payment form lengthens, and wallet one-tap recovers much of it; opt-in trades volume for a lower trial-to-paid, which is a choice, not a default.
+- **Apply when:** any web signup or trial start.
+- **Tags:** forms, friction-reduction, pricing, conversion, web
+- **Source:** [CRO26]/[PLG25]
+
+#### BP-120: Total price visible before the last step, in the user's currency and tax rules
+- **Do:** show the final amount — currency, VAT/sales tax, every fee — on the plan or cart step, not after the address form; localize price and payment methods by region; put wallets (Apple Pay / Google Pay) above the card form.
+- **Why:** unexpected extra costs are the single biggest documented checkout-abandonment cause, with "couldn't see the total upfront" a separate one on top; wallets delete the form for most users.
+- **Apply when:** any web checkout, subscription or one-time.
+- **Tags:** checkout, pricing, trust, conversion, web
+- **Source:** [Baymard]/[CRO26]
+
+#### BP-121: Abandonment is a flow, not a leak
+- **Do:** design the exit as a branch — persist cart/quiz state, issue a resume link (email or magic link) back to the exact step left, and send one recovery message repeating the original promise instead of opening a new pitch.
+- **Why:** roughly 70% of carts are abandoned and much of that traffic never disqualified itself — it stalled on cost, forced account, or complexity; recovery only exists if the state survived the exit.
+- **Apply when:** any multi-step web funnel with a payment step.
+- **Tags:** checkout, winback, error-recovery, conversion, web
+- **Source:** [Baymard]/[CRO26]
+
+#### BP-122: Dunning is a UX surface, not a billing job
+- **Do:** treat failed payment as a scenario — notice before card expiry, in-product banner with a one-tap update-card path (deep-linked, not "go to billing"), a retry schedule that ends in a real message, and a grace period that stays honest about the account's state.
+- **Why:** involuntary churn reaches a double-digit share of total churn, expired cards dominate the failures, and recovery roughly doubles when retries are paired with an in-product multi-touch path instead of processor retries alone.
+- **Apply when:** any recurring billing outside the stores.
+- **Tags:** billing, lifecycle, retention, error-recovery, revenue
+- **Source:** [CRO26]
+
+#### BP-123: Cancel is self-serve and honest; save-offer once
+- **Do:** cancellation reachable from settings in no more steps than upgrade; state exactly what happens and when (access until date, data retention, refund rule); at most one save offer (pause, downgrade, discount) with a reason survey — then let go and confirm in writing.
+- **Why:** hidden or hostile cancel flows convert into chargebacks, store refunds, and 1-star reviews (and in several jurisdictions, regulatory exposure); the reason survey is the input BP-035 winback needs.
+- **Apply when:** any subscription billed self-serve.
+- **Tags:** cancel, trust, retention, winback, web
+- **Source:** [CRO26]/[NNg]
+
+### Web-to-app funnels (web2app)
+
+BP-078 states the economics; this set is the design work. The store gap —
+web purchase, then install — is a seam that silently destroys owned
+conversion unless every branch across it is specified.
+
+#### BP-124: The web funnel replaces onboarding, not just the paywall
+- **Do:** run the quiz, goal-setting, value promise, and offer on the web (BP-002, BP-010, BP-069 apply verbatim), then hand a configured, already-paid account to the app; the app's first session starts at the first real task, never at a second onboarding.
+- **Why:** moving only the payment screen keeps the store friction and makes the user answer the same questions twice; the gain comes from owning the whole pre-install experience.
+- **Apply when:** paid-acquisition-heavy app products with LTV worth protecting (expands BP-078).
+- **Tags:** web2app, onboarding, revenue, conversion, subscription-app
+- **Source:** [W2A26]/[48Laws]
+
+#### BP-125: The paid handoff is a first-class scenario with failure branches
+- **Do:** specify install → identify (magic link / OTP / SSO under the same identity as the web purchase) → entitlement restore → activated home, plus the branches: wrong account, mail never arrived, purchase not yet propagated, second device, refunded. A paying user must never meet a paywall.
+- **Why:** the store gap is where owned conversion dies quietly — paid on the web, landed in a free app; "restore purchase" as the only route is a support queue wearing a button.
+- **Apply when:** every web2app funnel, and any web-checkout upsell beside IAP (BP-030).
+- **Tags:** web2app, handoff, error-recovery, trust, subscription-app
+- **Source:** [W2A26]
+
+#### BP-126: Carry context across the store gap (deferred deep linking)
+- **Do:** pass campaign, quiz answers, and entitlement through a deferred deep link / install-attribution SDK; degrade to the emailed magic link when the deep link is lost, and design that fallback screen deliberately instead of letting it be a cold start.
+- **Why:** without it the install breaks the chain — the app cannot personalize from answers already given (BP-010), and paid attribution stops at the store page.
+- **Apply when:** any web funnel that ends in an app install.
+- **Tags:** web2app, attribution, personalization, handoff, mobile
+- **Source:** [W2A26]/[ASO25]
+
+#### BP-127: Store policy is a per-storefront variable, not a constant
+- **Do:** branch the purchase surface by storefront and re-check the current rules before each ship: since the April 2025 US ruling, US-storefront iOS apps may link out to external purchases with no Apple commission; other storefronts still need the external-purchase-link entitlement with its own fee and disclosure sheet; the EU runs its own regime. Keep IAP as the fallback wherever linking out is not allowed.
+- **Why:** one hardcoded global purchase flow gets the build rejected or the entitlement revoked — and these rules have changed repeatedly since 2024.
+- **Apply when:** any app shipping external purchase links or web checkout (with BP-030, BP-078).
+- **Tags:** web2app, ios, android, pricing, revenue
+- **Source:** [W2A26]
+
+#### BP-128: Web billing brings duties the store used to absorb
+- **Do:** choose merchant-of-record vs direct processor consciously, then design what it obliges: tax display and remittance, SCA/3DS friction in the EU, refunds and chargebacks, receipts and invoices, and a self-serve billing portal — all user-facing scenarios, not back-office chores.
+- **Why:** the ~3–4% processing advantage over 15–30% IAP is only real net of tax, fraud, refunds, and support; the store was doing that work invisibly before.
+- **Apply when:** moving any purchase off IAP.
+- **Tags:** billing, checkout, trust, revenue, web
+- **Source:** [W2A26]/[CRO26]
+
+#### BP-129: Measure the whole chain or you are optimizing half a funnel
+- **Do:** define one funnel spanning web session → paywall view → purchase → install → identify → activation → retained, keyed to a single identity, with per-step drop-off and per-campaign cohorts (BP-045, BP-046); attribute install and activation back to the web step that sold them.
+- **Why:** a funnel measured only to the purchase optimizes the sale and hides the handoff drop — the money moment is a paying, activated user, not a checkout event.
+- **Apply when:** any web2app or web-checkout funnel that is live (with BP-040..048).
+- **Tags:** web2app, analytics, attribution, activation, insight
+- **Source:** [W2A26]/[PLG25]

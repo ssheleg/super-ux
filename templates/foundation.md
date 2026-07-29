@@ -33,8 +33,9 @@ data/observation, recognizable by a real user. -->
 - **Model:** hard paywall | freemium | hybrid | trial (type, length) — and why
 - **Value metric:** <what the paid tier meters>
 - **Free boundary:** <what stays free, where the visible limit sits>
-- **Money moments:** <paywall placement, upgrade triggers, rating prompts, winback>
-- **Acquisition coherence:** <the one story ad -> listing -> onboarding tells>
+- **Purchase surface:** in-app (IAP) | web checkout | web2app (web funnel -> app) — BP-030/BP-078/BP-127, and which storefronts
+- **Money moments:** <paywall placement, upgrade triggers, checkout, failed payment, cancel, rating prompts, winback>
+- **Acquisition coherence:** <the one story ad -> landing/listing -> onboarding tells>
 -->
 
 ## Design tooling

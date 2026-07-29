@@ -76,8 +76,11 @@ One question at a time; user's answers are the data:
    question once per project, never per flow.
 6. If the product earns money, fill the Monetization section: model chosen
    with data (BP-067..070 — hard paywall vs freemium vs hybrid, trial type
-   and length), value metric, free boundary, money moments, acquisition
-   coherence. Money moments become dedicated flows downstream.
+   and length), value metric, free boundary, purchase surface (IAP, web
+   checkout, or web2app — BP-030/BP-078/BP-127), money moments, acquisition
+   coherence. Money moments become dedicated flows downstream; a web or
+   web2app purchase surface makes the web funnel and the paid handoff flows
+   of this product too (BP-116..129).
 7. Present layer by layer for approval; mark unvalidated guesses as
    assumptions with a risk note.
 

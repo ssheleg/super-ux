@@ -43,8 +43,10 @@ deleted.
   complete; must/should stories have scenarios).
 
 Two more sections this file owns, filled when they apply: **Monetization**
-(model + value metric + free boundary + money moments + acquisition
-coherence — each money moment becomes a first-class flow) and **Design
+(model + value metric + free boundary + purchase surface + money moments +
+acquisition coherence — each money moment becomes a first-class flow, and a
+web/web2app purchase surface makes the web funnel and the paid handoff flows
+of this product too) and **Design
 tooling** (the Figma on/off choice, default on, plus the project's Figma file
 URL — asked once per project). Everything else about the visual layer, the
 design system and the style pack, lives in `docs/ux/screens.md`.

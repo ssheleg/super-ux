@@ -40,8 +40,12 @@ a non-trivial product, recommend `ux-foundation` first.
 Monetization section, design dedicated flows for each money moment —
 paywall (first-session placement, BP-069), upgrade-at-limit (the gated
 action's limit branch is a flow edge to the offer, BP-074), trial start/end,
-cancel + winback, rating prompt after success moments (BP-076). Each money
-flow uses its checklist row from
+cancel + winback (BP-123), rating prompt after success moments (BP-076).
+When the foundation's purchase surface is web checkout or web2app, the web
+funnel (landing → pricing → signup → checkout, BP-116..121), recurring
+billing (dunning, BP-122) and the paid handoff (install → identify →
+entitlement restore, with every failure branch, BP-124..126) are flows of
+this product as well. Each money flow uses its checklist row from
 [practice-selection.md](references/practice-selection.md) step 3.
 
 ## Choosing a workflow
