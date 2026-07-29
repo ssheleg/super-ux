@@ -74,14 +74,19 @@ One question at a time; user's answers are the data:
    [figma-integration.md](references/figma-integration.md) and
    [visual-identity.md](references/visual-identity.md). Ask the Figma
    question once per project, never per flow.
-6. If the product earns money, fill the Monetization section: model chosen
+6. Record **Product mechanics** when any of the three applies (contract §7):
+   personalization, engagement mechanics (streaks/points/leaderboards), and
+   the accessibility regime the product ships under. "None" is a valid
+   answer and worth recording — practice selection reads these three and
+   cannot infer them from the rest of the chain.
+7. If the product earns money, fill the Monetization section: model chosen
    with data (BP-067..070 — hard paywall vs freemium vs hybrid, trial type
    and length), value metric, free boundary, purchase surface (IAP, web
    checkout, or web2app — BP-030/BP-078/BP-127), money moments, acquisition
    coherence. Money moments become dedicated flows downstream; a web or
    web2app purchase surface makes the web funnel and the paid handoff flows
    of this product too (BP-116..129).
-7. Present layer by layer for approval; mark unvalidated guesses as
+8. Present layer by layer for approval; mark unvalidated guesses as
    assumptions with a risk note.
 
 ## Init (reverse) — existing product

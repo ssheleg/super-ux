@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.26.1 — 2026-07-29
+
+0.26.0 gave practice selection two new profile dimensions but no place in the
+chain to read them from — the foundation had no field for either, so the
+profile could only be built by asking again every session. This closes that
+loop.
+
+### Added
+- **Foundation contract §7 — Product mechanics** (`scenario-format.md`,
+  `templates/foundation.md`): personalization (none / rule-based / inferred),
+  engagement mechanics (none / streaks-tiers / points-badges-leaderboards),
+  and the accessibility regime (none stated / EAA / ADA / both) with its
+  owner. Three facts the profile reads and cannot infer from the rest of the
+  chain; each recorded mechanic carries its consequence into `flows.md` — a
+  recovery flow (BP-142), a correction path (BP-144), per-scenario checks
+  (BP-138).
+- `ux-foundation` records the section as a step of its own; "none" is a valid
+  and useful answer.
+
+The section is optional and additive — the contract stays **v4** and every
+existing `foundation.md` remains valid without it.
+
 ## 0.26.0 — 2026-07-29
 
 A pass over what the catalog could not answer about the *surface* of a

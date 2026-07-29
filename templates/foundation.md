@@ -38,6 +38,15 @@ data/observation, recognizable by a real user. -->
 - **Acquisition coherence:** <the one story ad -> landing/listing -> onboarding tells>
 -->
 
+## Product mechanics
+
+<!-- Two dimensions the practice-selection profile reads; record them once,
+even when the answer is "none":
+- **Personalization:** none | rule-based | inferred/model-driven — BP-143/BP-144 (what gets asked when, and how a wrong inference is corrected)
+- **Engagement mechanics:** none | streaks/tiers | points/badges/leaderboards — BP-141/BP-142 (which traced job each mechanic reinforces, and the recovery path when progress is lost)
+- **Accessibility regime:** none stated | EAA (EU) | ADA (US) | both — BP-138, with the owner
+-->
+
 ## Design tooling
 
 <!-- Visual mockups in Figma are optional (default on). Ask the user at the

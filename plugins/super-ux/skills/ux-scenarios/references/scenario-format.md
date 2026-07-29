@@ -128,6 +128,23 @@ system** (library, tokens in code, component source, assets) belongs to
 enabled, every screen state in `screens.md` carries its Figma frame link. See
 [figma-integration.md](figma-integration.md) for the workflow.
 
+### 7. Product mechanics (optional, additive — record once, "none" is an answer)
+
+```markdown
+## Product mechanics
+- **Personalization:** none | rule-based | inferred/model-driven — per BP-143/BP-144
+- **Engagement mechanics:** none | streaks/tiers | points/badges/leaderboards — per BP-141/BP-142, each naming the job it reinforces
+- **Accessibility regime:** none stated | EAA (EU) | ADA (US) | both — per BP-138, with the owner
+```
+
+Three facts the practice-selection profile reads and cannot infer from the
+rest of the chain. Absent section = all three unstated, which selection
+treats as `none` and the audit may raise once as an opportunity — an existing
+foundation stays valid without it. Each recorded mechanic carries its
+consequences into `flows.md`: an engagement mechanic owes a recovery flow
+(BP-142), personalization owes a correction path (BP-144), and a stated
+regime owes its checks in every scenario's UI elements (BP-138).
+
 ### ID rules (all layers)
 
 `P-NN`, `JTBD-NN`, `JRN-NN`, `ST-NNN` — sequential, **never reused**;
