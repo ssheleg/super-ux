@@ -1,7 +1,8 @@
 {
   "name": "super-ux",
+  "displayName": "Super UX",
   "description": "Scenario-driven UI development: a versioned design chain in docs/ux/ — personas, JTBD, journeys and stories -> user flows -> a screens+states UI map with Figma frames -> traced use-case scenarios -> evidence-backed audits -> concrete fix plans. Skills: ux-foundation, ux-flows, ux-scenarios, ux-audit. /ux is the single plain-language entry point; a stdlib linter fails on doc drift; a tag-indexed best-practices catalog, PRN heuristics and component guidelines guide design; one style pack (via the sheleg-design companion) locks the visual identity.",
-  "version": "0.26.4",
+  "version": "0.26.5",
   "author": {
     "name": "ssheleg"
   },

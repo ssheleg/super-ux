@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.26.5 — 2026-07-30
+
+### Added
+- **`displayName`** in both manifests — the `/plugin` picker shows `name`, which
+  is kebab-case because it namespaces components. The listing now reads
+  "Super UX".
+
 ## 0.26.4 — 2026-07-30
 
 ### Fixed
