@@ -1,6 +1,6 @@
 ---
 description: Update the UX chain after a change to user-facing behavior (same-change rule), or validate a new feature idea against the foundation, flows, and scenarios
-argument-hint: [change or feature description]
+argument-hint: "[change or feature description]"
 ---
 
 If `$ARGUMENTS` describes a **new feature idea**: validate it against the

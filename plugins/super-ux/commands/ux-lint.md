@@ -1,6 +1,6 @@
 ---
 description: Lint docs/ux for integrity and drift — missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, broken links
-argument-hint: [--strict]
+argument-hint: "[--strict]"
 ---
 
 Run the super-ux linter against this project's `docs/ux/`:

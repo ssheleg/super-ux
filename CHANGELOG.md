@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.26.4 — 2026-07-30
+
+### Fixed
+- **`/ux-audit` was loading with no metadata at all.** Its `argument-hint` held
+  an unquoted `[all | feature:<name> | ...] [quick|deep]`, which YAML reads as a
+  flow sequence and then fails to parse — and a command whose front matter fails
+  to parse loads with **every field silently dropped, description included**.
+  Nothing at runtime reports this; `claude plugin validate --strict` does, and it
+  now runs in CI. Four more commands had hints parsing as lists rather than
+  strings; all are quoted.
+- `homepage` and `repository` moved out of the top level of `marketplace.json`,
+  where Claude Code does not recognize them, into the plugin entry, where it
+  does.
+
 ## 0.26.3 — 2026-07-30
 
 ### Changed

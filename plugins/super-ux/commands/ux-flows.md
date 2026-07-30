@@ -1,6 +1,6 @@
 ---
 description: Design, reverse-engineer, update, or improve user flows — task analysis, mermaid flow diagrams, screen states, wireframes, Figma mockups, heuristic UX evaluation
-argument-hint: [story/feature to design | "improve" | what changed]
+argument-hint: '[story/feature to design | "improve" | what changed]'
 ---
 
 Invoke the `ux-flows` skill.
