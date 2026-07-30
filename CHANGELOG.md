@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.26.2 — 2026-07-30
+
+The README shipped in the package still described a five-member family and a
+single `install` command. Both were out of date, and the registry copy is what
+most people read first — a doc that only exists on `main` is not shipped.
+
+### Changed
+- **README** — `agent-sync` added to the family list, and the install block now
+  carries all three commands (`install`, `update`, `list`) plus the restart
+  note, because skills and hooks load at session start.
+- `CONTRIBUTING.md` — how to run `test/validate.py` and what a PR is checked
+  against.
+
 ## 0.26.1 — 2026-07-29
 
 0.26.0 gave practice selection two new profile dimensions but no place in the
