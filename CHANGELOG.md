@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.26.3 — 2026-07-30
+
+### Changed
+- **The licence is now declared where a user can actually see it** — an SPDX
+  `license: MIT` in the `marketplace.json` plugin entry and in the front matter
+  of all four skills. The `LICENSE` file has been in the repo since the start;
+  neither the Claude Code plugin listing nor an installed skill shows it, so the
+  terms were always one repository visit away. Both fields are optional in their
+  specs, which is why this stayed open — nothing errors on an absent licence.
+
 ## 0.26.2 — 2026-07-30
 
 The README shipped in the package still described a five-member family and a

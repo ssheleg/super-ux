@@ -1,6 +1,7 @@
 ---
 name: ux-audit
 description: Use when verifying the codebase against the UX scenario base - runs a batched, evidence-backed scenario audit and writes a versioned report to docs/ux/audits/. Triggers - "ux audit" / "UX-аудит", "run the scenarios" / "прогони по сценариям", "check all buttons/states/errors", pre-release UX verification, scenario compliance check.
+license: MIT
 ---
 
 # ux-audit — Scenario Audit Loop
