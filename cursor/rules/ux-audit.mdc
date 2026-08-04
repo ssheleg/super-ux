@@ -13,6 +13,11 @@ rule) — there is nothing to audit against.
 **Evidence discipline:** every verdict cites `file:line`. Cannot verify →
 verdict BLOCKED with the exact reason. Never guess, never a courtesy PASS.
 
+**Scope and limits (required section):** the report ends with what was
+covered, what was left out and why, what could not be verified, and what the
+code cannot answer. An audit reads a slice; absence from the report never
+means PASS.
+
 ## Loop
 
 1. Read the base (and foundation/flows/screens when they exist); scope =

@@ -404,6 +404,15 @@ handoff and each of its failure branches.
 | # | Scenario | Severity | Finding | Suggested fix |
 |---|----------|----------|---------|---------------|
 
+## Scope and limits
+
+- **Covered:** <batches, scenarios and code areas this run actually read>
+- **Not covered:** <what was left out and why — batch boundary, missing
+  artifact, surface the static trace cannot reach>
+- **Could not verify:** <every BLOCKED item with the reason it is blocked>
+- **Open questions:** <what the code cannot answer: needs a user, analytics,
+  or a product decision>
+
 ## Practice compliance (deep audits)
 
 | Practice | Verdict | How / why not |
@@ -413,6 +422,14 @@ handoff and each of its failure branches.
 The Practice compliance table follows the practice-selection protocol:
 verdicts `applied` / `adapted` / `rejected` (reason) / `deferred`
 (trigger) / `missing` (applicable but absent → suggestion finding).
+
+**Scope and limits is not optional.** An audit runs in batches and reads a
+finite slice of the code, so silence about the rest reads as coverage:
+absence of a scenario from the report never means PASS. Naming what was left
+out, what could not be verified, and what the code simply cannot answer is
+what separates a report from an impression — and it is the difference
+between a reader who knows where to look next and one who believes the work
+is done.
 
 ### Verdicts
 

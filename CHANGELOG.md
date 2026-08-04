@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.27.0 — 2026-08-04
+
+An audit of 51 external UX, product and growth skills, kept only where they
+found something this catalog did not already say better. Most of the overlap
+went the other way — on monetization, forms and activation the catalog was
+the stronger of the two, and with sources where the others had none. Four
+gaps survived that test.
+
+### Added
+- **Growth loops and referral — BP-147..151.** BP-067 has been telling
+  readers since 0.19 that freemium only works when free users feed a growth
+  loop, while the catalog described no loop anywhere. BP-147 names the three
+  kinds and the reference now resolves. The rest: virality riding the
+  product's own output rather than a "refer a friend" page, planning for a
+  viral coefficient around 0.2 with the loop's cycle time treated as the
+  other multiplier, rewards paid in the product's own unit on the invitee's
+  milestone, and abuse designed against before launch.
+- **Empty states — BP-152.** Three layers after NN/g: what happened, what
+  this place is for, and a way in — including inspecting the feature on demo
+  data. A blank panel is a defect, not a neutral state.
+- **Authentication and form recovery — BP-153..156.** The word "password"
+  appeared zero times across 146 practices. NIST SP 800-63B rev 4 (August
+  2025) made paste normative and composition rules prohibited; the field must
+  not fight the password manager; a passwordless door where the account
+  allows one; and a rejected form keeps the work instead of clearing it
+  (WCAG 2.2 redundant entry).
+- **Audit reports: a required "Scope and limits" section**
+  (`scenario-format.md`, `templates/audit-report.md`, `ux-audit`). A batched
+  audit reads a slice of the code, so silence about the rest was being read
+  as coverage. Absence from a report never means PASS.
+- **`validate_catalog()` in `test/validate.py`.** The catalog's shape — five
+  fields per entry, unbroken ids, tags from the taxonomy, and every practice
+  reachable from `practice-selection.md` — was an invariant held by hand
+  since the first entry. A practice no skill routes to is a practice that
+  does not exist; nothing checked for that until now.
+
+### Changed
+- Tag taxonomy gains `virality`, `referral` (mechanism) and `auth` (domain);
+  source keys gain `[NIST]` and `[Viral26]`.
+
+Two figures from the source material were dropped rather than repeated — a
+15–30% referral conversion norm and a 60% fraud threshold, neither of which
+survived a check. A third was corrected in the opposite direction: a viral
+coefficient of 0.3–0.7 is a strong result, not the practical target the
+source called it.
+
+The contract stays **v4**: the report section is additive and no existing
+`docs/ux` file changes shape.
+
 ## 0.26.1 — 2026-07-29
 
 0.26.0 gave practice selection two new profile dimensions but no place in the

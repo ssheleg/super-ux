@@ -29,6 +29,16 @@ Heuristic findings (deep): [PRN-NN] (severity) node — issue -> fix
 | # | Scenario | Severity | Finding | Suggested fix |
 |---|----------|----------|---------|---------------|
 
+## Scope and limits
+
+<!-- Required. An audit reads a finite slice of the code; absence from this
+report never means PASS. -->
+
+- **Covered:**
+- **Not covered:**
+- **Could not verify:**
+- **Open questions:**
+
 ## Practice compliance (deep audits)
 
 | Practice | Verdict | How / why not |

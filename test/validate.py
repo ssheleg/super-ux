@@ -375,6 +375,83 @@ def validate_shipped_references() -> None:
                     )
 
 
+def validate_catalog() -> None:
+    """The catalog's shape is an invariant nothing enforced until now.
+
+    All 146 entries at the time of writing carried the same five fields, ids ran
+    unbroken, and every tag came from the taxonomy -- by hand, every time. A
+    practice that quietly loses `Source` reads as authoritative while resting on
+    nothing, and one missing from `practice-selection.md` is unreachable: the
+    catalog holds it and no skill ever routes to it. Both fail silently, which is
+    exactly the kind of thing a validator is for.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    catalog = read(src / "best-practices.md")
+    routing = read(src / "practice-selection.md")
+    if not check(catalog is not None, "best-practices.md is missing"):
+        return
+    if not check(routing is not None, "practice-selection.md is missing"):
+        return
+
+    taxonomy_block = catalog.split("## Tag taxonomy", 1)[-1].split("## Practices", 1)[0]
+    taxonomy = set(re.findall(r"`([a-z0-9-]+)`", taxonomy_block))
+    check(bool(taxonomy), "best-practices.md: tag taxonomy is empty or unparseable")
+
+    entries = re.findall(r"^#### (BP-\d+):.*?(?=^#### BP-|\Z)", catalog, re.M | re.S)
+    bodies = re.split(r"^#### BP-\d+:", catalog, flags=re.M)[1:]
+    if not check(bool(entries), "best-practices.md: no BP entries found"):
+        return
+
+    for entry_id, body in zip(entries, bodies):
+        body = body.split("\n#### ", 1)[0]
+        for field in ("**Do:**", "**Why:**", "**Apply when:**", "**Tags:**", "**Source:**"):
+            check(field in body, f"best-practices.md {entry_id}: missing {field.strip('*:')} field")
+        tags_line = re.search(r"^- \*\*Tags:\*\*(.+)$", body, re.M)
+        if tags_line:
+            for tag in (t.strip() for t in tags_line.group(1).split(",")):
+                if tag:
+                    check(
+                        tag in taxonomy,
+                        f"best-practices.md {entry_id}: tag `{tag}` is not in the taxonomy "
+                        f"(add it there deliberately, or use an existing one)",
+                    )
+
+    numbers = [int(e.split("-")[1]) for e in entries]
+    check(len(numbers) == len(set(numbers)), "best-practices.md: duplicate BP ids")
+    expected = list(range(1, len(numbers) + 1))
+    check(
+        sorted(numbers) == expected,
+        f"best-practices.md: ids must run BP-001..BP-{len(numbers):03d} without gaps "
+        f"(found {len(numbers)} entries, max BP-{max(numbers):03d})",
+    )
+
+    # The header paragraph is a table of contents, not routing: it spans the whole
+    # catalog by construction, so counting it would make every entry look reachable.
+    # Only the selection tables below the first heading actually route anything.
+    tables = routing.split("\n## ", 1)[-1]
+    routed: set[int] = set()
+    for lo, hi in re.findall(r"BP-(\d+)\.\.(\d+)", tables):
+        routed.update(range(int(lo), int(hi) + 1))
+    routed.update(int(n) for n in re.findall(r"BP-(\d+)", tables))
+
+    span = re.search(r"BP-(\d+)\.\.(\d+)", routing)
+    if check(span is not None, "practice-selection.md: no BP-A..B catalog span in the header"):
+        check(
+            int(span.group(2)) == max(numbers),
+            f"practice-selection.md: header span ends at BP-{int(span.group(2)):03d} but the "
+            f"catalog ends at BP-{max(numbers):03d} (re-read the header when adding entries)",
+        )
+
+    unreachable = sorted(set(numbers) - routed)
+    check(
+        not unreachable,
+        "practice-selection.md: "
+        + ", ".join(f"BP-{n:03d}" for n in unreachable[:8])
+        + (" and more" if len(unreachable) > 8 else "")
+        + " are in the catalog but not routed -- no skill can reach them",
+    )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -386,6 +463,7 @@ def main() -> int:
     validate_linter()
     validate_links()
     validate_shipped_references()
+    validate_catalog()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
