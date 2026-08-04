@@ -14,3 +14,12 @@ jobs:
           python-version: "3.x"
       - name: Validate repo consistency
         run: python3 test/validate.py
+      - name: Official Claude Code conformance (plugin + marketplace, strict)
+        run: |
+          set -eu
+          # The repo's own validator enforces house rules; this one is the
+          # upstream spec. --strict fails on unrecognized manifest fields and on
+          # front matter that silently drops at runtime -- both were real here.
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate . --strict
+          claude plugin validate plugins/super-ux --strict

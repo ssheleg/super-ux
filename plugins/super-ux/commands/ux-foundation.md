@@ -1,6 +1,6 @@
 ---
 description: Build or update the UX foundation — personas, Jobs to Be Done, customer journeys, user stories (the WHY layer scenarios trace to)
-argument-hint: [what changed or what to explore]
+argument-hint: "[what changed or what to explore]"
 ---
 
 Invoke the `ux-foundation` skill.

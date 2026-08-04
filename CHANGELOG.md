@@ -48,6 +48,49 @@ source called it.
 
 The contract stays **v4**: the report section is additive and no existing
 `docs/ux` file changes shape.
+## 0.26.5 — 2026-07-30
+
+### Added
+- **`displayName`** in both manifests — the `/plugin` picker shows `name`, which
+  is kebab-case because it namespaces components. The listing now reads
+  "Super UX".
+
+## 0.26.4 — 2026-07-30
+
+### Fixed
+- **`/ux-audit` was loading with no metadata at all.** Its `argument-hint` held
+  an unquoted `[all | feature:<name> | ...] [quick|deep]`, which YAML reads as a
+  flow sequence and then fails to parse — and a command whose front matter fails
+  to parse loads with **every field silently dropped, description included**.
+  Nothing at runtime reports this; `claude plugin validate --strict` does, and it
+  now runs in CI. Four more commands had hints parsing as lists rather than
+  strings; all are quoted.
+- `homepage` and `repository` moved out of the top level of `marketplace.json`,
+  where Claude Code does not recognize them, into the plugin entry, where it
+  does.
+
+## 0.26.3 — 2026-07-30
+
+### Changed
+- **The licence is now declared where a user can actually see it** — an SPDX
+  `license: MIT` in the `marketplace.json` plugin entry and in the front matter
+  of all four skills. The `LICENSE` file has been in the repo since the start;
+  neither the Claude Code plugin listing nor an installed skill shows it, so the
+  terms were always one repository visit away. Both fields are optional in their
+  specs, which is why this stayed open — nothing errors on an absent licence.
+
+## 0.26.2 — 2026-07-30
+
+The README shipped in the package still described a five-member family and a
+single `install` command. Both were out of date, and the registry copy is what
+most people read first — a doc that only exists on `main` is not shipped.
+
+### Changed
+- **README** — `agent-sync` added to the family list, and the install block now
+  carries all three commands (`install`, `update`, `list`) plus the restart
+  note, because skills and hooks load at session start.
+- `CONTRIBUTING.md` — how to run `test/validate.py` and what a PR is checked
+  against.
 
 ## 0.26.1 — 2026-07-29
 

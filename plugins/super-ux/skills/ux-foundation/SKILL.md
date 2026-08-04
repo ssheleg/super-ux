@@ -1,6 +1,7 @@
 ---
 name: ux-foundation
 description: Use when defining or revising WHO the users are and WHY they use the product - personas, Jobs to Be Done, customer journey maps, user stories with acceptance criteria. Maintains docs/ux/foundation.md, the WHY layer that UX scenarios trace to. Triggers - "jtbd" / "джобы", "customer journey" / "карта пути", "user story" / "юзер стори", "personas" / "персоны", "who is this for", new product discovery.
+license: MIT
 ---
 
 # ux-foundation — The WHY Layer

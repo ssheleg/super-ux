@@ -1,6 +1,7 @@
 ---
 name: ux-flows
 description: Use when designing or improving HOW users move through the product - task analysis, user flows (screens, branches, error paths), screen states, low-fi wireframes, Figma mockups, heuristic UX evaluation and redesign proposals. Maintains docs/ux/flows.md between foundation (stories) and scenarios. Triggers - "user flow" / "юзер флоу", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "wireframe" / "вайрфрейм", "figma" / "фигма", "design a screen" / "нарисуй дизайн", "mockup" / "мокап", "task analysis", "redesign flow".
+license: MIT
 ---
 
 # ux-flows — Design HOW Users Move
