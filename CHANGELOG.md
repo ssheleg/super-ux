@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.29.0 — 2026-08-05
+
+A pass aimed at the installed base rather than the catalog. Run across the
+twelve projects using super-ux, the tooling turned out to be blind to the
+most common failure: only two are cleanly on contract v4, five carry no
+marker at all — including the two largest bases, at 119 and 120 scenarios —
+one holds v2, v3 and v4 across four artifacts simultaneously, and one keeps
+its base under a name the contract does not own, so four audit reports were
+produced against scenarios the tooling could not find.
+
+### Added
+- **`/ux-doctor` and `docs/ux/doctor.py`.** `ux_lint` checks a chain against
+  itself, so a base written entirely to an old contract passes it — from the
+  inside such a chain is consistent. The doctor reports the effective
+  contract version, what each version since it introduced, mixed versions
+  across artifacts, files the tooling cannot find under their contract
+  names, audits produced against a base that is not there, and which
+  additive sections a project has not adopted. Read-only unless `--fix`,
+  which does only what cannot be wrong: renames, and moving loose audit
+  reports into `audits/`. Contract upgrades stay content decisions for
+  `/ux-update`. Wired into `/ux` status and the Cursor rule.
+- **Information architecture — BP-180, BP-181.** BP-052 requires navigation
+  to be visible and BP-049 puts it in reach; neither judges whether the
+  *groups* make sense. Card sorting for grouping, tree testing for labels —
+  the one navigation decision that cannot be judged from the inside, because
+  the team already knows where everything is.
+- **Moderated test tasks generated from `scenarios.md`.** A scenario is
+  already the shape a test task wants — situation, goal, observable success
+  — so the tasks are a rewrite of the base rather than a new artifact, and
+  what comes back grades against the same base.
+- **`benchmark:<competitor>` audit scope.** Every other scope measures the
+  product against its own chain and cannot report that a flow is two steps
+  longer than everyone else's. Same axes both sides, observable from outside
+  only, and gaps recorded as opportunities for the foundation rather than as
+  defects in the report.
+- **Reviews and support tickets as WHY-layer evidence** in `ux-foundation` —
+  the cheapest input the layer has, and the one most often skipped because
+  it does not feel like research.
+
 ## 0.28.0 — 2026-08-05
 
 Closes the carry-over ledger the 0.27 audit opened. Twenty-three practices,
