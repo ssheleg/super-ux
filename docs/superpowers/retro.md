@@ -26,6 +26,7 @@ stamps — and log the deletion as one line under *Retired*.
 | Date | Task | Diverged? |
 |---|---|---|
 | 2026-08-05 | Tier-1 audit findings → BP-147..156, audit scope section, catalog validator; v0.27.0 → v0.27.1 | yes — see below |
+| 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
 | 2026-08-05 | Carry-over ledger closed → BP-157..179, PRN-17..21, three optional contract fields, prototype step, catalog index; v0.28.0 | no |
 
 ---
