@@ -20,6 +20,7 @@ bin/super-ux.js                  the npx installer (zero dependencies)
 install.sh                       POSIX fallback for the Cursor channel
 test/validate.py                 the test suite (stdlib only)
 test/sync_references.py          regenerates the per-skill contract copies
+test/release_preflight.py        run before tagging — is HEAD ahead of origin?
 ```
 
 **Why the contracts are duplicated:** the skills CLI ships only a skill's own
@@ -84,12 +85,19 @@ cd /tmp/t/proj && python3 docs/ux/lint.py
    and a new `## x.y.z — YYYY-MM-DD` section in `CHANGELOG.md`. The validator
    fails if they disagree.
 2. `python3 test/validate.py` green, commit, push.
-3. Tag `vX.Y.Z` and push the tag. The release workflow (armed by the
-   `RELEASE_ENABLED` repo variable) validates, checks the tag against the
-   manifests, creates the GitHub release from that CHANGELOG section, and
-   smoke-tests `npx` from a clean cwd.
-4. `npm publish` — a deliberate human step (2FA).
-5. Refresh local installs: the two commands in the README's
+3. `python3 test/release_preflight.py` — it fetches and refuses when `HEAD`
+   does not contain `origin/main`. A clean tree and a green validator say
+   nothing about whether the remote moved while you worked; v0.27.0 shipped
+   from a base four releases old for exactly that reason.
+4. Tag `vX.Y.Z` and push branch and tag **together**: `git push --atomic
+   origin main vX.Y.Z`. `--follow-tags` is not atomic — a rejected branch
+   still lets the tag through, and CI will build a release from it.
+5. The release workflow (armed by the `RELEASE_ENABLED` repo variable)
+   validates, checks the tag against the manifests, creates the GitHub
+   release from that CHANGELOG section, and smoke-tests `npx` from a clean
+   cwd. When `PUBLISH_NPMJS` is armed it also publishes to npm with
+   provenance — no separate human step.
+6. Refresh local installs: the two commands in the README's
    "Keeping installs current".
 
 
