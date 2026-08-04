@@ -13,9 +13,9 @@ stamps — and log the deletion as one line under *Retired*.
 1. **(2026-08-05)** Before tagging any release, run
    `python3 test/release_preflight.py`. A clean tree and a green validator
    describe the repo, not the remote. *(Retire when a hook or CI runs it
-   automatically.)* — **fired 2026-08-05 on the v0.28.0 release: passed, and
-   the push used `--atomic` as it prints. The failure it was written for did
-   not recur.**
+   automatically.)* — **fired on the v0.28.0 and v0.29.0 releases:
+   passed both times, and both pushes used `--atomic` as it prints. The
+   failure it was written for has not recurred.**
 
 ## Retired
 
@@ -23,11 +23,13 @@ stamps — and log the deletion as one line under *Retired*.
 
 ## Run stamps
 
+Newest last.
+
 | Date | Task | Diverged? |
 |---|---|---|
 | 2026-08-05 | Tier-1 audit findings → BP-147..156, audit scope section, catalog validator; v0.27.0 → v0.27.1 | yes — see below |
-| 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
 | 2026-08-05 | Carry-over ledger closed → BP-157..179, PRN-17..21, three optional contract fields, prototype step, catalog index; v0.28.0 | no |
+| 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
 
 ---
 
