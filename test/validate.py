@@ -442,6 +442,19 @@ def validate_catalog() -> None:
             f"catalog ends at BP-{max(numbers):03d} (re-read the header when adding entries)",
         )
 
+    # The index is generated; a stale one is worse than none, because it is
+    # trusted the same way and silently omits whatever was added last.
+    index = read(src / "best-practices-index.md")
+    if check(index is not None, "best-practices-index.md is missing (run bp_index.py)"):
+        indexed = {int(n) for n in re.findall(r"BP-(\d+)", index)}
+        missing = sorted(set(numbers) - indexed)
+        check(
+            not missing,
+            "best-practices-index.md is stale, missing "
+            + ", ".join(f"BP-{n:03d}" for n in missing[:6])
+            + " -- regenerate: python3 plugins/super-ux/scripts/bp_index.py",
+        )
+
     unreachable = sorted(set(numbers) - routed)
     check(
         not unreachable,

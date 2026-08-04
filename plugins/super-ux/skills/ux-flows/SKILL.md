@@ -26,7 +26,7 @@ once in `screens.md`.
 (ux-contract v4, `flows.md` section) and
 [ux-design-principles.md](references/ux-design-principles.md) — read the
 principles doc before designing; it is the thinking playbook (task-analysis
-method, flow rules, PRN-01..16 heuristics, improvement procedure).
+method, flow rules, PRN-01..21 heuristics, improvement procedure).
 Proven tactics: [best-practices.md](references/best-practices.md) by
 stage tags. Visual identity (which style pack the frames and the built UI
 obey, via the **sheleg-design** companion):
@@ -69,6 +69,11 @@ Per story (or tight cluster):
 2. **Draw the flow** (mermaid, node conventions from the contract): every
    decision an explicit branch; every error edge lands on recovery; all
    entry points enumerated; happy path ≤5 steps or justified.
+   **Diverge before converging:** for any flow or screen that carries real
+   weight, sketch at least two genuinely different shapes before picking —
+   different in structure, not in wording — and record in one line why the
+   loser lost. The first idea is rarely the best one, and a single option
+   presented for approval is a decision nobody actually made.
 3. **Register screens in `screens.md`:** each screen the flow touches gets
    (or updates) its `SCR-NN` entry — states (loading/empty/error/success)
    with per-state behavior, elements with one primary action, coverage,
@@ -140,7 +145,7 @@ prevents.
 Follow the improvement procedure in the principles doc, strictly:
 
 1. Prerequisite: flows exist (run Reverse first if not).
-2. Walk every flow against PRN-01..16 + journey pains; record violations
+2. Walk every flow against PRN-01..21 + journey pains; record violations
    `[PRN-NN] node — what breaks — severity (4..1)`.
 3. Redesign proposals: trace to a pain/job/story; cite `PRN-NN`/`BP-NNN`;
    show flow before → after (two mermaid diagrams); state the expected
@@ -159,6 +164,28 @@ Follow the improvement procedure in the principles doc, strictly:
    one-time): `/plugin marketplace add ssheleg/task-pipeline` →
    `/plugin install task-pipeline@task-pipeline`; or superpowers
    writing-plans / by hand. Same-change rule holds; re-audit after.
+
+## Prototype when the answer is not on paper (optional step)
+
+Between a designed flow and production code sits a question the documents
+cannot settle: does this actually feel right? When it comes up — a state
+model nobody can reason about, a layout where two options both look
+defensible — build a throwaway prototype that answers exactly that question
+and nothing else.
+
+- **Logic question** → the smallest runnable thing that drives the state
+  machine through the cases that are hard to hold in the head.
+- **Look-and-feel question** → the shortlisted variants on one throwaway
+  route, switchable, so they are compared side by side rather than in memory.
+
+Rules: it is throwaway from the first line and named so a reader can tell;
+no persistence, no tests, no abstractions; one command to run. When it has
+answered its question, fold the decision into the chain and keep the
+prototype as a primary source — a throwaway branch with a pointer from the
+issue. The main branch keeps the decision, not the sketch.
+
+Skip it when the answer is already obvious; the step exists so that "we
+weren't sure and shipped anyway" stops being the default.
 
 ## The build gate (state this to the user plainly)
 

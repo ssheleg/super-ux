@@ -88,11 +88,20 @@ One journey per persona × job that matters:
 - **Acceptance criteria:**
   - Given <precondition>, when <action>, then <observable result>.
 - **Priority:** must | should | could
+- **Kill criteria:** <metric> below <threshold> by <date> -> drop | iterate  — optional
 - **Status:** proposed | validated | delivered | dropped
 ```
 
 Quality bar: INVEST (independent, negotiable, valuable, estimable, small,
 testable). Acceptance criteria are Given/When/Then and observable.
+
+**Kill criteria** (optional) records, *before* the work starts, the signal
+that would say the bet was wrong: a metric, a threshold, a date, and what
+happens when it is missed. `dropped` already exists as a status and nothing
+ever defines when it applies — so it is only ever reached by someone losing
+interest, which is the slowest possible way to learn. A story that cannot
+name a signal that would retire it is usually a story nobody can evaluate
+at all.
 
 ### 5. Monetization model (when the product earns money)
 
@@ -311,6 +320,7 @@ observable response.
 - **UI elements:** welcome screen, "Create project" button, name field, confirm button
 - **States covered:** loading, empty, error, success
 - **Errors & recovery:** name empty -> inline "Name is required", field focused; save fails -> toast with retry, input preserved
+- **Telemetry:** `project_created` (params: `source`, `step_number`) — optional
 - **Status:** draft
 - **Coverage:** none yet
 ```
@@ -334,6 +344,18 @@ Field rules:
 - **States covered** — which of `loading | empty | error | success` apply.
 - **Errors & recovery** — each failure: what the user sees, how they
   recover. "Nothing can fail" must be stated explicitly.
+- **Telemetry** — *optional*: the analytics event this scenario emits and
+  the parameters that make it useful. Name it `object_action` in snake_case
+  with the verb last (`plan_selected`, not `clickPricingPlan`), keep tense
+  consistent (`_started` / `_completed` / `_failed`), and carry the
+  parameters that let the event be segmented later (who, which plan, how
+  much, by what method). Omit the field where the scenario emits nothing.
+  This is the bridge the chain was missing: the practices on frustration
+  telemetry and funnel measurement (BP-139, BP-140, BP-129) assume events
+  exist, and nothing tied a named event to the behavior it measures — so
+  the moment a step is renamed, the dashboard silently measures something
+  else. An audit checks a declared event against the code like any other
+  claim; a scenario without the field is not a finding.
 - **Status** — `draft | validated | implemented | retired`.
 - **Coverage** — `file:line` references to implementing code, or `none yet`.
 
@@ -413,6 +435,10 @@ handoff and each of its failure branches.
 - **Open questions:** <what the code cannot answer: needs a user, analytics,
   or a product decision>
 
+## Verdict
+
+REFINE | REDESIGN | NEW — one line of reasoning, and the scope it applies to.
+
 ## Practice compliance (deep audits)
 
 | Practice | Verdict | How / why not |
@@ -422,6 +448,21 @@ handoff and each of its failure branches.
 The Practice compliance table follows the practice-selection protocol:
 verdicts `applied` / `adapted` / `rejected` (reason) / `deferred`
 (trigger) / `missing` (applicable but absent → suggestion finding).
+
+**The verdict is a fork, not a score.** Findings alone always read as a
+to-do list, so an audit can return dozens of them and still leave the real
+question unasked. Say which of three it is:
+
+- **REFINE** — the design is right; the gaps are defects. Fix the findings.
+- **REDESIGN** — the findings cluster on one flow or screen whose structure
+  causes them; patching each one individually will not converge. Name the
+  artifact to redo.
+- **NEW** — the chain itself does not describe what was built, or the job
+  the surface serves is not in the foundation. Start upstream, not here.
+
+Without this, a surface that should be rebuilt is instead patched
+indefinitely, one true finding at a time, and every round looks like
+progress.
 
 **Scope and limits is not optional.** An audit runs in batches and reads a
 finite slice of the code, so silence about the rest reads as coverage:

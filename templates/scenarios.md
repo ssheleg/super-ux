@@ -32,6 +32,7 @@ action per step paired with the observable system response:
 - **UI elements:** <every button, field, link, dialog, toast involved>
 - **States covered:** <loading | empty | error | success>
 - **Errors & recovery:** <each failure: what the user sees, how they recover>
+- **Telemetry:** <`object_action` event + params, or omit if none>
 - **Status:** draft
 - **Coverage:** none yet
 -->
