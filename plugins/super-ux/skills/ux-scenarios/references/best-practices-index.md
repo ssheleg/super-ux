@@ -10,7 +10,7 @@ then open only those entries. The selection protocol
 *mandatory* to consider; this only makes finding them cheap.
 
 
-**179 practices, 75 tags in use.**
+**181 practices, 75 tags in use.**
 
 
 ## By tag
@@ -35,7 +35,7 @@ then open only those entries. The selection protocol
 - **`design-system`** — BP-091, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-100, BP-130, BP-145, BP-165, BP-166
 - **`dialog`** — BP-106, BP-107, BP-108, BP-109, BP-161, BP-168, BP-174, BP-178
 - **`email`** — BP-034
-- **`engagement`** — BP-007, BP-008, BP-009, BP-012, BP-013, BP-015, BP-018, BP-021, BP-025, BP-031, BP-032, BP-038, BP-049, BP-052, BP-053, BP-054, BP-062, BP-063, BP-065, BP-082, BP-086, BP-090, BP-141, BP-142, BP-144, BP-148, BP-152, BP-157, BP-158, BP-159, BP-162, BP-163, BP-173
+- **`engagement`** — BP-007, BP-008, BP-009, BP-012, BP-013, BP-015, BP-018, BP-021, BP-025, BP-031, BP-032, BP-038, BP-049, BP-052, BP-053, BP-054, BP-062, BP-063, BP-065, BP-082, BP-086, BP-090, BP-141, BP-142, BP-144, BP-148, BP-152, BP-157, BP-158, BP-159, BP-162, BP-163, BP-173, BP-180
 - **`error-recovery`** — BP-060, BP-061, BP-063, BP-066, BP-083, BP-102, BP-106, BP-107, BP-114, BP-121, BP-122, BP-125, BP-140, BP-156, BP-174, BP-175
 - **`feedback`** — BP-054, BP-058, BP-064, BP-065, BP-083, BP-130, BP-139, BP-162
 - **`feedback-ui`** — BP-105, BP-114, BP-115, BP-152, BP-163, BP-167
@@ -48,17 +48,17 @@ then open only those entries. The selection protocol
 - **`habit`** — BP-032, BP-033, BP-038, BP-041, BP-141, BP-142
 - **`handoff`** — BP-091, BP-092, BP-093, BP-094, BP-098, BP-099, BP-100, BP-125, BP-126
 - **`i18n`** — BP-177
-- **`insight`** — BP-040, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-052, BP-066, BP-088, BP-129, BP-139, BP-140, BP-144, BP-147, BP-149
+- **`insight`** — BP-040, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-052, BP-066, BP-088, BP-129, BP-139, BP-140, BP-144, BP-147, BP-149, BP-180, BP-181
 - **`ios`** — BP-030, BP-031, BP-033, BP-053, BP-127
 - **`landing-page`** — BP-116, BP-117, BP-132, BP-133, BP-169, BP-170, BP-171
 - **`layout`** — BP-085, BP-086, BP-087, BP-090, BP-097, BP-134, BP-171, BP-172, BP-177, BP-179
 - **`legal`** — BP-137, BP-138, BP-153
 - **`lifecycle`** — BP-034, BP-035, BP-036, BP-037, BP-039, BP-071, BP-076, BP-122
 - **`maintainability`** — BP-091, BP-092, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-099, BP-100, BP-101, BP-130, BP-140, BP-145, BP-165, BP-169, BP-172
-- **`microcopy`** — BP-089, BP-152, BP-170
+- **`microcopy`** — BP-089, BP-152, BP-170, BP-181
 - **`mobile`** — BP-002, BP-008, BP-049, BP-050, BP-051, BP-052, BP-053, BP-054, BP-055, BP-057, BP-059, BP-064, BP-075, BP-076, BP-079, BP-111, BP-112, BP-126, BP-131, BP-138, BP-164, BP-178
 - **`motion`** — BP-054, BP-130, BP-131, BP-132, BP-157, BP-158, BP-159, BP-160, BP-161, BP-162, BP-163, BP-164, BP-167
-- **`navigation`** — BP-049, BP-051, BP-052, BP-173
+- **`navigation`** — BP-049, BP-051, BP-052, BP-173, BP-180, BP-181
 - **`navigation-ui`** — BP-111, BP-112, BP-161
 - **`onboarding`** — BP-001, BP-002, BP-003, BP-004, BP-005, BP-006, BP-007, BP-008, BP-009, BP-010, BP-011, BP-012, BP-013, BP-014, BP-015, BP-041, BP-043, BP-069, BP-072, BP-075, BP-077, BP-078, BP-124, BP-143, BP-152
 - **`page-weight`** — BP-133
@@ -68,7 +68,7 @@ then open only those entries. The selection protocol
 - **`post-paywall`** — BP-004
 - **`pricing`** — BP-017, BP-020, BP-022, BP-023, BP-028, BP-030, BP-067, BP-068, BP-070, BP-073, BP-078, BP-118, BP-119, BP-120, BP-127
 - **`push`** — BP-013, BP-036, BP-037, BP-038
-- **`readability`** — BP-079, BP-080, BP-081, BP-084, BP-085, BP-086, BP-087, BP-088, BP-089, BP-090, BP-170, BP-177
+- **`readability`** — BP-079, BP-080, BP-081, BP-084, BP-085, BP-086, BP-087, BP-088, BP-089, BP-090, BP-170, BP-177, BP-180, BP-181
 - **`referral`** — BP-148, BP-150, BP-151
 - **`responsive`** — BP-134, BP-135, BP-164, BP-172, BP-178
 - **`retention`** — BP-004, BP-027, BP-031, BP-032, BP-033, BP-034, BP-035, BP-038, BP-048, BP-071, BP-072, BP-076, BP-122, BP-123, BP-141, BP-142, BP-150, BP-175
@@ -272,3 +272,5 @@ then open only those entries. The selection protocol
 - **BP-177** — Localization is a design constraint, not a translation step
 - **BP-178** — Overlays contain their own scrolling and set touch defaults
 - **BP-179** — Long lists are virtualized before they are shipped long
+- **BP-180** — Group by the user's model, and check it with a card sort
+- **BP-181** — Labels are tested for findability, not reviewed for accuracy

@@ -139,6 +139,32 @@ idea):
    not silently accepted.
 5. Report findings as a checklist with per-item fixes; apply approved fixes.
 
+## Moderated test tasks from the base (on request)
+
+A scenario is already the shape a usability-test task wants: a situation, a
+goal, and an observable success condition. Turning one into the other is a
+rewrite, not a new artifact — so when someone is about to test with users,
+generate the tasks from the base rather than writing them fresh.
+
+Per scenario in scope:
+
+- **Scenario** — the situation in the participant's terms, never the
+  product's: "you have just been handed a project from a colleague", not
+  "open SCN-014".
+- **Goal** — what they are trying to achieve, stated without naming the UI
+  that achieves it. "Find the settings" is a leading task; "change where
+  notifications are sent" is a task.
+- **Success** — the observable end state, taken from the scenario's
+  Expected result.
+
+Rules that keep the tasks honest: no verb from the interface in the wording
+(no "click", "tap", "the X button"), warm-up first and edge cases last, and
+one task per scenario — a task that needs two goals is two tasks. Where the
+scenario has alt or error paths, they become the stress tasks.
+
+What comes back is graded against the same base: a task nobody completes is
+a finding against its scenario, not against the participant.
+
 ## Definition of done
 
 - Index, personas, and entries in sync; format contract honored.

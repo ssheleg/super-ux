@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..179 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..181 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -10,7 +10,7 @@ personalization BP-143..144, trend governance BP-145..146, growth loops and
 referral BP-147..151, empty states BP-152, authentication and form recovery
 BP-153..156, motion craft BP-157..164, perceived quality BP-165..168,
 generated-default tells BP-169..172, interface state and platform surfaces
-BP-173..179;
+BP-173..179, information architecture BP-180..181;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..21)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -89,7 +89,7 @@ the Step-2 sets:
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
 | Web2app funnel + paid handoff | BP-124..129, BP-030, BP-078; PRN-01, PRN-09 |
-| Navigation / IA | BP-049, BP-051..053, BP-173; PRN-06, PRN-14 |
+| Navigation / IA | BP-049, BP-051..053, BP-173, BP-180, BP-181; PRN-06, PRN-14 |
 | Permissions / notifications | BP-013, BP-036..038 |
 | Lifecycle / email sequences | BP-034, BP-039, BP-071 |
 | Voice / chat dialog | BP-060..066; PRN-01, PRN-03, PRN-09 |

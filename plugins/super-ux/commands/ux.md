@@ -65,6 +65,12 @@ Routing table (user's words → action from the menu below):
 - **Run the linter** `python3 docs/ux/lint.py` and fold its errors/warnings
   into the status — it is the fastest, deterministic read of what's stale,
   drifted, or missing (lost Figma frames, broken traces, orphans).
+- **Run the doctor** `python3 docs/ux/doctor.py` and report the contract
+  state alongside it. The linter checks the chain against itself and stays
+  silent when the whole base is written to an old contract; the doctor is
+  what notices. If it reports a mixed or stale contract, say so before
+  offering any other action — designing on top of a base three versions
+  behind is how the versions got mixed in the first place.
 
 ## 2. Repair silently (no menu needed for these)
 

@@ -14,6 +14,10 @@ alwaysApply: true
 - Run the linter after any UX change and before calling work done:
   `python3 docs/ux/lint.py`. It must pass — drift must not merge; wire it
   into CI/pre-commit.
+- Run `python3 docs/ux/doctor.py` when picking this base up after a while.
+  The linter checks the chain against itself and stays silent when the whole
+  base is written to an old contract; the doctor is what notices. Fix a
+  mixed or stale contract before designing on top of it.
 - Any change that touches user-facing behavior MUST update
   `docs/ux/scenarios.md` in the same change (add/adjust scenarios, statuses,
   coverage). New user-facing behavior with no scenario is a blocker, not a

@@ -40,6 +40,13 @@ and trace to these IDs — the full chain gives every scenario its context.
   workarounds, measurable cost. One stakeholder's idea is an assumption, not
   a fact — mark assumptions (desirability / viability / feasibility /
   usability) and flag the risky-untested ones.
+- **Reviews and support tickets are evidence already sitting there.** Before
+  scheduling interviews nobody has time for, read the store reviews and the
+  support queue and sort them into praise, feature requests, bugs, and
+  friction complaints. The friction complaints are journey pain in the
+  user's own words — cite the source and the date on the journey row, the
+  way any other evidence is cited. This is the cheapest input the WHY layer
+  has and the one most often skipped because it does not feel like research.
 
 ## Choosing a workflow
 

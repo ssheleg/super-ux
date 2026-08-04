@@ -1411,3 +1411,19 @@ the defects are few and repetitive, which is what makes them checkable.
 - **Apply when:** any list, table or feed whose length is driven by user data.
 - **Tags:** performance, web, layout, accessibility
 - **Source:** [WIG]
+
+### Information architecture — the layer between navigation and content
+
+#### BP-180: Group by the user's model, and check it with a card sort
+- **Do:** derive the top-level grouping from how users actually cluster the content, not from the org chart or the database schema; validate it with an open card sort (participants group and name the content themselves) before the navigation is built, and re-check when a section is added.
+- **Why:** BP-052 says primary navigation must be visible, and BP-049 puts it in reach — neither says whether the *groups* make sense, and a perfectly visible menu built on the company's internal divisions hides everything just as effectively. Grouping is the one navigation decision that cannot be judged from the inside, because the team already knows where everything is.
+- **Apply when:** first IA of a product; any restructure; a section that support keeps having to point people to.
+- **Tags:** navigation, insight, engagement, readability
+- **Source:** [NNg]
+
+#### BP-181: Labels are tested for findability, not reviewed for accuracy
+- **Do:** check navigation and section labels with a tree test — give real tasks and see where people go in the label hierarchy alone, with no page content to rescue them; a label that is accurate but never chosen is a failed label. Prefer the user's word over the internal one (PRN-02) when they differ.
+- **Why:** teams review labels for correctness, which they almost always pass, and correctness is not the property that matters — findability is; the two diverge exactly where the product has its own vocabulary, which is where the newest users are.
+- **Apply when:** naming or renaming navigation, tabs, sections, settings groups.
+- **Tags:** navigation, microcopy, readability, insight
+- **Source:** [NNg]

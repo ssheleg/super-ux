@@ -34,6 +34,33 @@ flow diagram: every node reachable, every edge (including error edges)
 wired, screen states from the flow's table present — unimplemented
 nodes/edges are findings on the traced scenarios.
 
+## Benchmark scope (`benchmark:<competitor>`)
+
+Every other scope measures the product against its own chain, which cannot
+report that the whole flow is two steps longer than everyone else's. This one
+measures against a named competitor, and only on things that are observable
+from outside — never on guesses about their code.
+
+Measure both sides on the same axes and say where the number came from:
+
+| Axis | What to record |
+|---|---|
+| Time to first value | minutes from landing to the first real outcome, per BP-149's segment expectations |
+| Steps to activation | screens and required fields before that outcome |
+| Cost of entry | card required? account required? what is reachable without either |
+| Key flow depth | steps in the one flow that matters most, ours vs theirs |
+| First-run guidance | what the empty state offers (BP-152), what the onboarding teaches |
+| Mobile | store rating, top praise and top complaint in recent reviews |
+
+Store and support reviews are the cheapest honest signal here, on both
+sides: sort recent reviews into praise, feature requests, bugs and friction
+complaints. Their friction complaints are where a competitor is beatable;
+ours belong in the journey as pain (`ux-foundation`), sourced and dated.
+
+Report as findings like any other pass, but keep the verdicts separate: a
+gap against a competitor is an *opportunity*, not a defect against a
+scenario — it becomes a story in the foundation, not a fix in this report.
+
 ## Evidence discipline (non-negotiable)
 
 Every verdict must cite `file:line` evidence. Could not find or verify
@@ -94,7 +121,8 @@ Passes:
 
 1. **Scope.** Read the base (and foundation/flows, if present). Scope is
    `$ARGUMENTS` if given (`all`, `feature:<name>`, `SCN-010..SCN-020`,
-   `coverage`, `practices`, `heuristics`), default `all`; depth keyword
+   `coverage`, `practices`, `heuristics`, `benchmark:<competitor>`),
+   default `all`; depth keyword
    (`quick`/`deep`) selects the depth, default `standard`. Single-pass
    scopes (`coverage`/`practices`/`heuristics`) run just that pass. Note
    the git SHA of `docs/ux` — it goes into the report header. Skip
