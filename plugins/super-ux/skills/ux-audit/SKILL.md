@@ -46,7 +46,7 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
 |---|---|
 | `quick` | 1. Scenario pass only |
 | `standard` (default) | 1. Scenario pass + 2. Flow conformance |
-| `deep` | 1–2 + 3. Heuristic pass (PRN-01..16) + 4. Practice pass (selection protocol) + 5. Coverage pass |
+| `deep` | 1–2 + 3. Heuristic pass (PRN-01..21) + 4. Practice pass (selection protocol) + 5. Coverage pass |
 
 Passes:
 
@@ -60,7 +60,7 @@ Passes:
    registry marks but the design lost); with the Figma MCP connected,
    `get_metadata` confirms the frame still exists under its expected
    `SCR-NN/<Screen>/<state>` name without pulling full design context.
-3. **Heuristic pass** — implemented flows vs PRN-01..16
+3. **Heuristic pass** — implemented flows vs PRN-01..21
    ([ux-design-principles.md](references/ux-design-principles.md));
    findings `[PRN-NN] (severity) node — issue -> fix`.
 4. **Practice pass** — per
@@ -169,5 +169,10 @@ disagree. Off by default; offer it when the tooling is present.
   why, what could not be verified, what the code cannot answer. A batched
   audit reads a slice; a report that says nothing about the rest is read as
   if it covered everything.
+- **Verdict stated** — REFINE (fix the findings) / REDESIGN (the findings
+  cluster on a structure that patching will not converge on; name it) / NEW
+  (the chain does not describe what was built; start upstream). A findings
+  list without this reads as a to-do list, and a surface that should be
+  rebuilt gets patched forever, one true finding at a time.
 - Report on disk, summary honest, base statuses updated.
 - Findings offered to planning; nothing swallowed.

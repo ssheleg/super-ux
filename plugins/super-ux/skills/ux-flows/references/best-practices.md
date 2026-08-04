@@ -6,10 +6,17 @@ tags, apply what fits the product, ignore what doesn't. Practices are
 **suggestions with a mechanism**, not rules — a practice is adopted only
 when it serves a job/story in the project's foundation.
 
+**Finding an entry:** [best-practices-index.md](best-practices-index.md) is
+the generated tag index — tag → ids, id → title. Read it first and open only
+the entries that match; this file is long enough that reading it whole to
+find three practices is a real cost.
+
 **How to add entries:** next `BP-NNN` id (never reuse), one practice per
 entry, own-words summary, mechanism (`Why`), applicability (`Apply when`),
 tags from the taxonomy (extend taxonomy when genuinely needed), source
-attribution. Keep entries under ~6 lines.
+attribution. Keep entries under ~6 lines. Regenerate the index afterwards
+(`python3 plugins/super-ux/scripts/bp_index.py`) — the validator fails if it
+drifts.
 
 ## Tag taxonomy
 
@@ -22,7 +29,7 @@ attribution. Keep entries under ~6 lines.
   `trend-governance` `virality` `referral`
 - **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
   `landing-page` `web2app` `email` `push` `widgets` `voice` `ai-chat` `forms`
-  `auth` `responsive` `figma` `design-system` `handoff` `maintainability`
+  `auth` `i18n` `responsive` `figma` `design-system` `handoff` `maintainability`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
   `insight` `accessibility` `performance` `page-weight` `legal`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
@@ -62,7 +69,9 @@ motivation research and published gamification post-mortems; **[NIST]** =
 NIST SP 800-63B rev. 4, Digital Identity Guidelines (August 2025);
 **[Viral26]** = converged virality and referral benchmarks 2026 (B2B SaaS
 K-factor distributions, viral-cycle timing, referral-program industry
-reports).
+reports); **[EmilK]** = Emil Kowalski's design-engineering writing on
+interface motion (animations.dev, Sonner/Vaul build notes); **[WIG]** = Web
+Interface Guidelines (Vercel Labs, maintained rule set).
 
 Figures from `[CRO26]`/`[W2A26]`/`[CSq]`/`[HTTPArchive]` are industry
 aggregates, not laws: they justify the *shape* of a practice, and the
@@ -1233,3 +1242,172 @@ the defects are few and repetitive, which is what makes them checkable.
 - **Apply when:** any form with validation; multi-step and long forms especially.
 - **Tags:** forms, error-recovery, friction-reduction, conversion, accessibility
 - **Source:** [WCAG]/[Baymard]
+
+### Motion craft — the decisions BP-130's token scale does not make
+
+#### BP-157: Decide whether it animates at all, by how often it is seen
+- **Do:** gate on frequency before reaching for a duration. Something a user triggers a hundred times a day (a command palette, a keyboard shortcut, a list step) gets no animation at all; tens of times a day gets it reduced to feedback; occasional surfaces (modals, drawers, toasts) get the standard scale; rare and first-run moments can afford delight.
+- **Why:** BP-130 says what the durations should be but not whether the element deserves one, and the answer is decided by repetition: motion a user sees once reads as polish, and the same motion on the hundredth trigger reads as the interface being slow. Keyboard-initiated actions are the clearest case — the hand is already faster than the animation.
+- **Apply when:** any proposal to animate; audits check the frequent paths first.
+- **Tags:** motion, friction-reduction, engagement, performance
+- **Source:** [EmilK]
+
+#### BP-158: UI motion stays under ~300ms, scaled by the element
+- **Do:** press feedback ~100–160ms, tooltips and small popovers ~125–200ms, dropdowns and selects ~150–250ms, modals and drawers ~200–500ms. Marketing and explanatory motion is exempt; interface motion is not.
+- **Why:** these are the ranges where motion still reads as causation rather than as waiting, and the perceived speed of the whole product is set by the surfaces the user opens most; a 180ms select feels responsive where a 400ms one feels considered — and considered is not what an interface control wants to feel.
+- **Apply when:** filling in the duration tokens of BP-130 with actual numbers.
+- **Tags:** motion, performance, engagement
+- **Source:** [EmilK]/[M3]
+
+#### BP-159: Never `ease-in` on interface motion
+- **Do:** entering and exiting elements use `ease-out`; on-screen movement uses `ease-in-out`; hover and colour changes use `ease`; constant motion uses `linear`. Reach for a stronger custom curve than the CSS defaults, which are deliberately weak.
+- **Why:** `ease-in` withholds movement in the first frames — exactly when the user is watching hardest — so it feels slower than an `ease-out` of identical duration. This is a perception fact, not a taste preference, and it is the single most common motion defect in review.
+- **Apply when:** every transition and animation on an interface element.
+- **Tags:** motion, engagement
+- **Source:** [EmilK]
+
+#### BP-160: Elements enter from a visible state, never from `scale(0)`
+- **Do:** start entrances at ~0.95 scale with opacity 0, not at zero scale; pair scale with opacity so the element has a shape before it has size.
+- **Why:** nothing in the physical world appears out of nothing, and an element inflating from a point reads as a graphic effect rather than as something arriving; the difference is invisible on one element and unmistakable across a whole interface.
+- **Apply when:** any entrance animation — popovers, toasts, dialogs, list items.
+- **Tags:** motion, visual-hierarchy
+- **Source:** [EmilK]
+
+#### BP-161: Anchored surfaces grow from their trigger
+- **Do:** set `transform-origin` on a popover, menu or tooltip to the point it is anchored to, so it expands out of the control that opened it. Modals are the exception — they are not anchored to anything and stay centred.
+- **Why:** the origin is what tells the user which control produced the surface; expanding from the centre severs that link and makes the same element read as unrelated to the click that caused it.
+- **Apply when:** any anchored overlay.
+- **Tags:** motion, navigation-ui, dialog, visual-hierarchy
+- **Source:** [EmilK]/[WIG]
+
+#### BP-162: Enter and exit are not the same speed
+- **Do:** make the direction the user is deciding in slow and the direction the system is answering in fast — a hold-to-confirm fills deliberately and releases instantly; a dismissal leaves faster than the thing arrived.
+- **Why:** symmetric timing treats the user's deliberation and the system's acknowledgement as the same event; they are not, and matching their speeds makes one of them feel wrong every time.
+- **Apply when:** press-and-hold, drag-to-dismiss, any paired enter/exit.
+- **Tags:** motion, feedback, engagement
+- **Source:** [EmilK]
+
+#### BP-163: Rapidly-triggered motion must be interruptible
+- **Do:** use transitions rather than keyframe animations wherever a user can retrigger the element before it settles — stacking toasts, toggles, drag handles; springs where the gesture can reverse mid-flight.
+- **Why:** a transition retargets from wherever it currently is, while a keyframe animation restarts from zero — so the second toast in a burst visibly jumps, and a gesture the user reverses fights the animation instead of following the finger.
+- **Apply when:** any element a user can trigger again before the motion ends.
+- **Tags:** motion, feedback-ui, engagement
+- **Source:** [EmilK]
+
+#### BP-164: Hover effects are gated behind a hover-capable pointer
+- **Do:** wrap hover styling in `@media (hover: hover) and (pointer: fine)`; give touch its own pressed state instead of inheriting the hover one.
+- **Why:** touch devices fire hover on tap and then leave it stuck, so a hover-only affordance becomes a control that looks permanently active and, where hover reveals the action, one that needs two taps; BP-135 already treats input capability as independent of screen size and this is where that stops being theory.
+- **Apply when:** every hover style in a codebase that ships to touch.
+- **Tags:** motion, responsive, mobile, accessibility, control
+- **Source:** [EmilK]/[WIG]
+
+### Perceived quality — why a correct interface still looks unfinished
+
+#### BP-165: One icon family, one stroke weight, one fill discipline
+- **Do:** take icons from a single family, keep stroke width constant within a visual layer, and use filled or outlined consistently per hierarchy level rather than mixing them at the same level; size icons from tokens, not per-instance values.
+- **Why:** this is the most common reason a technically correct interface is described as looking amateur, and it is invisible per screen and obvious across one; unlike contrast or targets it fails no automated check, so it survives every audit that only measures.
+- **Apply when:** any icon set; audits of "it looks off but I can't say why".
+- **Tags:** visual-hierarchy, design-system, component, maintainability
+- **Source:** [HIG]/[M3]
+
+#### BP-166: Emoji are content, not structural icons
+- **Do:** never use emoji as navigation, settings or system-control icons; they are legitimate as content, in user text, and as deliberate expressive accents.
+- **Why:** emoji render differently on every platform and font, cannot be recoloured by a token, carry no consistent optical weight, and are announced by screen readers as their full names — a settings gear that reads as "gear emoji" is a labelling defect on top of a visual one.
+- **Apply when:** any icon slot in a shipped interface.
+- **Tags:** visual-hierarchy, accessibility, design-system, component
+- **Source:** [HIG]/[WIG]
+
+#### BP-167: Pressed states change appearance, not layout
+- **Do:** express press with colour, opacity, elevation or a transform that does not affect flow; never with a change to padding, margin, border width, or font size.
+- **Why:** a press that reflows its neighbours makes the whole region twitch under the finger, and on a list it moves the next target while the user is aiming at it — the same class of defect as content shifting during load, just triggered by the user rather than by the network.
+- **Apply when:** every pressable element.
+- **Tags:** control, motion, feedback-ui, performance
+- **Source:** [M3]/[EmilK]
+
+#### BP-168: An overlay's scrim actually separates the layers
+- **Do:** give modals and drawers a scrim strong enough that the content behind stops competing — typically 40–60% black over a light UI, adjusted per theme — and verify it in both themes rather than inheriting one.
+- **Why:** a weak scrim leaves two readable layers on screen at once, which is exactly the state a modal exists to prevent; it also breaks the focus story, since the interface looks operable behind a dialog that has trapped focus.
+- **Apply when:** any modal, drawer, sheet or lightbox.
+- **Tags:** dialog, visual-hierarchy, dark-mode, accessibility
+- **Source:** [M3]/[HIG]
+
+### Generated-default tells — the signature of a decision nobody made
+
+#### BP-169: Never build a fake product screenshot out of markup
+- **Do:** show the product with a real screenshot, a real embedded component, or a generated image — never a mock interface assembled from styled containers to look like a screenshot, and never fake chrome (version footers, "last sync 4s ago") inside one.
+- **Why:** this is the single most recognizable machine-generated tell on a marketing page, and it fails on its own terms too: the mock drifts from the real product the day after it is written, it is inert where a real embed is not, and it puts nonsense text in front of a screen reader.
+- **Apply when:** any hero, feature block or landing section that shows "the product".
+- **Tags:** landing-page, trust, maintainability, accessibility
+- **Source:** [NNg]/[WIG]
+
+#### BP-170: Placeholder content is plausible, not decorative
+- **Do:** use realistic names, locale-appropriate contacts, and organic numbers (47.2%, 1,284) rather than "John Doe", "Acme", and suspiciously round or maximal figures (50%, 99.99%, 1234567); reserve lorem ipsum for layout studies that never ship.
+- **Why:** implausible sample data is read as "nobody checked this", which is the same signal as a typo in the headline; it also hides real layout problems, because invented data is always the convenient length.
+- **Apply when:** demo data, empty-state examples (BP-152), screenshots, seeded environments.
+- **Tags:** trust, microcopy, readability, landing-page
+- **Source:** [NNg]
+
+#### BP-171: The three-equal-cards row is a default, not a decision
+- **Do:** before shipping three identical cards side by side as the feature section, check whether the content is actually three parallel things of equal weight; when it is not, use an asymmetric or staggered layout, alternating rows, or a single emphasized item with the rest secondary.
+- **Why:** the equal-thirds row is what a layout looks like when nobody decided the hierarchy, so it reads as generated even when the copy is good; it also flattens importance, which is the one thing a feature section exists to express.
+- **Apply when:** feature grids, benefit rows, pricing-adjacent sections.
+- **Tags:** layout, visual-hierarchy, landing-page, conversion
+- **Source:** [NNg]
+
+#### BP-172: Defaults that betray an unmade choice get made deliberately
+- **Do:** treat this recurring set as decisions: pure `#000000` backgrounds (use an off-black), more than one accent colour, warm and cool greys mixed in the same palette, `height: 100vh` for full-screen sections (use `100dvh` — the mobile URL bar makes `100vh` jump), and no max-width container on wide screens.
+- **Why:** each of these is what the tool produces when the question was never asked, so together they read as a template even when nothing is technically wrong; `100vh` is the one that is also a plain bug — it is measured against a viewport the user never actually sees on mobile.
+- **Apply when:** any screen built quickly, any redesign of a screen built quickly.
+- **Tags:** layout, color, responsive, visual-hierarchy, maintainability
+- **Source:** [WIG]/[NNg]
+
+### Interface state, platform surfaces & locale
+
+#### BP-173: The URL carries the state a user would want to return to
+- **Do:** put filters, tabs, pagination, sort order, expanded panels and selected items in the URL, and make every such state reachable by pasting that URL; keep genuinely ephemeral state (a half-typed field, a hover) out of it.
+- **Why:** state that lives only in memory cannot be shared, bookmarked, reopened after a crash, or linked to from a support reply — and the back button, which users treat as universal undo, silently does the wrong thing; this is the difference between a page and an application that behaves like one.
+- **Apply when:** any view with filters, tabs, steps, or a selection worth returning to.
+- **Tags:** web, navigation, engagement, trust
+- **Source:** [WIG]
+
+#### BP-174: Irreversible actions are confirmed; reversible ones offer undo instead
+- **Do:** decide per action — where the effect can be reverted, ship undo (act immediately, offer a timed reversal) rather than a confirmation dialog; where it genuinely cannot, confirm with a dialog that names the object and the consequence. Never do neither.
+- **Why:** confirmation dialogs are dismissed reflexively after the third one, so they stop protecting anything while still costing a step on every legitimate action; undo protects the case that actually happens — the accidental click — without taxing the intentional one.
+- **Apply when:** delete, archive, discard, send, publish, overwrite.
+- **Tags:** error-recovery, dialog, trust, friction-reduction
+- **Source:** [WIG]/[NNg]
+
+#### BP-175: Unsaved work survives the user's mistakes
+- **Do:** persist in-progress input (draft, autosave, restore on return) and warn before a navigation that would discard it; on a multi-step form keep the progress across a reload.
+- **Why:** losing typed work is the failure users describe in the strongest terms and the one they rarely give a product a second chance after; a warning dialog is the minimum, and persistence is the version that does not require the user to be paying attention.
+- **Apply when:** any form, editor, composer, or multi-step flow.
+- **Tags:** forms, error-recovery, trust, retention
+- **Source:** [WIG]/[Baymard]
+
+#### BP-176: Dark mode covers the surfaces the browser draws
+- **Do:** declare `color-scheme` so native scrollbars, form controls and caret follow the theme; set `theme-color` to match the background so the browser chrome does not band against the page; give native selects explicit background and text colours.
+- **Why:** BP-084 makes dark mode a designed palette, and this is where a designed palette still ends up with a white scrollbar and an unreadable dropdown — the surfaces the page does not paint itself default to light and betray the theme at exactly the edges.
+- **Apply when:** any product shipping a dark theme on the web.
+- **Tags:** dark-mode, web, color, accessibility
+- **Source:** [WIG]
+
+#### BP-177: Localization is a design constraint, not a translation step
+- **Do:** format dates, numbers and currency through the platform's locale APIs rather than by hand; design for strings 30–50% longer than the source language and verify the layout at that length; mark product names, identifiers and code so they are never translated; keep text direction in mind where the market needs it.
+- **Why:** hand-formatted dates and numbers are wrong for most of the world before a translator is ever hired, and layouts sized to English break silently on the first German or Finnish string — after the copy is signed off, which is the most expensive moment to discover it.
+- **Apply when:** any product with more than one locale, or one that intends to have one.
+- **Tags:** i18n, layout, readability, forms, trust
+- **Source:** [WIG]
+
+#### BP-178: Overlays contain their own scrolling and set touch defaults
+- **Do:** contain scroll inside modals, drawers and sheets so it does not chain to the page behind; set the tap-highlight and `touch-action` deliberately instead of accepting platform defaults; suppress text selection during a drag.
+- **Why:** scroll chaining is why a sheet "randomly scrolls the page underneath" and is invisible on a desktop mouse; the touch defaults are why taps feel delayed and why dragging a card selects the label instead of moving it — a cluster of small bugs that together read as an interface that does not feel native.
+- **Apply when:** any overlay, sheet, or drag interaction on touch.
+- **Tags:** mobile, dialog, control, friction-reduction, responsive
+- **Source:** [WIG]
+
+#### BP-179: Long lists are virtualized before they are shipped long
+- **Do:** decide the rendering strategy from the realistic upper bound, not the demo data — beyond roughly fifty rows, virtualize or paginate; keep the keyboard, focus and screen-reader behaviour intact when you do.
+- **Why:** a list that renders every row is fine at the size the team tests with and unusable at the size a real account reaches, and it degrades in the worst way: the customers with the most data, who are usually the most valuable, get the worst product.
+- **Apply when:** any list, table or feed whose length is driven by user data.
+- **Tags:** performance, web, layout, accessibility
+- **Source:** [WIG]

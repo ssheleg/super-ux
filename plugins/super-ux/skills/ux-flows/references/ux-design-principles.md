@@ -115,11 +115,32 @@ question; violations get the principle ID as evidence.
 | PRN-15 | Fitts's law | Primary targets big and close; dangerous targets far from frequent ones. |
 | PRN-16 | Peak–end rule | Polish the emotional peaks and the ending: first value, errors, completion, offboarding. |
 
+## Motivation principles (PRN-17..PRN-21)
+
+These describe why a user keeps going. Each is a **motivation** mechanism,
+and every one of them has a coercive twin — the same lever aimed at the
+product's interest instead of the user's. The line is the honesty stance
+below: a mechanism that only works while the user misunderstands the
+situation is a dark pattern wearing a principle's name. Applied honestly
+they make a real goal easier to reach; applied otherwise they manufacture a
+goal the user never had.
+
+| ID | Principle | Rule of thumb | Where it turns coercive |
+|----|-----------|---------------|--------------------------|
+| PRN-17 | Goal-gradient | Effort rises as a visible goal nears — show real remaining distance (checklist progress, "2 of 5 left"). | Progress toward a goal the product invented, or a bar that never quite fills. |
+| PRN-18 | Zeigarnik effect | An unfinished task stays in mind — an incomplete-setup marker works because the task is genuinely open. | Manufactured incompleteness: badges for things the user already finished or never started. |
+| PRN-19 | IKEA effect | People value what they helped build — personalization in onboarding raises attachment, not just relevance. | Busywork disguised as setup, so leaving feels like discarding one's own effort. |
+| PRN-20 | Endowment | Holding something raises its felt value — the honest use is a full-featured trial (a reverse trial, BP-070) that shows the real product. | Granting then removing capability to create loss the user did not choose. |
+| PRN-21 | Zero-price effect | Free is disproportionately attractive — it is why a free tier drives reach (BP-147). | "Free" that is not: undisclosed cost, card required to see the price. |
+
+Rule: any of PRN-17..21 recorded as `applied` in a compliance table names
+which side of that fourth column it is on, and what the user gets from it.
+
 ## Improving existing UX (heuristic evaluation procedure)
 
 1. Prerequisite: backwards-mode chain exists (flows + scenarios at least
    `inferred`). You cannot judge UX without knowing the intended jobs.
-2. Walk every flow against PRN-01..PRN-16 and the journey's pain points.
+2. Walk every flow against PRN-01..PRN-21 and the journey's pain points.
    Record violations: `[PRN-NN] screen/flow-node — what breaks — severity`.
 3. Severity (NN/g scale → audit mapping): 4 catastrophic / 3 major →
    `critical`/`major`; 2 minor → `minor`; 1 cosmetic → note only.

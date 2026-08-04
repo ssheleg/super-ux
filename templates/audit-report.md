@@ -39,6 +39,10 @@ report never means PASS. -->
 - **Could not verify:**
 - **Open questions:**
 
+## Verdict
+
+<REFINE | REDESIGN | NEW> — <one line of reasoning, and the scope it covers>
+
 ## Practice compliance (deep audits)
 
 | Practice | Verdict | How / why not |

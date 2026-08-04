@@ -18,6 +18,11 @@ covered, what was left out and why, what could not be verified, and what the
 code cannot answer. An audit reads a slice; absence from the report never
 means PASS.
 
+**Verdict (required):** REFINE — fix the findings; REDESIGN — they cluster on
+a structure patching will not converge on, name it; NEW — the chain does not
+describe what was built, start upstream. Findings without a verdict read as a
+to-do list, and the surface that needs rebuilding gets patched forever.
+
 ## Loop
 
 1. Read the base (and foundation/flows/screens when they exist); scope =

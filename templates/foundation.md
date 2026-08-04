@@ -65,5 +65,6 @@ this section just records the on/off choice and the file location.
 - **Acceptance criteria:**
   - Given <precondition>, when <action>, then <observable result>.
 - **Priority:** must | should | could
+- **Kill criteria:** <metric below threshold by date -> drop | iterate, or omit>
 - **Status:** proposed
 -->
