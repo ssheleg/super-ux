@@ -164,5 +164,9 @@ disagree. Off by default; offer it when the tooling is present.
 
 - Every scoped scenario has a verdict with evidence or an explicit BLOCKED
   reason — no scenario silently skipped.
+- **Scope and limits filled in** — what was covered, what was left out and
+  why, what could not be verified, what the code cannot answer. A batched
+  audit reads a slice; a report that says nothing about the rest is read as
+  if it covered everything.
 - Report on disk, summary honest, base statuses updated.
 - Findings offered to planning; nothing swallowed.

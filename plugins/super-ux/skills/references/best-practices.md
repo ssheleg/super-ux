@@ -19,10 +19,10 @@ attribution. Keep entries under ~6 lines.
 - **Mechanism:** `personalization` `social-proof` `commitment` `scarcity`
   `anchoring` `friction-reduction` `habit` `reward` `segmentation`
   `attribution` `activation` `feedback` `error-recovery` `gamification`
-  `trend-governance`
+  `trend-governance` `virality` `referral`
 - **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
   `landing-page` `web2app` `email` `push` `widgets` `voice` `ai-chat` `forms`
-  `responsive` `figma` `design-system` `handoff` `maintainability`
+  `auth` `responsive` `figma` `design-system` `handoff` `maintainability`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
   `insight` `accessibility` `performance` `page-weight` `legal`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
@@ -58,7 +58,11 @@ survey); **[A11yLaw]** = accessibility-compliance reporting 2025 (Level
 Access State of Digital Accessibility, UsableNet litigation tracking, the
 European Accessibility Act in force since June 2025); **[WSG]** = W3C Web
 Sustainability Guidelines 1.0; **[SDT]** = self-determination-theory
-motivation research and published gamification post-mortems.
+motivation research and published gamification post-mortems; **[NIST]** =
+NIST SP 800-63B rev. 4, Digital Identity Guidelines (August 2025);
+**[Viral26]** = converged virality and referral benchmarks 2026 (B2B SaaS
+K-factor distributions, viral-cycle timing, referral-program industry
+reports).
 
 Figures from `[CRO26]`/`[W2A26]`/`[CSq]`/`[HTTPArchive]` are industry
 aggregates, not laws: they justify the *shape* of a practice, and the
@@ -545,7 +549,7 @@ treated as directional only and never as a practice's sole justification.
 ### Monetization models & conversion economics
 
 #### BP-067: Choose the monetization model with data, not ideology
-- **Do:** decide hard paywall vs freemium vs hybrid explicitly, in the foundation: hard paywalls convert downloads-to-paid ~5× better than freemium (12.1% vs 2.2% median) with similar year-one retention; freemium wins only when free users feed growth loops (virality, content, network) or ads.
+- **Do:** decide hard paywall vs freemium vs hybrid explicitly, in the foundation: hard paywalls convert downloads-to-paid ~5× better than freemium (12.1% vs 2.2% median) with similar year-one retention; freemium wins only when free users feed a growth loop (BP-147..151 — virality, content, network) or ads.
 - **Why:** the model dictates every downstream flow; picking freemium "to be nice" without a growth loop just burns conversion.
 - **Apply when:** foundation stage of any monetized product; challenge inherited models during Improve.
 - **Tags:** pricing, paywall, freemium, revenue, conversion, subscription-app
@@ -1155,3 +1159,77 @@ the defects are few and repetitive, which is what makes them checkable.
 - **Apply when:** any of these styles is proposed; audits check the compensation exists in the built UI, not just in the discussion.
 - **Tags:** trend-governance, accessibility, visual-hierarchy, control, trust
 - **Source:** [WCAG]/[NNg]/[WebAIM]
+
+### Growth loops, virality & referral
+
+#### BP-147: Name the growth loop before choosing freemium
+- **Do:** if the model is freemium or any permanently free tier (BP-067), name the specific loop the free users feed — viral (they bring people), content (their output is public and found), or network (each user raises the product's value for the others) — and record it in the foundation beside the model. "Being generous" is not a loop.
+- **Why:** BP-067 makes freemium defensible only when such a loop exists, and BP-073 puts the median free→paid conversion at 2.6% — without a named loop the free tier is conversion given away for nothing. Referred users also convert and retain better than organic ones, so the loop pays twice, but only if someone designed it.
+- **Apply when:** choosing or revisiting a monetization model; any proposal to add a free tier.
+- **Tags:** freemium, virality, conversion, revenue, insight
+- **Source:** [RC25]/[PLG25]/[Viral26]
+
+#### BP-148: Virality rides the product's output, not a "refer a friend" page
+- **Do:** put the loop where the product already peaks: attribution on the artifact the user exports or shares, the link inside an invitation that was going out anyway, "invite your team" at the step where the work actually needs them, "share this result" on the screen that just produced value. A standalone referral page is the last mechanism to build, not the first.
+- **Why:** sharing the output is the lowest-friction loop there is — it asks for no new behavior, only the decision to carry attribution on the artifact — while a referral page needs its own motivation, its own visit, and a reason to remember it exists.
+- **Apply when:** the product exports, publishes, invites, or shares anything.
+- **Tags:** virality, referral, engagement, conversion, activation
+- **Source:** [Viral26]
+
+#### BP-149: Plan for K around 0.2 and design the cycle time
+- **Do:** model the viral coefficient at roughly 0.2 (the B2B SaaS average; 0.1–0.3 is typical, 0.3–0.7 is a strong result, above 1.0 belongs to a handful of collaboration products in a specific phase). Design the loop's cycle time alongside K — days for consumer products, weeks for B2B — because a fast loop with a moderate K beats a slow loop with a high one.
+- **Why:** growth models built on K > 1 almost never come true, and the cycle time is the multiplier nobody computes: it decides how many times the coefficient compounds within the same quarter.
+- **Apply when:** planning a growth loop; any financial model with an organic channel in it.
+- **Tags:** virality, analytics, insight, revenue
+- **Source:** [Viral26]
+
+#### BP-150: Reward in the product's own unit, pay on the invitee's milestone
+- **Do:** pay the referral in a unit of the product (seats, credits, storage, a period of the paid tier) rather than an unrelated discount or gift card, and release it when the invited user reaches a meaningful milestone — not when they register. Set the attribution window from the loop's cycle time (BP-149) instead of leaving it open.
+- **Why:** an in-product reward returns the user to the product instead of teaching them to wait for discounts; paying on a milestone aligns the referrer with retention rather than with volume and removes the cheapest abuse route, which is the empty account.
+- **Apply when:** any referral mechanic that pays a reward.
+- **Tags:** referral, reward, retention, conversion, trust
+- **Source:** [Viral26]
+
+#### BP-151: Design against referral abuse before launch, not after
+- **Do:** ship the safeguards with the program — verified address before any reward is credited, reward gated behind the qualifying action (BP-150), a rate limit on invitations per account — and watch for the signals afterwards: invitation conversion spiking against the program's own baseline, an unusual concentration of referrals on one account, invited accounts sharing devices or subnets.
+- **Why:** a referral reward is the one mechanic in the product that pays for account creation, so it attracts abuse by construction rather than by bad luck; the safeguards are cheap before launch and become a payout dispute afterwards.
+- **Apply when:** any referral program with a reward that has cash value or converts to one.
+- **Tags:** referral, trust, revenue, analytics
+- **Source:** [Viral26]
+
+### Empty states, authentication & form recovery
+
+#### BP-152: An empty state reports status, teaches, and offers a way in
+- **Do:** give every empty container three layers — what happened (genuinely empty vs still loading vs failed, told apart), what this place is for and what will appear here, and a direct path to start: create the first item, and where it fits, inspect the feature on demo data. A blank panel with no words is a defect, not a neutral state.
+- **Why:** an empty container is not neutral — it lowers confidence, hides the feature, and slows the task; the same space carrying an explanation and an action becomes onboarding exactly where the user already stands (BP-041), which is the one place onboarding does not have to interrupt anything.
+- **Apply when:** any list, table, dashboard, inbox, or folder — first run and every state that empties again later.
+- **Tags:** onboarding, activation, feedback-ui, microcopy, engagement
+- **Source:** [NNg]
+
+#### BP-153: Password rules follow length and screening, not composition
+- **Do:** drop composition rules ("one uppercase, one digit, one symbol") — they are prohibited, not merely unfashionable; require at least 15 characters when the password is the only authenticator and at least 8 alongside a second factor; screen every new password against breach corpora, dictionary words, keyboard runs, and context terms (the product name, the user's own login); force a change only on evidence of compromise.
+- **Why:** NIST SP 800-63B rev. 4 made this normative in August 2025 because composition rules produce predictable passwords and move the work into the user's memory, while length and breach screening act on the attack that actually happens.
+- **Apply when:** any screen that creates, changes, or recovers a password.
+- **Tags:** auth, forms, trust, legal, friction-reduction
+- **Source:** [NIST]
+
+#### BP-154: The password field must not fight the password manager
+- **Do:** allow paste — it is a normative requirement, not a convenience; show the rules before the first attempt rather than after the rejection; offer a reveal toggle; set `autocomplete` correctly (`new-password` on creation, `current-password` on sign-in) so the platform and the manager both fill it.
+- **Why:** blocking paste is prohibited precisely because it pushes people toward a password they can retype from memory, and WCAG 2.2 counts the same block as an accessible-authentication failure; rules revealed only after a rejection turn one attempt into a guessing loop.
+- **Apply when:** every password field on every platform.
+- **Tags:** auth, forms, friction-reduction, accessibility, trust
+- **Source:** [NIST]/[WCAG]
+
+#### BP-155: Offer a passwordless door where the account allows one
+- **Do:** where the account does not need a password to function, present a one-time link or code, a passkey, or a platform provider as an equal way in — placed as a first-class option, not buried under "forgot your password". The password stays available; it stops being the only door.
+- **Why:** the credential nobody has to invent is the one that cannot be reused from another breach, and 800-63B rev. 4 pushes deliberately toward phishing-resistant and syncable authenticators; on the signup side this is the same economy as BP-119 — ask for the smallest identity that unblocks value.
+- **Apply when:** designing sign-in and sign-up for a product without a hard password requirement.
+- **Tags:** auth, forms, friction-reduction, conversion
+- **Source:** [NIST]
+
+#### BP-156: A rejected form keeps the work and names the way out
+- **Do:** on a validation failure keep everything already typed, move focus to the first field at fault, and say what to do next; "this address is already registered" leads to sign-in and recovery instead of ending there; a multi-step form keeps its progress across a reload.
+- **Why:** clearing the form punishes the person who already did the work for a failure the system detected, and WCAG 2.2 treats re-asking for information the user has already given as a defect in its own right; PRN-09 asks a message to say what happened and how to recover, and a form that loses the input breaks the second half of that.
+- **Apply when:** any form with validation; multi-step and long forms especially.
+- **Tags:** forms, error-recovery, friction-reduction, conversion, accessibility
+- **Source:** [WCAG]/[Baymard]

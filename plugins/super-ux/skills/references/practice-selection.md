@@ -1,12 +1,14 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..146 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..156 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
 BP-136..138, frustration telemetry BP-139..140, gamification BP-141..142,
-personalization BP-143..144, trend governance BP-145..146;
+personalization BP-143..144, trend governance BP-145..146, growth loops and
+referral BP-147..151, empty states BP-152, authentication and form recovery
+BP-153..156;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..16)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -45,12 +47,13 @@ answers in the foundation):
 | mobile-* | BP-049..054 |
 | mobile-ios | + BP-031, BP-033 (OS surfaces, widgets — as opportunities) |
 | web | BP-052, BP-058, BP-059, BP-133..138 (weight budget, baseline viewport, input capability, native semantics, real evidence, regime) |
-| forms: yes | BP-050, BP-055..057, BP-143 |
+| forms: yes | BP-050, BP-055..057, BP-143, BP-156 |
+| account / sign-in present | BP-119, BP-153..155 (password rules, manager-friendly field, a passwordless door) |
 | voice | BP-060..065 |
 | ai-chat | BP-063..066 |
 | money ≠ none | BP-067..074 |
 | subscription / hybrid | + BP-016..030 (paywalls), BP-031..039 (retention/lifecycle) |
-| freemium / hybrid | + BP-024..027, BP-073, BP-074 |
+| freemium / hybrid | + BP-024..027, BP-073, BP-074, BP-147..151 (the loop the free tier feeds) |
 | app-store | BP-075, BP-076 |
 | paid-ads | BP-043, BP-077, BP-078 |
 | web-direct / both, money ≠ none | BP-116..123 (landing → pricing → checkout → billing → cancel) |
@@ -76,7 +79,9 @@ the Step-2 sets:
 | Trial start/end | BP-070, BP-071, BP-072, BP-019 (trial anxiety) |
 | Cancel / winback flow | BP-017, BP-027, BP-035, BP-123; PRN-03 |
 | Rating prompt flow | BP-076; PRN-16 |
-| Forms / checkout | BP-050, BP-055..057, BP-119, BP-120, BP-143; PRN-05, PRN-09 |
+| Forms / checkout | BP-050, BP-055..057, BP-119, BP-120, BP-143, BP-156; PRN-05, PRN-09 |
+| Sign-up / sign-in / password | BP-119, BP-153..156; PRN-05, PRN-09 |
+| Growth loop / referral program | BP-147..151, BP-067, BP-073 |
 | Landing / campaign page | BP-116, BP-117, BP-077, BP-132, BP-133; PRN-08 |
 | Pricing page (web) | BP-118, BP-022, BP-073; PRN-08 |
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
@@ -86,7 +91,7 @@ the Step-2 sets:
 | Permissions / notifications | BP-013, BP-036..038 |
 | Lifecycle / email sequences | BP-034, BP-039, BP-071 |
 | Voice / chat dialog | BP-060..066; PRN-01, PRN-03, PRN-09 |
-| Empty / first-use states | BP-004, BP-012; screen rules (principles doc) |
+| Empty / first-use states | BP-004, BP-012, BP-152; screen rules (principles doc) |
 | Store listing | BP-075, BP-077 |
 | Analytics / experiment design | BP-040..048 |
 | Screen build / visual polish | BP-079..090, BP-130, BP-145, BP-146; PRN-08, PRN-15 |
