@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.27.1 — 2026-08-05
+
+Re-cut of 0.27.0 on the correct base. The 0.27.0 tag was pushed from a tree
+that predated 0.26.2–0.26.5, so the GitHub release it produced was missing
+the MIT declarations, the `/ux-audit` front-matter fix, `displayName`, and
+the npm-publish workflow. Nothing was published to npm from it. The content
+of 0.27.0 is unchanged and listed below it; this release only puts it on top
+of the history it belongs to.
+
 ## 0.27.0 — 2026-08-04
 
 An audit of 51 external UX, product and growth skills, kept only where they
@@ -48,6 +57,7 @@ source called it.
 
 The contract stays **v4**: the report section is additive and no existing
 `docs/ux` file changes shape.
+
 ## 0.26.5 — 2026-07-30
 
 ### Added
