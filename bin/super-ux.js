@@ -89,16 +89,23 @@ function installCursor(target, force) {
   // The linter is code, not a template — refresh it to the shipped version.
   // Shipped via package.json files[]; if that ever regresses, warn instead of
   // dying on an ENOENT stack trace after the rules are already installed.
-  const lintSrc = path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py');
-  const lintDst = path.join(target, 'docs', 'ux', 'lint.py');
-  if (fs.existsSync(lintSrc)) {
-    fs.copyFileSync(lintSrc, lintDst);
-    console.log(`sync:    ${lintDst}`);
-  } else {
-    console.error(
-      `warning: linter not found in this package (${lintSrc}); docs/ux/lint.py was not installed.\n` +
-        `         Get it from https://github.com/${REPO}/blob/main/plugins/super-ux/scripts/ux_lint.py`
-    );
+  // Paths stay literal so test/validate.py can read them out of this source and
+  // check them against package.json files[] — a variable segment here silently
+  // turns that check into a directory prefix nobody ships.
+  for (const [src, from, dst] of [
+    ['ux_lint.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py'), 'lint.py'],
+    ['ux_doctor.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_doctor.py'), 'doctor.py'],
+  ]) {
+    const to = path.join(target, 'docs', 'ux', dst);
+    if (fs.existsSync(from)) {
+      fs.copyFileSync(from, to);
+      console.log(`sync:    ${to}`);
+    } else {
+      console.error(
+        `warning: ${src} not found in this package (${from}); docs/ux/${dst} was not installed.\n` +
+          `         Get it from https://github.com/${REPO}/blob/main/plugins/super-ux/scripts/${src}`
+      );
+    }
   }
 
   console.log(`done: ${installed} installed, ${skipped} skipped`);

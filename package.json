@@ -10,6 +10,7 @@
     "cursor",
     "templates",
     "plugins/super-ux/scripts/ux_lint.py",
+    "plugins/super-ux/scripts/ux_doctor.py",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
