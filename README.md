@@ -100,6 +100,41 @@ plugin user-globally — any combination in one run. Also works straight from
 GitHub: `npx github:ssheleg/super-ux --cursor <dir>`, or clone and run
 `./install.sh --cursor <dir>`.
 
+## The brand layer — how the product speaks
+
+`docs/ux/` decides what the product does. **`docs/brand/`** decides how it
+speaks, under `brand-contract v1`: one voice, many registers, and a linter
+that makes copy drift as findable as chain drift.
+
+| File | Holds |
+|---|---|
+| `voice.md` | the pack, five fixed axes, narrative, invariants, locales |
+| `terminology.md` | our words, banned words, entity and tier names |
+| `facts.md` | canonical figures — the only source of a number in public copy |
+| `channels.md` | one record per surface: register deltas, limits, bans |
+| `strings.md` | the interface string registry → `file:line` → scenario |
+| `locales/<code>.md` | address form, length coefficient, dead idioms, keywords |
+
+Two skills: **`brand-voice`** defines and holds the identity (six shipped
+voice packs, each declaring the degeneration it collapses into when overdone);
+**`copywriting`** writes in it and never writes *to* it — a missing term or an
+unsourced number is reported, never invented.
+
+Commands: `/brand` (status → one recommended action), `/brand-init`,
+`/brand-update`, `/brand-lint`, `/copy`.
+
+```bash
+python3 docs/brand/lint.py
+```
+
+31 deterministic checks — banned words, one action under two names, a figure
+with no sourced fact, a field over its limit with the locale coefficient
+applied, blocked AI crawlers, keyword stuffing, humor on a billing screen,
+a locale that lags without saying so. Exit 0 clean, 1 warnings, 2 errors.
+
+Clean means *checkable*, not *good*: tone drift, unproven claims and a voice
+that has overshot its own failure mode are judged by `/ux-audit copy`.
+
 ## The hard rule
 
 Installed into your project's `CLAUDE.md` (and as the always-on Cursor rule):

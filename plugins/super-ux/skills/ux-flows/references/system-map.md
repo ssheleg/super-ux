@@ -29,6 +29,23 @@ after this chain is designed and approved (and, with Figma on, mocked up).
 | `wireframes/…` | optional | `ux-flows` | low-fi ASCII wireframes / storyboards |
 | `README.md`, `lint.py` | meta | seeded | this map (project copy) + the linter |
 
+Beside the chain, one more root — **`docs/brand/`**, the verbal identity
+(`brand-contract v1`, [brand-contract.md](brand-contract.md)):
+
+| File | Owner skill | Holds |
+|------|-------------|-------|
+| `voice.md` | `brand-voice` | pack, five axes, narrative, invariants, locales |
+| `terminology.md` | `brand-voice` | our words, banned words, entity and tier names |
+| `facts.md` | `brand-voice` | canonical numbers — the only source of a figure |
+| `channels.md` | `brand-voice` | one record per surface: register, limits, bans |
+| `strings.md` | `brand-voice` | interface string registry → `file:line` → scenario |
+| `locales/<code>.md` | `brand-voice` | per-locale delta |
+| `lint.py` | seeded | `brand_lint.py`, 31 deterministic checks |
+
+It is a separate root because the brand also governs surfaces that are not UX
+— a store listing, an ad, a post. The pack derives from `foundation.md` and
+never the reverse. `copywriting` writes from it and never to it.
+
 Formats: [scenario-format.md](scenario-format.md). Design reasoning:
 [ux-design-principles.md](ux-design-principles.md). Practices:
 [best-practices.md](best-practices.md) selected via
@@ -44,9 +61,12 @@ pack via the **sheleg-design** companion):
 - **`/ux`** — the only command a user needs. Asks the task in plain words,
   routes to the right workflow, reports status. Users never pick skills.
 - `ux-foundation` · `ux-flows` · `ux-scenarios` — build/maintain the layers.
-- `ux-audit` — verify code against the chain (depths quick/standard/deep).
+- `ux-audit` — verify code against the chain (depths quick/standard/deep;
+  scope `copy` judges text against the brand pack).
+- `brand-voice` · `copywriting` — define the voice, then write in it.
 - Direct commands: `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update`
-  `/ux-audit` `/ux-rule` `/ux-lint`.
+  `/ux-audit` `/ux-rule` `/ux-lint`; `/brand` `/brand-init` `/brand-update`
+  `/brand-lint` `/copy`.
 
 ## The four rules that keep agents in sync
 

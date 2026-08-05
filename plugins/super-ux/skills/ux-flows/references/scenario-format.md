@@ -32,6 +32,19 @@ mode), but once a layer exists, its traceability and same-change update
 rules apply. In backwards mode (existing product) the same files are filled
 in reverse from the code, entries tagged `inferred` until confirmed.
 
+## `Strings:` (optional)
+
+A scenario may list the `strings.md` keys its steps depend on:
+
+```
+Strings: action.project.publish, error.publish.quota
+```
+
+Optional, like `Telemetry`. Its absence is never an error. Where it is
+present, a copy audit can go from a scenario to the exact strings that serve
+it, and `brand_lint.py` can tell a string that serves a real scenario from one
+nobody claims. Keys, not text -- the text lives in one place.
+
 ## Same-change update rule (all layers)
 
 Any change to user-facing behavior or interface updates the affected layers

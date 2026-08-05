@@ -1,0 +1,37 @@
+---
+description: Brand voice and copy — docs/brand/ is the source of truth for how the product speaks; any public-facing text change updates it in the same change and passes docs/brand/lint.py
+alwaysApply: false
+---
+
+# Brand voice (super-ux)
+
+`docs/ux/` decides what the product does. `docs/brand/` decides how it
+speaks, under `brand-contract v1`.
+
+## Before writing any user-visible text
+
+Read `docs/brand/voice.md`, `terminology.md`, and the `channels.md` record
+for the surface. No pack yet → run `/brand-init` rather than improvising a
+voice; a product whose copy was invented surface by surface is the drift
+this layer removes.
+
+## Rules
+
+- Any change to public text updates `docs/brand/` in the same change.
+- Never quote a figure with no row in `facts.md`. Never invent a fact,
+  statistic, quote or expert — report the gap.
+- One action, one name, everywhere it appears. Check `strings.md` first.
+- A register moves the voice axes; it never crosses the invariants listed in
+  `voice.md`.
+- No humor, exclamation marks or emoji on error, destructive confirm,
+  billing or paywall surfaces, in any voice.
+- New interface strings get a `strings.md` row: key, `file:line`, scenario.
+
+## Check
+
+```bash
+python3 docs/brand/lint.py
+```
+
+Exit 0 clean, 1 warnings, 2 errors. Clean means checkable, not good — the
+judgement half is `/ux-audit copy`.
