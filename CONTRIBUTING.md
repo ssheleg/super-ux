@@ -113,10 +113,16 @@ So a release is not finished at `npm publish`:
 ```bash
 # in ssheleg/sshlg-skills
 #   1. bump this member's "version" in skills.json
-#   2. bump the launcher's own version, changelog, tag
-npm publish --access public
+#   2. bump the launcher's own version, changelog
+#   3. commit, then tag -- its own release.yml publishes it
+git push --atomic origin main vX.Y.Z
 npx --yes sshlg-skills@latest list   # the new number must appear here
 ```
+
+There is no manual `npm publish` step in any repo in the family. Every one of
+them carries a `release.yml` whose `publish` job runs on a `v*` tag with
+`PUBLISH_NPMJS` armed, authenticating through `NPM_TOKEN` **and** OIDC
+trusted publishing, and skipping the version if the registry already has it.
 
 ## Reporting problems
 

@@ -1,5 +1,77 @@
 # Changelog
 
+## 0.30.0 — 2026-08-05
+
+The verbal identity layer. `docs/ux/` decides what the product does; the new
+`docs/brand/` decides how it speaks — one voice, many registers, and a linter
+that makes copy drift as findable as chain drift.
+
+### The contract — `brand-contract v1`
+
+`docs/brand/` is a second artifact root beside `docs/ux/`, seeded by the
+installer: `voice.md` (a voice pack, five fixed axes as IS / IS NOT, the
+narrative, the invariants that survive translation), `terminology.md` (our
+words, banned words, exact entity and tier spellings), `facts.md` (the only
+source of any figure in public copy), `channels.md` (one record per surface),
+`strings.md` (the interface string registry, key → `file:line` → scenario),
+and `locales/<code>.md`.
+
+Separate root on purpose: the brand also governs surfaces that are not UX at
+all — a store listing, an ad, a post. The pack derives from `foundation.md`
+and never the reverse.
+
+### Two skills
+
+- **`brand-voice`** — defines and holds the identity. Six shipped voice packs
+  (`operator-brief`, `calm-expert`, `peer-builder`, `editorial-premium`,
+  `plain-service`, `playful-consumer`), each declaring the degeneration it
+  collapses into when overdone, so an overshoot is a finding rather than a
+  matter of taste. Invoked with no task it reports state and proposes exactly
+  one next action, and never invents a missing fact to close a gap.
+- **`copywriting`** — writes in the voice and never writes *to* it. A missing
+  term or an unsourced number is reported, because adding it is the other
+  skill's decision.
+
+Commands: `/brand`, `/brand-init`, `/brand-update`, `/brand-lint`, `/copy`.
+
+### `brand_lint.py` — 31 deterministic checks
+
+Seeded as `docs/brand/lint.py`. Contract and sources (B001–B006), terminology
+(B010–B012), string consistency (B020–B025), facts (B030–B032), channel
+physics (B040–B043), bot safety (B050–B054), machine-drafting markers
+(B060–B061), locales (B070–B073). Exit 0 clean, 1 warnings, 2 errors;
+`--fix` touches only casing, the iOS keyword field, and re-pointing a registry
+row whose string is unchanged. 32 fixtures, one per code, each watched failing
+against a planted defect before it was trusted — and they run in CI.
+
+Three rules it exists to enforce: one action keeps one name everywhere; a
+number in public copy has a sourced row or is not written; no humor on error,
+destructive-confirm, billing or paywall surfaces, in any voice.
+
+### Catalog
+
+`BP-182..205` in six clusters of four — voice and consistency, product
+microcopy, conversion copy, bot safety, channel physics, localization — and
+`PRN-22..24`. New entries carry a sixth field, `Checked:`, dating the last
+verification against the source. It starts at BP-182 deliberately:
+backfilling it onto BP-001..181 would record a verification nobody performed.
+New tags `brand-voice` `copy` `narrative` `terminology` `channel-physics`
+`seo` `aeo` `aso` — `voice` was already taken, and it means a voice interface.
+
+### Elsewhere
+
+`ux-audit` gains scope `copy`, the judgement twin of the linter. `ux_doctor`
+reads the brand marker, because a pack on an old contract is internally
+consistent and the linter stays quiet about it. Scenarios gain an optional
+`Strings:` field. The brand hard rule ships in the Claude rule template and a
+new Cursor rule.
+
+### Fixed
+
+- `CONTRIBUTING.md` told maintainers to run `npm publish --access public`
+  by hand in `sshlg-skills` after a release. Every repo in the family has
+  published from CI on a `v*` tag since that text was written.
+
 ## 0.29.0 — 2026-08-05
 
 A pass aimed at the installed base rather than the catalog. Run across the

@@ -465,6 +465,141 @@ def validate_catalog() -> None:
     )
 
 
+def validate_brand_contract() -> None:
+    """`docs/brand/` has one contract, and it lives in exactly one file.
+
+    Every brand skill, template and the linter key off these names. A name
+    defined twice is drift with a delay fuse, so the contract is the only
+    place any of them is written down -- this check is what keeps that true.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "brand-contract.md")
+    if not check(text is not None, "brand-contract.md is missing"):
+        return
+    for token in (
+        "Contract: brand-contract v1", "voice.md", "terminology.md",
+        "facts.md", "channels.md", "strings.md", "locales/<code>.md",
+        "Locale parity threshold", "Derived-from", "Last calibrated",
+        "Confidence", "Register", "Distance", "Humor", "Density",
+        "Hero", "Enemy", "Product role", "Promise",
+        "agreed", "proposed", "drifted", "orphan",
+        "Length coefficient", "Sources:",
+    ):
+        check(token in text, f"brand-contract.md: missing `{token}`")
+
+
+PACKS = (
+    "operator-brief", "calm-expert", "peer-builder",
+    "editorial-premium", "plain-service", "playful-consumer",
+)
+PACK_FIELDS = (
+    "Use for", "Not for", "Axes", "Narrative template", "Lexicon",
+    "Pack bans", "Register deltas", "Ready lines", "Failure mode",
+)
+
+
+def validate_voice_packs() -> None:
+    """Six packs, and every one of them admits how it degrades.
+
+    `Failure mode` is the field that makes an archetype library safe to ship:
+    without it a pack is an instruction to overshoot, and the audit has no
+    way to call the overshoot anything but taste.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "voice-packs.md")
+    if not check(text is not None, "voice-packs.md is missing"):
+        return
+    for section in text.split("\n## ")[1:]:
+        name = section.split("\n", 1)[0].strip()
+        if name not in PACKS:
+            continue
+        for field in PACK_FIELDS:
+            check(field in section, f"voice-packs.md: {name} missing `{field}`")
+    for pack in PACKS:
+        check(f"\n## {pack}\n" in text, f"voice-packs.md: pack `{pack}` missing")
+
+
+BRAND_TEMPLATES = (
+    "README.md", "voice.md", "terminology.md", "facts.md",
+    "channels.md", "strings.md", "locale.md",
+)
+
+
+def validate_brand_templates() -> None:
+    """Every seeded brand file announces which contract it was written to.
+
+    Without the marker on the artifact itself, a base three contract versions
+    old is indistinguishable from a current one -- it is internally
+    consistent either way, which is exactly why the linter cannot see it and
+    the doctor can.
+    """
+    tdir = ROOT / "templates/brand"
+    for name in BRAND_TEMPLATES:
+        text = read(tdir / name)
+        if not check(text is not None, f"templates/brand/{name} is missing"):
+            continue
+        lines = text.splitlines()
+        first = lines[0].strip() if lines else ""
+        check(
+            first == "Contract: brand-contract v1",
+            f"templates/brand/{name}: first line must be the contract marker",
+        )
+    readme = read(tdir / "README.md") or ""
+    check(
+        "Sources:" in readme,
+        "templates/brand/README.md: no `Sources:` block -- the linter would "
+        "have nothing to scan (B006)",
+    )
+
+
+BRAND_FIRST_BP = 182
+
+
+def validate_brand_practices() -> None:
+    """The brand cluster carries a sixth field, and nothing reuses `voice`.
+
+    `Checked:` starts at BP-182 deliberately: backfilling it onto BP-001..181
+    would put a date on a verification nobody performed, which is the exact
+    failure the field exists to prevent.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "best-practices.md") or ""
+    ids = sorted(int(n) for n in re.findall(r"^#### BP-(\d{3}):", text, re.M))
+    if not check(bool(ids), "best-practices.md: no practices parsed"):
+        return
+    check(
+        max(ids) >= 205,
+        f"brand practices: catalog ends at BP-{max(ids):03d}, need BP-205 "
+        f"or higher (six clusters of at least four)",
+    )
+    for num in range(BRAND_FIRST_BP, max(ids) + 1):
+        body = re.search(
+            rf"^#### BP-{num:03d}:.*?(?=^#### |\Z)", text, re.M | re.S
+        )
+        if not check(body is not None, f"BP-{num:03d} is missing"):
+            continue
+        for field in ("- **Do:**", "- **Why:**", "- **Apply when:**",
+                      "- **Tags:**", "- **Source:**", "- **Checked:**"):
+            check(field in body.group(0),
+                  f"BP-{num:03d}: missing {field}")
+    # `.` spans newlines under re.S, so the tag group must exclude them --
+    # otherwise every entry's "tags" run to the end of the file and the first
+    # practice appears to carry every tag in the catalog.
+    # Scoped to the brand range on purpose: BP-060..065 are voice-interface
+    # practices and `voice` is their correct Domain tag. The collision is only
+    # a problem for new entries, where `voice` would mean the brand's.
+    for num, tags in re.findall(
+        r"^#### BP-(\d{3}):.*?- \*\*Tags:\*\* ([^\n]+)", text, re.M | re.S
+    ):
+        if int(num) < BRAND_FIRST_BP:
+            continue
+        check(
+            not re.search(r"(?:^|[ ,`])voice(?:[ ,`]|$)", tags),
+            f"BP-{num}: uses the tag `voice`, which in this catalog means a "
+            f"voice interface -- the brand tag is `brand-voice`",
+        )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -477,6 +612,10 @@ def main() -> int:
     validate_links()
     validate_shipped_references()
     validate_catalog()
+    validate_brand_contract()
+    validate_voice_packs()
+    validate_brand_templates()
+    validate_brand_practices()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")

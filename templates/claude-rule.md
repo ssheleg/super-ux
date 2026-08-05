@@ -29,3 +29,23 @@
 - Use `/ux` as the entry point; skills: `ux-foundation`, `ux-flows`
   (flows + Figma mockups), `ux-scenarios` for maintenance, `ux-audit` for
   evidence-backed verification. Full map: the plugin's system-map reference.
+
+## Brand voice — hard rule (super-ux)
+
+- `docs/brand/` is the source of truth for how the product speaks:
+  `voice.md` (axes, narrative, invariants), `terminology.md` (our words and
+  the banned ones), `facts.md` (the only source of any public figure),
+  `channels.md` (one record per surface), `strings.md` (the interface string
+  registry), `locales/<code>.md`.
+- Any change to public-facing text — an interface string, a landing page, a
+  post, a store listing, an ad, an email — updates `docs/brand/` in the SAME
+  change. A new string with no registry row is drift, not a detail.
+- **Never quote a number that has no row in `facts.md`,** and never invent a
+  fact, statistic, quote or expert to fill a gap. Report the gap instead.
+- **One action keeps one name** across button, confirmation, toast, history,
+  notification and accessible name. Search `strings.md` before naming one.
+- **No humor, exclamation marks or emoji** on error, destructive confirm,
+  billing or paywall surfaces — in any voice.
+- Run `python3 docs/brand/lint.py` after any text change and before calling
+  work done. It must exit clean; wire it into CI or pre-commit alongside the
+  UX linter so copy drift cannot merge.

@@ -166,6 +166,44 @@ def fix(ux: Path, d: dict) -> list[str]:
     return done
 
 
+def brand_contract_state(root: Path) -> list[str]:
+    """The brand pack's contract version, or why there is nothing to report.
+
+    Same blind spot as the chain's: a pack written to an old contract is
+    internally consistent, so `brand_lint.py` stays quiet about it. Only a
+    marker comparison notices, which is why the doctor reads it too.
+    """
+    brand = root / "docs" / "brand"
+    if not brand.is_dir():
+        return []
+    versions: dict[str, str] = {}
+    unmarked: list[str] = []
+    for path in sorted(brand.rglob("*.md")):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        found = re.search(r"^Contract:\s*brand-contract\s*(v\d+)\s*$", text, re.M)
+        rel = path.relative_to(brand).as_posix()
+        if found:
+            versions[rel] = found.group(1)
+        else:
+            unmarked.append(rel)
+    out = []
+    distinct = set(versions.values())
+    if len(distinct) > 1:
+        out.append(
+            "docs/brand: mixed contract versions -- "
+            + ", ".join(f"{k} {v}" for k, v in sorted(versions.items()))
+        )
+    elif distinct and distinct != {"v1"}:
+        out.append(
+            f"docs/brand: written to brand-contract {distinct.pop()}, current is v1"
+        )
+    if unmarked:
+        out.append(
+            "docs/brand: no contract marker on " + ", ".join(unmarked[:4])
+        )
+    return out
+
+
 def main() -> int:
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     ux = find_ux_dir(args[0] if args else None)
@@ -188,6 +226,14 @@ def main() -> int:
         return 0
 
     problems = report(ux, d)
+
+    brand = brand_contract_state(ux.parent.parent)
+    if brand:
+        print("\nBrand pack:")
+        for line in brand:
+            print(f"  {line}")
+        problems = True
+
     if "--fix" in sys.argv:
         applied = fix(ux, d)
         print("\nApplied:" if applied else "\nNothing to apply automatically.")

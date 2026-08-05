@@ -34,6 +34,28 @@ flow diagram: every node reachable, every edge (including error edges)
 wired, screen states from the flow's table present — unimplemented
 nodes/edges are findings on the traced scenarios.
 
+## Copy scope (`copy`)
+
+Single-pass, and the twin of `python3 docs/brand/lint.py`: the linter proves
+the mechanical half of the brand pack, this judges the half that needs a
+reader. Requires `docs/brand/voice.md`; without a recorded pack there is
+nothing to judge against except taste, so route to `/brand-init` instead.
+
+| Pass | Question | Evidence |
+|---|---|---|
+| Tone drift | does this surface sound like the recorded voice, or like whoever wrote it? | the string or passage, `file:line` |
+| Any-other-SaaS test | could this sentence sit unchanged on a competitor's page? | the sentence |
+| So-what | does every feature reach a consequence? | the unbridged claim |
+| Proof | is every claim backed near where it is made? | the claim and the missing fact |
+| Narrative | do hero, enemy and promise hold across surfaces? | the two surfaces that disagree |
+| Failure mode | has the voice overshot into the degeneration its pack declared? | the passage, named against the pack's own wording |
+| Register | does the surface match its `channels.md` record? | the record and the copy |
+
+Verdicts as everywhere else — PASS / PARTIAL / FAIL / BLOCKED, each with
+`file:line`. Findings feed the same fix-plan flow. Report linter findings
+alongside rather than repeating them: a clean linter means *checkable*, not
+*good*, and saying so is the point of running both.
+
 ## Benchmark scope (`benchmark:<competitor>`)
 
 Every other scope measures the product against its own chain, which cannot
@@ -124,7 +146,7 @@ Passes:
    `coverage`, `practices`, `heuristics`, `benchmark:<competitor>`),
    default `all`; depth keyword
    (`quick`/`deep`) selects the depth, default `standard`. Single-pass
-   scopes (`coverage`/`practices`/`heuristics`) run just that pass. Note
+   scopes (`coverage`/`practices`/`heuristics`/`copy`) run just that pass. Note
    the git SHA of `docs/ux` — it goes into the report header. Skip
    `retired` scenarios.
 2. **Batch.** Group scoped scenarios by feature, ~5–8 per batch. List the

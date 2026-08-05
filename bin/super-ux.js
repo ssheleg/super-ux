@@ -86,23 +86,46 @@ function installCursor(target, force) {
       console.log(`seed:    ${dst}`);
     }
   }
+  // The brand pack lives beside the UX chain, not inside it: it also governs
+  // surfaces that are not UX at all — a store listing, an ad, a post.
+  fs.mkdirSync(path.join(target, 'docs', 'brand', 'locales'), { recursive: true });
+  for (const tpl of [
+    'README', 'voice', 'terminology', 'facts', 'channels', 'strings',
+  ]) {
+    const dst = path.join(target, 'docs', 'brand', `${tpl}.md`);
+    if (fs.existsSync(dst)) {
+      console.log(`keep:    ${dst} exists (never overwritten)`);
+    } else {
+      fs.copyFileSync(path.join(ROOT, 'templates', 'brand', `${tpl}.md`), dst);
+      console.log(`seed:    ${dst}`);
+    }
+  }
+  {
+    const dst = path.join(target, 'docs', 'brand', 'locales', 'en.md');
+    if (!fs.existsSync(dst)) {
+      fs.copyFileSync(path.join(ROOT, 'templates', 'brand', 'locale.md'), dst);
+      console.log(`seed:    ${dst}`);
+    }
+  }
+
   // The linter is code, not a template — refresh it to the shipped version.
   // Shipped via package.json files[]; if that ever regresses, warn instead of
   // dying on an ENOENT stack trace after the rules are already installed.
   // Paths stay literal so test/validate.py can read them out of this source and
   // check them against package.json files[] — a variable segment here silently
   // turns that check into a directory prefix nobody ships.
-  for (const [src, from, dst] of [
-    ['ux_lint.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py'), 'lint.py'],
-    ['ux_doctor.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_doctor.py'), 'doctor.py'],
+  for (const [src, from, area, dst] of [
+    ['ux_lint.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_lint.py'), 'ux', 'lint.py'],
+    ['ux_doctor.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'ux_doctor.py'), 'ux', 'doctor.py'],
+    ['brand_lint.py', path.join(ROOT, 'plugins', 'super-ux', 'scripts', 'brand_lint.py'), 'brand', 'lint.py'],
   ]) {
-    const to = path.join(target, 'docs', 'ux', dst);
+    const to = path.join(target, 'docs', area, dst);
     if (fs.existsSync(from)) {
       fs.copyFileSync(from, to);
       console.log(`sync:    ${to}`);
     } else {
       console.error(
-        `warning: ${src} not found in this package (${from}); docs/ux/${dst} was not installed.\n` +
+        `warning: ${src} not found in this package (${from}); docs/${area}/${dst} was not installed.\n` +
           `         Get it from https://github.com/${REPO}/blob/main/plugins/super-ux/scripts/${src}`
       );
     }
