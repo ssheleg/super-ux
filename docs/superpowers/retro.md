@@ -13,9 +13,17 @@ stamps — and log the deletion as one line under *Retired*.
 1. **(2026-08-05)** Before tagging any release, run
    `python3 test/release_preflight.py`. A clean tree and a green validator
    describe the repo, not the remote. *(Retire when a hook or CI runs it
-   automatically.)* — **fired on the v0.28.0 and v0.29.0 releases:
-   passed both times, and both pushes used `--atomic` as it prints. The
-   failure it was written for has not recurred.**
+   automatically.)* — **fired on v0.28.0, v0.29.0 and v0.30.0: passed all
+   three, every push used `--atomic` as it prints. The failure it was written
+   for has not recurred.** Checked against all three retirement triggers at
+   the v0.30.0 run: still not automated, paths intact, fired within five
+   stamps. Kept.
+
+2. **(2026-08-05)** **Never read a gate's verdict through a pipe.** Run the
+   gate alone, check `$?`, then print. `python3 test/validate.py | tail -2 &&
+   git commit` commits on a red validator, because `tail` exits 0 and `&&`
+   reads the pipeline's status, not the gate's. *(Retire when a hook enforces
+   it, or after five stamps with no recurrence.)*
 
 ## Retired
 
@@ -30,6 +38,7 @@ Newest last.
 | 2026-08-05 | Tier-1 audit findings → BP-147..156, audit scope section, catalog validator; v0.27.0 → v0.27.1 | yes — see below |
 | 2026-08-05 | Carry-over ledger closed → BP-157..179, PRN-17..21, three optional contract fields, prototype step, catalog index; v0.28.0 | no |
 | 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
+| 2026-08-05 | Verbal identity layer — brand-contract v1, brand-voice + copywriting, brand_lint.py, BP-182..205, PRN-22..24; v0.30.0 | yes — see below |
 
 ---
 
@@ -89,3 +98,47 @@ unrelated fix in `cursor/rules/ux-audit.mdc`. Caught immediately by
 No standing instruction: the lesson is specific enough to be a note, and
 notes expire. **Expires 2026-08-19** (two runs): verify destructive-looking
 things in a worktree, never over the tree you are working in.
+
+---
+
+## 2026-08-05 — a red gate was committed through, twice removed
+
+**Symptom.** `sshlg-skills` v0.19.0 was tagged and pushed while its own
+validator was reporting two failures: the `skills/super-ux` submodule still
+pointed at the 0.26.5 commit, and the README table still printed 0.26.5. The
+tag is public and superseded by v0.19.1. Evidence: the validator's two lines
+appear in the same command output as the successful push.
+
+**Surfaced at** stage 8 (release), one command after it was caused.
+
+**Owned by** stage 8. The gate ran, said no, and was not heard.
+
+**Root cause.** The command was
+`python3 test/validate.py 2>&1 | tail -2 && git add -A && git commit …`.
+`tail` exits 0 whatever it reads, and `&&` tests the *pipeline's* status, not
+the gate's — so a red validator became a green-looking prefix. The output was
+even printed; it scrolled past above a successful push line, which is the
+worst possible presentation: visible, and structurally ignored.
+
+**Second finding, older and quieter.** The pin the release exists to move had
+been stale at 0.26.5 for **four** releases — 0.27, 0.28 and 0.29 all shipped
+without touching it, so `npx sshlg-skills list` reported and `update`
+installed a version nobody was publishing. `CONTRIBUTING.md` warns about
+exactly this in prose. Nothing checks it, which is why prose was not enough.
+
+**Fix, by grade.**
+
+- *Standing instruction (taken, #2 above):* never read a gate's verdict
+  through a pipe. Run it alone, check the exit code, then print.
+- *Mechanical check (carry-over):* `sshlg-skills` should compare each pin
+  against the registry (`npm view <name> version`) and fail when they differ.
+  That turns a four-release drift into a red build on the first release that
+  forgets. Logged as C-06.
+- *Documentation (taken):* the stale manual `npm publish` step in
+  `CONTRIBUTING.md` was replaced this run — every repo in the family has
+  published from CI on a `v*` tag since that text was written.
+
+**The check that catches it next time:** the standing instruction, until the
+registry comparison exists. Both halves of this run's release were verified
+after the fact with `npx sshlg-skills@latest list`, which is the assertion the
+pipeline should have made before the tag rather than after it.
