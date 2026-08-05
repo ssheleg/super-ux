@@ -2,7 +2,7 @@ Contract: brand-contract v1
 Voice pack: <pack id from voice-packs.md, or `custom`>
 Locales: <en (primary)>
 Locale parity threshold: 80%
-Derived-from: <PER-NN, JTBD-NN from docs/ux/foundation.md — or `inferred`>
+Derived-from: <P-NN, JTBD-NN from docs/ux/foundation.md — or `inferred`>
 Status: draft
 Last calibrated: <YYYY-MM-DD>
 

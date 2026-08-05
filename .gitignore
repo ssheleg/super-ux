@@ -2,3 +2,8 @@
 __pycache__/
 *.pyc
 *.tgz
+
+# graphify: the graph and report are committed (the next harvest queries them);
+# the working sidecars are not.
+graphify-out/.graphify_*
+graphify-out/cache/

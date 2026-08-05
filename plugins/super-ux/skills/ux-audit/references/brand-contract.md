@@ -60,7 +60,7 @@ Contract: brand-contract v1
 Voice pack: operator-brief
 Locales: en (primary), ru, de
 Locale parity threshold: 80%
-Derived-from: PER-01, PER-03, JTBD-02
+Derived-from: P-01, P-03, JTBD-02
 Status: validated
 Last calibrated: 2026-08-05
 
@@ -96,7 +96,7 @@ Promise: you stop guessing within one run
 **Header fields.** `Voice pack` is a pack id from
 [voice-packs.md](voice-packs.md) or `custom`. `Locales` lists every locale,
 marking exactly one `(primary)`. `Locale parity threshold` is the percentage
-below which `B071` warns. `Derived-from` lists `PER-` / `JTBD-` ids from
+below which `B071` warns. `Derived-from` lists `P-` / `JTBD-` ids from
 `foundation.md`, or the single word `inferred`. `Status` is `draft` or
 `validated`. `Last calibrated` is an ISO date.
 

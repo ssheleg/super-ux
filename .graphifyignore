@@ -1,0 +1,13 @@
+# sync_references.py copies every contract a skill links into that skill's own
+# references/ directory, because the skills CLI ships one skill at a time. That
+# is 100+ duplicate files whose only relationship is "generated from".
+#
+# Graphed, they would dominate: the hubs would describe the distribution
+# mechanism rather than the design, and the next harvest would read that as
+# structure. The source of truth is plugins/super-ux/skills/references/.
+plugins/super-ux/skills/ux-audit/references/
+plugins/super-ux/skills/ux-flows/references/
+plugins/super-ux/skills/ux-foundation/references/
+plugins/super-ux/skills/ux-scenarios/references/
+plugins/super-ux/skills/brand-voice/references/
+plugins/super-ux/skills/copywriting/references/

@@ -454,6 +454,28 @@ def main() -> int:
                  "title: " + "x" * 82 + "\n---\n\nHallo.\n"},
     )
 
+    # B004 traces the voice back to the foundation, so the two contracts have
+    # to agree on how a persona is numbered. They did not: the UX contract
+    # writes P-NN and the brand template said PER-NN, which made a project
+    # following our own template fail a blocking check while being correct.
+    traced = MINIMAL["voice.md"].replace(
+        "Derived-from: inferred", "Derived-from: P-01, JTBD-02"
+    )
+    foundation = "## Personas\n\n### P-01: the operator\n\n## Jobs\n\n### JTBD-02: ship\n"
+    case(
+        "Derived-from resolves against the foundation's own id scheme",
+        {**MINIMAL, "voice.md": traced},
+        set(),
+        project={"docs/ux/foundation.md": foundation},
+    )
+    case(
+        "Derived-from cites a persona the foundation does not have",
+        {**MINIMAL, "voice.md": MINIMAL["voice.md"].replace(
+            "Derived-from: inferred", "Derived-from: P-09")},
+        {"B004"},
+        project={"docs/ux/foundation.md": foundation},
+    )
+
     fix_idempotent()
 
     if failures:
