@@ -195,6 +195,124 @@ def main() -> int:
         project={"src/a.ts": 'const a = "Publish";\nconst b = "Archive";\n'},
     )
 
+    marketing_sources = MARKER + (
+        "\n\nSources:\n  ui: src/**/*.ts\n  marketing: content/**/*.md\n"
+    )
+    hero = (
+        MARKER + "\n\n### landing hero\n\n```\n"
+        "Register:   confidence +1\n"
+        "Format:     one headline\n"
+        "Limits:     title 60\n"
+        "Forbidden:  physics: none | brand: none\n"
+        "CTA:        one\n"
+        "Proof:      one number, sourced\n"
+        "Locales:    none\n"
+        "```\n"
+    )
+    x_surface = (
+        MARKER + "\n\n### X\n\n```\n"
+        "Register:   density +1\n"
+        "Format:     one idea\n"
+        "Limits:     body 280\n"
+        "Forbidden:  physics: link in body suppresses reach; max 2 hashtags"
+        " | brand: none\n"
+        "CTA:        first reply\n"
+        "Proof:      none\n"
+        "Locales:    none\n"
+        "```\n"
+    )
+    sourced = (
+        MARKER + "\n\n"
+        "| Fact | Value | Source | Checked | Review by | Public |\n"
+        "|---|---|---|---|---|---|\n"
+        "| speed gain | 42% | bench/2026-08.md | 2026-08-01 | 2099-01-01 | yes |\n"
+    )
+
+    def page(surface: str, title: str, body: str) -> str:
+        return f"---\nsurface: {surface}\ntitle: {title}\n---\n\n{body}\n"
+
+    case(
+        "number in public copy with no sourced fact",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B030"},
+        project={"content/a.md": page("landing hero", "Faster", "We are 42% faster.")},
+    )
+    case(
+        "the same number, sourced",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": sourced},
+        set(),
+        project={"content/a.md": page("landing hero", "Faster", "We are 42% faster.")},
+    )
+    case(
+        "fact with no source",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": MARKER + "\n\n"
+         "| Fact | Value | Source | Checked | Review by | Public |\n"
+         "|---|---|---|---|---|---|\n"
+         "| speed gain | 42% |  | 2026-08-01 | 2099-01-01 | yes |\n"},
+        {"B031"},
+        project={"content/a.md": page("landing hero", "Faster", "Hello.")},
+    )
+    case(
+        "superlative with nothing to back it",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B032"},
+        project={"content/a.md": page("landing hero", "Best", "The best platform for teams.")},
+    )
+    case(
+        "title over the surface limit",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B040"},
+        project={"content/a.md": page(
+            "landing hero",
+            "A headline that keeps going well past the sixty character limit set here",
+            "Hello.")},
+    )
+    case(
+        "link in the post body where physics forbids it",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": x_surface},
+        {"B042"},
+        project={"content/p.md": page("X", "Post", "Read https://example.com now.")},
+    )
+    case(
+        "more hashtags than the surface allows",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": x_surface},
+        {"B043"},
+        project={"content/p.md": page("X", "Post", "Shipped #build #ship #now")},
+    )
+
+    store_sources = MARKER + (
+        "\n\nSources:\n  ui: src/**/*.ts\n  store: store/**/*.md\n"
+    )
+    app_store = (
+        MARKER + "\n\n### App Store\n\n```\n"
+        "Register:   density +2\n"
+        "Format:     title, subtitle, keyword field\n"
+        "Limits:     title 30\n"
+        "Forbidden:  physics: none | brand: none\n"
+        "CTA:        none\n"
+        "Proof:      rating\n"
+        "Locales:    none\n"
+        "```\n"
+    )
+    case(
+        "iOS keyword field wastes the three ways it can",
+        {**MINIMAL, "README.md": store_sources, "channels.md": app_store},
+        {"B041"},
+        project={"store/ios.md":
+                 "---\nsurface: App Store\ntitle: MyTasks todo\n"
+                 "keywords: task, tasks, todo\n---\n\nBody.\n"},
+    )
+    case(
+        "the same field, written tight",
+        {**MINIMAL, "README.md": store_sources, "channels.md": app_store},
+        set(),
+        project={"store/ios.md":
+                 "---\nsurface: App Store\ntitle: MyTasks todo\n"
+                 "keywords: task,checklist,reminder\n---\n\nBody.\n"},
+    )
+
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")

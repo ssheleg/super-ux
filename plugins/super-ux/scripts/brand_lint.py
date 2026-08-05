@@ -368,6 +368,206 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
     return findings
 
 
+FRONT_MATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.S)
+NUMBER_RE = re.compile(r"\d+\s?%|[$€£]\s?\d[\d,.]*|\b\d{3,}\b")
+SUPERLATIVES = (
+    "the best", "best-in-class", "leading", "fastest", "most trusted",
+    "#1", "number one", "world-class", "unmatched",
+)
+
+
+def _front_matter(text: str) -> tuple[dict, str]:
+    match = FRONT_MATTER_RE.match(text)
+    if not match:
+        return {}, text
+    fields = {}
+    for line in match.group(1).splitlines():
+        pair = re.match(r"^([\w-]+):\s*(.*)$", line)
+        if pair:
+            fields[pair.group(1)] = pair.group(2).strip()
+    return fields, text[match.end():]
+
+
+def documents(brand_dir: Path, sources: dict, key: str) -> list[tuple]:
+    """(relative path, front matter, body) for one declared source key."""
+    root = brand_dir.parent.parent
+    out = []
+    for pattern in sources.get(key, []):
+        for path in sorted(root.glob(pattern)):
+            if not path.is_file():
+                continue
+            fields, body = _front_matter(read(path) or "")
+            out.append((path.relative_to(root).as_posix(), fields, body))
+    return out
+
+
+def surfaces(brand_dir: Path) -> dict[str, dict]:
+    """`channels.md` records: surface name -> field dict."""
+    text = read(brand_dir / "channels.md") or ""
+    out: dict[str, dict] = {}
+    for match in re.finditer(r"^### (.+?)$\s*```(.*?)```", text, re.M | re.S):
+        record = {}
+        for line in match.group(2).splitlines():
+            pair = re.match(r"^([A-Za-z][A-Za-z ]*?):\s*(.*)$", line)
+            if pair:
+                record[pair.group(1).strip()] = pair.group(2).strip()
+        out[match.group(1).strip()] = record
+    return out
+
+
+def facts(brand_dir: Path) -> list[dict]:
+    rows = []
+    for cells in table_rows(read(brand_dir / "facts.md") or ""):
+        if len(cells) < 6 or cells[0].strip().lower() == "fact":
+            continue
+        rows.append({
+            "fact": cells[0], "value": cells[1], "source": cells[2],
+            "checked": cells[3], "review": cells[4], "public": cells[5],
+        })
+    return rows
+
+
+def _today() -> str:
+    import datetime
+
+    return datetime.date.today().isoformat()
+
+
+def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B030-B032 -- every figure traces to a row, every row to a source."""
+    findings: list[Finding] = []
+    rows = facts(brand_dir)
+    known = " ".join(r["value"] for r in rows if r["public"].lower() != "no")
+
+    for row in rows:
+        if not row["source"] or row["source"].startswith("<"):
+            findings.append(Finding(
+                "B031", SEVERITY_WARN, "facts.md", 0,
+                f"`{row['fact']}` has no source -- an unsourced fact is an "
+                f"opinion with a number on it",
+            ))
+        elif row["review"] and not row["review"].startswith("<") \
+                and row["review"] < _today():
+            findings.append(Finding(
+                "B031", SEVERITY_WARN, "facts.md", 0,
+                f"`{row['fact']}` was due for review on {row['review']}",
+            ))
+
+    for path, _fields, body in documents(brand_dir, sources, "marketing"):
+        for number in NUMBER_RE.findall(body):
+            compact = number.replace(" ", "")
+            if compact not in known.replace(" ", ""):
+                findings.append(Finding(
+                    "B030", SEVERITY_ERROR, path, 0,
+                    f"`{number}` appears in public copy with no row in "
+                    f"facts.md -- a number nobody can check is a claim "
+                    f"nobody should make",
+                ))
+        for paragraph in re.split(r"\n\s*\n", body):
+            lowered = paragraph.lower()
+            for superlative in SUPERLATIVES:
+                if superlative in lowered and not re.search(r"\d", paragraph):
+                    findings.append(Finding(
+                        "B032", SEVERITY_ERROR, path, 0,
+                        f"`{superlative}` with nothing beside it to back it",
+                    ))
+                    break
+    return findings
+
+
+def _limits(record: dict) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for part in record.get("Limits", "").split(","):
+        pair = re.match(r"^\s*([\w ]+?)\s+(\d+)\s*$", part)
+        if pair:
+            out[pair.group(1).strip().lower()] = int(pair.group(2))
+    return out
+
+
+def _coefficient(brand_dir: Path, locale: str | None) -> float:
+    if not locale:
+        return 1.0
+    text = read(brand_dir / "locales" / f"{locale}.md") or ""
+    value = header_field(text, "Length coefficient")
+    try:
+        return float(value) if value else 1.0
+    except ValueError:
+        return 1.0
+
+
+def check_channels(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B040-B043 -- platform physics, applied with the locale's coefficient."""
+    findings: list[Finding] = []
+    records = surfaces(brand_dir)
+
+    for key in ("marketing", "store"):
+        for path, fields, body in documents(brand_dir, sources, key):
+            record = records.get(fields.get("surface", ""))
+            if not record:
+                continue
+            factor = _coefficient(brand_dir, fields.get("locale"))
+            for name, limit in _limits(record).items():
+                value = body if name == "body" else fields.get(name, "")
+                allowed = int(limit * factor)
+                if value and len(value.strip()) > allowed:
+                    findings.append(Finding(
+                        "B040", SEVERITY_ERROR, path, 0,
+                        f"{name} is {len(value.strip())} characters, over the "
+                        f"{allowed} this surface allows",
+                    ))
+
+            physics = record.get("Forbidden", "").split("|")[0].lower()
+            if "link in body" in physics and re.search(r"https?://", body):
+                findings.append(Finding(
+                    "B042", SEVERITY_ERROR, path, 0,
+                    "link in the post body -- this surface suppresses reach "
+                    "for it; the convention is the first reply",
+                ))
+            cap = re.search(r"max (\d+) hashtags", physics)
+            if cap:
+                used = re.findall(r"(?<!\w)#\w+", body)
+                if len(used) > int(cap.group(1)):
+                    findings.append(Finding(
+                        "B043", SEVERITY_WARN, path, 0,
+                        f"{len(used)} hashtags, over the {cap.group(1)} this "
+                        f"surface tolerates",
+                    ))
+
+            keywords = fields.get("keywords")
+            if keywords is not None:
+                findings.extend(_ios_keywords(path, fields, keywords))
+    return findings
+
+
+def _ios_keywords(path: str, fields: dict, raw: str) -> list[Finding]:
+    """B041 -- the four rules that recover a third of the 100-character field."""
+    findings = []
+    if ", " in raw:
+        findings.append(Finding(
+            "B041", SEVERITY_ERROR, path, 0,
+            "space after a comma in the keyword field -- each one is a "
+            "character bought for nothing",
+        ))
+    terms = [t.strip() for t in raw.split(",") if t.strip()]
+    singulars = {t[:-1] for t in terms if t.endswith("s")}
+    for term in terms:
+        if term in singulars:
+            findings.append(Finding(
+                "B041", SEVERITY_ERROR, path, 0,
+                f"`{term}` and its plural are both listed -- the store "
+                f"matches both forms from the singular",
+            ))
+    title = fields.get("title", "").lower()
+    for term in terms:
+        if term.lower() in title.split():
+            findings.append(Finding(
+                "B041", SEVERITY_ERROR, path, 0,
+                f"`{term}` is already in the title, which is indexed at "
+                f"higher weight -- the field spends it twice",
+            ))
+    return findings
+
+
 def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     """Every check, in order. `fix` is applied by the caller via apply_fixes."""
     sources = load_sources(brand_dir)
@@ -375,6 +575,8 @@ def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     findings.extend(check_contract(brand_dir))
     findings.extend(check_terminology(brand_dir))
     findings.extend(check_consistency(brand_dir, sources))
+    findings.extend(check_facts(brand_dir, sources))
+    findings.extend(check_channels(brand_dir, sources))
     return findings
 
 
