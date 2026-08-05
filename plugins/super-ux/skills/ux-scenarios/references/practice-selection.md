@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..205 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..206 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -10,7 +10,7 @@ personalization BP-143..144, trend governance BP-145..146, growth loops and
 referral BP-147..151, empty states BP-152, authentication and form recovery
 BP-153..156, motion craft BP-157..164, perceived quality BP-165..168,
 generated-default tells BP-169..172, interface state and platform surfaces
-BP-173..179, information architecture BP-180..181, verbal identity BP-182..205;
+BP-173..179, information architecture BP-180..181, verbal identity BP-182..206;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -93,6 +93,7 @@ the Step-2 sets:
 | Any user-visible string | BP-182, BP-185, BP-189; PRN-22 |
 | Error, empty or loading state | BP-186, BP-187, BP-188; PRN-24 |
 | Landing, pricing or feature page | BP-190..193; PRN-23 |
+| Paywall, popup, consent or cancellation ask | BP-206; PRN-24 |
 | Content aimed at search or answer engines | BP-194..197; PRN-23 |
 | Social, changelog, ads or email surface | BP-183, BP-184, BP-198..200 |
 | App Store or Google Play listing | BP-201, BP-205 |

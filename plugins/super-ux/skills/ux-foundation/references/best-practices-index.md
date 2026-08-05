@@ -10,7 +10,7 @@ then open only those entries. The selection protocol
 *mandatory* to consider; this only makes finding them cheap.
 
 
-**205 practices, 82 tags in use.**
+**206 practices, 82 tags in use.**
 
 
 ## By tag
@@ -34,8 +34,8 @@ then open only those entries. The selection protocol
 - **`commitment`** — BP-002
 - **`component`** — BP-101, BP-109, BP-111, BP-114, BP-115, BP-136, BP-165, BP-166
 - **`control`** — BP-101, BP-102, BP-105, BP-106, BP-107, BP-108, BP-110, BP-112, BP-113, BP-115, BP-135, BP-136, BP-146, BP-164, BP-167, BP-178
-- **`conversion`** — BP-001, BP-002, BP-005, BP-006, BP-010, BP-011, BP-013, BP-014, BP-015, BP-016, BP-017, BP-018, BP-019, BP-021, BP-023, BP-024, BP-025, BP-026, BP-027, BP-029, BP-034, BP-036, BP-037, BP-055, BP-056, BP-057, BP-058, BP-067, BP-069, BP-070, BP-071, BP-072, BP-073, BP-074, BP-075, BP-076, BP-077, BP-116, BP-117, BP-118, BP-119, BP-120, BP-121, BP-124, BP-133, BP-134, BP-139, BP-143, BP-147, BP-148, BP-150, BP-155, BP-156, BP-171, BP-189, BP-190, BP-191, BP-192, BP-193, BP-198, BP-201, BP-202
-- **`copy`** — BP-182, BP-183, BP-184, BP-185, BP-186, BP-187, BP-188, BP-189, BP-190, BP-191, BP-192, BP-193, BP-194, BP-195, BP-196, BP-197, BP-198, BP-199, BP-200, BP-201, BP-202, BP-203, BP-204, BP-205
+- **`conversion`** — BP-001, BP-002, BP-005, BP-006, BP-010, BP-011, BP-013, BP-014, BP-015, BP-016, BP-017, BP-018, BP-019, BP-021, BP-023, BP-024, BP-025, BP-026, BP-027, BP-029, BP-034, BP-036, BP-037, BP-055, BP-056, BP-057, BP-058, BP-067, BP-069, BP-070, BP-071, BP-072, BP-073, BP-074, BP-075, BP-076, BP-077, BP-116, BP-117, BP-118, BP-119, BP-120, BP-121, BP-124, BP-133, BP-134, BP-139, BP-143, BP-147, BP-148, BP-150, BP-155, BP-156, BP-171, BP-189, BP-190, BP-191, BP-192, BP-193, BP-198, BP-201, BP-202, BP-206
+- **`copy`** — BP-182, BP-183, BP-184, BP-185, BP-186, BP-187, BP-188, BP-189, BP-190, BP-191, BP-192, BP-193, BP-194, BP-195, BP-196, BP-197, BP-198, BP-199, BP-200, BP-201, BP-202, BP-203, BP-204, BP-205, BP-206
 - **`dark-mode`** — BP-084, BP-095, BP-168, BP-176
 - **`design-system`** — BP-091, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-100, BP-130, BP-145, BP-165, BP-166
 - **`dialog`** — BP-106, BP-107, BP-108, BP-109, BP-161, BP-168, BP-174, BP-178
@@ -57,10 +57,10 @@ then open only those entries. The selection protocol
 - **`ios`** — BP-030, BP-031, BP-033, BP-053, BP-127, BP-201
 - **`landing-page`** — BP-116, BP-117, BP-132, BP-133, BP-169, BP-170, BP-171
 - **`layout`** — BP-085, BP-086, BP-087, BP-090, BP-097, BP-134, BP-171, BP-172, BP-177, BP-179, BP-203
-- **`legal`** — BP-137, BP-138, BP-153, BP-187, BP-190, BP-194
+- **`legal`** — BP-137, BP-138, BP-153, BP-187, BP-190, BP-194, BP-206
 - **`lifecycle`** — BP-034, BP-035, BP-036, BP-037, BP-039, BP-071, BP-076, BP-122
 - **`maintainability`** — BP-091, BP-092, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-099, BP-100, BP-101, BP-130, BP-140, BP-145, BP-165, BP-169, BP-172, BP-184, BP-203, BP-204
-- **`microcopy`** — BP-089, BP-152, BP-170, BP-181, BP-182, BP-186, BP-187, BP-188, BP-189, BP-202
+- **`microcopy`** — BP-089, BP-152, BP-170, BP-181, BP-182, BP-186, BP-187, BP-188, BP-189, BP-202, BP-206
 - **`mobile`** — BP-002, BP-008, BP-049, BP-050, BP-051, BP-052, BP-053, BP-054, BP-055, BP-057, BP-059, BP-064, BP-075, BP-076, BP-079, BP-111, BP-112, BP-126, BP-131, BP-138, BP-164, BP-178
 - **`motion`** — BP-054, BP-130, BP-131, BP-132, BP-157, BP-158, BP-159, BP-160, BP-161, BP-162, BP-163, BP-164, BP-167
 - **`narrative`** — BP-183, BP-185
@@ -88,7 +88,7 @@ then open only those entries. The selection protocol
 - **`subscription-app`** — BP-001, BP-016, BP-022, BP-067, BP-068, BP-069, BP-070, BP-078, BP-124, BP-125
 - **`testing`** — BP-001, BP-003, BP-011, BP-039, BP-044, BP-046, BP-047, BP-070
 - **`trend-governance`** — BP-145, BP-146
-- **`trust`** — BP-006, BP-009, BP-013, BP-015, BP-016, BP-019, BP-020, BP-021, BP-053, BP-059, BP-060, BP-061, BP-064, BP-066, BP-073, BP-076, BP-077, BP-080, BP-082, BP-083, BP-089, BP-116, BP-120, BP-123, BP-125, BP-128, BP-131, BP-136, BP-137, BP-138, BP-144, BP-146, BP-150, BP-151, BP-153, BP-154, BP-169, BP-170, BP-173, BP-174, BP-175, BP-177, BP-182, BP-183, BP-186, BP-187, BP-190, BP-192, BP-193, BP-194, BP-200, BP-204
+- **`trust`** — BP-006, BP-009, BP-013, BP-015, BP-016, BP-019, BP-020, BP-021, BP-053, BP-059, BP-060, BP-061, BP-064, BP-066, BP-073, BP-076, BP-077, BP-080, BP-082, BP-083, BP-089, BP-116, BP-120, BP-123, BP-125, BP-128, BP-131, BP-136, BP-137, BP-138, BP-144, BP-146, BP-150, BP-151, BP-153, BP-154, BP-169, BP-170, BP-173, BP-174, BP-175, BP-177, BP-182, BP-183, BP-186, BP-187, BP-190, BP-192, BP-193, BP-194, BP-200, BP-204, BP-206
 - **`typography`** — BP-079, BP-080, BP-081, BP-087, BP-088
 - **`virality`** — BP-147, BP-148, BP-149
 - **`visual-hierarchy`** — BP-080, BP-082, BP-085, BP-086, BP-090, BP-102, BP-117, BP-130, BP-145, BP-146, BP-160, BP-161, BP-165, BP-166, BP-168, BP-171, BP-172
@@ -305,3 +305,4 @@ then open only those entries. The selection protocol
 - **BP-203** — Carry a length coefficient into the original design
 - **BP-204** — A lagging locale declares that it lags
 - **BP-205** — Research keywords per market; never translate them
+- **BP-206** — The way out is worded plainly, and never shames

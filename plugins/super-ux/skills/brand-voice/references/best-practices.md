@@ -1631,3 +1631,11 @@ nobody performed.
 - **Tags:** i18n, seo, aso, copy, insight
 - **Source:** [ASO25]
 - **Checked:** 2026-08-05
+
+#### BP-206: The way out is worded plainly, and never shames
+- **Do:** give every paywall, upgrade prompt, popup, consent dialog and cancellation flow a visible decline whose words say what declining does — "Not now", "Continue on Free", "Keep the current plan". Never phrase the refusal as a self-criticism the user has to click, and never make it quieter than the accept in wording as well as in weight.
+- **Why:** confirmshaming buys a small immediate lift and spends the relationship: it is the one dark pattern users quote back verbatim and screenshot, it is increasingly named in consumer-protection guidance, and a decline someone has to insult themselves to reach is not a decision they made freely. The escape hatch is required by BP-023 and the paywall practices; this is the half that governs its wording (PRN-24).
+- **Apply when:** paywalls and upgrade prompts, popups, consent dialogs, downgrade and cancellation flows, any dismissible ask.
+- **Tags:** copy, microcopy, trust, conversion, legal
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
