@@ -331,6 +331,31 @@ async function menu() {
   if (keys.includes('skills')) installSkillsCli();
 }
 
+/**
+ * Ask the launcher to write the family's routing block.
+ *
+ * Delegated rather than reimplemented. The block lists several routers and a
+ * precedence table describing what this machine actually has, so a lone
+ * member rendering it would produce a table for routers nobody installed.
+ * `--no-install` keeps this from silently downloading a package the user did
+ * not ask for; when the launcher is absent we print the one command instead.
+ */
+function offerRouters() {
+  const { spawnSync } = require('child_process');
+  const r = spawnSync(
+    'npx',
+    ['--no-install', 'sshlg-skills', 'routers', '--member', 'super-ux'],
+    { stdio: 'inherit', shell: process.platform === 'win32' }
+  );
+  if (r.status !== 0) {
+    console.log(
+      '\nЧтобы скилы включались по умолчанию во всех проектах, допиши блок\n' +
+      'роутинга в глобальные инструкции агента:\n\n' +
+      '  npx --yes sshlg-skills routers --member super-ux\n'
+    );
+  }
+}
+
 function main() {
   const args = process.argv.slice(2);
   if (args[0] === '--help' || args[0] === '-h') {
@@ -349,6 +374,7 @@ function main() {
   const force = args.includes('--force');
   const dirArg = args[1] && args[1] !== '--force' ? args[1] : '.';
   installCursor(path.resolve(dirArg), force);
+  offerRouters();
 }
 
 main();
