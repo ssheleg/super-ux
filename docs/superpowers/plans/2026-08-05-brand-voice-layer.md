@@ -101,22 +101,33 @@ exactly once; it carries the full surface list (product and marketing) that
 `channels.md` records; it states the three cross-cutting rules verbatim —
 register moves axes but never crosses invariants, platform physics and brand
 choice are separate fields, humor is forbidden on error / destructive confirm /
-billing / paywall surfaces; `python3 test/validate.py` is green.
+billing / paywall surfaces; `python3 test/validate.py` reports **no**
+`brand-contract.md: missing …` line.
+
+**Known-red until Group B lands.** The contract links `voice-packs.md`,
+`surface-registers.md` and `ai-tells.md`, which Tasks 2, 3 and 8 create. The
+validator's relative-link check therefore fails on exactly those three targets
+until Group B completes, and that is correct: the links are what
+`sync_references.py` follows to compute which contracts ship inside each skill,
+so removing them to buy an early green would ship the contract without its
+library. **The whole-validator green gate for Group A+B sits at the end of Task
+12, not here.** Any link failure naming a target outside those three is a real
+failure.
 
 - [ ] **Step 1: write the failing check**
 
 Add to `test/validate.py` inside `main()`, before the summary:
 
+Use the validator's own helpers — `check(ok, msg)` and `read(path)` — never
+`checks`/`failures` directly. House style, and `check` is what counts the check.
+
 ```python
-def validate_brand_contract():
-    global checks, failures
-    path = ROOT / "plugins/super-ux/skills/references/brand-contract.md"
-    checks += 1
-    if not path.is_file():
-        failures.append("brand-contract.md missing")
+def validate_brand_contract() -> None:
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "brand-contract.md")
+    if not check(text is not None, "brand-contract.md is missing"):
         return
-    text = path.read_text(encoding="utf-8")
-    required = [
+    for token in (
         "Contract: brand-contract v1", "voice.md", "terminology.md",
         "facts.md", "channels.md", "strings.md", "locales/<code>.md",
         "Locale parity threshold", "Derived-from", "Last calibrated",
@@ -124,12 +135,11 @@ def validate_brand_contract():
         "Hero", "Enemy", "Product role", "Promise",
         "agreed", "proposed", "drifted", "orphan",
         "Length coefficient", "Sources:",
-    ]
-    for token in required:
-        checks += 1
-        if token not in text:
-            failures.append(f"brand-contract.md: missing `{token}`")
+    ):
+        check(token in text, f"brand-contract.md: missing `{token}`")
 ```
+
+Call it from `main()` beside the other `validate_*` functions.
 
 - [ ] **Step 2: run it and confirm it fails**
 
@@ -143,10 +153,12 @@ order: the marker rule; a file table; a fully worked skeleton for each of the si
 files using the exact keys in the Interfaces block; the surface list; the three
 cross-cutting rules; and the `Sources:` block definition with its five keys.
 
-- [ ] **Step 4: run it and confirm it passes**
+- [ ] **Step 4: run it and confirm the contract checks pass**
 
 Run: `python3 test/validate.py`
-Expected: `OK (n checks)` with n larger than before.
+Expected: the check count rises by 26, no `brand-contract.md: missing …` line,
+and exactly three broken-link failures naming `voice-packs.md`,
+`surface-registers.md` and `ai-tells.md` — see *Known-red* above.
 
 - [ ] **Step 5: commit**
 
@@ -183,31 +195,25 @@ stated once at the top; `python3 test/validate.py` green.
 Add to `test/validate.py`:
 
 ```python
-def validate_voice_packs():
-    global checks, failures
-    path = ROOT / "plugins/super-ux/skills/references/voice-packs.md"
-    checks += 1
-    if not path.is_file():
-        failures.append("voice-packs.md missing")
+PACKS = ("operator-brief", "calm-expert", "peer-builder",
+         "editorial-premium", "plain-service", "playful-consumer")
+PACK_FIELDS = ("Use for", "Not for", "Axes", "Narrative template", "Lexicon",
+               "Pack bans", "Register deltas", "Ready lines", "Failure mode")
+
+
+def validate_voice_packs() -> None:
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "voice-packs.md")
+    if not check(text is not None, "voice-packs.md is missing"):
         return
-    text = path.read_text(encoding="utf-8")
-    packs = ["operator-brief", "calm-expert", "peer-builder",
-             "editorial-premium", "plain-service", "playful-consumer"]
-    for pack in packs:
-        checks += 1
-        if f"## {pack}" not in text:
-            failures.append(f"voice-packs.md: pack `{pack}` missing")
-    sections = text.split("## ")
-    for section in sections[1:]:
+    for section in text.split("\n## ")[1:]:
         name = section.split("\n", 1)[0].strip()
-        if name not in packs:
+        if name not in PACKS:
             continue
-        for field in ["Use for", "Not for", "Axes", "Narrative template",
-                      "Lexicon", "Pack bans", "Register deltas",
-                      "Ready lines", "Failure mode"]:
-            checks += 1
-            if field not in section:
-                failures.append(f"voice-packs.md: {name} missing `{field}`")
+        for field in PACK_FIELDS:
+            check(field in section, f"voice-packs.md: {name} missing `{field}`")
+    for pack in PACKS:
+        check(f"\n## {pack}\n" in text, f"voice-packs.md: pack `{pack}` missing")
 ```
 
 - [ ] **Step 2: run it and confirm it fails**
@@ -295,21 +301,21 @@ in the corresponding template; a project seeded from these templates passes
 Add to `test/validate.py`:
 
 ```python
-def validate_brand_templates():
-    global checks, failures
+BRAND_TEMPLATES = ("README.md", "voice.md", "terminology.md", "facts.md",
+                   "channels.md", "strings.md", "locale.md")
+
+
+def validate_brand_templates() -> None:
     tdir = ROOT / "templates/brand"
-    expected = ["README.md", "voice.md", "terminology.md", "facts.md",
-                "channels.md", "strings.md", "locale.md"]
-    for name in expected:
-        path = tdir / name
-        checks += 1
-        if not path.is_file():
-            failures.append(f"templates/brand/{name} missing")
+    for name in BRAND_TEMPLATES:
+        text = read(tdir / name)
+        if not check(text is not None, f"templates/brand/{name} is missing"):
             continue
-        first = path.read_text(encoding="utf-8").splitlines()[0].strip()
-        checks += 1
-        if first != "Contract: brand-contract v1":
-            failures.append(f"templates/brand/{name}: no contract marker")
+        first = text.splitlines()[0].strip() if text.splitlines() else ""
+        check(
+            first == "Contract: brand-contract v1",
+            f"templates/brand/{name}: first line must be the contract marker",
+        )
 ```
 
 - [ ] **Step 2: run it and confirm it fails**
@@ -875,36 +881,38 @@ catalog validator.
 
 Add to `test/validate.py`:
 
+`BP-182` is where the sixth field starts; `BP-001..181` keep five and must not
+be touched. The reserved-tag check applies to the whole catalog, old and new.
+
 ```python
-def validate_brand_practices():
-    global checks, failures
-    path = ROOT / "plugins/super-ux/skills/references/best-practices.md"
-    text = path.read_text(encoding="utf-8")
-    entries = re.findall(r"^#### (BP-(\d{3})): .*?(?=^#### |\Z)",
-                         text, re.M | re.S)
-    ids = sorted(int(n) for _, n in entries)
-    checks += 1
-    if max(ids) < 205:
-        failures.append(f"brand practices: highest is BP-{max(ids):03d}, need BP-205+")
-    for block in re.findall(r"^#### BP-(1[89]\d|2\d\d):.*?(?=^#### |\Z)",
-                            text, re.M | re.S):
-        pass
-    for num in range(182, max(ids) + 1):
-        body = re.search(rf"^#### BP-{num}:.*?(?=^#### |\Z)", text, re.M | re.S)
-        checks += 1
-        if not body:
-            failures.append(f"BP-{num} missing")
+BRAND_FIRST_BP = 182
+
+
+def validate_brand_practices() -> None:
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "best-practices.md") or ""
+    ids = sorted(int(n) for n in re.findall(r"^#### BP-(\d{3}):", text, re.M))
+    if not check(bool(ids), "best-practices.md: no practices parsed"):
+        return
+    check(
+        max(ids) >= 205,
+        f"brand practices: catalog ends at BP-{max(ids):03d}, need BP-205 or higher",
+    )
+    for num in range(BRAND_FIRST_BP, max(ids) + 1):
+        body = re.search(rf"^#### BP-{num:03d}:.*?(?=^#### |\Z)", text, re.M | re.S)
+        if not check(body is not None, f"BP-{num:03d} is missing"):
             continue
         chunk = body.group(0)
-        for field in ["- **Do:**", "- **Why:**", "- **Apply when:**",
-                      "- **Tags:**", "- **Source:**", "- **Checked:**"]:
-            checks += 1
-            if field not in chunk:
-                failures.append(f"BP-{num}: missing {field}")
-        checks += 1
-        tags_line = re.search(r"- \*\*Tags:\*\* (.+)", chunk)
-        if tags_line and re.search(r"(^|[ `])voice([ `]|$)", tags_line.group(1)):
-            failures.append(f"BP-{num}: uses the reserved tag `voice`")
+        for field in ("- **Do:**", "- **Why:**", "- **Apply when:**",
+                      "- **Tags:**", "- **Source:**", "- **Checked:**"):
+            check(field in chunk, f"BP-{num:03d}: missing {field}")
+    for num, tags in re.findall(r"^#### BP-(\d{3}):.*?- \*\*Tags:\*\* (.+)",
+                                text, re.M | re.S):
+        check(
+            not re.search(r"(?:^|[ ,`])voice(?:[ ,`]|$)", tags),
+            f"BP-{num}: uses `voice`, which is reserved for voice interfaces "
+            f"-- the brand tag is `brand-voice`",
+        )
 ```
 
 - [ ] **Step 2: run it and confirm it fails**

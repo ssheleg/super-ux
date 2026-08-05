@@ -465,6 +465,29 @@ def validate_catalog() -> None:
     )
 
 
+def validate_brand_contract() -> None:
+    """`docs/brand/` has one contract, and it lives in exactly one file.
+
+    Every brand skill, template and the linter key off these names. A name
+    defined twice is drift with a delay fuse, so the contract is the only
+    place any of them is written down -- this check is what keeps that true.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "brand-contract.md")
+    if not check(text is not None, "brand-contract.md is missing"):
+        return
+    for token in (
+        "Contract: brand-contract v1", "voice.md", "terminology.md",
+        "facts.md", "channels.md", "strings.md", "locales/<code>.md",
+        "Locale parity threshold", "Derived-from", "Last calibrated",
+        "Confidence", "Register", "Distance", "Humor", "Density",
+        "Hero", "Enemy", "Product role", "Promise",
+        "agreed", "proposed", "drifted", "orphan",
+        "Length coefficient", "Sources:",
+    ):
+        check(token in text, f"brand-contract.md: missing `{token}`")
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -477,6 +500,7 @@ def main() -> int:
     validate_links()
     validate_shipped_references()
     validate_catalog()
+    validate_brand_contract()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
