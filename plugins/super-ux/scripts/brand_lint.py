@@ -51,6 +51,19 @@ SOURCE_KEYS = ("ui", "marketing", "store", "robots", "locales")
 MARKER_RE = re.compile(rf"^Contract:\s*{CONTRACT}\s*(v\d+)\s*$", re.M)
 
 
+def unfilled(value: str) -> bool:
+    """A template placeholder, not data.
+
+    Templates ship worked examples so the shape is unambiguous, and a project
+    mid-fill has some rows done and some not. `<...>` means "nobody has filled
+    this in yet" -- reporting it as a defect would make every freshly seeded
+    project fail on its own scaffolding, which teaches people to ignore the
+    linter on day one.
+    """
+    value = value.strip()
+    return not value or (value.startswith("<") and value.endswith(">"))
+
+
 def read(path: Path) -> str | None:
     try:
         return path.read_text(encoding="utf-8")
@@ -148,7 +161,7 @@ def check_contract(brand_dir: Path) -> list[Finding]:
         ))
 
     derived = header_field(voice, "Derived-from")
-    if derived and derived != "inferred":
+    if derived and derived != "inferred" and not unfilled(derived):
         foundation = read(brand_dir.parent / "ux" / "foundation.md")
         ids = [i.strip() for i in derived.split(",") if i.strip()]
         if foundation is not None:
@@ -191,6 +204,8 @@ def registry(brand_dir: Path) -> list[dict]:
     rows = []
     for cells in table_rows(read(brand_dir / "strings.md") or ""):
         if len(cells) < 5 or cells[0].strip().lower() == "key":
+            continue
+        if unfilled(cells[0]) or unfilled(cells[1]) or unfilled(cells[2]):
             continue
         rows.append({
             "key": cells[0], "text": cells[1], "location": cells[2],
@@ -420,6 +435,8 @@ def facts(brand_dir: Path) -> list[dict]:
     for cells in table_rows(read(brand_dir / "facts.md") or ""):
         if len(cells) < 6 or cells[0].strip().lower() == "fact":
             continue
+        if unfilled(cells[0]) or unfilled(cells[1]):
+            continue
         rows.append({
             "fact": cells[0], "value": cells[1], "source": cells[2],
             "checked": cells[3], "review": cells[4], "public": cells[5],
@@ -440,7 +457,7 @@ def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
     known = " ".join(r["value"] for r in rows if r["public"].lower() != "no")
 
     for row in rows:
-        if not row["source"] or row["source"].startswith("<"):
+        if unfilled(row["source"]):
             findings.append(Finding(
                 "B031", SEVERITY_WARN, "facts.md", 0,
                 f"`{row['fact']}` has no source -- an unsourced fact is an "

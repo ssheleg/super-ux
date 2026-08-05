@@ -11,6 +11,7 @@
     "templates",
     "plugins/super-ux/scripts/ux_lint.py",
     "plugins/super-ux/scripts/ux_doctor.py",
+    "plugins/super-ux/scripts/brand_lint.py",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
