@@ -600,6 +600,32 @@ def validate_brand_practices() -> None:
         )
 
 
+def validate_brand_field_ownership() -> None:
+    """Every field the linter reads is one the contract still defines.
+
+    `validate_brand_contract` catches a field disappearing from the contract.
+    It cannot catch the other half: `header_field(voice, "X")` on a field the
+    contract renamed returns None, the check that depended on it stops firing,
+    and nothing anywhere goes red. A check that silently stops checking is
+    worse than one that was never written, because the green is still printed.
+
+    This is the "what breaks if this moves" question, made mechanical for the
+    one place it actually bites.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    contract = read(src / "brand-contract.md") or ""
+    linter = read(ROOT / "plugins/super-ux/scripts/brand_lint.py") or ""
+    fields = sorted(set(re.findall(r'header_field\([^,]+,\s*"([^"]+)"\)', linter)))
+    check(bool(fields), "brand_lint.py: no header_field reads found to verify")
+    for field in fields:
+        check(
+            field in contract,
+            f"brand_lint.py reads the field `{field}`, which brand-contract.md "
+            f"no longer defines -- the read returns nothing and its check stops "
+            f"firing silently",
+        )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -616,6 +642,7 @@ def main() -> int:
     validate_voice_packs()
     validate_brand_templates()
     validate_brand_practices()
+    validate_brand_field_ownership()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
