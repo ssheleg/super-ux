@@ -42,15 +42,26 @@ MINIMAL = {
 }
 
 
-def case(name: str, files: dict, expect: set) -> None:
-    """Write `files` into a temp brand dir and compare the codes returned."""
+def case(name: str, files: dict, expect: set, project: dict | None = None) -> None:
+    """Write a temp pack and compare the codes returned.
+
+    `files` land inside the brand directory; `project` lands beside it, at
+    the project root, which is where a `Location` column resolves from. A
+    fixture that cites `src/a.ts:1` and does not plant it is testing B023
+    whether it meant to or not -- so every fixture cites what it plants.
+    """
     global checks
     checks += 1
     with tempfile.TemporaryDirectory() as tmp:
-        brand = Path(tmp) / "brand"
-        brand.mkdir()
+        root = Path(tmp)
+        brand = root / "docs" / "brand"
+        brand.mkdir(parents=True)
         for rel, body in files.items():
             target = brand / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(body, encoding="utf-8")
+        for rel, body in (project or {}).items():
+            target = root / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(body, encoding="utf-8")
         got = {f.code for f in brand_lint.run(brand)}
@@ -92,7 +103,96 @@ def main() -> int:
                 "| a.b | Publish | src/a.ts:1 | SCN-001 | agreed |\n"
             ),
         },
-        {"B003"},
+        {"B003"}, project={"src/a.ts": "x\n"},
+    )
+
+    banned = (
+        MARKER + "\n\n## Banned\n"
+        "| Word or phrase | Why | Use instead |\n"
+        "|---|---|---|\n"
+        "| leverage | filler verb | use |\n"
+    )
+    terms = (
+        MARKER + "\n\n## Product terms — always\n"
+        "| Our term | Never write | Applies to |\n"
+        "|---|---|---|\n"
+        "| Run | Execution | what the product performs |\n"
+    )
+    entities = (
+        MARKER + "\n\n## Entity and tier names — exact spelling\n"
+        "| Name | Wrong forms seen |\n"
+        "|---|---|\n"
+        "| Pro | PRO, Pro plan |\n"
+    )
+
+    def registry(*rows: str) -> str:
+        head = (
+            MARKER + "\n"
+            "| Key | Text (primary) | Location | Scenario | Status |\n"
+            "|---|---|---|---|---|\n"
+        )
+        return head + "".join(rows)
+
+    case(
+        "banned word in an interface string",
+        {**MINIMAL, "terminology.md": banned,
+         "strings.md": registry(
+             "| a.b | Leverage this | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B010"}, project={"src/a.ts": "x\n"},
+    )
+    case(
+        "generic word where a product term exists",
+        {**MINIMAL, "terminology.md": terms,
+         "strings.md": registry(
+             "| a.b | Start execution | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B011"}, project={"src/a.ts": "x\n"},
+    )
+    case(
+        "entity name spelled inconsistently",
+        {**MINIMAL, "terminology.md": entities,
+         "strings.md": registry(
+             "| a.b | Upgrade to Pro plan | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B012"}, project={"src/a.ts": "x\n"},
+    )
+    case(
+        "one action, two names",
+        {**MINIMAL, "strings.md": registry(
+            "| action.publish | Publish | src/a.ts:1 | SCN-001 | agreed |\n",
+            "| action.publish | Submit | src/b.ts:2 | SCN-001 | agreed |\n")},
+        {"B020"}, project={"src/a.ts": "x\n", "src/b.ts": "x\n"},
+    )
+    case(
+        "registry entry pointing at a vanished location",
+        {**MINIMAL, "strings.md": registry(
+            "| a.b | Publish | src/gone.ts:1 | SCN-001 | drifted |\n")},
+        {"B023"},
+    )
+    case(
+        "button label is not sentence case",
+        {**MINIMAL, "strings.md": registry(
+            "| button.save | Save Changes | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B024"}, project={"src/a.ts": "x\n"},
+    )
+    case(
+        "button label is not a verb phrase",
+        {**MINIMAL, "strings.md": registry(
+            "| button.ok | OK | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B025"}, project={"src/a.ts": "x\n"},
+    )
+
+    case(
+        "registry text is not the text in the code",
+        {**MINIMAL, "strings.md": registry(
+            "| a.b | Publish | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B021", "B022"},
+        project={"src/a.ts": 'const label = "Submit";\n'},
+    )
+    case(
+        "code string with no registry row",
+        {**MINIMAL, "strings.md": registry(
+            "| a.b | Publish | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B022"},
+        project={"src/a.ts": 'const a = "Publish";\nconst b = "Archive";\n'},
     )
 
     if failures:

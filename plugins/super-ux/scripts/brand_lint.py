@@ -186,10 +186,195 @@ def check_contract(brand_dir: Path) -> list[Finding]:
     return findings
 
 
+def registry(brand_dir: Path) -> list[dict]:
+    """`strings.md` data rows as dicts, header dropped."""
+    rows = []
+    for cells in table_rows(read(brand_dir / "strings.md") or ""):
+        if len(cells) < 5 or cells[0].strip().lower() == "key":
+            continue
+        rows.append({
+            "key": cells[0], "text": cells[1], "location": cells[2],
+            "scenario": cells[3], "status": cells[4],
+        })
+    return rows
+
+
+def dictionary(brand_dir: Path) -> tuple[list, list, list]:
+    """(banned, product terms, entity names) from `terminology.md`."""
+    text = read(brand_dir / "terminology.md") or ""
+    sections: dict[str, list[str]] = {}
+    current = None
+    for line in text.splitlines():
+        heading = re.match(r"^##\s+(.*?)\s*$", line)
+        if heading:
+            current = heading.group(1)
+            sections[current] = []
+        elif current:
+            sections[current].append(line)
+
+    def rows(fragment: str, header: str) -> list[list[str]]:
+        for title, lines in sections.items():
+            if fragment.lower() in title.lower():
+                return [
+                    r for r in table_rows("\n".join(lines))
+                    if r and r[0].strip().lower() != header
+                ]
+        return []
+
+    banned = [r[0] for r in rows("Banned", "word or phrase") if r[0]]
+    terms = [
+        (r[0], r[1]) for r in rows("Product terms", "our term") if len(r) > 1
+    ]
+    entities = [
+        (r[0], r[1]) for r in rows("Entity and tier", "name") if len(r) > 1
+    ]
+    return banned, terms, entities
+
+
+def _alternatives(cell: str) -> list[str]:
+    """A comma-separated cell as a list, placeholders dropped."""
+    out = []
+    for part in cell.split(","):
+        part = part.strip()
+        if part and not part.startswith("<"):
+            out.append(part)
+    return out
+
+
+def _mentions(needle: str, haystack: str) -> bool:
+    return bool(re.search(rf"(?<!\w){re.escape(needle)}(?!\w)", haystack, re.I))
+
+
+def check_terminology(brand_dir: Path) -> list[Finding]:
+    """B010-B012 -- the dictionary is law, in the interface and in copy."""
+    findings: list[Finding] = []
+    banned, terms, entities = dictionary(brand_dir)
+    for row in registry(brand_dir):
+        text = row["text"]
+        for word in banned:
+            if _mentions(word, text):
+                findings.append(Finding(
+                    "B010", SEVERITY_ERROR, row["location"], 0,
+                    f"`{row['key']}` uses the banned word `{word}`: "
+                    f"\"{text}\"",
+                ))
+        for ours, generic_cell in terms:
+            for generic in _alternatives(generic_cell):
+                if _mentions(generic, text):
+                    findings.append(Finding(
+                        "B011", SEVERITY_ERROR, row["location"], 0,
+                        f"`{row['key']}` says `{generic}` where the product "
+                        f"term is `{ours}`: \"{text}\"",
+                    ))
+        for name, wrong_cell in entities:
+            for wrong in _alternatives(wrong_cell):
+                if wrong and wrong in text:
+                    findings.append(Finding(
+                        "B012", SEVERITY_ERROR, row["location"], 0,
+                        f"`{row['key']}` spells the entity `{name}` as "
+                        f"`{wrong}`: \"{text}\"",
+                    ))
+    return findings
+
+
+WEAK_LABELS = {
+    "ok", "yes", "no", "submit", "done", "go", "click here",
+    "learn more", "get started", "continue",
+}
+
+LITERAL_RE = re.compile(r"""["']([^"'\n]{3,60})["']""")
+
+
+def _looks_like_copy(literal: str) -> bool:
+    """A quoted literal that could plausibly be user-visible text."""
+    if not literal or literal[0].islower() and " " not in literal:
+        return False
+    return bool(re.match(r"^[A-Z]", literal)) or " " in literal
+
+
+def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B020-B025 -- the registry, the code and the casing agree."""
+    findings: list[Finding] = []
+    root = brand_dir.parent.parent
+    rows = registry(brand_dir)
+    _, _, entities = dictionary(brand_dir)
+    entity_words = {name for name, _ in entities}
+
+    by_key: dict[str, set] = {}
+    for row in rows:
+        by_key.setdefault(row["key"], set()).add(row["text"])
+    for key, texts in sorted(by_key.items()):
+        if len(texts) > 1:
+            listed = " / ".join(f'"{t}"' for t in sorted(texts))
+            findings.append(Finding(
+                "B020", SEVERITY_ERROR, "strings.md", 0,
+                f"one action, two names -- `{key}` is {listed}. An action "
+                f"keeps one name across the whole flow",
+            ))
+
+    for row in rows:
+        location = row["location"]
+        file_part = location.split(":")[0]
+        target = root / file_part
+        if not target.is_file():
+            findings.append(Finding(
+                "B023", SEVERITY_ERROR, location, 0,
+                f"`{row['key']}` points at {file_part}, which does not exist",
+            ))
+            continue
+
+        body = read(target) or ""
+        literals = [
+            lit for lit in LITERAL_RE.findall(body) if _looks_like_copy(lit)
+        ]
+        if literals:
+            if row["text"] not in body:
+                findings.append(Finding(
+                    "B021", SEVERITY_ERROR, location, 0,
+                    f"`{row['key']}` is \"{row['text']}\" in the registry, "
+                    f"but that text is not in {file_part}",
+                ))
+            known = {r["text"] for r in rows}
+            for lit in literals:
+                if lit not in known:
+                    findings.append(Finding(
+                        "B022", SEVERITY_WARN, f"{file_part}", 0,
+                        f"\"{lit}\" is in the code with no registry row -- "
+                        f"agree it or retire it",
+                    ))
+
+    for row in rows:
+        words = row["text"].split()
+        for word in words[1:]:
+            bare = word.strip(".,:;!?()")
+            if not bare or bare in entity_words:
+                continue
+            if bare.isupper() and len(bare) <= 4:
+                continue
+            if bare[0].isupper():
+                findings.append(Finding(
+                    "B024", SEVERITY_ERROR, row["location"], 0,
+                    f"`{row['key']}` is not sentence case: \"{row['text']}\"",
+                ))
+                break
+        if row["key"].startswith("button.") and \
+                row["text"].strip().lower() in WEAK_LABELS:
+            findings.append(Finding(
+                "B025", SEVERITY_WARN, row["location"], 0,
+                f"`{row['key']}` is \"{row['text']}\" -- a button says what "
+                f"happens, not that something happens",
+            ))
+
+    return findings
+
+
 def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     """Every check, in order. `fix` is applied by the caller via apply_fixes."""
+    sources = load_sources(brand_dir)
     findings: list[Finding] = []
     findings.extend(check_contract(brand_dir))
+    findings.extend(check_terminology(brand_dir))
+    findings.extend(check_consistency(brand_dir, sources))
     return findings
 
 
