@@ -212,7 +212,7 @@ Four skills, one entry point, and a set of contracts they all obey.
 | `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` | Direct controls for when you know exactly what you want; `/ux-rule` installs the hard rule into `CLAUDE.md` |
 | `docs/ux/lint.py` + `/ux-lint` | The deterministic half: missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, ID gaps, broken links. Stdlib-only, exit 1 on problems — wire it into CI so drift can't merge |
 | `cursor/rules/*.mdc` | The same methodology for Cursor: one always-on hard rule + four agent-requested rules |
-| `templates/` | Seeds for `docs/ux/`: foundation, flows, screens, scenario base, the folder README, the audit-report skeleton, and the CLAUDE.md rule snippet |
+| `templates/` | Seeds for `docs/ux/`: foundation, flows, screens, scenario base, the folder README, the audit-report skeleton, and the CLAUDE.md rule snippet. Seeds for `docs/brand/`: voice, terminology, facts, channels, the string registry, a locale delta, and its folder README |
 
 The contracts every skill reads:
 
