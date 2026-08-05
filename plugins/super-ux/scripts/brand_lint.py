@@ -505,15 +505,23 @@ def check_channels(brand_dir: Path, sources: dict) -> list[Finding]:
             record = records.get(fields.get("surface", ""))
             if not record:
                 continue
-            factor = _coefficient(brand_dir, fields.get("locale"))
+            locale = fields.get("locale")
+            factor = _coefficient(brand_dir, locale)
             for name, limit in _limits(record).items():
                 value = body if name == "body" else fields.get(name, "")
                 allowed = int(limit * factor)
                 if value and len(value.strip()) > allowed:
+                    # Same overflow, two codes on purpose: B040 is the
+                    # primary-locale case, B073 the one the coefficient
+                    # created. They are fixed differently -- one shortens the
+                    # string, the other questions the original design.
+                    code = "B073" if locale else "B040"
                     findings.append(Finding(
-                        "B040", SEVERITY_ERROR, path, 0,
+                        code, SEVERITY_ERROR, path, 0,
                         f"{name} is {len(value.strip())} characters, over the "
-                        f"{allowed} this surface allows",
+                        f"{allowed} this surface allows"
+                        + (f" for `{locale}` (coefficient {factor})"
+                           if locale else ""),
                     ))
 
             physics = record.get("Forbidden", "").split("|")[0].lower()
@@ -712,6 +720,162 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
     return findings
 
 
+def declared_locales(brand_dir: Path) -> tuple[str | None, list[str]]:
+    """(primary, others) from voice.md's `Locales:` line."""
+    text = read(brand_dir / "voice.md") or ""
+    raw = header_field(text, "Locales") or ""
+    primary, others = None, []
+    for part in raw.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        code = part.split()[0]
+        if "(primary)" in part:
+            primary = code
+        else:
+            others.append(code)
+    return primary, others
+
+
+def check_locales(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B070-B072 -- a locale may lag, but it may not hide that it lags."""
+    findings: list[Finding] = []
+    primary, others = declared_locales(brand_dir)
+    root = brand_dir.parent.parent
+
+    for code in others:
+        if not (brand_dir / "locales" / f"{code}.md").is_file():
+            findings.append(Finding(
+                "B070", SEVERITY_ERROR, "voice.md", 0,
+                f"`{code}` is declared but has no locales/{code}.md -- "
+                f"nothing records its address form, humor level or "
+                f"length coefficient",
+            ))
+
+    threshold = header_field(read(brand_dir / "voice.md") or "",
+                             "Locale parity threshold")
+    limit = 0.0
+    if threshold:
+        try:
+            limit = float(threshold.rstrip("%")) / 100
+        except ValueError:
+            limit = 0.0
+
+    if primary and limit and "locales" in sources:
+        catalogues: dict[str, set] = {}
+        for pattern in sources["locales"]:
+            for path in sorted(root.glob(pattern)):
+                try:
+                    data = json.loads(read(path) or "{}")
+                except json.JSONDecodeError:
+                    continue
+                if isinstance(data, dict):
+                    catalogues[path.stem] = set(data)
+        base = catalogues.get(primary, set())
+        for code in others:
+            keys = catalogues.get(code)
+            if base and keys is not None:
+                parity = len(keys & base) / len(base)
+                if parity < limit:
+                    findings.append(Finding(
+                        "B071", SEVERITY_WARN, f"locales/{code}.md", 0,
+                        f"{code} covers {parity:.0%} of {primary}, under the "
+                        f"declared {limit:.0%} -- {len(base - keys)} string(s) "
+                        f"behind",
+                    ))
+
+    for code in others:
+        text = read(brand_dir / "locales" / f"{code}.md") or ""
+        for cells in table_rows(text):
+            if len(cells) < 2 or cells[0].startswith("<"):
+                continue
+            if cells[0].strip().lower() in ("primary", "term"):
+                continue
+            if cells[0] and cells[0] == cells[1]:
+                findings.append(Finding(
+                    "B072", SEVERITY_WARN, f"locales/{code}.md", 0,
+                    f"`{cells[0]}` is unchanged from the primary -- a "
+                    f"word-for-word rendering translates the words and not "
+                    f"the job the string does",
+                ))
+    return findings
+
+
+FIXABLE = ("B024", "B041", "B023")
+
+
+def apply_fixes(brand_dir: Path, findings: list[Finding]) -> int:
+    """The subset that cannot be wrong. Everything else needs a human.
+
+    B024 normalises casing, B041 tightens the iOS keyword field, and B023
+    re-points a registry row when the string is unchanged and matches
+    exactly one new location. Anything requiring a judgement about meaning
+    is reported, never rewritten.
+    """
+    rewritten = 0
+    root = brand_dir.parent.parent
+    strings_path = brand_dir / "strings.md"
+    text = read(strings_path)
+    if text is None:
+        return 0
+    original = text
+
+    _, _, entities = dictionary(brand_dir)
+    entity_words = {name for name, _ in entities}
+    for finding in findings:
+        if finding.code != "B024":
+            continue
+        for row in registry(brand_dir):
+            words = row["text"].split()
+            fixed = [words[0]] + [
+                w if (w.strip(".,:;!?()") in entity_words
+                      or (w.isupper() and len(w) <= 4))
+                else w[0].lower() + w[1:]
+                for w in words[1:]
+            ]
+            replacement = " ".join(fixed)
+            if replacement != row["text"]:
+                text = text.replace(
+                    f"| {row['text']} |", f"| {replacement} |"
+                )
+
+    for finding in findings:
+        if finding.code != "B023":
+            continue
+        row_key = finding.message.split("`")[1]
+        for row in registry(brand_dir):
+            if row["key"] != row_key:
+                continue
+            matches = [
+                p for p in root.rglob("*")
+                if p.is_file() and p.suffix in (".ts", ".tsx", ".js", ".jsx")
+                and row["text"] in (read(p) or "")
+            ]
+            if len(matches) == 1:
+                new = matches[0].relative_to(root).as_posix()
+                text = text.replace(row["location"], f"{new}:1")
+
+    if text != original:
+        strings_path.write_text(text, encoding="utf-8")
+        rewritten += 1
+
+    for path, fields, _body in documents(brand_dir, load_sources(brand_dir),
+                                         "store"):
+        raw = fields.get("keywords")
+        if not raw or ", " not in raw:
+            continue
+        target = root / path
+        body = read(target) or ""
+        tightened = raw.replace(", ", ",")
+        target.write_text(
+            body.replace(f"keywords: {raw}", f"keywords: {tightened}"),
+            encoding="utf-8",
+        )
+        rewritten += 1
+
+    return rewritten
+
+
 def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     """Every check, in order. `fix` is applied by the caller via apply_fixes."""
     sources = load_sources(brand_dir)
@@ -723,6 +887,7 @@ def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     findings.extend(check_channels(brand_dir, sources))
     findings.extend(check_bot_safety(brand_dir, sources))
     findings.extend(check_ai_tells(brand_dir, sources))
+    findings.extend(check_locales(brand_dir, sources))
     return findings
 
 
@@ -760,6 +925,10 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     findings = run(brand_dir, fix=args.fix)
+    if args.fix:
+        rewritten = apply_fixes(brand_dir, findings)
+        print(f"--fix rewrote {rewritten} file(s)")
+        findings = run(brand_dir)
     report(findings, args.brief, args.json)
 
     if any(f.severity == SEVERITY_ERROR for f in findings):

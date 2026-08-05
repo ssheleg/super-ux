@@ -71,6 +71,47 @@ def case(name: str, files: dict, expect: set, project: dict | None = None) -> No
         )
 
 
+def fix_idempotent() -> None:
+    """`--fix` clears what it claims to, and the second run has nothing left.
+
+    A fixer that keeps finding work on an unchanged tree is either not
+    fixing or not detecting, and both look identical from the outside.
+    """
+    global checks
+    checks += 1
+    files = {
+        **MINIMAL,
+        "strings.md": (
+            MARKER + "\n"
+            "| Key | Text (primary) | Location | Scenario | Status |\n"
+            "|---|---|---|---|---|\n"
+            "| button.save | Save Changes | src/a.ts:1 | SCN-001 | agreed |\n"
+        ),
+    }
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        brand = root / "docs" / "brand"
+        brand.mkdir(parents=True)
+        for rel, body in files.items():
+            (brand / rel).write_text(body, encoding="utf-8")
+        (root / "src").mkdir()
+        (root / "src" / "a.ts").write_text("x\n", encoding="utf-8")
+
+        before = {f.code for f in brand_lint.run(brand)}
+        if before != {"B024"}:
+            failures.append(f"fix: expected B024 before, got {sorted(before)}")
+            return
+        first = brand_lint.apply_fixes(brand, brand_lint.run(brand))
+        after = {f.code for f in brand_lint.run(brand)}
+        second = brand_lint.apply_fixes(brand, brand_lint.run(brand))
+        if after:
+            failures.append(f"fix: B024 survived --fix, got {sorted(after)}")
+        if first < 1:
+            failures.append("fix: first pass rewrote nothing")
+        if second != 0:
+            failures.append(f"fix: second pass rewrote {second} file(s)")
+
+
 def main() -> int:
     case("clean minimal base", MINIMAL, set())
 
@@ -376,6 +417,44 @@ def main() -> int:
         {"B061"},
         project={"src/a.ts": "x\n"},
     )
+
+    multi = MINIMAL["voice.md"].replace(
+        "Locales: en (primary)", "Locales: en (primary), de"
+    )
+    locale_sources = MARKER + (
+        "\n\nSources:\n  ui: src/**/*.ts\n  locales: i18n/*.json\n"
+    )
+    de = (
+        MARKER + "\nLocale: de\nPrimary: no\nAddress form: Sie\n"
+        "Length coefficient: 1.30\n"
+    )
+
+    case(
+        "declared locale with no locale file",
+        {**MINIMAL, "voice.md": multi},
+        {"B070"},
+    )
+    case(
+        "locale parity below the declared threshold",
+        {**MINIMAL, "voice.md": multi, "README.md": locale_sources,
+         "locales/de.md": de},
+        {"B071"},
+        project={
+            "i18n/en.json": '{"a":"1","b":"2","c":"3","d":"4"}',
+            "i18n/de.json": '{"a":"1"}',
+        },
+    )
+    case(
+        "field overflows once the locale coefficient is applied",
+        {**MINIMAL, "voice.md": multi, "channels.md": hero,
+         "README.md": marketing_sources, "locales/de.md": de},
+        {"B073"},
+        project={"content/de.md":
+                 "---\nsurface: landing hero\nlocale: de\n"
+                 "title: " + "x" * 82 + "\n---\n\nHallo.\n"},
+    )
+
+    fix_idempotent()
 
     if failures:
         for failure in failures:
