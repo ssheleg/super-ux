@@ -1,6 +1,19 @@
 # Changelog
 
-## 0.30.1 — 2026-08-05
+## 0.30.2 — 2026-08-05
+
+### Added
+- **The installer offers the family routing block.** After `npx super-ux
+  --cursor`, it delegates to `npx --no-install sshlg-skills routers --member
+  super-ux`, which writes the `super-ux` and `copywriting` routers into the
+  global agent instructions so both engage by default in every project.
+  Delegated rather than reimplemented: the block carries a precedence table
+  describing what the machine actually has, and a lone member rendering it
+  would list routers nobody installed. When the launcher is absent the
+  installer prints the one command instead of failing, and `--no-install`
+  keeps it from downloading a package nobody asked for.
+
+ — 2026-08-05
 
 ### Fixed
 - **`templates/brand/voice.md` told projects to write `PER-NN` where the UX
