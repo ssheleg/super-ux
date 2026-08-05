@@ -13,6 +13,9 @@ then open only those entries. The selection protocol
 **206 practices, 82 tags in use.**
 
 
+25 carry a `Checked` review date; 181 predate the field. Ages are deliberately not written here -- they would change daily and make this generated file look permanently stale. Run `bp_index.py --stale [months]` for the report.
+
+
 ## By tag
 
 - **`accessibility`** — BP-050, BP-051, BP-054, BP-059, BP-079, BP-081, BP-083, BP-084, BP-101, BP-104, BP-108, BP-110, BP-115, BP-131, BP-132, BP-134, BP-135, BP-136, BP-137, BP-138, BP-146, BP-154, BP-156, BP-164, BP-166, BP-168, BP-169, BP-176, BP-179

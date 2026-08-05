@@ -1440,6 +1440,14 @@ the date the practice was last verified against its source. It starts here on
 purpose: backfilling a date onto BP-001..181 would record a verification
 nobody performed.
 
+**The absence of `Checked` on BP-001..181 is the honest state, not a gap
+awaiting a script.** It says: written before the field existed, never
+re-verified against its source by this process. Anyone re-reading one of those
+sources may add the field with a real date — one entry at a time, as the
+verification actually happens. `bp_index.py --stale [months]` reports both
+halves: which dated practices have aged past the threshold, and how many carry
+no date at all.
+
 #### BP-182: One action keeps one name everywhere it appears
 - **Do:** name an action once — button, confirmation, toast, history entry, notification, docs and the accessible name all use it, with only tense changing (`Publish` → `Published`). Record it in the string registry against the scenario it serves before a second surface names it.
 - **Why:** each screen is written correctly on its own, so the defect is invisible from inside any one of them and findable only by reading the whole interface at once; users who learned `Publish` do not recognise `Submit` as the same act, and the support cost lands on the team that never saw the conflict.

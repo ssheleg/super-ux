@@ -61,9 +61,16 @@ breaks it. A prose rule nobody can verify is a suggestion.
 - **Stable IDs, never reused** (`SCN-NNN`, `FLW-NN`, `SCR-NN`, `ST-NNN`,
   `BP-NNN`, `PRN-NN`). Retired entries stay with a reason.
 - Adding a practice to `best-practices.md`: next free `BP-NNN`, one practice
-  per entry, `Do` / `Why` / `Apply when` / `Tags` / `Source`, tags from the
-  taxonomy at the top of the file, under ~6 lines. Then wire it into
-  `practice-selection.md` so it actually gets pulled by something.
+  per entry, `Do` / `Why` / `Apply when` / `Tags` / `Source` — plus `Checked`
+  (an ISO date) from `BP-182` on. Tags from the taxonomy at the top of the
+  file, under ~6 lines. Then wire it into `practice-selection.md` so it
+  actually gets pulled by something.
+- **Never stamp a `Checked` date you did not earn.** The field exists to make
+  staleness visible; a date written to fill a column reports a verification
+  nobody performed and is worse than no field at all. BP-001..181 carry none
+  by decision — add one only when you have actually re-read the source.
+  `python3 plugins/super-ux/scripts/bp_index.py --stale 12` reports what has
+  aged and how many are undated.
 
 ## Testing a change end-to-end
 

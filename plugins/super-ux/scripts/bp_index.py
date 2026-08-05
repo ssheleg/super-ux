@@ -9,8 +9,9 @@ audit a little less thorough than it meant to be.
 This writes `best-practices-index.md`: tag -> ids, and id -> title. Small
 enough to hold in context, enough to decide what to read.
 
-    python3 plugins/super-ux/scripts/bp_index.py          # write
-    python3 plugins/super-ux/scripts/bp_index.py --check   # exit 1 if stale
+    python3 plugins/super-ux/scripts/bp_index.py            # write
+    python3 plugins/super-ux/scripts/bp_index.py --check    # exit 1 if stale
+    python3 plugins/super-ux/scripts/bp_index.py --stale 12 # review-date report
 """
 
 from __future__ import annotations
@@ -37,36 +38,82 @@ then open only those entries. The selection protocol
 """
 
 
-def parse(text: str) -> list[tuple[str, str, list[str]]]:
-    """(id, title, tags) for every entry, in catalog order."""
+def parse(text: str) -> list[tuple[str, str, list[str], str]]:
+    """(id, title, tags, checked) for every entry, in catalog order.
+
+    `checked` is "" for entries written before the field existed. That absence
+    is information, not a gap to fill: a date nobody verified is exactly the
+    failure the field was added to prevent.
+    """
     entries = []
     blocks = re.split(r"^#### (BP-\d+): ", text, flags=re.M)[1:]
     for entry_id, body in zip(blocks[0::2], blocks[1::2]):
         title = body.splitlines()[0].strip()
         tags_line = re.search(r"^- \*\*Tags:\*\*(.+)$", body, re.M)
         tags = [t.strip() for t in tags_line.group(1).split(",")] if tags_line else []
-        entries.append((entry_id, title, [t for t in tags if t]))
+        checked_line = re.search(r"^- \*\*Checked:\*\*\s*(\S+)", body, re.M)
+        checked = checked_line.group(1) if checked_line else ""
+        entries.append((entry_id, title, [t for t in tags if t], checked))
     return entries
 
 
-def render(entries: list[tuple[str, str, list[str]]]) -> str:
+def render(entries: list[tuple[str, str, list[str], str]]) -> str:
     by_tag: dict[str, list[str]] = defaultdict(list)
-    for entry_id, _title, tags in entries:
+    for entry_id, _title, tags, _checked in entries:
         for tag in tags:
             by_tag[tag].append(entry_id)
 
+    dated = [e for e in entries if e[3]]
     out = [HEADER, f"\n**{len(entries)} practices, {len(by_tag)} tags in use.**\n"]
+    out.append(
+        f"\n{len(dated)} carry a `Checked` review date; {len(entries) - len(dated)} "
+        f"predate the field. Ages are deliberately not written here -- they would "
+        f"change daily and make this generated file look permanently stale. Run "
+        f"`bp_index.py --stale [months]` for the report.\n"
+    )
     out.append("\n## By tag\n")
     for tag in sorted(by_tag):
         out.append(f"- **`{tag}`** — {', '.join(by_tag[tag])}")
     out.append("\n## By id\n")
-    for entry_id, title, _tags in entries:
+    for entry_id, title, _tags, _checked in entries:
         out.append(f"- **{entry_id}** — {title}")
     return "\n".join(out) + "\n"
 
 
+def stale_report(entries, months: int) -> int:
+    """Practices whose review date has aged past `months`, oldest first."""
+    import datetime
+
+    cutoff = datetime.date.today() - datetime.timedelta(days=months * 30)
+    undated = [e for e in entries if not e[3]]
+    aged = []
+    for entry_id, title, _tags, checked in entries:
+        if not checked:
+            continue
+        try:
+            when = datetime.date.fromisoformat(checked)
+        except ValueError:
+            print(f"UNPARSEABLE {entry_id}: Checked is `{checked}`, want YYYY-MM-DD")
+            continue
+        if when < cutoff:
+            aged.append((when, entry_id, title))
+
+    for when, entry_id, title in sorted(aged):
+        print(f"{when}  {entry_id}  {title}")
+    print(
+        f"\n{len(aged)} practice(s) past {months} months; "
+        f"{len(undated)} predate the field and were never verified against a "
+        f"source by this process."
+    )
+    return 1 if aged else 0
+
+
 def main() -> int:
     text = SRC.read_text(encoding="utf-8")
+    if "--stale" in sys.argv:
+        idx = sys.argv.index("--stale")
+        months = int(sys.argv[idx + 1]) if len(sys.argv) > idx + 1 else 12
+        return stale_report(parse(text), months)
     rendered = render(parse(text))
     if "--check" in sys.argv:
         current = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
