@@ -38,6 +38,7 @@ Newest last.
 | 2026-08-05 | Tier-1 audit findings → BP-147..156, audit scope section, catalog validator; v0.27.0 → v0.27.1 | yes — see below |
 | 2026-08-05 | Carry-over ledger closed → BP-157..179, PRN-17..21, three optional contract fields, prototype step, catalog index; v0.28.0 | no |
 | 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
+| 2026-08-05 | Verbal identity layer, carry-over ledger to zero, code graph; v0.30.0 → v0.30.1 | yes — see below |
 | 2026-08-05 | Verbal identity layer — brand-contract v1, brand-voice + copywriting, brand_lint.py, BP-182..205, PRN-22..24; v0.30.0 | yes — see below |
 
 ---
@@ -144,3 +145,53 @@ exactly this in prose. Nothing checks it, which is why prose was not enough.
 registry comparison exists. Both halves of this run's release were verified
 after the fact with `npx sshlg-skills@latest list`, which is the assertion the
 pipeline should have made before the tag rather than after it.
+
+---
+
+## 2026-08-05 — a repeat audit found what a green suite could not
+
+**Symptom.** A second audit pass, run with the axis rotated from the REQ table
+to the code graph, found four defects in a layer that had passed 3338
+validator checks, 34 linter fixtures and a full stage-10 acceptance:
+
+1. `templates/brand/voice.md` shipped `PER-NN` where the UX contract numbers
+   personas `P-NN`. `B004` traces `Derived-from` against `foundation.md`, so a
+   project following our own template earned a **false blocking error**. It
+   went out in v0.30.0.
+2. `B005`, `B054`, `B060`, `B072` shipped with no fixture, while the suite was
+   green and the fixture count looked right.
+3. Eighteen of 33 check codes were documented only in `brand_lint.py`'s source,
+   in a repo whose canon is *one owner per fact*.
+4. `system-map.md` — the document whose stated job is telling an agent what
+   else exists — named the brand artifacts but not the pack library or the
+   register model, the two things an agent would otherwise improvise.
+
+**Surfaced at** the repeat audit. **Owned by** stage 10: the first acceptance
+compared the REQ table against the plan, which finds what was named and lost.
+None of these four were on any list.
+
+**Root cause.** The horizontal pass is structurally unable to see them. A
+comparison needs two sides; an absence has one. A green suite cannot report a
+check it was never asked to run, and the fixture *count* looking right is
+exactly what hid the four missing ones.
+
+**Fix, by grade.**
+
+- *Mechanical (taken):* `validate_brand_lint_coverage` — every code the linter
+  can emit must have a fixture **and** a contract row. Findings 2 and 3 became
+  a gate rather than two ledger entries.
+- *Mechanical (taken):* `check_changelog_headings` in `sshlg-skills` — a
+  version documented twice would ship the previous release's notes, because
+  the workflow reads the first section and stops. super-ux has guarded this
+  since its own duplicate; the launcher had not, and a two-session collision
+  on v0.21.2 walked straight through.
+- *Content (taken):* the contract now owns all 33 codes with severities; the
+  system map names the brand shelf without linking it, because linking would
+  make every skill carry ten files it will not read.
+
+**The check that catches it next time:** the coverage gate. It is the only one
+of the four fixes that would have failed the build on the original commit.
+
+**What this run confirms about the graph.** C-03 was closed by building it, and
+it earned its place on the first pass by finding defect 1 — which four
+gates, a full acceptance and a human read had all passed over.
