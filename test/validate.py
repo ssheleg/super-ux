@@ -488,6 +488,37 @@ def validate_brand_contract() -> None:
         check(token in text, f"brand-contract.md: missing `{token}`")
 
 
+PACKS = (
+    "operator-brief", "calm-expert", "peer-builder",
+    "editorial-premium", "plain-service", "playful-consumer",
+)
+PACK_FIELDS = (
+    "Use for", "Not for", "Axes", "Narrative template", "Lexicon",
+    "Pack bans", "Register deltas", "Ready lines", "Failure mode",
+)
+
+
+def validate_voice_packs() -> None:
+    """Six packs, and every one of them admits how it degrades.
+
+    `Failure mode` is the field that makes an archetype library safe to ship:
+    without it a pack is an instruction to overshoot, and the audit has no
+    way to call the overshoot anything but taste.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "voice-packs.md")
+    if not check(text is not None, "voice-packs.md is missing"):
+        return
+    for section in text.split("\n## ")[1:]:
+        name = section.split("\n", 1)[0].strip()
+        if name not in PACKS:
+            continue
+        for field in PACK_FIELDS:
+            check(field in section, f"voice-packs.md: {name} missing `{field}`")
+    for pack in PACKS:
+        check(f"\n## {pack}\n" in text, f"voice-packs.md: pack `{pack}` missing")
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -501,6 +532,7 @@ def main() -> int:
     validate_shipped_references()
     validate_catalog()
     validate_brand_contract()
+    validate_voice_packs()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
