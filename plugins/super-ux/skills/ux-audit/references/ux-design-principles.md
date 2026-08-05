@@ -136,11 +136,29 @@ goal the user never had.
 Rule: any of PRN-17..21 recorded as `applied` in a compliance table names
 which side of that fourth column it is on, and what the user gets from it.
 
+## Voice principles (PRN-22..PRN-24)
+
+These describe how a product **sounds**, and they sit beside the interaction
+principles rather than under them: a product can satisfy every heuristic
+above and still read like three different companies. Each has the same shape
+as the rest — a mechanism, and the failure it prevents.
+
+| ID | Principle | What it means | Violated when |
+|---|---|---|---|
+| PRN-22 | One voice, many registers | The voice is fixed and per-surface tone is a delta on named axes; invariants hold everywhere, including in every locale (BP-183, BP-202). | A surface quietly breaks an invariant because it "needs a different tone" — improvisation dressed as adaptation. |
+| PRN-23 | Every claim is checkable | A number, a superlative or a citation exists as a sourced, dated fact, or it is not written (BP-190, BP-194). | Unsourced figures, fabricated quotes or experts, superlatives with nothing beside them. |
+| PRN-24 | Never joke about the user's loss | Where data, money or access is at stake, the copy carries no levity — in any voice, including the playful one (BP-187). | A cheerful error, an emoji on a failed payment, a pun on a destructive confirmation. |
+
+Rule: PRN-22..24 recorded as `applied` in a compliance table name the surface
+and the pack they were judged against, since a voice judged with no recorded
+pack is judged against taste.
+
+
 ## Improving existing UX (heuristic evaluation procedure)
 
 1. Prerequisite: backwards-mode chain exists (flows + scenarios at least
    `inferred`). You cannot judge UX without knowing the intended jobs.
-2. Walk every flow against PRN-01..PRN-21 and the journey's pain points.
+2. Walk every flow against PRN-01..PRN-24 and the journey's pain points.
    Record violations: `[PRN-NN] screen/flow-node — what breaks — severity`.
 3. Severity (NN/g scale → audit mapping): 4 catastrophic / 3 major →
    `critical`/`major`; 2 minor → `minor`; 1 cosmetic → note only.

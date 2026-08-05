@@ -34,6 +34,9 @@ drifts.
   `insight` `accessibility` `performance` `page-weight` `legal`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
   `visual-hierarchy` `microcopy` `motion`
+- **Verbal identity:** `brand-voice` `copy` `narrative` `terminology`
+  `channel-physics` `seo` `aeo` `aso` — note `voice` above means a voice
+  *interface* (VUI); the brand's voice is `brand-voice`.
 - **Components:** `component` `control` `navigation-ui` `dialog` `forms-ui`
   `selection` `feedback-ui`
 
@@ -44,7 +47,9 @@ Source key: **[48Laws]** = "48 Laws of Subscription App Success" (Botsi,
 **[M3]** = Material Design 3 / M3 Expressive (Google, 2025); **[NNg]** =
 Nielsen Norman Group research; **[Baymard]** = Baymard Institute large-scale
 usability testing (2025); **[WCAG]** = WCAG 2.2 (W3C, Level AA); **[webdev]**
-= web.dev Core Web Vitals; **[VUI]** = converged voice-interface guidance
+= web.dev Core Web Vitals; **[GEO24]** = generative-engine-optimization
+research (Aggarwal et al., KDD 2024) with its 2025 correction (C-SEO Bench,
+NeurIPS 2025) and the FTC §5 exposure that followed; **[VUI]** = converged voice-interface guidance
 (Amazon/Google conversation-design checklists, 2024–2026); **[RC25]** =
 RevenueCat State of Subscription Apps 2025 (75k+ apps, $10B revenue);
 **[PLG25]** = OpenView / ProductLed 2025 SaaS benchmarks; **[ASO25]** =
@@ -1427,3 +1432,202 @@ the defects are few and repetitive, which is what makes them checkable.
 - **Apply when:** naming or renaming navigation, tabs, sections, settings groups.
 - **Tags:** navigation, microcopy, readability, insight
 - **Source:** [NNg]
+
+### Verbal identity (BP-182..205)
+
+Written against `brand-contract v1`. These carry a sixth field, **Checked** —
+the date the practice was last verified against its source. It starts here on
+purpose: backfilling a date onto BP-001..181 would record a verification
+nobody performed.
+
+#### BP-182: One action keeps one name everywhere it appears
+- **Do:** name an action once — button, confirmation, toast, history entry, notification, docs and the accessible name all use it, with only tense changing (`Publish` → `Published`). Record it in the string registry against the scenario it serves before a second surface names it.
+- **Why:** each screen is written correctly on its own, so the defect is invisible from inside any one of them and findable only by reading the whole interface at once; users who learned `Publish` do not recognise `Submit` as the same act, and the support cost lands on the team that never saw the conflict.
+- **Apply when:** naming any action; reviewing a flow that spans more than one screen; adopting a string registry on an existing product.
+- **Tags:** brand-voice, copy, microcopy, trust, friction-reduction
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-183: A register moves the axes; it never crosses the invariants
+- **Do:** express per-surface tone as signed deltas on a fixed set of voice axes, and list separately the invariants that hold on every surface and in every locale. A surface that seems to need an invariant broken triggers one of two decisions with an owner — change it for the whole product, or do not use the surface.
+- **Why:** without the split, per-surface freedom becomes per-surface improvisation, and a product ends up reading like three companies; with it, a Reddit post can drop the CTA and turn self-deprecating while the brand still refuses to hedge.
+- **Apply when:** adding a surface; writing for one that has no record; reviewing copy that "sounds off" without an obvious error.
+- **Tags:** brand-voice, narrative, copy, trust
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-184: Platform physics and brand choice are recorded as separate fields
+- **Do:** in each surface record, keep "what the platform penalises" apart from "what we have decided not to do", and fill both halves even when one is `none`.
+- **Why:** merged into one line they are indistinguishable within a quarter, and then nobody can tell which rule is safe to revisit when the platform changes its ranking — so either the team keeps obeying a dead algorithm, or it discards a brand decision believing it was one.
+- **Apply when:** writing any channel playbook; a platform announces a ranking change; onboarding someone new to the channel.
+- **Tags:** brand-voice, channel-physics, copy, maintainability
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-185: A voice archetype ships with its own failure mode
+- **Do:** whenever a tone is adopted from a pack or a reference brand, write down the degenerate form it collapses into when overdone, and check for that form by name in review.
+- **Why:** every overshoot sounds *more* like the chosen voice, not less, which is why it is never caught from inside; naming it converts "this feels like too much" from a taste argument into a finding — terse becomes jargon parody, warm becomes cringe, careful becomes corporate mush.
+- **Apply when:** adopting or authoring a voice; any copy review; onboarding a new writer.
+- **Tags:** brand-voice, narrative, copy, insight
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-186: An error names what happened, what survived, and one next step
+- **Do:** write the three facts in that order, in the product's vocabulary rather than the exception's. The middle one — "your draft was saved" — is the one teams skip and users need most.
+- **Why:** it converts a failure into an interruption; without it the user assumes the worst and either retries destructively or leaves, and the support ticket that follows costs more than the sentence would have.
+- **Apply when:** every error branch in every flow and scenario.
+- **Tags:** copy, microcopy, error-recovery, trust
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-187: No humor where the user is losing something
+- **Do:** ban levity — jokes, exclamation marks, emoji — on errors, destructive confirmations, billing and paywalls, in every voice including the playful one. Make it a linted rule, not a guideline.
+- **Why:** at that moment the user is losing data, access or money, usually through no choice of their own, and a joke reads as mockery of a loss the product caused; the brand pays for it exactly where trust is thinnest.
+- **Apply when:** any surface where money, data or access changes hands or disappears.
+- **Tags:** copy, microcopy, trust, error-recovery, legal
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-188: An empty state teaches; it does not apologise
+- **Do:** answer three things — what belongs here, why it is worth putting there, and the one action that starts it. Distinguish nothing-yet from nothing-matched (offer to widen or clear the filter, and show what it was) from nothing-left (confirm completion).
+- **Why:** the empty state is the highest-attention moment a feature ever gets and the only one where the user is guaranteed to read; "No items yet" spends it on a status the screen already showed.
+- **Apply when:** every list, board, inbox, search result and dashboard, in all three empty variants.
+- **Tags:** copy, microcopy, onboarding, activation, engagement
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-189: State the requirement before the user types, not after they fail
+- **Do:** put format, length and constraint under the field from the start; validation messages then say what is wrong *and* what is valid, in that order.
+- **Why:** requirements revealed only by failure make the user guess, and each failed attempt raises abandonment on exactly the forms that matter most; the information costs nothing to show early and everything to withhold.
+- **Apply when:** every form field with a constraint — passwords, identifiers, card numbers, file uploads.
+- **Tags:** copy, microcopy, forms, friction-reduction, conversion
+- **Source:** [Baymard]
+- **Checked:** 2026-08-05
+
+#### BP-190: Every claim carries its proof, or it gets softened
+- **Do:** keep one canonical source of every public figure, with a source, a checked date and a review date; a number that has no row there does not go into copy. Superlatives ship with a sourced fact beside them or not at all.
+- **Why:** an unsourced number is an opinion with a digit on it — it cannot survive a customer's question, a regulator's, or an answer engine's, and one discovered exaggeration discounts every other claim on the page.
+- **Apply when:** any public surface; any comparison; any pricing or performance claim.
+- **Tags:** copy, conversion, trust, legal, seo
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-191: Bridge every feature to its consequence
+- **Do:** for each feature stated, answer "so what?" once in the reader's terms, and cut the ones with no answer rather than padding them.
+- **Why:** readers do not convert features into outcomes on the writer's behalf; a page that lists capability without consequence reads as complete to its author and as noise to its audience.
+- **Apply when:** feature pages, pricing tables, release announcements, store descriptions.
+- **Tags:** copy, conversion, engagement
+- **Source:** [CRO26]
+- **Checked:** 2026-08-05
+
+#### BP-192: Answer the objection where it is felt, not in an FAQ
+- **Do:** place the trust signal — trial terms, cancellation, data handling, what happens next — immediately beside the action that raises the doubt, and keep the FAQ for questions that are genuinely secondary.
+- **Why:** hesitation is local and momentary; an answer three sections away is an answer the hesitating reader never reaches, and the FAQ is where objections go to be technically addressed and practically ignored.
+- **Apply when:** every primary CTA, paywall, signup form and checkout step.
+- **Tags:** copy, conversion, trust, friction-reduction
+- **Source:** [CRO26]
+- **Checked:** 2026-08-05
+
+#### BP-193: A comparison page concedes something real
+- **Do:** compare against the competitor's current configuration, date the check, and name at least one thing they do better; where the difference is a difference rather than a deficit, say so.
+- **Why:** a comparison with no concession is read as an advertisement and discounted entirely, so the concession is what makes the rest credible; comparing against a stale or straw configuration is also the version most likely to be corrected in public.
+- **Apply when:** any versus, alternatives or competitor page.
+- **Tags:** copy, conversion, trust, seo
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-194: Never fabricate a fact, a quote, an expert or a citation
+- **Do:** refuse, say why, and find a real source. Where no evidence exists, state the absence plainly instead of filling it.
+- **Why:** the visibility lift measured for fabricated citations against 2023-era models is gone — it is now trained against as an adversarial signal, it evaporates under competition, and it carries consumer-protection exposure; real evidence delivered in the same structural pattern captures most of the effect with none of the risk.
+- **Apply when:** any content aimed at search or answer engines; any claim under deadline pressure; any request to "add a statistic".
+- **Tags:** copy, seo, aeo, trust, legal
+- **Source:** [GEO24]
+- **Checked:** 2026-08-05
+
+#### BP-195: Blocking the AI crawlers vetoes everything else
+- **Do:** decide once whether answer-engine visibility is a goal, record the decision, and make `robots.txt` agree with it; check the agreement mechanically rather than assuming it.
+- **Why:** content quality is irrelevant to a crawler that never arrives, so every other investment on the page scores zero — and the contradiction is invisible because both halves look correct in isolation.
+- **Apply when:** declaring AI search a target; any robots.txt change; any AEO or GEO audit, as the first check rather than the last.
+- **Tags:** aeo, seo, copy, insight
+- **Source:** [GEO24]
+- **Checked:** 2026-08-05
+
+#### BP-196: Front-load the answer; keyword density is not a lever
+- **Do:** put the answer in the first sentence after the heading, keep statements self-contained enough to quote, and use tables for comparisons and ordered lists for procedures. Treat any single term exceeding about 1% of a document as stuffing.
+- **Why:** extraction weights early, standalone text heavily and decays fast, so position does the work repetition used to; density above the threshold lowers citation likelihood rather than raising it, and reads to a human as an attempt to game a machine.
+- **Apply when:** every page or post intended to rank or be cited.
+- **Tags:** seo, aeo, copy, readability
+- **Source:** [GEO24]
+- **Checked:** 2026-08-05
+
+#### BP-197: Cut the filler opener and the vague entity
+- **Do:** delete industry-landscape preambles and replace "experts say", "studies show" and "a leading provider" with a named source or with nothing.
+- **Why:** the preamble delays the answer past the point where extraction happens, and an unnamed source is not a source — together they are the two most reliable signals that a page was generated rather than written, to readers and retrieval alike.
+- **Apply when:** editing any long-form or landing copy; reviewing machine-drafted text.
+- **Tags:** copy, seo, aeo, readability
+- **Source:** [GEO24]
+- **Checked:** 2026-08-05
+
+#### BP-198: Write to the surface's mechanics, not around them
+- **Do:** record each channel's real constraints — what suppresses reach, what is capped, what is rewarded — with the date each was last verified, and write to them; re-verify before treating a rule older than its date as a constraint.
+- **Why:** platform mechanics decay quietly, and a rule nobody dated cannot be audited, only believed; teams end up obeying a suppression that was lifted two years ago while missing the one introduced last quarter.
+- **Apply when:** every social, store, ads or email surface; any platform announcement.
+- **Tags:** channel-physics, copy, engagement, conversion
+- **Source:** [Viral26]
+- **Checked:** 2026-08-05
+
+#### BP-199: Adapt across channels; never paste across them
+- **Do:** re-write per surface from the claim and the proof, changing length, structure, CTA policy and register; say explicitly what each version drops.
+- **Why:** a thread is not a page with line breaks, and the register that reads as confident on a landing page reads as marketing intrusion in a community; cross-posting is visible to the audience and costs more standing than the reach it buys.
+- **Apply when:** repurposing any piece; launch weeks; any "post this everywhere" request.
+- **Tags:** channel-physics, copy, engagement
+- **Source:** [Viral26]
+- **Checked:** 2026-08-05
+
+#### BP-200: A changelog entry describes the user's world, not the codebase
+- **Do:** write what changed for the reader, lead with breaking changes and their migration path, and group by user-visible area rather than internal module.
+- **Why:** the people who read changelogs are the users who stayed, which makes it the highest-trust surface a product has; "refactored the scheduler" spends that trust on information only the team can use.
+- **Apply when:** every release note, in-product what's-new, and store update text.
+- **Tags:** channel-physics, copy, trust, engagement
+- **Source:** [NNg]
+- **Checked:** 2026-08-05
+
+#### BP-201: Spend the store's tightest fields on distinct terms
+- **Do:** in a keyword field, drop spaces after commas, drop plurals the store already matches, drop anything already carried by the title, and never list a competitor's brand; write captions as outcomes rather than as UI labels.
+- **Why:** these four habits waste roughly a third of a 100-character field for no reach, and the first caption is read before the screenshot is understood — so it is a headline, not a label.
+- **Apply when:** any App Store or Google Play listing; every listing localization.
+- **Tags:** aso, copy, conversion, ios, android
+- **Source:** [ASO25]
+- **Checked:** 2026-08-05
+
+#### BP-202: Translate the job the string does, not the words it uses
+- **Do:** for CTAs, headlines, taglines and captions, define what the string must accomplish and write the string that accomplishes it in the target language; treat a word-for-word rendering as a defect even when the grammar is perfect.
+- **Why:** the shorter the string, the more its effect depends on idiom, so literal translation fails hardest exactly where conversion is decided; a grammatically flawless CTA that nobody recognises as an invitation converts worse than no translation at all.
+- **Apply when:** every locale; especially buttons, hero headlines and store fields.
+- **Tags:** i18n, copy, conversion, microcopy
+- **Source:** [GOVUK]
+- **Checked:** 2026-08-05
+
+#### BP-203: Carry a length coefficient into the original design
+- **Do:** record a measured expansion factor per locale and apply it to every field limit at design time, so the primary-language string is authored against the tightest effective budget rather than the loosest.
+- **Why:** German and Russian routinely need 15-30% more room and CJK much less, so a layout designed at 100% breaks on first translation; discovering it during localization turns a copy decision into a redesign.
+- **Apply when:** buttons, tabs, store titles and subtitles, any fixed-width field.
+- **Tags:** i18n, copy, layout, maintainability
+- **Source:** [GOVUK]
+- **Checked:** 2026-08-05
+
+#### BP-204: A lagging locale declares that it lags
+- **Do:** set a parity threshold, compute coverage per locale mechanically, and report the shortfall with its count; never let a partially translated locale present as complete.
+- **Why:** a declared gap is a known state someone can plan around, while an undeclared one is a surprise delivered to the user least able to read the fallback; fallbacks are acceptable, silent fallbacks are not.
+- **Apply when:** any product with more than one locale; every release that adds strings.
+- **Tags:** i18n, copy, trust, maintainability
+- **Source:** [GOVUK]
+- **Checked:** 2026-08-05
+
+#### BP-205: Research keywords per market; never translate them
+- **Do:** run keyword and store-term research separately in each locale, and let the resulting page structure differ where the market's questions differ.
+- **Why:** the translation of a high-volume term is routinely a term with no volume, while the phrase people actually type is a different word entirely — so a translated keyword list buys the cost of localization without its return.
+- **Apply when:** entering a market; localizing a store listing; any multi-locale content plan.
+- **Tags:** i18n, seo, aso, copy, insight
+- **Source:** [ASO25]
+- **Checked:** 2026-08-05

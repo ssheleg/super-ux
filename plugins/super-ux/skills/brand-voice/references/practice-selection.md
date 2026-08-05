@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..181 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..205 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -10,8 +10,8 @@ personalization BP-143..144, trend governance BP-145..146, growth loops and
 referral BP-147..151, empty states BP-152, authentication and form recovery
 BP-153..156, motion craft BP-157..164, perceived quality BP-165..168,
 generated-default tells BP-169..172, interface state and platform surfaces
-BP-173..179, information architecture BP-180..181;
-[ux-design-principles.md](ux-design-principles.md) PRN-01..21)
+BP-173..179, information architecture BP-180..181, verbal identity BP-182..205;
+[ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
 **audit** (`ux-audit`). Purpose: the right practices get considered at the
@@ -90,6 +90,12 @@ the Step-2 sets:
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
 | Web2app funnel + paid handoff | BP-124..129, BP-030, BP-078; PRN-01, PRN-09 |
 | Navigation / IA | BP-049, BP-051..053, BP-173, BP-180, BP-181; PRN-06, PRN-14 |
+| Any user-visible string | BP-182, BP-185, BP-189; PRN-22 |
+| Error, empty or loading state | BP-186, BP-187, BP-188; PRN-24 |
+| Landing, pricing or feature page | BP-190..193; PRN-23 |
+| Content aimed at search or answer engines | BP-194..197; PRN-23 |
+| Social, changelog, ads or email surface | BP-183, BP-184, BP-198..200 |
+| App Store or Google Play listing | BP-201, BP-205 |
 | Permissions / notifications | BP-013, BP-036..038 |
 | Lifecycle / email sequences | BP-034, BP-039, BP-071 |
 | Voice / chat dialog | BP-060..066; PRN-01, PRN-03, PRN-09 |
@@ -100,8 +106,8 @@ the Step-2 sets:
 | Reading surfaces (articles, docs, long copy) | BP-079, BP-081, BP-086, BP-087 |
 | Data tables / dashboards | BP-086, BP-088; PRN-06 |
 | Animated / scroll-driven surface | BP-054, BP-130..132, BP-133, BP-157..164; PRN-01, PRN-08 |
-| Destructive or irreversible action | BP-174, BP-175; PRN-03, PRN-05 |
-| Multi-locale surface | BP-177; PRN-02 |
+| Destructive or irreversible action | BP-174, BP-175, BP-187; PRN-03, PRN-05, PRN-24 |
+| Multi-locale surface | BP-177, BP-202..205; PRN-02, PRN-22 |
 | Long list / table / feed | BP-179, BP-086, BP-088; PRN-06 |
 | Responsive layout pass | BP-134, BP-135, BP-050, BP-087 |
 | Accessibility pass | BP-059, BP-081, BP-083, BP-136..138; PRN-01, PRN-04 |

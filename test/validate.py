@@ -552,6 +552,54 @@ def validate_brand_templates() -> None:
     )
 
 
+BRAND_FIRST_BP = 182
+
+
+def validate_brand_practices() -> None:
+    """The brand cluster carries a sixth field, and nothing reuses `voice`.
+
+    `Checked:` starts at BP-182 deliberately: backfilling it onto BP-001..181
+    would put a date on a verification nobody performed, which is the exact
+    failure the field exists to prevent.
+    """
+    src = ROOT / "plugins/super-ux/skills/references"
+    text = read(src / "best-practices.md") or ""
+    ids = sorted(int(n) for n in re.findall(r"^#### BP-(\d{3}):", text, re.M))
+    if not check(bool(ids), "best-practices.md: no practices parsed"):
+        return
+    check(
+        max(ids) >= 205,
+        f"brand practices: catalog ends at BP-{max(ids):03d}, need BP-205 "
+        f"or higher (six clusters of at least four)",
+    )
+    for num in range(BRAND_FIRST_BP, max(ids) + 1):
+        body = re.search(
+            rf"^#### BP-{num:03d}:.*?(?=^#### |\Z)", text, re.M | re.S
+        )
+        if not check(body is not None, f"BP-{num:03d} is missing"):
+            continue
+        for field in ("- **Do:**", "- **Why:**", "- **Apply when:**",
+                      "- **Tags:**", "- **Source:**", "- **Checked:**"):
+            check(field in body.group(0),
+                  f"BP-{num:03d}: missing {field}")
+    # `.` spans newlines under re.S, so the tag group must exclude them --
+    # otherwise every entry's "tags" run to the end of the file and the first
+    # practice appears to carry every tag in the catalog.
+    # Scoped to the brand range on purpose: BP-060..065 are voice-interface
+    # practices and `voice` is their correct Domain tag. The collision is only
+    # a problem for new entries, where `voice` would mean the brand's.
+    for num, tags in re.findall(
+        r"^#### BP-(\d{3}):.*?- \*\*Tags:\*\* ([^\n]+)", text, re.M | re.S
+    ):
+        if int(num) < BRAND_FIRST_BP:
+            continue
+        check(
+            not re.search(r"(?:^|[ ,`])voice(?:[ ,`]|$)", tags),
+            f"BP-{num}: uses the tag `voice`, which in this catalog means a "
+            f"voice interface -- the brand tag is `brand-voice`",
+        )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -567,6 +615,7 @@ def main() -> int:
     validate_brand_contract()
     validate_voice_packs()
     validate_brand_templates()
+    validate_brand_practices()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
