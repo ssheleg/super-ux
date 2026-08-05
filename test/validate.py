@@ -519,6 +519,39 @@ def validate_voice_packs() -> None:
         check(f"\n## {pack}\n" in text, f"voice-packs.md: pack `{pack}` missing")
 
 
+BRAND_TEMPLATES = (
+    "README.md", "voice.md", "terminology.md", "facts.md",
+    "channels.md", "strings.md", "locale.md",
+)
+
+
+def validate_brand_templates() -> None:
+    """Every seeded brand file announces which contract it was written to.
+
+    Without the marker on the artifact itself, a base three contract versions
+    old is indistinguishable from a current one -- it is internally
+    consistent either way, which is exactly why the linter cannot see it and
+    the doctor can.
+    """
+    tdir = ROOT / "templates/brand"
+    for name in BRAND_TEMPLATES:
+        text = read(tdir / name)
+        if not check(text is not None, f"templates/brand/{name} is missing"):
+            continue
+        lines = text.splitlines()
+        first = lines[0].strip() if lines else ""
+        check(
+            first == "Contract: brand-contract v1",
+            f"templates/brand/{name}: first line must be the contract marker",
+        )
+    readme = read(tdir / "README.md") or ""
+    check(
+        "Sources:" in readme,
+        "templates/brand/README.md: no `Sources:` block -- the linter would "
+        "have nothing to scan (B006)",
+    )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -533,6 +566,7 @@ def main() -> int:
     validate_catalog()
     validate_brand_contract()
     validate_voice_packs()
+    validate_brand_templates()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
