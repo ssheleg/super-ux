@@ -568,6 +568,150 @@ def _ios_keywords(path: str, fields: dict, raw: str) -> list[Finding]:
     return findings
 
 
+AI_AGENTS = ("GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended")
+
+FILLER_OPENERS = (
+    "in today's digital landscape", "in the ever-evolving world",
+    "in today's fast-paced", "in an increasingly", "in the modern era",
+)
+
+# S1 markers only -- the ones decisive on their own. The full catalogue,
+# with S2 and S3, is in references/ai-tells.md.
+S1_MARKERS = (
+    "delve", "it is important to note", "it's important to note",
+    "it is worth noting", "in conclusion", "needless to say",
+    "landscape of", "leverage the", "robust and", "seamless integration",
+    "crucial to", "navigate the complexities",
+)
+
+STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "your", "you",
+    "are", "was", "were", "have", "has", "had", "not", "but", "all",
+    "can", "will", "into", "than", "then", "them", "they", "our", "its",
+    "some", "other", "here", "more", "most", "when", "what", "which",
+}
+
+SENSITIVE_PREFIXES = ("error.", "destructive.", "billing.", "paywall.")
+EMOJI_RE = re.compile(
+    "[\U0001F300-\U0001FAFF☀-➿️]"
+)
+
+
+def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B050-B054 -- do not write text that looks like gaming a crawler."""
+    findings: list[Finding] = []
+    channels = read(brand_dir / "channels.md") or ""
+    targets_ai = "AI search: target" in channels
+
+    if targets_ai and "robots" in sources:
+        for path, _fields, _body in [
+            (p, {}, "") for p in sources["robots"]
+        ]:
+            robots = read(brand_dir.parent.parent / path) or ""
+            blocks = []
+            agent = None
+            for line in robots.splitlines():
+                head = re.match(r"^User-agent:\s*(.+?)\s*$", line, re.I)
+                if head:
+                    agent = head.group(1).strip()
+                elif re.match(r"^Disallow:\s*/\s*$", line, re.I) and agent:
+                    if agent in AI_AGENTS:
+                        blocks.append(agent)
+            if blocks:
+                findings.append(Finding(
+                    "B050", SEVERITY_ERROR, path, 0,
+                    f"channels.md declares AI search a target while "
+                    f"{', '.join(blocks)} is blocked here -- content quality "
+                    f"is irrelevant to a crawler that never arrives",
+                ))
+
+    records = surfaces(brand_dir)
+    for path, fields, body in documents(brand_dir, sources, "marketing"):
+        words = [w.lower().strip(".,:;!?()\"'") for w in body.split()]
+        real = [w for w in words if len(w) > 3 and w not in STOPWORDS]
+        if len(real) >= 40:
+            counts: dict[str, int] = {}
+            for word in real:
+                counts[word] = counts.get(word, 0) + 1
+            for word, count in sorted(counts.items()):
+                if count / len(words) > 0.01:
+                    findings.append(Finding(
+                        "B051", SEVERITY_ERROR, path, 0,
+                        f"`{word}` is {count / len(words):.1%} of the "
+                        f"document -- above 1% reads as stuffing, which "
+                        f"lowers citation likelihood rather than raising it",
+                    ))
+                    break
+
+        opening = body.strip().lower()[:120]
+        for filler in FILLER_OPENERS:
+            if opening.startswith(filler) or f"\n{filler}" in opening:
+                findings.append(Finding(
+                    "B052", SEVERITY_ERROR, path, 0,
+                    f"filler opener \"{filler}…\" -- it delays the answer "
+                    f"past the point where extraction happens",
+                ))
+                break
+
+        record = records.get(fields.get("surface", ""))
+        if record and "author" in record.get("Proof", "").lower():
+            if not fields.get("author"):
+                findings.append(Finding(
+                    "B053", SEVERITY_WARN, path, 0,
+                    "no named author, and this surface makes claims that "
+                    "need one",
+                ))
+
+        title = fields.get("title", "")
+        promised = re.match(r"^\s*(\d+)\b", title)
+        if promised:
+            items = len(re.findall(r"^\s*(?:[-*]|\d+\.)\s+", body, re.M))
+            headings = len(re.findall(r"^#{2,}\s+", body, re.M))
+            if max(items, headings) < int(promised.group(1)):
+                findings.append(Finding(
+                    "B054", SEVERITY_WARN, path, 0,
+                    f"the title promises {promised.group(1)} and the body "
+                    f"delivers {max(items, headings)}",
+                ))
+    return findings
+
+
+def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B060-B061 -- machine-drafting markers, and the one absolute ban."""
+    findings: list[Finding] = []
+
+    for path, _fields, body in documents(brand_dir, sources, "marketing"):
+        lowered = body.lower()
+        hits = [m for m in S1_MARKERS if m in lowered]
+        if not hits:
+            continue
+        grade = "B" if len(hits) < 3 else "C"
+        severity = SEVERITY_ERROR if len(hits) >= 3 else SEVERITY_WARN
+        findings.append(Finding(
+            "B060", severity, path, 0,
+            f"{len(hits)} S1 marker(s) -- {', '.join(sorted(hits))}. "
+            f"Naturalness grade {grade}",
+        ))
+
+    for row in registry(brand_dir):
+        if not row["key"].startswith(SENSITIVE_PREFIXES):
+            continue
+        text = row["text"]
+        reason = None
+        if "!" in text:
+            reason = "an exclamation mark"
+        elif EMOJI_RE.search(text):
+            reason = "an emoji"
+        if reason:
+            findings.append(Finding(
+                "B061", SEVERITY_ERROR, row["location"], 0,
+                f"`{row['key']}` carries {reason}. The user is losing data, "
+                f"access or money on this surface; levity reads as mockery "
+                f"of a loss the product caused",
+            ))
+    return findings
+
+
 def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     """Every check, in order. `fix` is applied by the caller via apply_fixes."""
     sources = load_sources(brand_dir)
@@ -577,6 +721,8 @@ def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     findings.extend(check_consistency(brand_dir, sources))
     findings.extend(check_facts(brand_dir, sources))
     findings.extend(check_channels(brand_dir, sources))
+    findings.extend(check_bot_safety(brand_dir, sources))
+    findings.extend(check_ai_tells(brand_dir, sources))
     return findings
 
 

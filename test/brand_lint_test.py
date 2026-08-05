@@ -313,6 +313,70 @@ def main() -> int:
                  "keywords: task,checklist,reminder\n---\n\nBody.\n"},
     )
 
+    ai_sources = MARKER + (
+        "\n\nSources:\n  ui: src/**/*.ts\n  marketing: content/**/*.md\n"
+        "  robots: public/robots.txt\n"
+    )
+    blog = (
+        MARKER + "\nAI search: target\n\n### blog\n\n```\n"
+        "Register:   distance -1\n"
+        "Format:     long form\n"
+        "Limits:     none\n"
+        "Forbidden:  physics: none | brand: none\n"
+        "CTA:        none\n"
+        "Proof:      named author required\n"
+        "Locales:    none\n"
+        "```\n"
+    )
+
+    case(
+        "AI search declared a target while the crawlers are blocked",
+        {**MINIMAL, "README.md": ai_sources, "channels.md": blog},
+        {"B050"},
+        project={
+            "public/robots.txt": "User-agent: GPTBot\nDisallow: /\n",
+            "content/a.md": "---\nsurface: blog\nauthor: R. Iyer\n"
+            "title: Post\n---\n\nA short post.\n",
+        },
+    )
+    case(
+        "keyword repeated past one percent of the document",
+        {**MINIMAL, "README.md": ai_sources, "channels.md": blog},
+        {"B051"},
+        project={
+            "public/robots.txt": "User-agent: *\nAllow: /\n",
+            "content/a.md": "---\nsurface: blog\nauthor: R. Iyer\n"
+            "title: Widgets\n---\n\n"
+            + ("widgets " * 4 + "plus assorted filler content lines ") * 8,
+        },
+    )
+    case(
+        "filler opener",
+        {**MINIMAL, "README.md": ai_sources, "channels.md": blog},
+        {"B052"},
+        project={
+            "public/robots.txt": "User-agent: *\nAllow: /\n",
+            "content/a.md": "---\nsurface: blog\nauthor: R. Iyer\ntitle: X\n"
+            "---\n\nIn today's digital landscape, teams need clarity.\n",
+        },
+    )
+    case(
+        "claims with no named author where the surface requires one",
+        {**MINIMAL, "README.md": ai_sources, "channels.md": blog},
+        {"B053"},
+        project={
+            "public/robots.txt": "User-agent: *\nAllow: /\n",
+            "content/a.md": "---\nsurface: blog\ntitle: X\n---\n\nA short post.\n",
+        },
+    )
+    case(
+        "humor on an error string",
+        {**MINIMAL, "strings.md": registry(
+            "| error.upload | Oops! that did not work 🙃 | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B061"},
+        project={"src/a.ts": "x\n"},
+    )
+
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
