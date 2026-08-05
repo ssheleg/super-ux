@@ -130,10 +130,12 @@ exactly this in prose. Nothing checks it, which is why prose was not enough.
 
 - *Standing instruction (taken, #2 above):* never read a gate's verdict
   through a pipe. Run it alone, check the exit code, then print.
-- *Mechanical check (carry-over):* `sshlg-skills` should compare each pin
-  against the registry (`npm view <name> version`) and fail when they differ.
-  That turns a four-release drift into a red build on the first release that
-  forgets. Logged as C-06.
+- *Mechanical check (taken):* `sshlg-skills` `test/check_pins.py`, gated in
+  CI, released as v0.20.0. It verifies ownership before reporting drift — a
+  name that exists is not a name that belongs to us, and `task-pipeline` on
+  npm is someone else's 0.1.0. On its first run it found `sheleg-design`
+  pinned at 1.3.4 against a published 1.7.0, so the check paid for itself
+  before it was merged. C-06 closed.
 - *Documentation (taken):* the stale manual `npm publish` step in
   `CONTRIBUTING.md` was replaced this run — every repo in the family has
   published from CI on a `v*` tag since that text was written.
