@@ -304,6 +304,55 @@ one of the two.
    that moment; a joke reads as mockery. Enforced as `B061`, not left to
    taste.
 
+---
+
+## The check codes
+
+`brand_lint.py` emits these and nothing else. The contract owns the meanings;
+the linter owns the detection. A code the linter can emit that is absent here
+is a validator failure, because its meaning would otherwise live only in the
+source of the thing doing the checking.
+
+Severity is fixed per code: **E** blocks, **W** reports.
+
+| Code | | Fires when |
+|---|---|---|
+| B001 | E | a file under `docs/brand/` has no contract marker |
+| B002 | E | markers disagree across the pack |
+| B003 | W | `voice.md` is `draft` while `strings.md` holds agreed rows |
+| B004 | E | `Derived-from` cites an id absent from `foundation.md` |
+| B005 | W | `foundation.md` changed after `Last calibrated` |
+| B006 | E | `README.md` has no `Sources:` block — nothing to scan |
+| B010 | E | a banned word appears in a registered string |
+| B011 | E | a generic word used where a product term exists |
+| B012 | E | an entity or tier name spelled inconsistently |
+| B020 | E | one action carries two different names |
+| B021 | E | a registered string diverged from the code |
+| B022 | W | a code string has no registry row |
+| B023 | E | a registry row points at a location that does not exist |
+| B024 | E | declared casing violated |
+| B025 | W | a button label names no outcome |
+| B030 | E | a figure in public copy has no row in `facts.md` |
+| B031 | W | a fact has no source, or is past its `Review by` |
+| B032 | E | a superlative with no fact beside it |
+| B040 | E | a field exceeds its surface limit |
+| B041 | E | an iOS keyword-field rule broken |
+| B042 | E | a link in a body where the surface's physics forbid it |
+| B043 | W | more hashtags than the surface tolerates |
+| B050 | E | AI search declared a target while a crawler is blocked |
+| B051 | E | a token exceeds 1% of a marketing document |
+| B052 | E | a filler opener |
+| B053 | W | no named author where the surface needs one |
+| B054 | W | the title promises more than the body delivers |
+| B060 | W/E | machine-drafting markers; error at three S1 |
+| B061 | E | humor where the user is losing something |
+| B070 | E | a declared locale has no locale file |
+| B071 | W | locale parity below the declared threshold |
+| B072 | W | a locale row left identical to the primary |
+| B073 | E | a field overflows under the locale's coefficient |
+
+---
+
 ## Versioning
 
 The version in the marker moves when a field is renamed or removed, or when a

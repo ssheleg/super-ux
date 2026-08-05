@@ -626,6 +626,34 @@ def validate_brand_field_ownership() -> None:
         )
 
 
+def validate_brand_lint_coverage() -> None:
+    """Every code the linter can emit has a fixture, and the contract names it.
+
+    Found by audit, not by the suite: four codes shipped with no fixture while
+    the count looked right, and eighteen were documented only in the linter's
+    own source -- in a repo whose canon is one owner per fact. A green suite
+    cannot report a check it was never asked to run, so this asks.
+    """
+    lint = read(ROOT / "plugins/super-ux/scripts/brand_lint.py") or ""
+    tests = read(ROOT / "test/brand_lint_test.py") or ""
+    contract = read(
+        ROOT / "plugins/super-ux/skills/references/brand-contract.md"
+    ) or ""
+    emitted = sorted(set(re.findall(r'"(B\d{3})"', lint)))
+    check(bool(emitted), "brand_lint.py: no check codes found")
+    for code in emitted:
+        check(
+            f'"{code}"' in tests,
+            f"{code} is emitted by brand_lint.py with no fixture in "
+            f"brand_lint_test.py -- a check nobody watched fail is not evidence",
+        )
+        check(
+            code in contract,
+            f"{code} is emitted by brand_lint.py but brand-contract.md does "
+            f"not name it -- the code's meaning would live only in the source",
+        )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -643,6 +671,7 @@ def main() -> int:
     validate_brand_templates()
     validate_brand_practices()
     validate_brand_field_ownership()
+    validate_brand_lint_coverage()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")

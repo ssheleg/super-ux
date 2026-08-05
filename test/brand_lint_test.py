@@ -476,6 +476,45 @@ def main() -> int:
         project={"docs/ux/foundation.md": foundation},
     )
 
+    # The four codes an audit found emitting with no fixture behind them. The
+    # DoD said one per code and the count looked right; four had slipped, which
+    # is what an audit is for and what a passing suite cannot tell you.
+    case(
+        "foundation changed after the voice was last calibrated",
+        {**MINIMAL, "voice.md": MINIMAL["voice.md"]
+            .replace("Derived-from: inferred", "Derived-from: P-01")
+            .replace("Last calibrated: 2026-08-05", "Last calibrated: 2020-01-01")},
+        {"B005"},
+        project={"docs/ux/foundation.md": "### P-01: the operator\n"},
+    )
+    case(
+        "the title promises more than the body delivers",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B054"},
+        project={"content/a.md":
+                 "---\nsurface: landing hero\ntitle: 7 ways to ship\n---\n\n"
+                 "- one\n- two\n"},
+    )
+    case(
+        "machine-drafting markers above the S1 threshold",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B060"},
+        project={"content/a.md":
+                 "---\nsurface: landing hero\ntitle: Ship\n---\n\n"
+                 "It is important to note that teams delve into this. "
+                 "In conclusion, it is worth noting the result.\n"},
+    )
+    case(
+        "a locale row left identical to the primary",
+        {**MINIMAL,
+         "voice.md": MINIMAL["voice.md"].replace(
+             "Locales: en (primary)", "Locales: en (primary), de"),
+         "locales/de.md": MARKER + "\nLocale: de\nPrimary: no\n\n"
+         "| Primary | Replacement | Job |\n|---|---|---|\n"
+         "| ship it | ship it | permission to stop |\n"},
+        {"B072"},
+    )
+
     fix_idempotent()
 
     if failures:

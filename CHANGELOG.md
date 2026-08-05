@@ -1,6 +1,31 @@
 # Changelog
 
-## 0.30.0 — 2026-08-05
+## 0.30.1 — 2026-08-05
+
+### Fixed
+- **`templates/brand/voice.md` told projects to write `PER-NN` where the UX
+  contract numbers personas `P-NN`.** `B004` traces `Derived-from` against
+  `foundation.md`, so a project following our own template earned a false
+  blocking error — the failure mode that teaches people to ignore a linter.
+  Shipped in 0.30.0; found by the code graph built afterwards.
+- Four check codes (`B005`, `B054`, `B060`, `B072`) shipped with no fixture
+  behind them while the suite was green and the count looked right.
+
+### Added
+- **`brand-contract.md` now owns all 33 check codes** with their severities.
+  Eighteen were documented only in the linter's source, in a repo whose canon
+  is one owner per fact.
+- **`validate_brand_lint_coverage`** — every code the linter can emit must have
+  a fixture and a contract row. The audit finding became a gate rather than a
+  ledger entry.
+- `system-map.md` names the brand reference shelf. It names rather than links:
+  a link would make every skill ship all ten files, and the map's job is
+  telling you what exists.
+- The code graph itself (`graphify-out/`), with `.graphifyignore` excluding the
+  115 sync_references copies whose hubs would describe the distribution
+  mechanism rather than the design.
+
+ — 2026-08-05
 
 The verbal identity layer. `docs/ux/` decides what the product does; the new
 `docs/brand/` decides how it speaks — one voice, many registers, and a linter

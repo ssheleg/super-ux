@@ -46,6 +46,16 @@ It is a separate root because the brand also governs surfaces that are not UX
 — a store listing, an ad, a post. The pack derives from `foundation.md` and
 never the reverse. `copywriting` writes from it and never to it.
 
+The brand layer has its own reference shelf, reached through
+[brand-contract.md](brand-contract.md) rather than linked here — naming them
+is this map's job, carrying them is not, and a link from the map would make
+every skill ship all ten. `voice-packs.md` is the library the voice is chosen
+from (six archetypes, each declaring its own failure mode) and
+`surface-registers.md` is the model the layer runs on (one voice, deltas per
+surface). Craft: `ui-copy.md`, `marketing-copy.md`, `channel-playbooks.md`,
+`store-copy.md`. Guards: `seo-aeo-safety.md`, `ai-tells.md`,
+`localization.md`.
+
 Formats: [scenario-format.md](scenario-format.md). Design reasoning:
 [ux-design-principles.md](ux-design-principles.md). Practices:
 [best-practices.md](best-practices.md) selected via
