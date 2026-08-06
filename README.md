@@ -204,12 +204,13 @@ Four skills, one entry point, and a set of contracts they all obey.
 
 | Piece | Purpose |
 |---|---|
+| skill `vision` | The WHAT layer (`docs/ux/vision.md`): essence, core idea, system behaviour, the user's role, principles with a rejected side, the **anti-vision**, horizon, one sentence, and an alignment test later features are checked against. Installs that check into the project's own instruction file |
 | skill `ux-foundation` | The WHY layer (`docs/ux/foundation.md`): personas, jobs to be done with forces, customer journey maps, user stories with Given/When/Then acceptance criteria, the monetization model |
 | skill `ux-flows` | The HOW layer + the UI map: `docs/ux/flows.md` (task analysis, mermaid flows referencing screens by ID) and `docs/ux/screens.md` — every screen and state with its Figma frame, wireframe, code coverage, scenarios and resources. Also heuristic evaluation and traced redesign proposals |
 | skill `ux-scenarios` | `docs/ux/scenarios.md`: use-case scenarios (action → observable response, alt and error paths) covering every flow node and edge, `Traces:` to stories and flows, validated for conflicts, coverage and traceability |
 | skill `ux-audit` | Batched audit with full context: code vs every scenario plus its story's acceptance criteria; verdicts PASS / PARTIAL / FAIL / BLOCKED with `file:line` evidence; depths `quick` / `standard` / `deep`; a `coverage` scope that audits the chain itself |
 | `/ux` | **The one command**: sets up whatever is missing, reports status across every layer, then offers only the applicable actions with one marked recommended. Idempotent |
-| `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` | Direct controls for when you know exactly what you want; `/ux-rule` installs the hard rule into `CLAUDE.md` |
+| `/vision` `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` | Direct controls for when you know exactly what you want; `/ux-rule` installs the hard rule into `CLAUDE.md` |
 | `docs/ux/lint.py` + `/ux-lint` | The deterministic half: missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, ID gaps, broken links. Stdlib-only, exit 1 on problems — wire it into CI so drift can't merge |
 | `cursor/rules/*.mdc` | The same methodology for Cursor: one always-on hard rule + four agent-requested rules |
 | `templates/` | Seeds for `docs/ux/`: foundation, flows, screens, scenario base, the folder README, the audit-report skeleton, and the CLAUDE.md rule snippet. Seeds for `docs/brand/`: voice, terminology, facts, channels, the string registry, a locale delta, and its folder README |
@@ -237,7 +238,7 @@ the plugin reloads):
 ```sh
 claude plugin marketplace update super-ux && \
 claude plugin update super-ux@super-ux && \
-npx --yes skills update ux-audit ux-flows ux-foundation ux-scenarios --global --yes
+npx --yes skills update ux-audit ux-flows ux-foundation ux-scenarios vision --global --yes
 ```
 
 Cursor rules and the seeded `docs/ux/lint.py` are per-project (Cursor has no
