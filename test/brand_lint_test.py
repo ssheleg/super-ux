@@ -10,6 +10,7 @@ Run: python3 test/brand_lint_test.py
 
 from __future__ import annotations
 
+import datetime
 import sys
 import tempfile
 from pathlib import Path
@@ -24,6 +25,8 @@ failures: list[str] = []
 
 MARKER = "Contract: brand-contract v1"
 
+TODAY = datetime.date.today().isoformat()
+
 MINIMAL = {
     "README.md": MARKER + "\n\nSources:\n  ui: src/**/*.ts\n",
     "voice.md": (
@@ -33,7 +36,11 @@ MINIMAL = {
         "Locale parity threshold: 80%\n"
         "Derived-from: inferred\n"
         "Status: validated\n"
-        "Last calibrated: 2026-08-05\n"
+        # B005 compares foundation.md's MTIME against this date, and a
+        # fixture's files are always written now. A hardcoded date here is a
+        # time bomb: this suite was green on 2026-08-05 and red on 2026-08-06
+        # with no code change. Calibrate "today" so the baseline cannot expire.
+        f"Last calibrated: {TODAY}\n"
     ),
     "terminology.md": MARKER + "\n",
     "facts.md": MARKER + "\n",
@@ -483,7 +490,7 @@ def main() -> int:
         "foundation changed after the voice was last calibrated",
         {**MINIMAL, "voice.md": MINIMAL["voice.md"]
             .replace("Derived-from: inferred", "Derived-from: P-01")
-            .replace("Last calibrated: 2026-08-05", "Last calibrated: 2020-01-01")},
+            .replace(f"Last calibrated: {TODAY}", "Last calibrated: 2020-01-01")},
         {"B005"},
         project={"docs/ux/foundation.md": "### P-01: the operator\n"},
     )
