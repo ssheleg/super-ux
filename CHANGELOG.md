@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.31.0 — 2026-08-06
+
+### Added
+- **`vision` skill + `/vision`** — the layer above `ux-foundation`. Foundation
+  answers who uses the product and why; vision answers what the product **is**
+  and what it refuses to become. Writes `docs/ux/vision.md` in nine layers —
+  essence, core idea, system behaviour, the user's role, principles that each
+  name a rejected alternative, the **anti-vision**, horizon, the one sentence,
+  and an alignment test — then installs that test as a rule so later features
+  are checked against it.
+
+  The chain now reads **vision -> foundation -> flows -> scenarios -> audit**.
+
+### Notes
+- Ported from a Cursor-only `vision-generator`. Two things changed on the way in.
+  It wrote its guardian rule to a **hardcoded `.cursor/skills/` path** (three
+  occurrences); it now installs into whichever instruction file the project
+  actually uses — `CLAUDE.md`, `AGENTS.md` or `GEMINI.md` — because a rule
+  installed where the running agent cannot see it is worse than no rule: absence
+  looks identical to compliance. And the document moved to `docs/ux/vision.md`,
+  into the chain the rest of this plugin maintains, rather than beside it in the
+  project root.
+- The skill raises a contradiction with `foundation.md` as a finding rather than
+  smoothing it over. Two documents that disagree are worse than one that is
+  wrong, because teams follow whichever they read last.
+
 ## 0.30.2 — 2026-08-05
 
 ### Added
