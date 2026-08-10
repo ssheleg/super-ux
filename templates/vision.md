@@ -1,5 +1,7 @@
 # <Product> — Vision
 
+<!-- Managed with super-ux (ux-contract v4). The layer above the chain. -->
+
 <!--
   Owned by the `vision` skill (super-ux). Nine sections, these headings, in
   this order — `python3 docs/ux/lint.py` keys off them.

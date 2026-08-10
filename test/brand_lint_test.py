@@ -292,6 +292,42 @@ def main() -> int:
         set(),
         project={"content/a.md": page("landing hero", "Faster", "We are 42% faster.")},
     )
+    # B030 read identifiers, standards and years as unsourced claims until this
+    # linter was pointed at super-ux's own README, where `BP-079..090`,
+    # `NIST SP 800-63B` and `Apple HIG 2025` produced nine errors nobody could
+    # act on. A check that cries wolf is uninstalled, so each shape gets a
+    # fixture: the regression would otherwise look exactly like working.
+    case(
+        "catalog ids and ranges are not figures",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project={"content/a.md": page(
+            "landing hero", "Craft floors",
+            "BP-079..090 and BP-130..135 are craft floors; PRN-24 always holds.")},
+    )
+    case(
+        "a standard's designation is not a figure",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project={"content/a.md": page(
+            "landing hero", "Auth",
+            "Password rules follow NIST SP 800-63B rev 4.")},
+    )
+    case(
+        "a year dates a claim, it is not the claim",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project={"content/a.md": page(
+            "landing hero", "Guidance",
+            "Guidance from Apple HIG 2025 and Material 3 Expressive.")},
+    )
+    case(
+        "a real unsourced figure still blocks",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B030"},
+        project={"content/a.md": page(
+            "landing hero", "Reach", "Used by 4200 teams.")},
+    )
     case(
         "fact with no source",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,

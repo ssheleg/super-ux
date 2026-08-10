@@ -20,7 +20,7 @@ const REPO = 'ssheleg/super-ux';
 
 const MENU_ITEMS = [
   { key: 'skills', label: 'Skills for any AI agent (Claude Code, Codex, Cursor, 70+ — opens agent picker)' },
-  { key: 'cursor', label: 'Cursor rules (always-on hard rule + docs/ux skeleton) into a project' },
+  { key: 'cursor', label: 'Cursor rules + docs/ux skeleton + docs/brand pack + linters, into a project' },
   { key: 'claude', label: 'Claude Code plugin (skills + /ux commands, user-global)' },
 ];
 
@@ -35,9 +35,12 @@ Usage:
 Menu items (select any combination, 'a' = all):
   1. Skills for any AI agent (Claude Code, Codex, Cursor, 70+) — delegates to
      'npx skills add ${REPO}' with its agent/global/project picker.
-  2. Cursor rules: cursor/rules/*.mdc -> <project>/.cursor/rules/ plus the
-     docs/ux skeleton. Existing scenario base is NEVER overwritten; existing
-     rule files are skipped unless --force.
+  2. Cursor rules: cursor/rules/*.mdc -> <project>/.cursor/rules/, plus the
+     docs/ux skeleton, the docs/brand pack, and all three linters
+     (docs/ux/lint.py, docs/ux/doctor.py, docs/brand/lint.py). Existing
+     scenario base and brand pack are NEVER overwritten; existing rule files
+     are skipped unless --force. docs/ux/vision.md is not seeded: an empty
+     vision reads as a decided one — write it with the vision skill.
   3. Claude Code plugin (skills + /ux commands, user-global) — runs
      'claude plugin marketplace add ${REPO}' + 'claude plugin install' when
      the claude CLI is available, otherwise prints the /plugin commands.`);
@@ -59,6 +62,7 @@ function installCursor(target, force) {
 
   let installed = 0;
   let skipped = 0;
+  let seeded = 0;
   const rules = fs.readdirSync(rulesSrc).filter((f) => f.endsWith('.mdc')).sort();
   if (rules.length === 0) fail(`no .mdc rules found in ${rulesSrc}`);
 
@@ -84,6 +88,7 @@ function installCursor(target, force) {
     } else {
       fs.copyFileSync(path.join(ROOT, 'templates', `${tpl}.md`), dst);
       console.log(`seed:    ${dst}`);
+      seeded += 1;
     }
   }
   // The brand pack lives beside the UX chain, not inside it: it also governs
@@ -98,6 +103,7 @@ function installCursor(target, force) {
     } else {
       fs.copyFileSync(path.join(ROOT, 'templates', 'brand', `${tpl}.md`), dst);
       console.log(`seed:    ${dst}`);
+      seeded += 1;
     }
   }
   {
@@ -105,6 +111,7 @@ function installCursor(target, force) {
     if (!fs.existsSync(dst)) {
       fs.copyFileSync(path.join(ROOT, 'templates', 'brand', 'locale.md'), dst);
       console.log(`seed:    ${dst}`);
+      seeded += 1;
     }
   }
 
@@ -131,7 +138,12 @@ function installCursor(target, force) {
     }
   }
 
-  console.log(`done: ${installed} installed, ${skipped} skipped`);
+  // Report what happened, not one third of it: the old line counted rules
+  // only, so a run that wrote twenty files announced eight.
+  console.log(
+    `done: ${installed} rule(s) installed, ${skipped} skipped, ` +
+      `${seeded} doc(s) seeded, linters synced`
+  );
 }
 
 function run(cmd, args) {
@@ -329,6 +341,10 @@ async function menu() {
   if (keys.includes('cursor')) installCursor(cursorDir, false);
   if (keys.includes('claude')) installClaudePlugin();
   if (keys.includes('skills')) installSkillsCli();
+
+  // Same offer the --cursor flag path makes. Two doors into one install that
+  // behave differently is how a feature comes to exist for half its users.
+  offerRouters();
 }
 
 /**
@@ -349,8 +365,8 @@ function offerRouters() {
   );
   if (r.status !== 0) {
     console.log(
-      '\nЧтобы скилы включались по умолчанию во всех проектах, допиши блок\n' +
-      'роутинга в глобальные инструкции агента:\n\n' +
+      '\nTo have these skills apply by default in every project, add the\n' +
+      "family's routing block to your agent's global instructions:\n\n" +
       '  npx --yes sshlg-skills routers --member super-ux\n'
     );
   }
