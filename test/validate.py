@@ -244,7 +244,12 @@ def validate_skills() -> None:
 
 def validate_commands() -> None:
     commands_dir = ROOT / "plugins/super-ux/commands"
-    expected = {"ux.md", "ux-init.md", "ux-update.md", "ux-audit.md", "ux-rule.md", "ux-foundation.md", "ux-flows.md", "ux-lint.md", "vision.md"}
+    expected = {
+        "ux.md", "ux-init.md", "ux-update.md", "ux-audit.md", "ux-rule.md",
+        "ux-foundation.md", "ux-flows.md", "ux-lint.md", "ux-doctor.md",
+        "vision.md", "brand.md", "brand-init.md", "brand-update.md",
+        "brand-lint.md", "copy.md",
+    }
     found = {p.name for p in commands_dir.glob("*.md")} if commands_dir.is_dir() else set()
     check(expected <= found, f"commands: missing {sorted(expected - found)}")
     for name in sorted(found):
@@ -269,33 +274,61 @@ def validate_cursor_rules() -> None:
 
 
 def validate_templates() -> None:
-    for name in ("scenarios.md", "audit-report.md", "claude-rule.md", "foundation.md", "flows.md", "screens.md", "README.md"):
+    for name in ("scenarios.md", "audit-report.md", "claude-rule.md", "vision-rule.md", "vision.md", "foundation.md", "flows.md", "screens.md", "README.md"):
         path = ROOT / "templates" / name
         text = read(path)
         check(bool(text and text.strip()), f"templates/{name}: missing or empty")
 
 
-def validate_hard_rule_copies() -> None:
-    """The hard rule lives in two Claude-facing places — they must be one text.
+def _dedent_block(block: str) -> str:
+    """Strip the uniform list indent a rule block may carry inside a command."""
+    lines = block.splitlines()
+    body = [l for l in lines if l.strip()]
+    pad = min((len(l) - len(l.lstrip(" ")) for l in body), default=0)
+    return "\n".join(l[pad:] if len(l) >= pad else l for l in lines).strip()
 
-    `templates/claude-rule.md` seeds new projects; `/ux-rule` appends its own
-    embedded copy to an existing CLAUDE.md. Two copies of a rule is exactly the
-    drift this plugin exists to prevent, and neither file looks wrong alone.
+
+HARD_RULES = [
+    ("templates/claude-rule.md", "plugins/super-ux/commands/ux-rule.md",
+     "## UX scenarios — hard rule (super-ux)"),
+    ("templates/vision-rule.md", "plugins/super-ux/skills/vision/SKILL.md",
+     "## Vision alignment — hard rule (super-ux)"),
+]
+
+
+def validate_hard_rule_copies() -> None:
+    """Every hard rule lives in two places at once — they must be one text.
+
+    A template seeds new projects; a command or skill carries its own embedded
+    copy to append to an existing instruction file. Two copies of a rule is
+    exactly the drift this plugin exists to prevent, and neither file looks
+    wrong alone.
+
+    Found by audit: the vision rule shipped in 0.31.0 with no template and no
+    gate, in the same repo whose validator already called that the main enemy.
+    So the pair list is data, and adding a rule without adding its row here
+    fails on the missing template rather than passing silently.
     """
-    template = (read(ROOT / "templates/claude-rule.md") or "").strip()
-    command = read(ROOT / "plugins/super-ux/commands/ux-rule.md") or ""
-    match = re.search(r"```markdown\n(.*?)\n   ```", command, re.DOTALL)
-    if not check(bool(match) and bool(template), "ux-rule.md: no embedded ```markdown rule block"):
-        return
-    embedded = "\n".join(
-        line[3:] if line.startswith("   ") else line
-        for line in match.group(1).splitlines()
-    ).strip()
-    check(
-        embedded == template,
-        "ux-rule.md's embedded rule block differs from templates/claude-rule.md "
-        "(one rule, one text — re-copy the template into the command)",
-    )
+    for template_path, carrier_path, heading in HARD_RULES:
+        template = (read(ROOT / template_path) or "").strip()
+        carrier = read(ROOT / carrier_path) or ""
+        if not check(bool(template), f"{template_path}: missing or empty — a hard rule needs one source"):
+            continue
+        blocks = [
+            _dedent_block(b) for b in re.findall(r"```markdown\n(.*?)\n\s*```", carrier, re.DOTALL)
+        ]
+        matching = [b for b in blocks if b.startswith(heading)]
+        if not check(
+            len(matching) == 1,
+            f"{carrier_path}: expected exactly one embedded ```markdown block "
+            f"starting '{heading}', found {len(matching)}",
+        ):
+            continue
+        check(
+            matching[0] == template,
+            f"{carrier_path}'s embedded rule block differs from {template_path} "
+            f"(one rule, one text — re-copy the template into the carrier)",
+        )
 
 
 def validate_linter() -> None:
@@ -373,6 +406,146 @@ def validate_shipped_references() -> None:
                         (refdir / target.split("#")[0]).exists(),
                         f"{skill_dir.name}/references/{f.name}: dangling link {target}",
                     )
+
+
+NUMBER_WORDS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+}
+
+# Prose lives in these; the per-skill `references/` copies are byte-identical
+# to their source and would multiply every finding by seven. `CHANGELOG.md` and
+# `docs/superpowers/` are history: a number that was right at v0.30.0 must stay
+# written as it was.
+def _prose_files() -> list[Path]:
+    out = [ROOT / "README.md", ROOT / "CONTRIBUTING.md", ROOT / "SECURITY.md"]
+    for pattern in ("templates/**/*.md", "cursor/rules/*.mdc",
+                    "plugins/super-ux/commands/*.md",
+                    "plugins/super-ux/skills/*/SKILL.md",
+                    "plugins/super-ux/skills/references/*.md"):
+        out.extend(sorted(ROOT.glob(pattern)))
+    return [p for p in out if p.is_file()]
+
+
+def _skill_names() -> list[str]:
+    d = ROOT / "plugins/super-ux/skills"
+    return sorted(p.name for p in d.iterdir() if p.is_dir() and p.name != "references") if d.is_dir() else []
+
+
+def validate_stated_numbers() -> None:
+    """Every count written in prose, against the artifact it counts.
+
+    Found by audit, three at once: the README advertised 181 practices against
+    a catalog of 206, "31 deterministic checks" against a linter emitting 33,
+    and four different PRN ranges (..10, ..16, ..21, ..24) across six files.
+    Every one of them passed 3427 checks, because the suite verified shape and
+    never once verified a number. A figure nobody can recompute is a claim.
+    """
+    catalog = read(ROOT / "plugins/super-ux/skills/references/best-practices.md") or ""
+    bp_count = len(re.findall(r"^#### BP-\d+:", catalog, re.M))
+    lint = read(ROOT / "plugins/super-ux/scripts/brand_lint.py") or ""
+    brand_codes = len(set(re.findall(r'"(B\d{3})"', lint)))
+    principles = read(ROOT / "plugins/super-ux/skills/references/ux-design-principles.md") or ""
+    prn_nums = [int(n) for n in re.findall(r"PRN-(\d+)", principles)]
+    prn_max = max(prn_nums) if prn_nums else 0
+    skills = _skill_names()
+
+    check(bp_count > 0, "best-practices.md: no `#### BP-NNN:` entries to count")
+    check(brand_codes > 0, "brand_lint.py: no check codes to count")
+    check(prn_max > 0, "ux-design-principles.md: no PRN ids to count")
+
+    for path in _prose_files():
+        rel = path.relative_to(ROOT)
+        text = read(path) or ""
+
+        for stated in re.findall(r"catalog of (\d+) proven practices", text):
+            check(int(stated) == bp_count,
+                  f"{rel}: says {stated} proven practices, best-practices.md holds {bp_count}")
+        for stated in re.findall(r"(\d+) deterministic checks", text):
+            check(int(stated) == brand_codes,
+                  f"{rel}: says {stated} deterministic checks, brand_lint.py emits {brand_codes}")
+        # `PRN-01..NN` claims to span the catalog. A genuine sub-range must be
+        # written another way (`PRN-01 – PRN-10`), so this form is unambiguous.
+        for stated in re.findall(r"PRN-01\.\.(?:PRN-)?(\d+)", text):
+            check(int(stated) == prn_max,
+                  f"{rel}: claims the heuristic catalog spans PRN-01..{stated}, "
+                  f"ux-design-principles.md ends at PRN-{prn_max}")
+        for word in re.findall(r"\b(one|two|three|four|five|six|seven|eight|nine|ten) skills\b", text):
+            check(NUMBER_WORDS[word] == len(skills),
+                  f"{rel}: says '{word} skills', the plugin ships {len(skills)} "
+                  f"({', '.join(skills)})")
+
+    rules = sorted((ROOT / "cursor/rules").glob("*.mdc"))
+    requested = [r for r in rules if not (front_matter(r) or {}).get("alwaysApply")]
+    readme = read(ROOT / "README.md") or ""
+    for word in re.findall(r"\b(one|two|three|four|five|six|seven|eight|nine|ten) agent-requested rules\b", readme):
+        check(NUMBER_WORDS[word] == len(requested),
+              f"README.md: says '{word} agent-requested rules', cursor/rules has {len(requested)}")
+
+
+def validate_skill_parity() -> None:
+    """A skill exists in seven places or it does not exist.
+
+    Found by audit: `brand-voice` and `copywriting` shipped in 0.30.0 and
+    reached neither manifest description nor the `/ux` router; `vision` shipped
+    in 0.31.0 and reached neither the system map nor a Cursor rule. Each was
+    invisible in a different place, and no single file looked wrong. Absence
+    has one side, so it has to be asked for by name.
+    """
+    skills = _skill_names()
+    check(bool(skills), "no skill directories to check parity against")
+
+    router = read(ROOT / "plugins/super-ux/commands/ux.md") or ""
+    smap = read(ROOT / "plugins/super-ux/skills/references/system-map.md") or ""
+    smap_skills = smap.split("## Skills & the one entry point", 1)[-1].split("\n## ", 1)[0]
+    plugin = load_json("plugins/super-ux/.claude-plugin/plugin.json", []) or {}
+    market = load_json(".claude-plugin/marketplace.json", []) or {}
+    market_desc = (market.get("plugins") or [{}])[0].get("description", "")
+    rule_names = {p.stem for p in (ROOT / "cursor/rules").glob("*.mdc")}
+
+    for name in skills:
+        check(name in router,
+              f"{name} is not named in commands/ux.md — /ux calls itself the only "
+              f"command a user needs, so a skill it cannot route to is a skill nobody runs")
+        check(name in smap_skills,
+              f"{name} is missing from system-map.md's 'Skills & the one entry point' section")
+        check(name in plugin.get("description", ""),
+              f"{name} is missing from plugins/super-ux/.claude-plugin/plugin.json description")
+        check(name in market_desc,
+              f"{name} is missing from .claude-plugin/marketplace.json description")
+        check(name in rule_names,
+              f"cursor/rules/{name}.mdc is missing — the Cursor channel would ship "
+              f"{len(rule_names) - 1} of {len(skills)} domains")
+
+    for cmd in ("/ux-doctor", "/vision", "/brand-lint", "/copy"):
+        check(cmd in smap, f"system-map.md does not list the {cmd} command")
+
+
+SEEDED_SCRIPTS = [
+    ("docs/ux/lint.py", "ux_lint.py"),
+    ("docs/ux/doctor.py", "ux_doctor.py"),
+    ("docs/brand/lint.py", "brand_lint.py"),
+]
+
+
+def validate_seeded_scripts() -> None:
+    """Every script an instruction tells a reader to run is put there by a command.
+
+    Found by audit: `/ux-rule` installed a rule saying "run
+    `python3 docs/brand/lint.py`" and seeded only `docs/ux/lint.py`; `/ux` told
+    the reader to run `docs/ux/doctor.py` after a repair step that never copied
+    it; `/ux-doctor` claimed `/ux-rule` "seeds both scripts". Three files, one
+    missing seam, and nothing that reads a single file can see it.
+    """
+    commands = sorted((ROOT / "plugins/super-ux/commands").glob("*.md"))
+    texts = {p.name: (read(p) or "") for p in commands}
+    for dest, source in SEEDED_SCRIPTS:
+        seeders = [n for n, txt in texts.items() if source in txt and dest in txt]
+        check(
+            bool(seeders),
+            f"no command copies {source} to {dest}, yet something instructs the "
+            f"reader to run it — a rule pointing at a file nobody installed",
+        )
 
 
 def validate_catalog() -> None:
@@ -666,6 +839,9 @@ def main() -> int:
     validate_links()
     validate_shipped_references()
     validate_catalog()
+    validate_stated_numbers()
+    validate_skill_parity()
+    validate_seeded_scripts()
     validate_brand_contract()
     validate_voice_packs()
     validate_brand_templates()

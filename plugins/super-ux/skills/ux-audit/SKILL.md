@@ -41,6 +41,13 @@ the mechanical half of the brand pack, this judges the half that needs a
 reader. Requires `docs/brand/voice.md`; without a recorded pack there is
 nothing to judge against except taste, so route to `/brand-init` instead.
 
+What this scope reads: [brand-contract.md](references/brand-contract.md) for
+the pack's file and field names, [voice-packs.md](references/voice-packs.md)
+to name a failure mode in the pack's own wording,
+[surface-registers.md](references/surface-registers.md) for the register a
+surface owes, and [ai-tells.md](references/ai-tells.md) for the
+any-other-SaaS test.
+
 | Pass | Question | Evidence |
 |---|---|---|
 | Tone drift | does this surface sound like the recorded voice, or like whoever wrote it? | the string or passage, `file:line` |
@@ -95,7 +102,7 @@ never a courtesy PASS. An audit that flatters the codebase is worthless.
 |---|---|
 | `quick` | 1. Scenario pass only |
 | `standard` (default) | 1. Scenario pass + 2. Flow conformance |
-| `deep` | 1–2 + 3. Heuristic pass (PRN-01..21) + 4. Practice pass (selection protocol) + 5. Coverage pass |
+| `deep` | 1–2 + 3. Heuristic pass (PRN-01..24) + 4. Practice pass (selection protocol) + 5. Coverage pass |
 
 Passes:
 
@@ -109,7 +116,7 @@ Passes:
    registry marks but the design lost); with the Figma MCP connected,
    `get_metadata` confirms the frame still exists under its expected
    `SCR-NN/<Screen>/<state>` name without pulling full design context.
-3. **Heuristic pass** — implemented flows vs PRN-01..21
+3. **Heuristic pass** — implemented flows vs PRN-01..24
    ([ux-design-principles.md](references/ux-design-principles.md));
    findings `[PRN-NN] (severity) node — issue -> fix`.
 4. **Practice pass** — per

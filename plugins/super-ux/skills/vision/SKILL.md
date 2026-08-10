@@ -4,12 +4,19 @@ description: Use when a project needs the layer ABOVE personas and jobs - what t
 license: MIT
 ---
 
-# vision
+# vision — what the product is, and what it refuses to become
+
+> Part of **super-ux** — see [system-map.md](references/system-map.md) for the
+> whole pipeline. After writing the document, run `python3 docs/ux/lint.py`.
 
 The layer above `ux-foundation`. Foundation answers **who** uses the product and
 **why**; vision answers **what the product is** and **what it refuses to
 become**. Without it, "should we build this?" has no answer that outlives the
 person who last had an opinion.
+
+Do not confuse it with `scenarios.md`, the other layer whose name starts with
+"what": scenarios say what the product **does**, step by step. A feature can
+be perfectly scenario'd and still violate the anti-vision.
 
 > **This skill produces two things, and the second is the point.**
 > 1. `docs/ux/vision.md` — the document.

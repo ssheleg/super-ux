@@ -26,7 +26,7 @@ once in `screens.md`.
 (ux-contract v4, `flows.md` section) and
 [ux-design-principles.md](references/ux-design-principles.md) — read the
 principles doc before designing; it is the thinking playbook (task-analysis
-method, flow rules, PRN-01..21 heuristics, improvement procedure).
+method, flow rules, PRN-01..24 heuristics, improvement procedure).
 Proven tactics: [best-practices.md](references/best-practices.md) by
 stage tags. Visual identity (which style pack the frames and the built UI
 obey, via the **sheleg-design** companion):
@@ -145,7 +145,7 @@ prevents.
 Follow the improvement procedure in the principles doc, strictly:
 
 1. Prerequisite: flows exist (run Reverse first if not).
-2. Walk every flow against PRN-01..21 + journey pains; record violations
+2. Walk every flow against PRN-01..24 + journey pains; record violations
    `[PRN-NN] node — what breaks — severity (4..1)`.
 3. Redesign proposals: trace to a pain/job/story; cite `PRN-NN`/`BP-NNN`;
    show flow before → after (two mermaid diagrams); state the expected

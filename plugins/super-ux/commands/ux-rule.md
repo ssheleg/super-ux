@@ -38,9 +38,11 @@ twice.
    - After any UX change and before calling the work done, run the linter
      `python3 docs/ux/lint.py` — it must pass (errors are drift/broken
      structure; wire it into CI/pre-commit).
-   - Use `/ux` as the entry point; skills: `ux-foundation`, `ux-flows`
-     (flows + Figma mockups), `ux-scenarios` for maintenance, `ux-audit` for
-     evidence-backed verification. Full map: the plugin's system-map reference.
+   - Use `/ux` as the entry point; skills: `vision` (what the product is and
+     refuses to become), `ux-foundation`, `ux-flows` (flows + Figma mockups),
+     `ux-scenarios` for maintenance, `ux-audit` for evidence-backed
+     verification, `brand-voice` and `copywriting` for everything the user
+     reads. Full map: the plugin's system-map reference.
 
    ## Brand voice — hard rule (super-ux)
 
@@ -71,10 +73,15 @@ twice.
    `flows.md`, `screens.md`, and `README.md` from the plugin's `templates/`.
    Never overwrite existing files.
 
-3. Copy the linter to `docs/ux/lint.py` from the plugin's
-   `scripts/ux_lint.py` (refresh it even if present — it's code, not user
-   content). Suggest wiring `python3 docs/ux/lint.py` into the project's CI
-   or pre-commit.
+3. Copy **both** scripts from the plugin's `scripts/`, refreshing them even
+   if present — they are code, not user content:
+   `ux_lint.py` → `docs/ux/lint.py` and `ux_doctor.py` → `docs/ux/doctor.py`.
+   Suggest wiring `python3 docs/ux/lint.py` into the project's CI or
+   pre-commit. **The rule installed in step 1 tells the reader to run
+   `python3 docs/brand/lint.py` as well** — that file is seeded by
+   `/brand-init` together with `docs/brand/` itself. If `docs/brand/` does
+   not exist yet, say so in the closing report and offer `/brand-init`,
+   rather than leaving a rule that points at a missing file.
 
 4. Report what was installed and suggest `/ux` next if the base is still
    empty.

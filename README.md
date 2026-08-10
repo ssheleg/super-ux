@@ -18,7 +18,8 @@ used as the checklist for evidence-backed audits of the code.
 
 ```mermaid
 flowchart LR
-    F["Foundation<br/>personas · JTBD<br/>journeys · stories"] --> L["Flows<br/>task analysis<br/>+ branches"]
+    V["Vision<br/>essence · principles<br/>anti-vision"] --> F["Foundation<br/>personas · JTBD<br/>journeys · stories"]
+    F --> L["Flows<br/>task analysis<br/>+ branches"]
     L --> S["Screens<br/>states · elements<br/>Figma frames"]
     S --> C["Scenarios<br/>action → response<br/>alt + error paths"]
     C --> B["Build UI<br/>only now"]
@@ -26,6 +27,7 @@ flowchart LR
     A --> P["Fix plan<br/>Freq × Severity<br/>× Solvability"]
     P --> B
     B -.->|same change| C
+    V -.->|alignment check| B
 ```
 
 Every layer traces to the one above it. New product? Build it forward. Existing
@@ -69,15 +71,15 @@ routing is the agent's job.
 npx super-ux --cursor /path/to/your/project
 ```
 
-Copies the rules into `.cursor/rules/` (one always-on hard rule + four
-agent-requested rules), seeds `docs/ux/`, and installs the linter. An existing
+Copies the rules into `.cursor/rules/` (one always-on hard rule + seven
+agent-requested rules), seeds `docs/ux/`, and installs the linters. An existing
 scenario base is never overwritten; re-run with `--force` after a release to
 refresh rules and linter only.
 
 ### Any agent (70+, via the skills CLI)
 
 ```sh
-npx skills add ssheleg/super-ux            # all four skills, current project
+npx skills add ssheleg/super-ux            # all seven skills, current project
 npx skills add ssheleg/super-ux -g         # user-global
 npx skills add ssheleg/super-ux --skill ux-audit   # one skill
 ```
@@ -127,7 +129,7 @@ Commands: `/brand` (status → one recommended action), `/brand-init`,
 python3 docs/brand/lint.py
 ```
 
-31 deterministic checks — banned words, one action under two names, a figure
+33 deterministic checks (`B001`..`B073`) — banned words, one action under two names, a figure
 with no sourced fact, a field over its limit with the locale coefficient
 applied, blocked AI crawlers, keyword stuffing, humor on a billing screen,
 a locale that lags without saying so. Exit 0 clean, 1 warnings, 2 errors.
@@ -200,20 +202,24 @@ compliance table. Full protocol:
 
 ## What's inside
 
-Four skills, one entry point, and a set of contracts they all obey.
+Seven skills, one entry point, and a set of contracts they all obey. Every
+one of them is reachable from `/ux` — a skill the entry point cannot route
+to is a skill nobody runs.
 
 | Piece | Purpose |
 |---|---|
-| skill `vision` | The WHAT layer (`docs/ux/vision.md`): essence, core idea, system behaviour, the user's role, principles with a rejected side, the **anti-vision**, horizon, one sentence, and an alignment test later features are checked against. Installs that check into the project's own instruction file |
+| skill `vision` | What the product **is** (`docs/ux/vision.md`) — the layer above the chain, never to be confused with `scenarios.md`, which says what it **does**: essence, core idea, system behaviour, the user's role, principles with a rejected side, the **anti-vision**, horizon, one sentence, and an alignment test later features are checked against. Installs that check into the project's own instruction file |
 | skill `ux-foundation` | The WHY layer (`docs/ux/foundation.md`): personas, jobs to be done with forces, customer journey maps, user stories with Given/When/Then acceptance criteria, the monetization model |
 | skill `ux-flows` | The HOW layer + the UI map: `docs/ux/flows.md` (task analysis, mermaid flows referencing screens by ID) and `docs/ux/screens.md` — every screen and state with its Figma frame, wireframe, code coverage, scenarios and resources. Also heuristic evaluation and traced redesign proposals |
 | skill `ux-scenarios` | `docs/ux/scenarios.md`: use-case scenarios (action → observable response, alt and error paths) covering every flow node and edge, `Traces:` to stories and flows, validated for conflicts, coverage and traceability |
 | skill `ux-audit` | Batched audit with full context: code vs every scenario plus its story's acceptance criteria; verdicts PASS / PARTIAL / FAIL / BLOCKED with `file:line` evidence; depths `quick` / `standard` / `deep`; a `coverage` scope that audits the chain itself |
+| skill `brand-voice` | `docs/brand/`: the pack and its five axes, the words the product owns and bans, canonical facts, the per-surface register, locales — six shipped voice packs, each declaring the degeneration it collapses into when overdone |
+| skill `copywriting` | Writes in that voice and never writes *to* it: interface strings, errors, empty states, landing and pricing pages, posts, changelogs, store listings, ads, lifecycle email. A missing term or an unsourced number is reported, never invented |
 | `/ux` | **The one command**: sets up whatever is missing, reports status across every layer, then offers only the applicable actions with one marked recommended. Idempotent |
-| `/vision` `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` | Direct controls for when you know exactly what you want; `/ux-rule` installs the hard rule into `CLAUDE.md` |
+| `/vision` `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` `/ux-doctor` · `/brand` `/brand-init` `/brand-update` `/brand-lint` `/copy` | Direct controls for when you know exactly what you want; `/ux-rule` installs both hard rules and seeds `lint.py` + `doctor.py`; `/brand-init` seeds `docs/brand/` and its linter |
 | `docs/ux/lint.py` + `/ux-lint` | The deterministic half: missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, ID gaps, broken links. Stdlib-only, exit 1 on problems — wire it into CI so drift can't merge |
-| `cursor/rules/*.mdc` | The same methodology for Cursor: one always-on hard rule + four agent-requested rules |
-| `templates/` | Seeds for `docs/ux/`: foundation, flows, screens, scenario base, the folder README, the audit-report skeleton, and the CLAUDE.md rule snippet. Seeds for `docs/brand/`: voice, terminology, facts, channels, the string registry, a locale delta, and its folder README |
+| `cursor/rules/*.mdc` | The same methodology for Cursor: one always-on hard rule + seven agent-requested rules (vision, foundation, flows, scenarios, audit, brand voice, copywriting) |
+| `templates/` | Seeds for `docs/ux/`: the vision skeleton, foundation, flows, screens, scenario base, the folder README, and the audit-report skeleton. Both hard-rule snippets live here as their single source — `claude-rule.md` (scenario-first) and `vision-rule.md` (vision alignment) — and the validator fails if a command's embedded copy drifts from them. Seeds for `docs/brand/`: voice, terminology, facts, channels, the string registry, a locale delta, and its folder README |
 
 The contracts every skill reads:
 
@@ -223,8 +229,8 @@ The contracts every skill reads:
 | [system-map.md](plugins/super-ux/skills/references/system-map.md) | The whole system on one page — pipeline, files, skills, companions, and the four sync rules; every skill points here |
 | [ux_doctor.py](plugins/super-ux/scripts/ux_doctor.py) | Contract doctor — reports mixed or stale contract versions across a project's artifacts, files the tooling cannot find under their contract names, and audits produced against a base that is not there. `/ux-lint` checks a chain against itself; this checks it against the contract. Installed as `docs/ux/doctor.py`, read-only unless `--fix` |
 | [best-practices-index.md](plugins/super-ux/skills/references/best-practices-index.md) | Generated tag index over the catalog — tag → ids, id → title. Read it to decide which entries to open; regenerated by `plugins/super-ux/scripts/bp_index.py` and checked for drift by the validator |
-| [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward and backwards), task analysis, flow rules, heuristics PRN-01..21, the improvement procedure, anti-patterns |
-| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 181 proven practices — subscription-app laws, mobile/web/voice guidance (Apple HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries), web funnels end to end (landing, pricing, checkout, dunning, cancel) and web2app (paid handoff, deferred deep links, storefront rules), motion and page weight (HTTP Archive field data, W3C sustainability), accessibility as it actually fails (WebAIM Million, EAA/ADA exposure), frustration telemetry, gamification and trend governance, growth loops and referral mechanics, empty states, authentication (NIST SP 800-63B rev 4) and form recovery, motion craft and perceived quality, the defaults that make an interface read as generated, interface state, locale and platform surfaces (Web Interface Guidelines), visual craft, Figma structure |
+| [ux-design-principles.md](plugins/super-ux/skills/references/ux-design-principles.md) | How the agent thinks: the design pipeline (forward and backwards), task analysis, flow rules, heuristics PRN-01..24, the improvement procedure, anti-patterns |
+| [best-practices.md](plugins/super-ux/skills/references/best-practices.md) | Living, tag-indexed catalog of 206 proven practices — subscription-app laws, mobile/web/voice guidance (Apple HIG 2025, M3 Expressive, NN/g, Baymard, WCAG 2.2), monetization economics (RevenueCat/PLG 2025 benchmarks, ASO, freemium boundaries), web funnels end to end (landing, pricing, checkout, dunning, cancel) and web2app (paid handoff, deferred deep links, storefront rules), motion and page weight (HTTP Archive field data, W3C sustainability), accessibility as it actually fails (WebAIM Million, EAA/ADA exposure), frustration telemetry, gamification and trend governance, growth loops and referral mechanics, empty states, authentication (NIST SP 800-63B rev 4) and form recovery, motion craft and perceived quality, the defaults that make an interface read as generated, interface state, locale and platform surfaces (Web Interface Guidelines), visual craft, Figma structure |
 | [practice-selection.md](plugins/super-ux/skills/references/practice-selection.md) | The deterministic bridge: product profile → mandatory consideration sets → per-artifact checklists → a compliance table where every pulled practice gets a verdict. No silent skips, no cargo cult |
 | [component-guidelines.md](plugins/super-ux/skills/references/component-guidelines.md) | Which control for which job (radios/select/switch, sheet/alert, modal/disclosure, combobox, nav bar/rail, FAB, dates, toasts) and the platform rules — Apple HIG, Material 3, W3C ARIA APG, GOV.UK |
 | [visual-identity.md](plugins/super-ux/skills/references/visual-identity.md) | The visual layer and its owner: one style pack for the whole product, where it's recorded, how it meets Figma and code, and the division of labor with the craft floors |
@@ -232,14 +238,27 @@ The contracts every skill reads:
 
 ## Keeping installs current
 
-Global channels (run after a release, then restart the Claude Code session so
-the plugin reloads):
+One command, every channel (run after a release, then restart the Claude Code
+session so the plugin reloads):
 
 ```sh
-claude plugin marketplace update super-ux && \
-claude plugin update super-ux@super-ux && \
-npx --yes skills update ux-audit ux-flows ux-foundation ux-scenarios vision --global --yes
+npx --yes sshlg-skills@latest update
 ```
+
+It updates the Claude Code plugin **and** the agent copies, and clears any
+plain copy under `~/.claude/skills/` that would shadow the plugin.
+
+Per-plugin, only when the launcher is unavailable:
+
+```sh
+claude plugin marketplace update super-ux && claude plugin update super-ux@super-ux
+```
+
+**Do not run a bare `npx skills update <skill>` for a skill you installed as a
+plugin.** Without an explicit `--agent` list the skills CLI detects Claude Code
+and re-creates `~/.claude/skills/<skill>` as a plain copy, which shadows the
+plugin and serves its frozen version forever. Nothing reports this: the plugin
+updates, the copy does not, and the copy is what loads.
 
 Cursor rules and the seeded `docs/ux/lint.py` are per-project (Cursor has no
 global rules directory) — refresh each project you use:

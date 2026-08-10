@@ -47,7 +47,7 @@ def read(path: Path) -> str:
 def find_ux_dir(arg: str | None) -> Path | None:
     base = Path(arg) if arg else Path.cwd()
     for cand in (base, base / "docs" / "ux", base.parent if base.name else base):
-        if (cand / "scenarios.md").exists() or (cand / "foundation.md").exists():
+        if any((cand / n).exists() for n in ("scenarios.md", "foundation.md", "vision.md")):
             return cand
     return None
 
@@ -102,6 +102,60 @@ def screen_blocks(text: str) -> dict[str, str]:
     return out
 
 
+VISION_SECTIONS = [
+    "1. Essence",
+    "2. Core idea",
+    "3. What the system does",
+    "4. The user's role",
+    "5. Principles",
+    "6. Anti-vision",
+    "7. Horizon",
+    "8. The one sentence",
+    "9. The alignment test",
+]
+
+VISION_RULE_HEADING = "## Vision alignment — hard rule (super-ux)"
+INSTRUCTION_FILES = ("CLAUDE.md", "AGENTS.md", "GEMINI.md")
+
+
+def check_vision(ux: Path, vision: str) -> None:
+    """The vision layer: all nine sections, and the rule that makes it read.
+
+    A vision with no alignment rule in the project's instruction file is a
+    document, not a constraint — and its absence looks exactly like
+    compliance, which is why it is checked rather than trusted.
+    """
+    if not vision.strip():
+        return
+    for section in VISION_SECTIONS:
+        if not re.search(rf"^##\s+{re.escape(section)}\s*$", vision, re.MULTILINE):
+            err(f"vision.md: missing section '## {section}'")
+    # Emptiness is a defect only once the document claims to be finished.
+    # A freshly seeded template is all headings and no content by design, and
+    # a linter that fails on its own seed teaches people to skip the linter.
+    approved = bool(re.search(r"\*\*Status:\*\*\s*approved", vision, re.IGNORECASE))
+    if approved:
+        for section in ("6. Anti-vision", "9. The alignment test"):
+            body = re.split(rf"^##\s+{re.escape(section)}\s*$", vision, maxsplit=1,
+                            flags=re.MULTILINE)
+            if len(body) == 2:
+                tail = re.split(r"^##\s", body[1], maxsplit=1, flags=re.MULTILINE)[0]
+                if not tail.strip():
+                    err(f"vision.md: approved but '## {section}' is empty — "
+                        f"the section that settles arguments cannot be blank")
+
+    root = ux.parent.parent if ux.name == "ux" else ux.parent
+    present = [root / n for n in INSTRUCTION_FILES if (root / n).is_file()]
+    if not present:
+        warn("vision.md exists but the project has no CLAUDE.md / AGENTS.md / "
+             "GEMINI.md — the alignment rule has nowhere to live")
+        return
+    if not any(VISION_RULE_HEADING in read(p) for p in present):
+        warn(f"vision.md exists but no '{VISION_RULE_HEADING}' block in "
+             f"{', '.join(p.name for p in present)} — nothing ever reads the vision "
+             f"(run the `vision` skill's step 4)")
+
+
 def check_links(ux: Path) -> None:
     link_re = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
     for md in sorted(ux.rglob("*.md")):
@@ -122,6 +176,7 @@ def main() -> int:
         print("no UX docs found (docs/ux/scenarios.md). Run /ux to set up.")
         return 2
 
+    vision = read(ux / "vision.md")
     foundation = read(ux / "foundation.md")
     flows = read(ux / "flows.md")
     screens = read(ux / "screens.md")
@@ -210,6 +265,7 @@ def main() -> int:
             if status == "built" and (not cov or cov.lower().startswith("none")):
                 warn(f"screens.md: {sid} is 'built' but has no Coverage")
 
+    check_vision(ux, vision)
     check_links(ux)
 
     # --- Report ---

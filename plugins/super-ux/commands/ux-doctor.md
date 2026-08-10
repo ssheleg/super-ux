@@ -10,7 +10,8 @@ python3 docs/ux/doctor.py $ARGUMENTS
 ```
 
 If `docs/ux/doctor.py` is missing, copy it from the plugin's
-`scripts/ux_doctor.py` (or run `/ux-rule`, which seeds both scripts).
+`scripts/ux_doctor.py` — or run `/ux-rule`, which seeds `lint.py` and
+`doctor.py` together.
 
 `/ux-lint` checks a chain against itself — ids, links, orphans. It cannot see
 that the whole base is written to a contract three versions old, because from

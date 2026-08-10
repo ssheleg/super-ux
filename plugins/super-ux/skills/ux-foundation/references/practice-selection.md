@@ -37,7 +37,11 @@ answers in the foundation):
 
 ## Step 2 — Mandatory sets from the profile
 
-`ALWAYS` applies to every product: PRN-01..21, BP-001.
+`ALWAYS` applies to every product: PRN-01..24, BP-001. PRN-22..24 are
+the verbal ones — one voice with per-surface registers, every claim
+checkable, no levity where the user can lose something. They read as brand
+rules and are therefore easy to file as optional, but any product with text
+has them, which is every product with an interface.
 
 | Profile fact | Mandatory consideration set |
 |---|---|

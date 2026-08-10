@@ -26,9 +26,11 @@
 - After any UX change and before calling the work done, run the linter
   `python3 docs/ux/lint.py` — it must pass (errors are drift/broken
   structure; wire it into CI/pre-commit).
-- Use `/ux` as the entry point; skills: `ux-foundation`, `ux-flows`
-  (flows + Figma mockups), `ux-scenarios` for maintenance, `ux-audit` for
-  evidence-backed verification. Full map: the plugin's system-map reference.
+- Use `/ux` as the entry point; skills: `vision` (what the product is and
+  refuses to become), `ux-foundation`, `ux-flows` (flows + Figma mockups),
+  `ux-scenarios` for maintenance, `ux-audit` for evidence-backed
+  verification, `brand-voice` and `copywriting` for everything the user
+  reads. Full map: the plugin's system-map reference.
 
 ## Brand voice — hard rule (super-ux)
 

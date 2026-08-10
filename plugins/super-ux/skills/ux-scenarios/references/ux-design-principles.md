@@ -86,7 +86,7 @@ The gaps between "is" and "should" become the improvement backlog.
   available — see [visual-identity.md](visual-identity.md). Inventing a look
   per screen is visual drift.
 
-## Heuristics checklist (PRN-01..PRN-10, after Nielsen)
+## Heuristics checklist (Nielsen's ten: PRN-01 – PRN-10)
 
 Used by design reviews and the audit's heuristic pass. Each has an audit
 question; violations get the principle ID as evidence.

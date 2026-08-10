@@ -38,7 +38,7 @@ ADDITIVE = [
     ("foundation.md", "**Kill criteria:**", "`Kill criteria` on stories — gives `dropped` a definition, 0.28.0"),
 ]
 
-ARTIFACTS = ["foundation.md", "flows.md", "screens.md", "scenarios.md"]
+ARTIFACTS = ["vision.md", "foundation.md", "flows.md", "screens.md", "scenarios.md"]
 
 # Names the contract owns, and the near-misses seen in the wild.
 RENAMES = {

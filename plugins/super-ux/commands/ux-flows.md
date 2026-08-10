@@ -18,7 +18,7 @@ built screens use that pack's tokens instead of a per-screen palette.
 
 Pick the workflow from state and `$ARGUMENTS`: stories exist but flows
 don't → Design; existing product without flows.md → Reverse; `$ARGUMENTS`
-says improve/fix/redesign → Improve (heuristic evaluation PRN-01..16 →
+says improve/fix/redesign → Improve (heuristic evaluation PRN-01..24 →
 traced before/after proposals); otherwise → Update.
 
 After flow changes, cascade to `ux-scenarios`: every new/changed node and

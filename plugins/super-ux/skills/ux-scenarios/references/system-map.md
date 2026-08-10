@@ -7,19 +7,30 @@ unsure.
 ## The pipeline
 
 ```
-Personas ─ JTBD ─ Journeys ─ Stories   →  Flows  →  Screens  →  Scenarios  →  Audits  →  Plans
-        (WHY, foundation.md)              (HOW,      (UI map,    (WHAT,        (evidence)  (action)
-                                          flows.md)  screens.md) scenarios.md)
+Vision  →  Personas ─ JTBD ─ Journeys ─ Stories  →  Flows  →  Screens  →  Scenarios  →  Audits  →  Plans
+(what the          (WHY, foundation.md)              (HOW,      (UI map,    (what it       (evidence)  (action)
+ product IS                                          flows.md)  screens.md)  DOES,
+ and refuses                                                                 scenarios.md)
+ to become,
+ vision.md)
 ```
 
 Each layer traces to the one above. Build forward for new work; fill
 backward (tagged `inferred`) for an existing product. UI code comes only
 after this chain is designed and approved (and, with Figma on, mocked up).
 
+**Two layers answer a question shaped like "what", and confusing them is the
+one mistake this map exists to prevent.** `vision.md` answers *what the
+product is* — its essence, its principles, and what it refuses to become.
+`scenarios.md` answers *what it does* — every step, state and error. A
+feature can be perfectly scenario'd and still violate the anti-vision, which
+is why the alignment check runs before the chain, not inside it.
+
 ## Files in a target project (`docs/ux/`)
 
 | File | Layer | Owner skill | Holds |
 |------|-------|-------------|-------|
+| `vision.md` | what it IS | `vision` | essence, core idea, system behaviour, the user's role, principles, anti-vision, horizon, the one sentence, the alignment test |
 | `foundation.md` | WHY | `ux-foundation` | personas, JTBD, journeys, user stories, monetization, Figma on/off + file URL |
 | `flows.md` | HOW | `ux-flows` | task analysis + user-flow diagrams, referencing screens by `SCR-ID` |
 | `screens.md` | UI map | `ux-flows` | the design system block + every screen and state with Figma frame, wireframe, coverage, scenarios, resources |
@@ -27,10 +38,11 @@ after this chain is designed and approved (and, with Figma on, mocked up).
 | `audits/…` | evidence | `ux-audit` | one report per audit run |
 | `plans/…` | action | `ux-audit`/`ux-flows` | target-interface + CREATE/MODIFY/DELETE plan |
 | `wireframes/…` | optional | `ux-flows` | low-fi ASCII wireframes / storyboards |
-| `README.md`, `lint.py` | meta | seeded | this map (project copy) + the linter |
+| `README.md`, `lint.py`, `doctor.py` | meta | seeded | this map (project copy), the drift linter, the contract doctor |
 
 Beside the chain, one more root — **`docs/brand/`**, the verbal identity
-(`brand-contract v1`, [brand-contract.md](brand-contract.md)):
+(`brand-contract v1` — named here, not linked; the shelf note below says
+why):
 
 | File | Owner skill | Holds |
 |------|-------------|-------|
@@ -40,43 +52,55 @@ Beside the chain, one more root — **`docs/brand/`**, the verbal identity
 | `channels.md` | `brand-voice` | one record per surface: register, limits, bans |
 | `strings.md` | `brand-voice` | interface string registry → `file:line` → scenario |
 | `locales/<code>.md` | `brand-voice` | per-locale delta |
-| `lint.py` | seeded | `brand_lint.py`, 31 deterministic checks |
+| `lint.py` | seeded | `brand_lint.py`, 33 deterministic checks (B001..B073) |
 
 It is a separate root because the brand also governs surfaces that are not UX
 — a store listing, an ad, a post. The pack derives from `foundation.md` and
 never the reverse. `copywriting` writes from it and never to it.
 
-The brand layer has its own reference shelf, reached through
-[brand-contract.md](brand-contract.md) rather than linked here — naming them
-is this map's job, carrying them is not, and a link from the map would make
-every skill ship all ten. `voice-packs.md` is the library the voice is chosen
-from (six archetypes, each declaring its own failure mode) and
-`surface-registers.md` is the model the layer runs on (one voice, deltas per
-surface). Craft: `ui-copy.md`, `marketing-copy.md`, `channel-playbooks.md`,
-`store-copy.md`. Guards: `seo-aeo-safety.md`, `ai-tells.md`,
-`localization.md`.
+## The reference shelves — this map names them, and links none
 
-Formats: [scenario-format.md](scenario-format.md). Design reasoning:
-[ux-design-principles.md](ux-design-principles.md). Practices:
-[best-practices.md](best-practices.md) selected via
-[practice-selection.md](practice-selection.md); control choice:
-[component-guidelines.md](component-guidelines.md). Figma workflow:
-[figma-integration.md](figma-integration.md); Figma file structure &
-naming: [figma-structure.md](figma-structure.md). Visual identity (style
-pack via the **sheleg-design** companion):
-[visual-identity.md](visual-identity.md).
+**Every link in a skill is a shipping instruction.** `test/sync_references.py`
+copies the transitive closure of a skill's links into that skill, so that the
+contracts arrive intact on Cursor, Codex and every other agent that ships one
+directory. Because *every skill points at this map*, a link from here is a
+link from all of them at once: one pointer to `brand-contract.md` once put all
+nine brand contracts inside every UX skill, 352K of App Store guidance riding
+along in `ux-foundation`. So the rule here is absolute — **this map names a
+contract, it never links one.** Each skill links exactly what it reads, and
+carries exactly that.
+
+*The chain shelf.* `scenario-format.md` — the format contract. Design
+reasoning: `ux-design-principles.md` (PRN-01..24). Practices:
+`best-practices.md`, selected via `practice-selection.md` and previewed
+through `best-practices-index.md`; control choice:
+`component-guidelines.md`. Figma workflow: `figma-integration.md`; file
+structure and naming: `figma-structure.md`. Visual identity (style pack via
+the **sheleg-design** companion): `visual-identity.md`.
+
+*The brand shelf,* reached through `brand-contract.md`. `voice-packs.md` is
+the library the voice is chosen from (six archetypes, each declaring its own
+failure mode) and `surface-registers.md` is the model the layer runs on (one
+voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
+`channel-playbooks.md`, `store-copy.md`. Guards: `seo-aeo-safety.md`,
+`ai-tells.md`, `localization.md`.
 
 ## Skills & the one entry point
 
 - **`/ux`** — the only command a user needs. Asks the task in plain words,
   routes to the right workflow, reports status. Users never pick skills.
+  Everything below is reachable from it; a skill `/ux` cannot route to is a
+  skill nobody runs.
+- `vision` — the layer above the chain: what the product is and what it
+  refuses to become. Also installs the **vision-alignment rule**, which
+  checks a proposed feature against the anti-vision before the chain starts.
 - `ux-foundation` · `ux-flows` · `ux-scenarios` — build/maintain the layers.
 - `ux-audit` — verify code against the chain (depths quick/standard/deep;
   scope `copy` judges text against the brand pack).
 - `brand-voice` · `copywriting` — define the voice, then write in it.
-- Direct commands: `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update`
-  `/ux-audit` `/ux-rule` `/ux-lint`; `/brand` `/brand-init` `/brand-update`
-  `/brand-lint` `/copy`.
+- Direct commands: `/vision` `/ux-init` `/ux-foundation` `/ux-flows`
+  `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` `/ux-doctor`; `/brand`
+  `/brand-init` `/brand-update` `/brand-lint` `/copy`.
 
 ## The four rules that keep agents in sync
 
@@ -98,8 +122,8 @@ pack via the **sheleg-design** companion):
 - **sheleg-design** — the visual identity: one locked style pack (palette,
   type, texture, motion tokens, bans) + ready token CSS, plus the motion
   methodology for cinematic scroll-driven pages. Used at VISUALIZE/BUILD,
-  recorded once in `screens.md` → Design system.
-  [visual-identity.md](visual-identity.md).
+  recorded once in `screens.md` → Design system. The protocol lives in
+  `visual-identity.md`, carried by the skills that draw.
 - **task-pipeline** — implements a finished UX plan end-to-end (spec → plan →
   subagent build → tests → deploy → docs). Offered after audits and Improve
   passes.

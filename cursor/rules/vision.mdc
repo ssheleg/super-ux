@@ -1,0 +1,67 @@
+---
+description: "Product vision (docs/ux/vision.md): apply when defining what the product is and what it refuses to become, when a proposed feature feels off-strategy, or when a scope argument has no document that settles it"
+alwaysApply: false
+---
+
+# vision — what the product is, and what it refuses to become
+
+The layer above the chain. `foundation.md` answers **who** uses the product
+and **why**; `vision.md` answers **what the product is**. Do not confuse it
+with `scenarios.md`, the other layer whose name starts with "what":
+scenarios say what the product **does**, step by step. A feature can satisfy
+every scenario and still violate the anti-vision — that case is the whole
+reason this layer exists.
+
+## Before writing a word
+
+Read the project, not its README: source entry points, the schema, the
+routing table, the live UI, `package.json`, and `docs/ux/foundation.md` if
+it exists. **A vision written from the README alone describes the README.**
+The gap between what a project claims and what its code does is usually
+where the real vision is hiding, and naming that gap is often the most
+valuable thing this pass does.
+
+## The document — nine sections, these headings, in this order
+
+```
+## 1. Essence            one sentence; survives a rewrite on another stack
+## 2. Core idea          an observation about the world, not a problem statement
+## 3. What the system does   continuous behaviour, verbs not nouns
+## 4. The user's role    what the user becomes: directs, judges, decides
+## 5. Principles         "we do X, not Y" — Y is something reasonable people pick
+## 6. Anti-vision        what it refuses to become, named product by product
+## 7. Horizon            a direction for two to three years, never a roadmap
+## 8. The one sentence   if someone remembers exactly one thing
+## 9. The alignment test three to five questions a feature must pass
+```
+
+`**Status:** draft | approved` and `**Last reviewed:** YYYY-MM-DD` at the
+top. A section with no rejected alternative is a slogan; a vision with no
+anti-vision settles no argument.
+
+## The half that is actually the point
+
+Writing the document is half the job. The other half is the alignment rule
+in this project's own instruction file (`.cursor/rules/`, `AGENTS.md` or
+`CLAUDE.md` — whichever this project reads), so that later features get
+checked against the vision instead of the vision being written once and
+never read. **A vision nothing reads is a document, not a constraint.**
+
+Before planning any new feature, check it against the anti-vision and the
+alignment test. Aligned → proceed, saying in one line which part it serves.
+Misaligned → stop before writing code, name the conflict quoting the layer
+it contradicts, and offer two paths: reshape the feature, or amend the
+vision and say what that costs. Do not pick one silently.
+
+**Do NOT trigger for** bug fixes, refactors, dependency work, tests, docs,
+or anything with no user-facing surface. A vision check on a typo fix is how
+a team learns to skip the check that matters.
+
+## Check
+
+```bash
+python3 docs/ux/lint.py
+```
+
+It reports missing sections, an approved vision with an empty anti-vision,
+and a `vision.md` whose alignment rule was never installed.

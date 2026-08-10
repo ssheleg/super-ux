@@ -1,0 +1,65 @@
+---
+description: "Write or rewrite any text a user reads (interface strings, errors, empty states, landing and pricing pages, posts, changelogs, store listings, ads, email): apply when asked to write copy, rewrite a headline or CTA, fix microcopy, or when a draft reads machine-made"
+alwaysApply: false
+---
+
+# copywriting — write it in the product's own voice
+
+`brand-voice` decides how the product speaks. This is the pass that writes
+in it. The two are not interchangeable: defining a voice mid-sentence to
+finish a button is how a product ends up with six voices.
+
+## First action, every time
+
+Read the pack: `docs/brand/voice.md`, `terminology.md`, and the
+`channels.md` record for the surface being written. **No pack? Stop and run
+`/brand-init`.** Guessing the voice and being wrong costs more than the
+pause.
+
+**Never write to `docs/brand/`.** A term missing from the dictionary, or a
+number with no row in `facts.md`, is **reported** — never invented to finish
+the sentence. Adding it is `brand-voice`'s decision, not this pass's.
+
+## Rules that hold in every voice
+
+- **Every figure comes from `facts.md`.** No sourced fact, no number. Never
+  fabricate a statistic, a quote, or an expert.
+- **One action keeps one name** across button, confirmation, toast, history,
+  notification and accessible name. Search `strings.md` before naming one.
+- **No humor, exclamation marks or emoji** on error, destructive confirm,
+  billing or paywall surfaces — including in a playful voice.
+- **Errors say what happened and how to recover**, in the user's words, and
+  never blame the user.
+- **A register is a delta on the voice axes**, never a crossing of the
+  invariants recorded in `voice.md`.
+- **Every new interface string gets a `strings.md` row**: key, `file:line`,
+  and the scenario it serves. A string with no scenario is a candidate for
+  deletion, not translation.
+- **Claims reach a consequence.** "AI-powered" is a mechanism; what the user
+  stops doing is the copy.
+
+## The any-other-SaaS test
+
+Could this sentence sit unchanged on a competitor's page? Then it says
+nothing. Rewrite it until it could not.
+
+Machine-made tells to strip: tricolons that add nothing, "seamless /
+effortless / unlock / elevate / robust", em-dash cadence in every paragraph,
+"it's not just X, it's Y", hedges stacked two deep, and a closing sentence
+that summarizes what was just said.
+
+## Localization
+
+A locale is not a translation of the English: the length coefficient, the
+address form, and the dead idioms are recorded per locale. A locale that
+lags the primary says so rather than pretending to be current.
+
+## Check
+
+```bash
+python3 docs/brand/lint.py
+```
+
+Exit 0 clean, 1 warnings, 2 errors. Clean means *checkable*, not *good* —
+tone drift, unproven claims and a voice that overshot its declared failure
+mode are judged by `/ux-audit copy`.

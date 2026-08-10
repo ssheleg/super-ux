@@ -1,8 +1,8 @@
-# UX Contract (v4): Foundation, Flows, Screens, Scenarios, Audits
+# UX Contract (v4): Vision, Foundation, Flows, Screens, Scenarios, Audits
 
-This is THE contract for `docs/ux/` in a target project. The `ux-foundation`,
-`ux-flows`, `ux-scenarios`, and `ux-audit` skills — and the Cursor rules —
-follow it. Do not deviate from field names, ID schemes, statuses, or
+This is THE contract for `docs/ux/` in a target project. The `vision`,
+`ux-foundation`, `ux-flows`, `ux-scenarios`, and `ux-audit` skills — and the
+Cursor rules — follow it. Do not deviate from field names, ID schemes, statuses, or
 verdicts; tooling and audits key off them. The design reasoning behind the
 formats lives in [ux-design-principles.md](ux-design-principles.md).
 
@@ -10,6 +10,7 @@ formats lives in [ux-design-principles.md](ux-design-principles.md).
 
 ```
 docs/ux/
+├── vision.md                 # WHAT IT IS: essence, core idea, principles, anti-vision, alignment test (optional layer)
 ├── foundation.md             # WHY: personas, JTBD, journeys, user stories, monetization, design tooling
 ├── flows.md                  # HOW: task analysis + user flows (mermaid), referencing screens
 ├── screens.md                # UI MAP: every screen + state with Figma frame, wireframe, coverage, resources
@@ -54,6 +55,44 @@ coverage change — and, when Figma is enabled, the Figma frame is updated and
 its link re-verified in the same change**. A screen whose code diverges from
 its `screens.md` record (or a stale/broken Figma link) is a `drifted`
 finding, not an acceptable state.
+
+## `docs/ux/vision.md` — the layer above the chain
+
+Optional, and owned by the `vision` skill. Present or absent, never partial:
+a vision missing its anti-vision is the one shape that reliably settles no
+argument.
+
+**Nine sections, these headings, in this order.** The linter keys off them.
+
+```markdown
+# <Product> — Vision
+
+**Status:** draft | approved
+**Last reviewed:** YYYY-MM-DD
+
+## 1. Essence
+## 2. Core idea
+## 3. What the system does
+## 4. The user's role
+## 5. Principles
+## 6. Anti-vision
+## 7. Horizon
+## 8. The one sentence
+## 9. The alignment test
+```
+
+**It is a gate, not a document.** Writing `vision.md` without installing the
+`## Vision alignment — hard rule (super-ux)` block into the project's own
+instruction file (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) leaves a file
+nothing reads. `python3 docs/ux/lint.py` reports the missing rule.
+
+**Two layers answer a "what" question.** `vision.md` says what the product
+**is**; `scenarios.md` says what it **does**. Never merge them: a feature can
+satisfy every scenario and still violate the anti-vision, and that is
+precisely the case the vision layer exists to catch.
+
+Traceability: `foundation.md` jobs and personas must not contradict the
+vision. A contradiction is a finding to raise, not to smooth over.
 
 ## `docs/ux/foundation.md`
 
