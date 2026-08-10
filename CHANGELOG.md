@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.34.0 — 2026-08-10
+
+B-010 and B-002, and the gate that stops both coming back. The UX linter is
+older and more central than the brand one and had neither codes nor fixtures;
+this release gives it both, and then gates the fixtures so the harness cannot
+fall behind the linter the way the linter fell behind the contract.
+
+### Added
+
+- **Every UX linter rule has a code, `U001`..`U054`.** Twenty-one of them, in
+  the message itself, so a rule can be searched, cited in review and gated on.
+  The full table with severities is in `references/scenario-format.md` — the
+  contract, not the source, is where a rule's meaning lives.
+- **`test/ux_lint_test.py` covers all twenty-one.** 43 checks: every code with
+  its planted defect, and a clean twin wherever silence is the interesting
+  half. Three defects were planted in the linter itself to confirm the harness
+  bites — a duplicate-id check that never fires, a Figma-frame check short-
+  circuited, a coverage check keyed to a status that does not exist — and each
+  turned exactly one case red.
+- **`validate_ux_lint_coverage`** — every emitted code needs a fixture **and** a
+  contract row. It went red on all twenty-one on its first run, which is what a
+  coverage gate is supposed to do the day it is added.
+- **`validate_run_instructions`** — closes B-002 from the other side. The
+  existing gate asked *for each known destination, does a command seed it?*;
+  this one asks *for each path an instruction tells the reader to run, is it a
+  destination anything seeds?* That is the direction a rename breaks: an
+  instruction naming `docs/ux/linter.py` while commands seed `docs/ux/lint.py`
+  passed the old gate and failed the reader.
+
+### Changed
+
+- Linter output now carries the code before the message. Exit codes, severities
+  and behaviour are unchanged; anything keying off exit status is unaffected.
+
 ## 0.33.0 — 2026-08-10
 
 The chain designed landing pages and had nowhere to record that a landing is a

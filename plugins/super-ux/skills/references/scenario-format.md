@@ -658,3 +658,38 @@ flow / finding / principle IDs — an untraced change doesn't enter the plan;
 paths named where known, screens named otherwise; DELETE rows carry the
 reason. The plan supersedes nothing: scenarios/flows stay the source of
 truth and are updated by the implementation, same-change rule.
+
+---
+
+## Linter codes — what `docs/ux/lint.py` can say
+
+Every message the linter emits carries a stable code, so a rule can be
+searched, cited in a review and gated on. `validate_ux_lint_coverage` requires
+each emitted code to have a fixture in `test/ux_lint_test.py` **and** a row
+here — the meaning of a rule never lives only in its source.
+
+**E** fails the run (exit 1). **W** is reported and passes unless `--strict`.
+
+| Code | | What it means |
+|---|---|---|
+| U001 | E | two entries share one id |
+| U002 | W | a gap in an id sequence — retired entries should stay, so a gap means one was deleted |
+| U003 | W | an entry exists with no row in its file's index table |
+| U004 | E | the index lists an id that no entry defines |
+| U010 | E | a flow traverses a screen `screens.md` does not have |
+| U011 | W | a screen no flow uses — an orphan |
+| U012 | W | a scenario traces to a story absent from `foundation.md` |
+| U013 | W | a scenario traces to a flow absent from `flows.md` |
+| U014 | W | a `must`/`should` story with no scenario tracing to it |
+| U020 | E | a screen state has no Figma frame link while Figma is enabled |
+| U021 | W | a screen marked `built` names no `Coverage` |
+| U030 | E | `vision.md` is missing one of the nine sections |
+| U031 | E | an approved vision whose anti-vision or alignment test is empty |
+| U032 | W | `vision.md` exists but the project has no instruction file for the alignment rule |
+| U033 | W | an instruction file exists but carries no alignment rule — nothing reads the vision |
+| U040 | W | a relative markdown link that does not resolve |
+| U050 | W | `screens.md` has no `Web surfaces:` declaration — the one question an audit afterwards cannot fix |
+| U051 | E | the project declares no web surfaces while a screen carries a `Web surface:` block |
+| U052 | W | the project declares web surfaces and no screen carries the block |
+| U053 | E | a `Web surface:` block is missing one of its five required fields |
+| U054 | W | a flow starts at a URL while the project declares no web surfaces |

@@ -73,12 +73,12 @@ def check_unique_and_gaps(entry_ids: list[str], label: str) -> None:
         seen[i] = seen.get(i, 0) + 1
     for i, n in seen.items():
         if n > 1:
-            err(f"{label}: duplicate id {i} ({n} entries)")
+            err(f"[U001] {label}: duplicate id {i} ({n} entries)")
     nums = sorted(int(i.split("-")[1]) for i in seen)
     if nums:
         missing = [n for n in range(1, max(nums) + 1) if n not in nums]
         if missing:
-            warn(f"{label}: id gaps (retired entries should stay): {missing}")
+            warn(f"[U002] {label}: id gaps (retired entries should stay): {missing}")
 
 
 def figma_enabled(foundation: str) -> bool | None:
@@ -136,26 +136,26 @@ def check_web_surface(screens: str, flows: str) -> None:
 
     if declared is None:
         warn(
-            "screens.md: no **Web surfaces:** declaration — answer yes or no once "
+            "[U050] screens.md: no **Web surfaces:** declaration — answer yes or no once "
             "(a public page a search or answer engine reads?). An unanswered "
             "question reads as no, and this one cannot be fixed after launch"
         )
     elif declared is False and blocks:
         for sid in sorted(blocks):
             err(
-                f"screens.md: declares no web surfaces but {sid} carries a "
+                f"[U051] screens.md: declares no web surfaces but {sid} carries a "
                 f"**Web surface:** block — one of the two is wrong"
             )
     elif declared is True and not blocks:
         warn(
-            "screens.md: declares web surfaces but no screen carries a "
+            "[U052] screens.md: declares web surfaces but no screen carries a "
             "**Web surface:** block"
         )
 
     for sid, body in sorted(blocks.items()):
         for field in WEB_SURFACE_FIELDS:
             if f"**{field}:**" not in body:
-                err(f"screens.md: {sid} web surface block is missing **{field}:**")
+                err(f"[U053] screens.md: {sid} web surface block is missing **{field}:**")
 
     # A declaration of "no" is silence, so it must not be able to hide a flow
     # that plainly starts on the web. This is the one contradiction the
@@ -168,7 +168,7 @@ def check_web_surface(screens: str, flows: str) -> None:
             entry = m.group(1).strip()
             if re.match(r"https?://|/\S", entry):
                 warn(
-                    f"flows.md: {fid} starts at a URL ({entry.split()[0]}) while "
+                    f"[U054] flows.md: {fid} starts at a URL ({entry.split()[0]}) while "
                     f"screens.md declares no web surfaces — one of the two is wrong"
                 )
 
@@ -200,7 +200,7 @@ def check_vision(ux: Path, vision: str) -> None:
         return
     for section in VISION_SECTIONS:
         if not re.search(rf"^##\s+{re.escape(section)}\s*$", vision, re.MULTILINE):
-            err(f"vision.md: missing section '## {section}'")
+            err(f"[U030] vision.md: missing section '## {section}'")
     # Emptiness is a defect only once the document claims to be finished.
     # A freshly seeded template is all headings and no content by design, and
     # a linter that fails on its own seed teaches people to skip the linter.
@@ -212,17 +212,17 @@ def check_vision(ux: Path, vision: str) -> None:
             if len(body) == 2:
                 tail = re.split(r"^##\s", body[1], maxsplit=1, flags=re.MULTILINE)[0]
                 if not tail.strip():
-                    err(f"vision.md: approved but '## {section}' is empty — "
+                    err(f"[U031] vision.md: approved but '## {section}' is empty — "
                         f"the section that settles arguments cannot be blank")
 
     root = ux.parent.parent if ux.name == "ux" else ux.parent
     present = [root / n for n in INSTRUCTION_FILES if (root / n).is_file()]
     if not present:
-        warn("vision.md exists but the project has no CLAUDE.md / AGENTS.md / "
+        warn("[U032] vision.md exists but the project has no CLAUDE.md / AGENTS.md / "
              "GEMINI.md — the alignment rule has nowhere to live")
         return
     if not any(VISION_RULE_HEADING in read(p) for p in present):
-        warn(f"vision.md exists but no '{VISION_RULE_HEADING}' block in "
+        warn(f"[U033] vision.md exists but no '{VISION_RULE_HEADING}' block in "
              f"{', '.join(p.name for p in present)} — nothing ever reads the vision "
              f"(run the `vision` skill's step 4)")
 
@@ -236,7 +236,7 @@ def check_links(ux: Path) -> None:
                 continue
             resolved = (md.parent / target.split("#", 1)[0]).resolve()
             if not resolved.exists():
-                warn(f"{md.name}: broken link -> {target}")
+                warn(f"[U040] {md.name}: broken link -> {target}")
 
 
 def main() -> int:
@@ -276,18 +276,18 @@ def main() -> int:
             continue
         idx = index_ids(text, pref)
         for missing in sorted(entries - idx):
-            warn(f"{name}: {missing} has no index row")
+            warn(f"[U003] {name}: {missing} has no index row")
         for ghost in sorted(idx - entries):
-            err(f"{name}: index lists {ghost} but no entry exists")
+            err(f"[U004] {name}: index lists {ghost} but no entry exists")
 
     # --- Flows reference existing screens ---
     if has_flows and has_screens:
         screen_ids = set(ids(screens, "SCR"))
         used = refs(flows, "SCR")
         for miss in sorted(used - screen_ids):
-            err(f"flows.md references {miss} but screens.md has no such screen")
+            err(f"[U010] flows.md references {miss} but screens.md has no such screen")
         for orphan in sorted(screen_ids - used):
-            warn(f"screens.md: {orphan} is used by no flow (orphan)")
+            warn(f"[U011] screens.md: {orphan} is used by no flow (orphan)")
 
     # --- Scenario traces resolve ---
     if ids(scenarios, "SCN"):
@@ -297,10 +297,10 @@ def main() -> int:
         traced_flw = refs(scenarios, "FLW")
         if has_stories:
             for miss in sorted(traced_st - story_ids):
-                warn(f"scenarios.md: traces to {miss} which is not in foundation.md")
+                warn(f"[U012] scenarios.md: traces to {miss} which is not in foundation.md")
         if has_flows:
             for miss in sorted(traced_flw - flow_ids):
-                warn(f"scenarios.md: traces to {miss} which is not in flows.md")
+                warn(f"[U013] scenarios.md: traces to {miss} which is not in flows.md")
 
     # --- must/should stories have a scenario ---
     if has_stories and ids(scenarios, "SCN"):
@@ -312,7 +312,7 @@ def main() -> int:
             tail = re.split(r"^#{2,3}\s", foundation[m.end():], maxsplit=1, flags=re.MULTILINE)[0]
             if re.search(r"\*\*Priority:\*\*\s*(must|should)", tail, re.IGNORECASE):
                 if sid not in traced:
-                    warn(f"foundation.md: {sid} (must/should) has no scenario tracing to it")
+                    warn(f"[U014] foundation.md: {sid} (must/should) has no scenario tracing to it")
 
     # --- Screen-level: Figma frames, coverage, drift status ---
     if has_screens:
@@ -330,11 +330,11 @@ def main() -> int:
                     cells = [c.strip() for c in rest.split("|")]
                     frame = cells[1] if len(cells) >= 2 else ""
                     if not frame or frame in ("-", "—", "<frame deep-link>", "<frame link>"):
-                        err(f"screens.md: {sid} state '{state}' has no Figma frame link")
+                        err(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
             cov_m = re.search(r"\*\*Coverage:\*\*\s*(.+)", body)
             cov = cov_m.group(1).strip() if cov_m else ""
             if status == "built" and (not cov or cov.lower().startswith("none")):
-                warn(f"screens.md: {sid} is 'built' but has no Coverage")
+                warn(f"[U021] screens.md: {sid} is 'built' but has no Coverage")
 
     check_vision(ux, vision)
     check_web_surface(screens, flows)

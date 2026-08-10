@@ -827,6 +827,76 @@ def validate_brand_lint_coverage() -> None:
         )
 
 
+def validate_ux_lint_coverage() -> None:
+    """Every code the UX linter can emit has a fixture, and the contract names it.
+
+    The brand linter has had this since v0.30.0 and the older, more central
+    linter had neither codes nor fixtures until v0.34.0 -- so the harness could
+    fall behind the linter exactly the way the linter had fallen behind the
+    contract, and nothing would have said so.
+    """
+    lint = read(ROOT / "plugins/super-ux/scripts/ux_lint.py") or ""
+    tests = read(ROOT / "test/ux_lint_test.py") or ""
+    contract = read(
+        ROOT / "plugins/super-ux/skills/references/scenario-format.md"
+    ) or ""
+    emitted = sorted(set(re.findall(r"\[(U\d{3})\]", lint)))
+    check(bool(emitted), "ux_lint.py: no check codes found")
+    for code in emitted:
+        check(
+            f'"{code}"' in tests,
+            f"{code} is emitted by ux_lint.py with no fixture in "
+            f"ux_lint_test.py -- a check nobody watched fail is not evidence",
+        )
+        check(
+            code in contract,
+            f"{code} is emitted by ux_lint.py but scenario-format.md does not "
+            f"name it -- the code's meaning would live only in the source",
+        )
+
+
+# Paths under docs/ belong to the target project, so an instruction naming one
+# is telling a reader to run a file super-ux put there. Repo-internal commands
+# (test/validate.py and friends) are addressed to a contributor and are not.
+RUN_INSTRUCTION_RE = re.compile(r"python3\s+(docs/[\w./-]+\.py)")
+
+RUN_INSTRUCTION_SURFACES = (
+    "plugins/super-ux/commands",
+    "plugins/super-ux/skills",
+    "templates",
+)
+
+
+def validate_run_instructions() -> None:
+    """Every path an instruction says to run is a path some command seeds.
+
+    `validate_seeded_scripts` asks the question one way -- for each known
+    destination, does a command copy it? That leaves the other direction open,
+    and it is the direction a rename breaks: an instruction pointing at
+    `docs/ux/linter.py` while commands seed `docs/ux/lint.py` passes the first
+    check and fails the reader.
+    """
+    seeded = {dest for dest, _ in SEEDED_SCRIPTS}
+    named: dict[str, list[str]] = {}
+    files = [ROOT / "README.md", ROOT / "CONTRIBUTING.md", ROOT / "CLAUDE.md"]
+    for rel in RUN_INSTRUCTION_SURFACES:
+        files.extend(sorted((ROOT / rel).rglob("*.md")))
+    for path in files:
+        for hit in RUN_INSTRUCTION_RE.findall(read(path) or ""):
+            named.setdefault(hit, []).append(
+                path.relative_to(ROOT).as_posix()
+            )
+    check(bool(named), "no `python3 docs/....py` instruction found anywhere")
+    for path, sources in sorted(named.items()):
+        check(
+            path in seeded,
+            f"instructions tell the reader to run `{path}` "
+            f"({sources[0]}{'' if len(sources) == 1 else f' +{len(sources) - 1} more'}) "
+            f"but no command seeds that path -- SEEDED_SCRIPTS has "
+            f"{', '.join(sorted(seeded))}",
+        )
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -848,6 +918,8 @@ def main() -> int:
     validate_brand_practices()
     validate_brand_field_ownership()
     validate_brand_lint_coverage()
+    validate_ux_lint_coverage()
+    validate_run_instructions()
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
