@@ -1,8 +1,8 @@
 {
   ".claude-plugin/marketplace.json": {
-    "mtime": 1786377660.1993835,
-    "ast_hash": "3f80ad0cd0ea3c200dc34dbce99d3e5d",
-    "semantic_hash": "3f80ad0cd0ea3c200dc34dbce99d3e5d"
+    "mtime": 1786387849.8034077,
+    "ast_hash": "2c74f7e38bfa154e9413e6fb1e294fe4",
+    "semantic_hash": "2c74f7e38bfa154e9413e6fb1e294fe4"
   },
   "bin/super-ux.js": {
     "mtime": 1786377545.2406356,
@@ -20,9 +20,9 @@
     "semantic_hash": "01b2e3cff82b762625b2091c1ca78f20"
   },
   "docs/ux/lint.py": {
-    "mtime": 1786377479.8878229,
-    "ast_hash": "a2badda79d21420683240d39c69f94a2",
-    "semantic_hash": "a2badda79d21420683240d39c69f94a2"
+    "mtime": 1786387809.7918358,
+    "ast_hash": "2ec1ceb27b669229fdcac8a58378cbd9",
+    "semantic_hash": "2ec1ceb27b669229fdcac8a58378cbd9"
   },
   "install.sh": {
     "mtime": 1785254042.1143038,
@@ -30,14 +30,14 @@
     "semantic_hash": "9ad0b3fa9f3b4d8ab19769ef85c5807b"
   },
   "package.json": {
-    "mtime": 1786377660.1990833,
-    "ast_hash": "c3d88edcc05b1cc9edaebdc41e88d96c",
-    "semantic_hash": "c3d88edcc05b1cc9edaebdc41e88d96c"
+    "mtime": 1786387849.798631,
+    "ast_hash": "700d373c695337c28a1eaafede910c5a",
+    "semantic_hash": "700d373c695337c28a1eaafede910c5a"
   },
   "plugins/super-ux/.claude-plugin/plugin.json": {
-    "mtime": 1786377660.1996853,
-    "ast_hash": "b0329cbba9d3e0dd415c2b2c65a9884a",
-    "semantic_hash": "b0329cbba9d3e0dd415c2b2c65a9884a"
+    "mtime": 1786387849.8038273,
+    "ast_hash": "1a315b60afc9c78acc8a2b8e891b8661",
+    "semantic_hash": "1a315b60afc9c78acc8a2b8e891b8661"
   },
   "plugins/super-ux/scripts/bp_index.py": {
     "mtime": 1785952989.8364286,
@@ -55,9 +55,9 @@
     "semantic_hash": "01b2e3cff82b762625b2091c1ca78f20"
   },
   "plugins/super-ux/scripts/ux_lint.py": {
-    "mtime": 1786376920.6917746,
-    "ast_hash": "a2badda79d21420683240d39c69f94a2",
-    "semantic_hash": "a2badda79d21420683240d39c69f94a2"
+    "mtime": 1786387691.467957,
+    "ast_hash": "2ec1ceb27b669229fdcac8a58378cbd9",
+    "semantic_hash": "2ec1ceb27b669229fdcac8a58378cbd9"
   },
   "test/brand_lint_test.py": {
     "mtime": 1786377523.9216228,
@@ -75,9 +75,9 @@
     "semantic_hash": "36309abaa3c985ab3c8471543d94ca9d"
   },
   "test/validate.py": {
-    "mtime": 1786328566.7324567,
-    "ast_hash": "c40665ec55fb90d912fd80b5a8121563",
-    "semantic_hash": "c40665ec55fb90d912fd80b5a8121563"
+    "mtime": 1786387737.4620695,
+    "ast_hash": "8782ddae668508af223f9a51d16b7017",
+    "semantic_hash": "8782ddae668508af223f9a51d16b7017"
   },
   ".github/ISSUE_TEMPLATE/bug_report.md": {
     "mtime": 1785261532.182395,
@@ -105,9 +105,9 @@
     "semantic_hash": "adc131a220784f4bbac0298fef924d21"
   },
   "CHANGELOG.md": {
-    "mtime": 1786377660.1974843,
-    "ast_hash": "ccf6608c5ebe76e2275e9948a1bf2142",
-    "semantic_hash": "ccf6608c5ebe76e2275e9948a1bf2142"
+    "mtime": 1786387849.7902067,
+    "ast_hash": "c4d88239e7e678e9628ebfc6c1cdc022",
+    "semantic_hash": "c4d88239e7e678e9628ebfc6c1cdc022"
   },
   "CLAUDE.md": {
     "mtime": 1786328566.7139087,
@@ -170,9 +170,9 @@
     "semantic_hash": "6dba7ff99fc91297fc875993b5229a6c"
   },
   "docs/superpowers/backlog.md": {
-    "mtime": 1786377705.8610156,
-    "ast_hash": "60ef2ec4f3eae75cfb0c4d5700aa9103",
-    "semantic_hash": "60ef2ec4f3eae75cfb0c4d5700aa9103"
+    "mtime": 1786387850.0498188,
+    "ast_hash": "16caa8d5459f247df662786c67cade4d",
+    "semantic_hash": "16caa8d5459f247df662786c67cade4d"
   },
   "docs/superpowers/briefs/2026-08-04-tier1-audit-findings-acceptance.md": {
     "mtime": 1785883446.0982857,
@@ -220,9 +220,9 @@
     "semantic_hash": "d12b621d32b7b031f79fc2427468fc7c"
   },
   "docs/superpowers/retro.md": {
-    "mtime": 1786328566.718774,
-    "ast_hash": "0d3db8e2d0f233e5faf972a29d8615b1",
-    "semantic_hash": "0d3db8e2d0f233e5faf972a29d8615b1"
+    "mtime": 1786380145.295274,
+    "ast_hash": "2d6ad924efdb2ee49eb899ab29ae0d4f",
+    "semantic_hash": "2d6ad924efdb2ee49eb899ab29ae0d4f"
   },
   "docs/superpowers/specs/2026-07-19-super-ux-design.md": {
     "mtime": 1785261524.6241186,
@@ -240,9 +240,9 @@
     "semantic_hash": "af44925c7f94fb2dc119c754d0d64908"
   },
   "docs/superpowers/verification.md": {
-    "mtime": 1786328566.719022,
-    "ast_hash": "a4017222c64b88c179bcc16329357444",
-    "semantic_hash": "a4017222c64b88c179bcc16329357444"
+    "mtime": 1786380195.4455867,
+    "ast_hash": "5d7ec81804be5a0176584ea905eeb1e3",
+    "semantic_hash": "5d7ec81804be5a0176584ea905eeb1e3"
   },
   "docs/ux/README.md": {
     "mtime": 1786328566.71925,
@@ -415,9 +415,9 @@
     "semantic_hash": "83a34bd625c8630dbb593a2f5411d7b3"
   },
   "plugins/super-ux/skills/references/scenario-format.md": {
-    "mtime": 1786376976.2563856,
-    "ast_hash": "1a9933b9155142766e524c5a8edefd6a",
-    "semantic_hash": "1a9933b9155142766e524c5a8edefd6a"
+    "mtime": 1786387793.7478411,
+    "ast_hash": "b153643ef911bc293e2ce35afb5dc732",
+    "semantic_hash": "b153643ef911bc293e2ce35afb5dc732"
   },
   "plugins/super-ux/skills/references/seo-aeo-safety.md": {
     "mtime": 1785950231.7170386,
@@ -535,7 +535,7 @@
     "semantic_hash": "9ae99486f79ab4212a495e3dab709705"
   },
   "templates/claude-rule.md": {
-    "mtime": 1786328566.7312744,
+    "mtime": 1786387789.3137698,
     "ast_hash": "6aa460303fa5dc713ea6bae203e5aef0",
     "semantic_hash": "6aa460303fa5dc713ea6bae203e5aef0"
   },
@@ -570,9 +570,9 @@
     "semantic_hash": "37a795e8800e72927dee46195e2313d5"
   },
   "test/ux_lint_test.py": {
-    "mtime": 1786376942.4849665,
-    "ast_hash": "20ccc00632b7006f6430755d2c4b643c",
-    "semantic_hash": "20ccc00632b7006f6430755d2c4b643c"
+    "mtime": 1786387791.2268543,
+    "ast_hash": "764e599002135e8f717a33c31cbcab96",
+    "semantic_hash": "764e599002135e8f717a33c31cbcab96"
   },
   "docs/superpowers/briefs/2026-08-10-web-surface-and-routing.md": {
     "mtime": 1786376731.7308273,
@@ -583,5 +583,10 @@
     "mtime": 1786376752.9666035,
     "ast_hash": "da71f0eeeadc544ab469025dc5ccdaf4",
     "semantic_hash": "da71f0eeeadc544ab469025dc5ccdaf4"
+  },
+  "docs/superpowers/briefs/2026-08-10-web-surface-and-routing-acceptance.md": {
+    "mtime": 1786380177.3850458,
+    "ast_hash": "93625dcd7e984c6d726f34cd7994df58",
+    "semantic_hash": "93625dcd7e984c6d726f34cd7994df58"
   }
 }
