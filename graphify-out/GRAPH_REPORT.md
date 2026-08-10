@@ -1,5 +1,21 @@
 # Graph Report - /Users/sshlg/DATA/super-ux  (2026-08-06)
 
+> **STALE as of 2026-08-10 — do not treat this graph as current.**
+> The v0.32.0 run changed 16 code and 98 doc files: the `vision` skill and its
+> template, three new gate functions in `test/validate.py`, four `brand_lint.py`
+> repairs, two new Cursor rules, and this project's own `docs/ux/` and
+> `docs/brand/`. None of it is in the graph below.
+>
+> `graphify . --update` refused with `no LLM API key found (98 doc/paper/image
+> file(s) need semantic extraction)` and no key is present on this machine.
+> `--code-only` would have replaced a 756-node doc-and-code graph with a
+> code-only one and reported success — a downgrade dressed as a refresh, on a
+> corpus that is 98 documents and 16 code files.
+>
+> Refresh with a key set, then delete this block. Tracked as **B-006** on the
+> board. A stale graph is a false premise carrying the authority of a machine,
+> and the next harvest queries it first.
+
 ## Corpus Check
 - 90 files · ~115,840 words
 - Verdict: corpus is large enough that graph structure adds value.

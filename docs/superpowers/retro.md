@@ -23,7 +23,17 @@ stamps — and log the deletion as one line under *Retired*.
    gate alone, check `$?`, then print. `python3 test/validate.py | tail -2 &&
    git commit` commits on a red validator, because `tail` exits 0 and `&&`
    reads the pipeline's status, not the gate's. *(Retire when a hook enforces
-   it, or after five stamps with no recurrence.)*
+   it, or after five stamps with no recurrence.)* — **fired on 2026-08-10:**
+   `python3 docs/brand/lint.py … | tail -3; echo exit=$?` printed `exit=0`
+   while nine errors scrolled past. Two stamps, two catches. Kept.
+
+3. **(2026-08-10)** **A new check runs against the seeded template before it
+   runs against anything else.** `CONTRIBUTING.md` requires a freshly seeded
+   project to lint clean from the first second, and a check written against
+   real content will not notice it broke that. The vision emptiness check
+   errored on the pristine `templates/vision.md`, because `read()` strips the
+   HTML comments the template is made of. *(Retire when the validator seeds a
+   project and lints it, or after five stamps with no recurrence.)*
 
 ## Retired
 
@@ -40,6 +50,72 @@ Newest last.
 | 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
 | 2026-08-05 | Verbal identity layer, carry-over ledger to zero, code graph; v0.30.0 → v0.30.1 | yes — see below |
 | 2026-08-05 | Verbal identity layer — brand-contract v1, brand-voice + copywriting, brand_lint.py, BP-182..205, PRN-22..24; v0.30.0 | yes — see below |
+| 2026-08-10 | Structural audit of 0.31.0 → 22 findings closed, three composition gates, dogfood chain + brand pack; v0.32.0 | yes — see below |
+
+---
+
+## 2026-08-10 — a green suite that had never been asked a question about composition
+
+**Symptom.** `python3 test/validate.py` reported `OK (3427 checks)` on
+v0.31.0 while the README advertised 181 practices against a catalog of 206
+and 31 lint checks against a linter emitting 33; the heuristic range appeared
+as `PRN-01..10`, `..16`, `..21` and `..24` in six files; `/ux` — documented
+as "the only command a user needs" — named three of seven skills; and
+`vision`, shipped the same day, reached neither the system map, the linter,
+the doctor, a template, a Cursor rule nor the router. Evidence: the audit's
+35-check re-verification script, all failing before this run and all passing
+after.
+
+**Surfaced at** stage 0, by an audit the operator asked for. Nothing in the
+pipeline would have surfaced it: every stage was green.
+
+**Owned by** the validator. Not by the people who wrote the drifting files —
+each edit was locally correct, and no single file looked wrong.
+
+**Root cause.** 3427 checks verified **shape** — front-matter fields, version
+agreement across manifests, byte-identity of the shipped reference copies,
+link resolution, one fixture per lint code. Not one of them verified
+**composition**: whether a number in prose equals the artifact it counts,
+whether a skill that exists is reachable, whether a script an instruction
+names is installed by anything. Shape is what a single file can be wrong
+about. Composition is what only the set can be wrong about, and absence has
+one side — so it has to be asked for by name.
+
+The second half of the cause is subtler and is why the drift was invisible
+rather than merely unnoticed: **the checks that did exist made the suite feel
+exhaustive.** 3427 is a number that stops people looking.
+
+**Fix, by grade.**
+
+- *Mechanical checks (taken):* `validate_stated_numbers` recomputes every
+  count written in prose from the artifact it counts.
+  `validate_skill_parity` asks for each skill by name in five places.
+  `validate_seeded_scripts` proves every script an instruction names is
+  copied there by some command. `validate_hard_rule_copies` is now driven by
+  a pair list rather than one hardcoded pair. Each was verified against a
+  planted defect before being trusted — the plant/revert transcript is in
+  `docs/superpowers/verification.md`, and every row there is `planted` or
+  `observed`, none `never`.
+- *Structural (taken):* `references/system-map.md` names contracts and links
+  none. Every link in a skill is a shipping instruction, and because every
+  skill links the map, a link from the map is a link from all of them.
+- *Documentation (taken):* `CONTRIBUTING.md` gains an "Invariants the
+  validator asks for by name" section, so the next contributor meets the
+  rules before tripping them.
+- *Dogfood (taken):* super-ux now runs its own chain and its own pack. Six
+  further defects surfaced within an hour of writing the scenarios, four of
+  them in the shipped `brand_lint.py`. That is the real fix: the audit found
+  the drift once, the dogfood finds it continuously.
+
+**The check that catches it next time:** the three composition gates. The
+older one — the suite's own count — is what to stop trusting.
+
+### A note that expires
+
+Writing a check and running it once against real content is not a test: the
+pristine template is a different input, and `CONTRIBUTING.md` promises it
+lints clean. Now standing instruction #3. **This note expires 2026-08-24**
+(two runs) if #3 has held.
 
 ---
 

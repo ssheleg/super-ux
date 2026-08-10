@@ -14,6 +14,9 @@ plugins/super-ux/
   skills/references/             the SOURCE OF TRUTH for those contracts
   commands/*.md                  the /ux slash commands
   scripts/ux_lint.py             the linter seeded into target projects
+                                 (ux_doctor.py and brand_lint.py sit beside it;
+                                  every one of the three is seeded by a command,
+                                  and validate_seeded_scripts proves it)
 cursor/rules/*.mdc               the same methodology for Cursor
 templates/                       what gets seeded into a project's docs/ux/
 bin/super-ux.js                  the npx installer (zero dependencies)
@@ -84,6 +87,36 @@ mkdir /tmp/t/proj && node /tmp/t/package/bin/super-ux.js --cursor /tmp/t/proj
 # the seeded project must lint clean from the first second
 cd /tmp/t/proj && python3 docs/ux/lint.py
 ```
+
+## Invariants the validator asks for by name
+
+Three gates exist because the same failure shape recurred and no single file
+ever looked wrong:
+
+- **`validate_stated_numbers`** — every count written in prose equals the
+  artifact it counts. The README once advertised 181 practices against a
+  catalog of 206 and 31 lint checks against 33, for months, with a green
+  suite. Write a number, and a check recomputes it.
+- **`validate_skill_parity`** — a skill exists in five places or it does not
+  exist: its directory, `cursor/rules/<name>.mdc`, the system map's skill
+  list, both manifest descriptions, and `commands/ux.md` so `/ux` can route
+  to it. Adding a skill without adding its Cursor rule fails here.
+- **`validate_seeded_scripts`** — every script an instruction tells a reader
+  to run is copied there by some command. A hard rule that says
+  "run `python3 docs/brand/lint.py`" while nothing installs that file is the
+  defect this catches.
+
+Two more that are easy to trip:
+
+- **Hard rules live in `templates/`.** `claude-rule.md` and `vision-rule.md`
+  are the only sources; the command or skill that installs one carries an
+  identical embedded copy, and `HARD_RULES` in `test/validate.py` pairs
+  them. Adding a rule means adding its row.
+- **Every link in a skill is a shipping instruction.**
+  `test/sync_references.py` copies the transitive closure of a skill's links
+  into that skill, so `references/system-map.md` names contracts and links
+  none. One link from the map to `brand-contract.md` once put all nine brand
+  contracts inside every UX skill.
 
 ## Releasing (maintainer)
 

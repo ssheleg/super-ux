@@ -1,5 +1,94 @@
 # Changelog
 
+## 0.32.0 — 2026-08-10
+
+A structural audit of 0.31.0 found twenty-two defects that 3427 green checks
+could not see, because the suite verified shape and never once verified
+composition. This release closes them and turns each finding class into a
+check that fails.
+
+### Fixed
+
+- **The system map linked `brand-contract.md`, and every skill links the
+  map.** `test/sync_references.py` copies the transitive closure of a skill's
+  links, so one pointer put all nine brand contracts inside every UX skill —
+  App Store guidance riding along in `ux-foundation`. The map now names
+  contracts and links none. `ux-flows`, `ux-foundation` and `ux-scenarios`
+  drop from 19 shipped contracts to 10, `brand-voice` from 19 to 10,
+  `copywriting` from 20 to 11; `ux-audit` keeps both shelves and now links
+  them deliberately, because its `copy` scope reads them.
+- **`vision` shipped in 0.31.0 connected to nothing.** It is now in the
+  system map's pipeline, file table, skill list and command list; it points
+  back at the map; `ux_lint.py` checks its nine sections, its anti-vision and
+  whether its alignment rule was ever installed; `ux_doctor.py` reads its
+  contract marker; `templates/vision.md` seeds it; `cursor/rules/vision.mdc`
+  carries it to Cursor; `/ux-init` offers it as step 0.
+- **`/ux` called itself the only command a user needs and could not reach
+  three of seven skills.** `vision`, `brand-voice` and `copywriting` now have
+  routing rows, status rows and menu entries. The action menu is renumbered
+  1..15.
+- **The vision hard rule had no single source.** It now lives in
+  `templates/vision-rule.md`, and `validate_hard_rule_copies` is driven by a
+  pair list covering both rules instead of one.
+- **Three commands told the reader to run a script nothing installed.**
+  `/ux-rule` seeds `doctor.py` beside `lint.py`, `/brand-init` seeds
+  `docs/brand/lint.py`, and `/ux-doctor` no longer claims `/ux-rule` "seeds
+  both scripts" when it seeded one.
+- **Numbers that had agreed with themselves for months.** 181 practices
+  against a catalog of 206; "31 deterministic checks" against a linter
+  emitting 33; the heuristic range written as `PRN-01..10`, `..16`, `..21`
+  and `..24` in six files; "four skills" and "four agent-requested rules"
+  against seven of each; `plugin.json` and `marketplace.json` naming five of
+  seven skills; a documented update command that omitted two skills and
+  recommended the bare `skills update` that shadows the plugin.
+- **`bin/super-ux.js`** — a Russian-only fallback message in an otherwise
+  English CLI; the routing-block offer firing on the `--cursor` path and not
+  from the menu; `--help` describing a skeleton three categories smaller than
+  the one it writes; and a `done:` line that counted rules and called it the
+  whole install.
+- **`brand_lint.py`, four defects found by pointing it at real prose.**
+  `B030` read `BP-079..090`, `NIST SP 800-63B` and `Apple HIG 2025` as
+  unsourced claims. The literal extractor ignored which quote opened a string
+  and read the gaps between template interpolations as copy — 598 fragments
+  from one file. `B022` rescanned a file once per registry row. `B024` had no
+  allowance for declared proper nouns, acronyms, sentence boundaries or
+  escape sequences. The registry parser could not hold a string containing a
+  pipe, or one with leading or trailing space.
+
+### Added
+
+- **Three gates that ask for composition, not shape.**
+  `validate_stated_numbers` recomputes every count written in prose against
+  the artifact it counts. `validate_skill_parity` asks for each skill by name
+  in five places — its directory, a Cursor rule, the system map, both
+  manifest descriptions, and `commands/ux.md`. `validate_seeded_scripts`
+  proves every script an instruction names is copied there by some command.
+  Each was verified against a planted defect before being trusted.
+- `validate_commands` now requires all fifteen commands, not eight;
+  `validate_templates` requires the vision skeleton and both rule snippets.
+- `cursor/rules/copywriting.mdc` — the Cursor channel shipped four of seven
+  domains.
+- **super-ux now runs its own chain.** `CLAUDE.md` with all three hard rules,
+  `docs/ux/` (vision, foundation, flows, screens, 15 scenarios covering the
+  installer TUI) and `docs/brand/` (peer-builder pack, terminology, a facts
+  table where every row names the command that recomputes it, channels, and a
+  string registry generated from the source). Both linters exit clean. Six of
+  the defects above were found by writing them.
+- `docs/superpowers/backlog.md` and `verification.md` — the board and the
+  ledger the pipeline reads at stage 0 and writes at stage 8.
+- Four `B030` regression fixtures, so the identifier, standard, year and
+  real-figure cases each have a test that has been watched fail.
+
+### Changed
+
+- `practice-selection.md`'s `ALWAYS` set is `PRN-01..24`. PRN-22..24 are the
+  verbal heuristics; they read as brand rules and were therefore filed as
+  optional, but any product with text has them.
+- `templates/README.md` — the map seeded into every project now carries the
+  vision row, the `docs/brand/` sibling and `doctor.py`.
+- The `ux-contract` gains an optional `vision.md` section. Still v4: the file
+  is additive and optional.
+
 ## 0.31.0 — 2026-08-06
 
 ### Added
