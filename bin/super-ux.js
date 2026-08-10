@@ -322,7 +322,7 @@ async function menu() {
 
   if (picked.length === 0) {
     if (prompter) prompter.close();
-    console.log('Nothing selected.');
+    console.log('Nothing selected');
     return;
   }
 

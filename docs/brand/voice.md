@@ -74,3 +74,15 @@ enter, and the tell is a page that assumes the reader already knows what
 practised — limits listed for credit while the real one stays buried. For
 this product the second form has a specific shape: publishing a linter's
 check count as a badge while the count is stale.
+
+## Voice references
+
+Two fixed points, and the refused one does most of the work: it is the only
+half that can be checked against a draft out loud.
+
+- **Admired:** Stripe's API documentation — every claim arrives with something
+  you can run, so trust is earned by the reader rather than asserted by the
+  writer.
+- **Refused:** the launch-post register that opens with "We're thrilled to
+  announce" — a tone that treats the reader's attention as already won, and
+  puts the writer's excitement where the reader's problem should be.

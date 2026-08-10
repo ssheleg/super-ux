@@ -41,6 +41,9 @@ MINIMAL = {
         # time bomb: this suite was green on 2026-08-05 and red on 2026-08-06
         # with no code change. Calibrate "today" so the baseline cannot expire.
         f"Last calibrated: {TODAY}\n"
+        "\n## Voice references\n"
+        "- **Admired:** Stripe docs — every claim has a runnable example\n"
+        "- **Refused:** an outage page that is cheerful about it\n"
     ),
     "terminology.md": MARKER + "\n",
     "facts.md": MARKER + "\n",
@@ -129,7 +132,11 @@ def main() -> int:
     )
     case(
         "missing contract marker",
-        {**MINIMAL, "voice.md": "Voice pack: operator-brief\n"},
+        # The references section stays, or this fixture would test two codes
+        # at once and pass for the wrong reason.
+        {**MINIMAL, "voice.md": "Voice pack: operator-brief\n"
+         "\n## Voice references\n- **Admired:** Stripe docs\n"
+         "- **Refused:** a cheerful outage page\n"},
         {"B001"},
     )
     case(
@@ -556,6 +563,59 @@ def main() -> int:
          "| Primary | Replacement | Job |\n|---|---|---|\n"
          "| ship it | ship it | permission to stop |\n"},
         {"B072"},
+    )
+
+    # --- B007: the voice names what it admires and what it refuses ---
+    no_refs = MINIMAL["voice.md"].split("\n## Voice references")[0] + "\n"
+    case(
+        "B007 voice.md with no Voice references section",
+        {**MINIMAL, "voice.md": no_refs},
+        {"B007"},
+    )
+    case(
+        "B007 fires when only one half is named",
+        {**MINIMAL, "voice.md": no_refs + "\n## Voice references\n"
+         "- **Admired:** Stripe docs — every claim has a runnable example\n"},
+        {"B007"},
+    )
+    case(
+        "B007 fires when the half is a template placeholder",
+        {**MINIMAL, "voice.md": no_refs + "\n## Voice references\n"
+         "- **Admired:** Stripe docs\n- **Refused:** <brand you refuse to sound like>\n"},
+        {"B007"},
+    )
+
+    case(
+        "B007 silent on a draft voice, which has not been calibrated yet",
+        {**MINIMAL, "voice.md": no_refs.replace("Status: validated", "Status: draft")},
+        set(),
+    )
+
+    # --- B026: a label is not a sentence, so it takes no full stop ---
+    case(
+        "B026 a menu label ending in a period",
+        {**MINIMAL, "strings.md": registry("| menu.item.install | Install the plugin. | src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B026"}, project={"src/a.ts": "Install the plugin.\n"},
+    )
+    case(
+        "B026 silent on the same label without one",
+        {**MINIMAL, "strings.md": registry("| menu.item.install | Install the plugin | src/a.ts:1 | SCN-001 | agreed |\n")},
+        set(), project={"src/a.ts": "Install the plugin\n"},
+    )
+    case(
+        "B026 silent on a prose key, which is allowed sentences",
+        {**MINIMAL, "strings.md": registry("| error.disk.full | The disk is full. | src/a.ts:1 | SCN-001 | agreed |\n")},
+        set(), project={"src/a.ts": "The disk is full.\n"},
+    )
+    case(
+        "B026 silent on an ellipsis, which is progress and not a full stop",
+        {**MINIMAL, "strings.md": registry("| button.save | Saving… | src/a.ts:1 | SCN-001 | agreed |\n")},
+        set(), project={"src/a.ts": "Saving…\n"},
+    )
+    case(
+        "B026 silent on a multi-sentence label, which is prose in a bad place",
+        {**MINIMAL, "strings.md": registry("| title.welcome | Welcome. Let us begin. | src/a.ts:1 | SCN-001 | agreed |\n")},
+        set(), project={"src/a.ts": "Welcome. Let us begin.\n"},
     )
 
     fix_idempotent()

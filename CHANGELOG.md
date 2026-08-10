@@ -1,5 +1,57 @@
 # Changelog
 
+## 0.33.0 — 2026-08-10
+
+The chain designed landing pages and had nowhere to record that a landing is a
+page a machine reads. This release gives that decision a home, teaches the
+router the words users actually bring, and adds the two copy checks that our
+own interface failed.
+
+### Added
+
+- **`Web surface:` — the second reader gets a field.** A screen that is a
+  public URL now carries five, and each is the design-time twin of a check an
+  audit runs on the live page later, so both ends speak one vocabulary:
+  `Route`, `Answers` (the ONE question this page answers — a second question is
+  a second page), `Indexable`, `Without JS`, `Entity`. `screens.md` answers
+  `Web surfaces: yes|no` once per project, because a declared absence is
+  countable and an unanswered question is not. Contract stays **v4**: the block
+  is optional and additive, nothing to migrate.
+  `ux-flows` asks at the moment it already asks about Figma and the style pack;
+  `ux-audit` checks a built screen against the record; **seo-aeo-audit** joins
+  `sheleg-design` and `task-pipeline` as the third companion, on the same
+  recommend-never-force contract. The reason it lives in the chain and not in
+  an audit: once a page is live its URL is in other people's links and its
+  structure is what an answer engine already quoted, so an audit then finds a
+  problem it can no longer fix.
+- **`test/ux_lint_test.py` — the UX linter gets a fixture harness.** The brand
+  linter has carried one per code since 0.30.0; the older and more central
+  linter had none. Fourteen cases, every rule with its planted defect and its
+  clean twin, wired into CI. The backfill for the checks that predate it is
+  **B-010** on the board — named rather than implied.
+- **B007 — a voice names one brand it admires and one it refuses.** The refused
+  half does the work: it is the only one that can be checked against a draft out
+  loud. Silent while the voice is `draft`, because the references are part of
+  calibrating it and a warning on a freshly seeded project is how a linter
+  teaches people to ignore it on day one.
+- **B026 — a label, button, menu item or title takes no full stop.** Scoped by
+  key prefix rather than by guessing at the text: a message may be a sentence
+  and should be. It found `Nothing selected.` in this project's own installer
+  on its first run.
+- **Four routing rows and the composite brief.** `/ux` now answers to
+  *воронка / funnel / pricing / checkout*, *дизайн / how should it look*,
+  *SEO / чтобы находилось*, and *мобильное приложение / which platform* — every
+  one of which had a capability behind it and no words in front of it. And a
+  brief that names three things is now mapped to three routes, ordered by chain
+  position, with the sequence stated before the first one runs.
+
+### Fixed
+
+- `menu.nothing` in `bin/super-ux.js` ended in a full stop, and the registry
+  agreed with it. Both corrected; B026 is what found it.
+- This project's own `screens.md` now answers the web-surface question (`no`,
+  with the reason), and its `voice.md` names its two references.
+
 ## 0.32.0 — 2026-08-10
 
 A structural audit of 0.31.0 found twenty-two defects that 3427 green checks

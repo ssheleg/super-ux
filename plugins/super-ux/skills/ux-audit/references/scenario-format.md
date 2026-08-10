@@ -279,7 +279,8 @@ design map: every screen and state with its Figma frame, wireframe, code
 coverage, and resources. Update in the same change as any interface change;
 when Figma is enabled, update the frame too. -->`
 
-Structure: an Index, a Design system block, then one entry per screen.
+Structure: an Index, a Design system block, a Web surfaces declaration, then
+one entry per screen.
 
 ```markdown
 ## Index
@@ -294,6 +295,9 @@ Structure: an Index, a Design system block, then one entry per screen.
 - **Component source:** <shared UI components dir, e.g. src/components/>
 - **Assets:** <icons/illustrations location>
 
+## Web surfaces
+- **Web surfaces:** yes | no
+
 ## Screens
 
 ### SCR-01: Welcome
@@ -306,6 +310,12 @@ Structure: an Index, a Design system block, then one entry per screen.
   | success | default | <frame deep-link> | value copy + CTA |
   | empty | nothing created | <frame deep-link> | "Create your first project" prompt |
   | error | load failed | <frame deep-link> | inline error + retry |
+- **Web surface:** (optional — only when this screen is a public URL)
+  - **Route:** /pricing
+  - **Answers:** what does it cost, and what is in each tier
+  - **Indexable:** yes | no + why | canonical → /other-path
+  - **Without JS:** the tier table and prices render in plain HTML
+  - **Entity:** schema.org/Product with an Offer per tier
 - **Wireframe:** wireframes/SCR-01.md (optional)
 - **Coverage:** src/onboarding/Welcome.tsx:1 (or `none yet`)
 - **Scenarios:** SCN-001, SCN-002
@@ -332,6 +342,25 @@ Rules:
   obeys — recorded ONCE here, referenced everywhere else. Chosen with the
   **sheleg-design** companion skill when it's available; see
   [visual-identity.md](visual-identity.md).
+- **`Web surfaces` is answered once per project, `yes` or `no`** — does this
+  product have pages a search engine or an AI answer engine will read? `no`
+  is a complete answer and silences the rest; an *unanswered* question is
+  not, because a declared absence is countable and a skip is not.
+- **A screen that is a public URL carries a `Web surface:` block, and all
+  five fields are required.** Each one is the design-time twin of a check an
+  audit runs on the live page later, so both ends speak one vocabulary:
+  `Route` (a readable, stable path), `Answers` (the ONE question this page
+  answers — a second question is a second page), `Indexable` (yes, no with
+  the reason, or the canonical it defers to), `Without JS` (what a reader
+  gets when no JS executes — the answer, or nothing), `Entity` (the
+  schema.org type and the thing it describes, matched to visible content).
+- **Why this lives in the chain and not in an audit.** By the time a page is
+  live its URL is in other people's links and its structure is what an answer
+  engine already quoted; an audit then finds a problem it can no longer fix.
+  Verifying the live page is still worth doing and belongs to the
+  **seo-aeo-audit** companion — this block is what it verifies *against*.
+- Public figures on such a page still have exactly one home,
+  `docs/brand/facts.md`. This block adds no second one.
 
 ## `docs/ux/scenarios.md`
 

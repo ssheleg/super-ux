@@ -201,6 +201,34 @@ def check_contract(brand_dir: Path) -> list[Finding]:
             "report",
         ))
 
+    # B007 -- a voice defined only by what it is drifts toward the average of
+    # everything. Naming one brand you admire and one you refuse gives the
+    # writer two fixed points, and the refused one does most of the work: it
+    # is the only field that can be checked against a draft out loud.
+    # A `draft` voice has not been calibrated yet and the references are part
+    # of calibrating it, so firing here would put a warning on every freshly
+    # seeded project -- which is how a linter teaches people to ignore it on
+    # day one. The check begins the moment someone claims the voice is done.
+    if voice and status and status != "draft":
+        section = re.search(
+            r"^##\s+Voice references\s*$(.*?)(?=^##\s|\Z)",
+            voice, re.MULTILINE | re.DOTALL,
+        )
+        body = section.group(1) if section else ""
+        admired = re.search(r"\*\*Admired:\*\*\s*(\S.*)", body)
+        refused = re.search(r"\*\*Refused:\*\*\s*(\S.*)", body)
+        missing = [
+            name for name, m in (("Admired", admired), ("Refused", refused))
+            if not m or unfilled(m.group(1))
+        ]
+        if missing:
+            findings.append(Finding(
+                "B007", SEVERITY_WARN, "voice.md", 1,
+                f"`## Voice references` is missing {', '.join(missing)} -- "
+                f"a voice with no brand it refuses to sound like has no edge "
+                f"to be checked against",
+            ))
+
     return findings
 
 
@@ -348,6 +376,12 @@ def _looks_like_copy(literal: str) -> bool:
 DIRECTIVES = {"use strict", "use client", "use server"}
 
 
+LABEL_KEY_RE = re.compile(
+    r"^(button|cta|label|title|heading|header|menu|tab|nav|placeholder"
+    r"|action|link|toggle|chip|badge)\b", re.IGNORECASE
+)
+
+
 def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
     """B020-B025 -- the registry, the code and the casing agree."""
     findings: list[Finding] = []
@@ -368,6 +402,24 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
                 f"one action, two names -- `{key}` is {listed}. An action "
                 f"keeps one name across the whole flow",
             ))
+
+    # B026 -- a label is a name, not a statement, so it ends with nothing.
+    # Scoped by key prefix rather than by guessing at the text: a message may
+    # be a sentence and should be, while a button that ends in a full stop is
+    # the single most common tell that prose leaked into a control.
+    for row in rows:
+        if not LABEL_KEY_RE.match(row["key"]):
+            continue
+        text = row["text"].rstrip()
+        if not text.endswith(".") or text.endswith("..") or text.endswith("…"):
+            continue
+        if ". " in text:      # genuinely several sentences -- a different defect
+            continue
+        findings.append(Finding(
+            "B026", SEVERITY_WARN, "strings.md", 0,
+            f"`{row['key']}` ends in a full stop: \"{text}\". A label, button, "
+            f"menu item or title is a name and takes no terminal punctuation",
+        ))
 
     for row in rows:
         location = row["location"]

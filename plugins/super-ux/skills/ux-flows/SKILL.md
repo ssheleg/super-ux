@@ -94,7 +94,19 @@ Per story (or tight cluster):
    skill's motion methodology. Companion not installed → offer the one-time
    install once and continue on platform defaults either way. Never invent a
    palette, type pairing, or motion per screen.
-5. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
+5. **Settle the second reader, in the same breath** — ask once, plainly:
+   *does this product have pages a search engine or an AI answer engine will
+   read — a landing, pricing, docs, a blog?* Record the answer in
+   `screens.md` → Web surfaces as `yes` or `no`; `no` is a complete answer.
+   On `yes`, every public screen gets the five-field **Web surface:** block
+   (`Route`, `Answers`, `Indexable`, `Without JS`, `Entity` — see
+   [scenario-format.md](references/scenario-format.md)), filled while the
+   screen is being designed and not afterwards: once the page is live its URL
+   is in other people's links and its structure is what an answer engine
+   already quoted. Verifying the live page belongs to the **seo-aeo-audit**
+   companion — offer the one-time install once and continue either way; this
+   block is what that audit checks against.
+6. **Optional wireframes** (`docs/ux/wireframes/FLW-NN.md`): ASCII blocks —
    hierarchy and primary action, not pixels. Storyboard only when usage
    context drives design.
    **Figma mockups** (default on — see
@@ -106,14 +118,14 @@ Per story (or tight cluster):
    connecting it and continue text-only (flows/wireframes stay the source of
    truth, sync later). Ask the Figma yes/no question once at the start and
    record it in the foundation.
-6. **Practice pass** (mandatory, per
+7. **Practice pass** (mandatory, per
    [practice-selection.md](references/practice-selection.md)): build the
    product profile from the foundation, pull the mandatory sets + this
    artifact's checklist row, give every pulled practice a verdict
    (applied / adapted / rejected+reason / deferred+trigger) in a compliance
    table attached to the flow entry. No silent skips; applied practices
    must be visible in the flow/scenario artifacts.
-7. Present for approval (flow + compliance table); hand off to
+8. Present for approval (flow + compliance table); hand off to
    `ux-scenarios` to cover nodes/edges.
 
 ## Reverse (backwards mode)

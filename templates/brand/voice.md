@@ -56,3 +56,11 @@ Conventions rather than character. Each is decided again in
 Copied from the pack, kept here so the audit can look for it by name.
 
 <the degenerate form this voice collapses into when overdone>
+
+## Voice references
+
+<!-- Two fixed points. The refused one does most of the work: it is the only
+half that can be checked against a draft out loud ("this is the thing we said
+we would never sound like"). Required once Status leaves `draft`. -->
+- **Admired:** <brand or product, and the ONE thing it does that you want>
+- **Refused:** <brand or product, and the ONE thing it does that you refuse>

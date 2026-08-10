@@ -30,7 +30,7 @@ requires.
 | menu.hint.keys | \x1b[2K  ↑/↓ move · space/number toggle · a all · enter confirm · q quit\n | bin/super-ux.js:252 | SCN-001 | agreed |
 | menu.select.prompt | Select [e.g. 1,3 \| all \| q]:  | bin/super-ux.js:302 | SCN-004 | agreed |
 | menu.intro | super-ux — scenario-driven UI development. Select what to install:\n | bin/super-ux.js:309 | SCN-001 | agreed |
-| menu.nothing | Nothing selected. | bin/super-ux.js:325 | SCN-003 | agreed |
+| menu.nothing | Nothing selected | bin/super-ux.js:325 | SCN-003 | agreed |
 | prompt.cursor.dir | Cursor rules — project directory [.]:  | bin/super-ux.js:336 | SCN-006 | agreed |
 | routers.offer.1 | \nTo have these skills apply by default in every project, add the\n | bin/super-ux.js:368 | SCN-012 | agreed |
 | routers.offer.2 | family's routing block to your agent's global instructions:\n\n | bin/super-ux.js:369 | SCN-012 | agreed |

@@ -52,7 +52,7 @@ why):
 | `channels.md` | `brand-voice` | one record per surface: register, limits, bans |
 | `strings.md` | `brand-voice` | interface string registry → `file:line` → scenario |
 | `locales/<code>.md` | `brand-voice` | per-locale delta |
-| `lint.py` | seeded | `brand_lint.py`, 33 deterministic checks (B001..B073) |
+| `lint.py` | seeded | `brand_lint.py`, 35 deterministic checks (B001..B073) |
 
 It is a separate root because the brand also governs surfaces that are not UX
 — a store listing, an ad, a post. The pack derives from `foundation.md` and

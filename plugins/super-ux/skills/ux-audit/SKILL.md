@@ -116,6 +116,16 @@ Passes:
    registry marks but the design lost); with the Figma MCP connected,
    `get_metadata` confirms the frame still exists under its expected
    `SCR-NN/<Screen>/<state>` name without pulling full design context.
+   **A screen carrying a `Web surface:` block is checked against it too:**
+   the route the code actually serves vs `Route`, whether the answer survives
+   with JS disabled vs `Without JS`, whether the emitted structured data
+   matches `Entity` and the visible content, and whether the indexation
+   directives agree with `Indexable`. Divergence is `drifted` like any other.
+   Where `screens.md` declares `Web surfaces: no` while the code serves a
+   public route, that is a finding against the declaration, not the screen.
+   The live-page audit — rendering, crawl reach, competitors, the SERP — is
+   the **seo-aeo-audit** companion's job; this pass checks the record against
+   the code, and hands the rest over rather than guessing at it.
 3. **Heuristic pass** — implemented flows vs PRN-01..24
    ([ux-design-principles.md](references/ux-design-principles.md));
    findings `[PRN-NN] (severity) node — issue -> fix`.

@@ -30,6 +30,17 @@ the whole surface is a terminal.
   the meaning; colour never does.
 - **Selection glyphs:** `◉` selected, `◯` not, `❯` cursor.
 
+## Web surfaces
+
+- **Web surfaces:** no
+
+super-ux ships a terminal installer and a plugin. Its only public text lives in
+the GitHub README, which is a *copy* surface (`docs/brand/channels.md` → landing
+hero) and not a web surface this project routes: there is no path we choose, no
+canonical we set and no markup we emit. The day a hosted page exists — docs, a
+landing, pricing — this line flips to `yes` and every public screen takes its
+five-field `Web surface:` block.
+
 ## Screens
 
 ### SCR-01: Interactive multi-select list

@@ -129,7 +129,7 @@ Commands: `/brand` (status → one recommended action), `/brand-init`,
 python3 docs/brand/lint.py
 ```
 
-33 deterministic checks (`B001`..`B073`) — banned words, one action under two names, a figure
+35 deterministic checks (`B001`..`B073`) — banned words, one action under two names, a figure
 with no sourced fact, a field over its limit with the locale coefficient
 applied, blocked AI crawlers, keyword stuffing, humor on a billing screen,
 a locale that lags without saying so. Exit 0 clean, 1 warnings, 2 errors.

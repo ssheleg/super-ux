@@ -35,6 +35,24 @@ sheleg-design@sheleg-design-skill`, or `npx sheleg-design-skill` in the
 project) and continue on platform defaults either way — recommend, don't
 force. Division of labor: the visual-identity reference.
 
+**The second reader, same moment:** if the task touches a page a search or an
+AI answer engine will read — a landing, pricing, docs, a blog — check
+`screens.md` → Web surfaces. Unanswered, ask once (`yes`/`no`), and on `yes`
+every public screen takes the five-field **Web surface:** block while it is
+being designed. This is not an audit item: once a page is live its URL is in
+other people's links and its structure is what an answer engine already
+quoted. Checking the *live* page is the **seo-aeo-audit** companion — not
+installed → offer the one-time install once (`/plugin marketplace add
+ssheleg/seo-aeo-audit` + `/plugin install seo-aeo-audit@seo-aeo-audit`, or
+`npx @ssheleg/seo-aeo-audit` in the project) and continue either way.
+
+**A brief usually names more than one thing.** "A feature, its landing and the
+funnel" matches three rows below, not one. Map **every** row that matches,
+order them by chain position (vision → foundation → flows/screens →
+scenarios → copy → audit → plan), state the sequence in one line before
+running the first, and run them in that order. Answering only the row you
+matched first is how half a brief gets silently dropped.
+
 Routing table (user's words → action from the menu below):
 
 | User says (any language) | Route to |
@@ -50,6 +68,10 @@ Routing table (user's words → action from the menu below):
 | "write the button/error/landing/post" / "напиши текст", "перепиши", "заголовок", "лендинг" | 12 |
 | "does the copy match the brand" / "проверь тексты по бренду" | 13 |
 | "what to fix first", plan / "что чинить в первую очередь", "план" | 14 |
+| "the funnel", "pricing page", "checkout", "we need to make money from this" / "воронка", "монетизация", "прайсинг", "оплата" | 4 — a funnel is a flow with screens. The purchase surface in `foundation.md` routes the practice set (`BP-116..123` web, `BP-124..129` web2app); then 12 for its copy |
+| "design it", "how should it look", "the visuals", "pick a style" / "дизайн", "как это выглядит", "стиль", "визуал" | 4, with the visual identity settled first — the **sheleg-design** companion picks the style pack and `screens.md` → Design system records it. Not a taste conversation per screen |
+| "will Google/ChatGPT find it", "SEO", "the landing must be findable" / "SEO", "чтобы находилось", "поисковики", "нейронки" | 4 — the `Web surface:` block is designed with the screen; the **seo-aeo-audit** companion checks the live page afterwards. Never the other way round |
+| "mobile app", "iOS/Android", "which platform" / "мобильное приложение", "айос", "андроид", "приложение" | 2 first — `Platform` in `foundation.md` is what routes `BP-049..054` and the platform component rules; then 4 |
 | "don't know", "just take a look" / "просто посмотри" | run 1–3 of Inspect, recommend from state |
 
 Three layers sit outside the chain and are reached only from here, so never
@@ -76,7 +98,10 @@ become), **brand-voice** and **copywriting** (how it speaks). A user who says
   without flows.
 - `docs/ux/screens.md`? If yes: screen count by status
   (designed/built/drifted), screens missing Figma frames (when Figma on),
-  screens missing coverage.
+  screens missing coverage, and the **Web surfaces** answer — `yes` with the
+  count of screens carrying a complete `Web surface:` block, `no`, or
+  unanswered. Unanswered is a gap, not a non-issue: it is the one question in
+  the chain that an audit afterwards cannot fix.
 - `docs/ux/scenarios.md`? If yes: scenario counts by status, features,
   `Traces` filled or not, `Last audit` values.
 - Latest report in `docs/ux/audits/` (date, totals, open findings) and any
@@ -107,7 +132,7 @@ become), **brand-voice** and **copywriting** (how it speaks). A user who says
 Compact table across every layer: vision (present? status, alignment rule
 installed?), foundation (present? entry counts, assumptions unvalidated),
 flows (count, `inferred` vs confirmed), screens (by status, missing
-frames/coverage), scenarios (total/by status, traced %, features), audits
+frames/coverage, web surfaces answered/`yes`+blocks/`no`), scenarios (total/by status, traced %, features), audits
 (last run, PASS/PARTIAL/FAIL/BLOCKED totals, open findings), brand (pack,
 status, unsourced facts, locale parity), plus both linters' error/warning
 counts.

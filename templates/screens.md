@@ -23,6 +23,17 @@ contract) before drawing anything; record its token file below. -->
 - **Component source:** <shared UI components dir, e.g. src/components/>
 - **Assets:** <icons/illustrations location>
 
+## Web surfaces
+
+<!-- Does this product have pages a search engine or an AI answer engine will
+read — a landing, pricing, docs, blog? Answer once, here. "no" silences the
+check; flip it to "yes" the moment a public page is designed, and give every
+public screen the **Web surface:** block shown below. This is decided at design
+time on purpose: once a page is live its URL is in other people's links and its
+structure is what an answer engine already quoted, so an audit afterwards finds
+the problem it can no longer fix. -->
+- **Web surfaces:** no
+
 ## Screens
 
 <!-- One entry per screen (see ux-contract v4 for field rules):
@@ -38,6 +49,12 @@ contract) before drawing anything; record its token file below. -->
   | empty | <trigger> | <frame deep-link> | <prompt to act> |
   | error | <trigger> | <frame deep-link> | <message + recovery> |
   | loading | <trigger> | <frame deep-link> | <skeleton/progress> |
+- **Web surface:** (only when this screen is a public URL; all five required)
+  - **Route:** </pricing — the path, readable and stable>
+  - **Answers:** <the ONE question this page answers; a second question is a second page>
+  - **Indexable:** <yes | no + why | canonical → /other-path>
+  - **Without JS:** <what a reader gets with no JS executed — the answer, or nothing>
+  - **Entity:** <schema.org type + the thing it describes, matched to visible content>
 - **Wireframe:** wireframes/SCR-01.md (optional)
 - **Coverage:** <file:line, or "none yet">
 - **Scenarios:** <SCN-… touching this screen>

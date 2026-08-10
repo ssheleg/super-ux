@@ -89,10 +89,10 @@ def figma_enabled(foundation: str) -> bool | None:
     return m.group(1).lower() == "enabled"
 
 
-def screen_blocks(text: str) -> dict[str, str]:
-    """Map SCR-id -> its section body (from its header to the next ### / ##)."""
+def entry_blocks(text: str, prefix: str) -> dict[str, str]:
+    """Map PREFIX-id -> its section body (from its header to the next ### / ##)."""
     out: dict[str, str] = {}
-    parts = re.split(r"^###\s+(SCR-\d+):", text, flags=re.MULTILINE)
+    parts = re.split(rf"^###\s+({prefix}-\d+):", text, flags=re.MULTILINE)
     # parts = [pre, id1, body1, id2, body2, ...]
     for i in range(1, len(parts), 2):
         sid = parts[i]
@@ -100,6 +100,77 @@ def screen_blocks(text: str) -> dict[str, str]:
         body = re.split(r"^##\s", body, maxsplit=1, flags=re.MULTILINE)[0]
         out[sid] = body
     return out
+
+
+def screen_blocks(text: str) -> dict[str, str]:
+    """Map SCR-id -> its section body."""
+    return entry_blocks(text, "SCR")
+
+
+WEB_SURFACE_FIELDS = ("Route", "Answers", "Indexable", "Without JS", "Entity")
+
+
+def web_surfaces_declared(screens: str) -> bool | None:
+    """True/False from the project-level declaration; None if unstated."""
+    m = re.search(r"\*\*Web surfaces:\*\*\s*(yes|no)\b", screens, re.IGNORECASE)
+    if not m:
+        return None
+    return m.group(1).lower() == "yes"
+
+
+def check_web_surface(screens: str, flows: str) -> None:
+    """A screen a crawler will read is designed as one, or declared not to be.
+
+    The rule this enforces is decided at design time and cannot be recovered
+    by an audit: by the time a landing is live, its URL is in other people's
+    links and its structure is what an answer engine already quoted. So the
+    chain records the five things a later audit checks -- and a project with
+    no public page says so once, because a declared absence is countable and
+    an unanswered question is not.
+    """
+    declared = web_surfaces_declared(screens)
+    blocks = {
+        sid: body for sid, body in screen_blocks(screens).items()
+        if "**Web surface:**" in body
+    }
+
+    if declared is None:
+        warn(
+            "screens.md: no **Web surfaces:** declaration — answer yes or no once "
+            "(a public page a search or answer engine reads?). An unanswered "
+            "question reads as no, and this one cannot be fixed after launch"
+        )
+    elif declared is False and blocks:
+        for sid in sorted(blocks):
+            err(
+                f"screens.md: declares no web surfaces but {sid} carries a "
+                f"**Web surface:** block — one of the two is wrong"
+            )
+    elif declared is True and not blocks:
+        warn(
+            "screens.md: declares web surfaces but no screen carries a "
+            "**Web surface:** block"
+        )
+
+    for sid, body in sorted(blocks.items()):
+        for field in WEB_SURFACE_FIELDS:
+            if f"**{field}:**" not in body:
+                err(f"screens.md: {sid} web surface block is missing **{field}:**")
+
+    # A declaration of "no" is silence, so it must not be able to hide a flow
+    # that plainly starts on the web. This is the one contradiction the
+    # declaration cannot absorb.
+    if declared is False:
+        for fid, body in sorted(entry_blocks(flows, "FLW").items()):
+            m = re.search(r"\*\*Entry point:\*\*\s*(.+)", body)
+            if not m:
+                continue
+            entry = m.group(1).strip()
+            if re.match(r"https?://|/\S", entry):
+                warn(
+                    f"flows.md: {fid} starts at a URL ({entry.split()[0]}) while "
+                    f"screens.md declares no web surfaces — one of the two is wrong"
+                )
 
 
 VISION_SECTIONS = [
@@ -266,6 +337,7 @@ def main() -> int:
                 warn(f"screens.md: {sid} is 'built' but has no Coverage")
 
     check_vision(ux, vision)
+    check_web_surface(screens, flows)
     check_links(ux)
 
     # --- Report ---

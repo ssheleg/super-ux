@@ -323,6 +323,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B004 | E | `Derived-from` cites an id absent from `foundation.md` |
 | B005 | W | `foundation.md` changed after `Last calibrated` |
 | B006 | E | `README.md` has no `Sources:` block — nothing to scan |
+| B007 | W | `## Voice references` names no admired or no refused brand, once the voice leaves `draft` |
 | B010 | E | a banned word appears in a registered string |
 | B011 | E | a generic word used where a product term exists |
 | B012 | E | an entity or tier name spelled inconsistently |
@@ -332,6 +333,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B023 | E | a registry row points at a location that does not exist |
 | B024 | E | declared casing violated |
 | B025 | W | a button label names no outcome |
+| B026 | W | a label, button, menu item or title ends in a full stop |
 | B030 | E | a figure in public copy has no row in `facts.md` |
 | B031 | W | a fact has no source, or is past its `Review by` |
 | B032 | E | a superlative with no fact beside it |
