@@ -40,6 +40,14 @@ stamps — and log the deletion as one line under *Retired*.
    soften the promise. Two checks written, one caught. Kept, and the cold
    clock resets here.
 
+4. **(2026-08-10)** **An artifact added to stop drift needs its own answer to
+   "what would notice if this fell behind?"** A harness, a registry, a matrix,
+   a checklist — each can drift, and "someone remembering" is not an answer.
+   Where the artifact is a set, give its members ids first: a rule set that
+   cannot be enumerated cannot have coverage computed over it. *(Retire when a
+   coverage gate exists for every generated or hand-kept set in the repo, or
+   after five stamps with no recurrence.)*
+
 ## Retired
 
 *(nothing yet)*
@@ -57,6 +65,53 @@ Newest last.
 | 2026-08-05 | Verbal identity layer — brand-contract v1, brand-voice + copywriting, brand_lint.py, BP-182..205, PRN-22..24; v0.30.0 | yes — see below |
 | 2026-08-10 | Structural audit of 0.31.0 → 22 findings closed, three composition gates, dogfood chain + brand pack; v0.32.0 | yes — see below |
 | 2026-08-10 | Web surface in the contract, four routing rows, composite briefs, B007 + B026, ux_lint fixture harness; v0.33.0 | yes — see below |
+| 2026-08-10 | B-010 + B-002 — UX linter codes U001..U054, 43 fixtures, coverage gate, run-instruction gate; v0.34.0 | yes — see below |
+
+---
+
+## 2026-08-10 — the harness had the defect it was built to fix
+
+**Symptom.** v0.33.0 shipped `test/ux_lint_test.py` with fourteen cases
+covering **one** of the linter's twenty-one rules. It was filed as B-010 and
+called a backfill. It is not a backfill — a partial harness reports green, and
+green from a partial harness is indistinguishable from green from a complete
+one. The linter it tests is the older and more central of the two; the brand
+linter had carried a fixture per code since v0.30.0, four releases earlier, and
+nobody had noticed the asymmetry because both were green.
+
+**Surfaced at** stage 0 of the next run, reading its own board.
+
+**Owned by** the previous run — this one. The harness was built without the
+gate that keeps a harness honest, which is the same omission one level up from
+the one it was built to close.
+
+**Root cause.** An artifact added to stop drift is itself an artifact that can
+drift, and the question *what makes this fall out of date, and what would
+notice?* was never asked of the new file. Its answer would have been "someone
+remembering", which is the answer that means there is no answer.
+
+The mechanical obstacle underneath: the linter's rules were **prose**. A rule
+set that cannot be enumerated cannot have coverage computed over it, so no gate
+was possible until the rules had ids.
+
+**Fix, by grade.**
+
+- *Mechanical (taken):* codes `U001..U054` in every message; a fixture per
+  code, 43 checks; `validate_ux_lint_coverage` requiring a fixture **and** a
+  contract row per code. It went red on all twenty-one on its first run, which
+  is what a coverage gate should do the day it is added.
+- *Structural (taken):* `validate_run_instructions` closes B-002 from the
+  inverse direction — for each path an instruction names, is it seeded? The
+  existing gate asked only the forward question, and a rename breaks the other
+  one.
+- *Method (taken, and the part worth keeping):* the fixtures were confirmed to
+  bite by planting defects **in the linter**, not in the input — a comparison
+  weakened, a branch short-circuited, a condition keyed to an impossible value.
+  Each turned exactly one case red. Fixtures passing proves the codes fire; only
+  this proves the fixtures would notice if they stopped.
+
+**The check that catches it next time:** `validate_ux_lint_coverage` for this
+class, and the standing instruction below for the general one.
 
 ---
 

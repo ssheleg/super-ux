@@ -8,6 +8,20 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-10 — UX linter codes and coverage, v0.34.0
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-01 | Every UX linter rule carries a stable code `U001..U054` | `validate_ux_lint_coverage` finds 21 | observed |
+| R-02 | Every code has a fixture with its planted defect | `python3 test/ux_lint_test.py` — 43 checks | planted — three defects in the linter (`n > 1`→`n > 99`, frame branch short-circuited, `status == "never"`), each turned exactly one case red |
+| R-03 | Every code has a row in the contract | `validate_ux_lint_coverage` | planted — deleted the U040 row |
+| R-04 | A code with no fixture fails the build | `validate_ux_lint_coverage` | planted — renamed `"U014"` in the harness |
+| R-05 | Every `python3 docs/**/*.py` an instruction names is seeded by a command | `validate_run_instructions` | planted — instruction renamed to `docs/ux/linter.py` |
+| R-06 | The seeded project still lints clean, zero warnings | fresh install + both linters | observed |
+| R-07 | v0.34.0 ships: four version places, preflight, atomic push, CI read, registry serving | run 31421172382, `npm view` → 0.34.0 | observed |
+
+**Rows at `never`: 0.**
+
 ## 2026-08-10 — web surface and routing, v0.33.0
 
 | REQ | What ships | Verified by | Watched |
