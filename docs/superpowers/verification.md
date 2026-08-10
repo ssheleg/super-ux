@@ -8,6 +8,28 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-10 — web surface and routing, v0.33.0
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-01 | A public screen records five fields, each the design-time twin of a live-page check | `scenario-format.md`; `validate.py` (3112 checks) | observed |
+| R-02 | `screens.md` declares `Web surfaces: yes\|no`; absence is declared, not assumed | `check_web_surface` | planted — removed the declaration |
+| R-03 | A partial block errors; `no` silences; a URL entry point under `no` still warns | `test/ux_lint_test.py` | planted — each of the five fields deleted in turn |
+| R-04 | The seeded project lints clean from the first second, zero warnings | fresh install + both linters | observed |
+| R-05 | `ux-flows` asks the web-surface question beside Figma and the style pack | `ux-flows/SKILL.md` step 5 | observed |
+| R-06 | `ux-audit` checks a built public screen against its record | `ux-audit/SKILL.md` pass 2 | observed |
+| R-07 | `seo-aeo-audit` is the third companion, with install commands verified against the registry | `commands/ux.md`, `system-map.md`, README | observed |
+| R-08 | `/ux` speaks funnel, design, SEO and mobile app | `commands/ux.md` routing table | observed |
+| R-09 | A composite brief maps to every matching row, in chain order | `commands/ux.md` step 0 | observed |
+| R-10 | Counts, contract rows, manifests and hard rules stay in sync | `validate.py` | planted — went red on 33-vs-35 and two missing contract rows |
+| R-11 | super-ux answers its own new questions | `docs/ux/screens.md`, `docs/brand/voice.md` | observed |
+| R-12 | Contract stays v4 | `ux_doctor.py`, marker unchanged | observed |
+| R-13 | v0.33.0 tagged, CI green, registry serving it | preflight, run 31406816515, `npm view` | observed |
+| R-14 | The UX linter has a fixture harness at all | `test/ux_lint_test.py`, 14 checks, in CI | planted — 10 of 14 red before implementation |
+| R-15 | A new check runs against the seeded template before anything else | B007 gated on `draft`; fresh install clean | planted — the ungated version warned on every seeded pack |
+
+**Rows at `never`: 0.**
+
 ## 2026-08-10 — audit findings, v0.32.0
 
 | REQ | What ships | Verified by | Watched |

@@ -33,7 +33,12 @@ stamps — and log the deletion as one line under *Retired*.
    real content will not notice it broke that. The vision emptiness check
    errored on the pristine `templates/vision.md`, because `read()` strips the
    HTML comments the template is made of. *(Retire when the validator seeds a
-   project and lints it, or after five stamps with no recurrence.)*
+   project and lints it, or after five stamps with no recurrence.)* — **fired
+   on v0.33.0, one stamp after it was written:** B007 warned on every freshly
+   seeded pack, because a seeded `voice.md` legitimately has no references
+   yet. The fix was to gate the check on `Status` leaving `draft`, not to
+   soften the promise. Two checks written, one caught. Kept, and the cold
+   clock resets here.
 
 ## Retired
 
@@ -51,6 +56,62 @@ Newest last.
 | 2026-08-05 | Verbal identity layer, carry-over ledger to zero, code graph; v0.30.0 → v0.30.1 | yes — see below |
 | 2026-08-05 | Verbal identity layer — brand-contract v1, brand-voice + copywriting, brand_lint.py, BP-182..205, PRN-22..24; v0.30.0 | yes — see below |
 | 2026-08-10 | Structural audit of 0.31.0 → 22 findings closed, three composition gates, dogfood chain + brand pack; v0.32.0 | yes — see below |
+| 2026-08-10 | Web surface in the contract, four routing rows, composite briefs, B007 + B026, ux_lint fixture harness; v0.33.0 | yes — see below |
+
+---
+
+## 2026-08-10 — the index inherited the vocabulary of the people who wrote it
+
+**Symptom.** A composite request — *feature, design, UX/UI, marketing funnel,
+landing, web, app* — was walked through `/ux` as an agent reads it. Eight items:
+**eight had an owner, three had a word.** `commands/ux.md` matched zero rows for
+funnel, monetization, design-as-a-task, SEO, or mobile app, while
+`practice-selection.md` routed `BP-116..123` off the purchase surface and
+`BP-049..054` off `Platform: mobile-*`, and `ux-flows` named `sheleg-design`
+twice. Separately, `scenario-format.md` mentioned indexability, robots,
+crawlers and schema **zero times**, so the layer that designs landings had no
+field for the rule that governs them.
+
+**Surfaced at** stage 0, by a routing test the operator asked for. Every gate
+was green, including the three composition gates added eight hours earlier.
+
+**Owned by** the routing table and the contract — not by any skill. Each skill
+was complete about its own subject.
+
+**Root cause.** Two of the same family, one layer apart.
+
+The routing table is the artifact built **for people who do not know the
+internals**, and it is written **by** the people who do. Every row someone adds
+is a row they personally needed; the concepts they already reach by another
+name never become rows. Nothing errors — an unmatched request falls into the
+catch-all and gets a confident answer to a question nobody asked.
+
+The contract had the same shape at the layer below: `screens.md` recorded
+Purpose, States, Elements, Figma and Coverage — everything a *screen* is — and
+nothing about the screen being a *URL a machine reads*, because that reader was
+never at the table when the fields were chosen.
+
+**Fix, by grade.**
+
+- *Mechanical (taken):* the `Web surface:` block, five fields, each read off
+  `seo-aeo-audit`'s own O1–O5 checks so the record and the audit share one
+  vocabulary; `check_web_surface` with fourteen fixtures; four routing rows;
+  a decomposition rule for composite briefs; B007 and B026 with fixtures.
+- *Structural (taken):* `test/ux_lint_test.py` exists at all. The brand linter
+  has had a fixture per code since 0.30.0 and the older, more central linter
+  had none — a gap nobody had asked about because both were green.
+- *Documentation (taken):* the backfill for the pre-existing UX checks is
+  **B-010**, named on the board rather than implied by the harness's existence.
+
+**What the new checks did on their first run:** B026 found `Nothing selected.`
+in this project's own installer, and B007 found a voice with no brand it refuses
+to sound like. Both defects were in the tree the audit had just called clean.
+
+**The check that catches it next time:** none of these. A router's coverage of
+*the words a user brings* is not derivable from the repository — it needs a real
+composite request in the user's own phrasing, walked through, with two columns:
+capability, and the word for it. That is a scheduled exercise, not a gate, and
+saying so is the honest half of this entry.
 
 ---
 
