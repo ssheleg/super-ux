@@ -5,6 +5,16 @@ reference exists to prevent is solving that with two dozen voices — which is
 how a product ends up reading like three different companies, and is the
 verbal twin of the visual drift a style pack prevents.
 
+## Contents
+
+- [The model](#the-model)
+- [Rule 1 — a register moves the axes, never the invariants](#rule-1--a-register-moves-the-axes-never-the-invariants)
+- [Rule 2 — platform physics and brand choice are different fields](#rule-2--platform-physics-and-brand-choice-are-different-fields)
+- [Rule 3 — humor is forbidden where the user is losing something](#rule-3--humor-is-forbidden-where-the-user-is-losing-something)
+- [Product surfaces](#product-surfaces)
+- [Marketing surfaces](#marketing-surfaces)
+
+
 Field names and the surface list come from
 [brand-contract.md](brand-contract.md). The axes being shifted are the five
 fixed axes in `voice.md`, filled by a pack from

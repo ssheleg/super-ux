@@ -5,6 +5,18 @@ values live in the project's `channels.md`; the limits below are what the
 platforms enforce, and `B040` checks copy against them with the locale's
 length coefficient applied.
 
+## Contents
+
+- [Field limits](#field-limits)
+- [The iOS keyword field](#the-ios-keyword-field)
+- [Title and subtitle](#title-and-subtitle)
+- [Description](#description)
+- [Screenshot captions](#screenshot-captions)
+- [What's new](#whats-new)
+- [Ratings and reviews](#ratings-and-reviews)
+- [Localization](#localization)
+
+
 *Platform limits checked 2026-08-05. Both stores change them; re-verify
 before a listing rewrite rather than trusting this table.*
 

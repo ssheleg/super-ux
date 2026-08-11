@@ -7,6 +7,17 @@ The workflow (when to ask, MCP preflight, sync) lives in
 structure and the naming that ties Figma to the super-ux chain. Practices:
 BP-091..BP-100 in [best-practices.md](best-practices.md).
 
+## Contents
+
+- [The one idea: names ARE the index](#the-one-idea-names-are-the-index)
+- [Page order (BP-091, BP-092)](#page-order-bp-091-bp-092)
+- [Frame naming (BP-093) — the backbone](#frame-naming-bp-093--the-backbone)
+- [Components, variants, tokens (BP-094..BP-098)](#components-variants-tokens-bp-094bp-098)
+- [Layer hygiene (BP-099)](#layer-hygiene-bp-099)
+- [Recording the convention (BP-100)](#recording-the-convention-bp-100)
+- [What the agent checks (maintenance)](#what-the-agent-checks-maintenance)
+
+
 ## The one idea: names ARE the index
 
 Every Figma object is named to match a super-ux ID, so mapping is 1:1 and

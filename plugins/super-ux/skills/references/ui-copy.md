@@ -5,6 +5,20 @@ Craft for the twelve product surfaces listed in
 [surface-registers.md](surface-registers.md); this file is about the strings
 themselves.
 
+## Contents
+
+- [The four laws](#the-four-laws)
+- [Errors](#errors)
+- [Empty states](#empty-states)
+- [Loading and progress](#loading-and-progress)
+- [Confirmations and destructive actions](#confirmations-and-destructive-actions)
+- [Forms](#forms)
+- [Notifications, toasts and email](#notifications-toasts-and-email)
+- [Permissions and asks](#permissions-and-asks)
+- [Numbers, dates and names in the interface](#numbers-dates-and-names-in-the-interface)
+- [Accessibility is copy work too](#accessibility-is-copy-work-too)
+
+
 Interface copy is read differently from marketing copy in one way that
 changes every rule: **it is read hundreds of times by the same person.** A
 line that is charming on the first read is an obstruction on the fortieth.

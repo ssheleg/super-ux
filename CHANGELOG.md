@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.34.1] — 2026-08-11
+
+### Changed
+
+- **Seventy-six references over 100 lines now open with a `## Contents` list**,
+  generated from each file's own `##` headings.
+
+  `best-practices.md` and `best-practices-index.md` are deliberately untouched
+  in all five skills that carry them: the catalog already routes through a
+  generated tag index that the validator keeps in sync with it, which is a
+  better answer to the same problem than a heading list would be.
+
 ## 0.34.0 — 2026-08-10
 
 B-010 and B-002, and the gate that stops both coming back. The UX linter is

@@ -18,6 +18,15 @@ functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
 right step every time — nothing relevant silently skipped, nothing
 irrelevant cargo-culted.
 
+## Contents
+
+- [Step 1 — Product profile](#step-1--product-profile)
+- [Step 2 — Mandatory sets from the profile](#step-2--mandatory-sets-from-the-profile)
+- [Step 3 — Per-artifact checklists](#step-3--per-artifact-checklists)
+- [Step 4 — Compliance table (the record)](#step-4--compliance-table-the-record)
+- [Anti-cargo-cult rule](#anti-cargo-cult-rule)
+
+
 ## Step 1 — Product profile
 
 Build once from `foundation.md` (ask the user for missing dimensions; store

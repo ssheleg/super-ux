@@ -7,6 +7,16 @@ every screen must clear (BP-079..090 in
 [best-practices.md](best-practices.md) — type scale, contrast, spacing grid,
 microcopy).
 
+## Contents
+
+- [Division of labor (state it to the user this way)](#division-of-labor-state-it-to-the-user-this-way)
+- [When to bring it in](#when-to-bring-it-in)
+- [Using it with Figma (the default surface)](#using-it-with-figma-the-default-surface)
+- [Using it at build time (no Figma)](#using-it-at-build-time-no-figma)
+- [What the audit checks](#what-the-audit-checks)
+- [Boundaries](#boundaries)
+
+
 It deliberately does **not** invent a look. A palette, a type pairing, a
 texture, a motion vocabulary — invented per screen, they drift into a
 collage; that is the visual half of the same drift this system exists to

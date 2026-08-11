@@ -7,6 +7,18 @@ how the voice shifts — lives in
 purpose, because merged they become indistinguishable within a quarter and
 nobody can tell which half is safe to revisit when a platform changes.
 
+## Contents
+
+- [X](#x)
+- [Reddit](#reddit)
+- [LinkedIn](#linkedin)
+- [HN and Product Hunt](#hn-and-product-hunt)
+- [Blog](#blog)
+- [Changelog](#changelog)
+- [Ads](#ads)
+- [Lifecycle email](#lifecycle-email)
+
+
 Store listings have their own file: [store-copy.md](store-copy.md).
 
 Anything a crawler or answer engine reads also passes

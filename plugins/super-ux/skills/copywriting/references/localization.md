@@ -4,6 +4,18 @@ A voice does not survive translation intact. Some of it is invariant, some of
 it has to be decided again per language, and the difference has to be written
 down or every locale quietly becomes its own brand.
 
+## Contents
+
+- [What travels and what does not](#what-travels-and-what-does-not)
+- [Length](#length)
+- [The primary locale is the source of meaning, not of form](#the-primary-locale-is-the-source-of-meaning-not-of-form)
+- [Parity, declared rather than hidden](#parity-declared-rather-than-hidden)
+- [Keywords are researched, never translated](#keywords-are-researched-never-translated)
+- [What never translates](#what-never-translates)
+- [Legal and regulatory differences](#legal-and-regulatory-differences)
+- [Who decides](#who-decides)
+
+
 File shape: [brand-contract.md](brand-contract.md). Locale files live at
 `docs/brand/locales/<code>.md`.
 

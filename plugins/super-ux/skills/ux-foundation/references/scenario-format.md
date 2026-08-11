@@ -6,6 +6,21 @@ Cursor rules — follow it. Do not deviate from field names, ID schemes, statuse
 verdicts; tooling and audits key off them. The design reasoning behind the
 formats lives in [ux-design-principles.md](ux-design-principles.md).
 
+## Contents
+
+- [Files in the target project](#files-in-the-target-project)
+- [`Strings:` (optional)](#strings-optional)
+- [Same-change update rule (all layers)](#same-change-update-rule-all-layers)
+- [`docs/ux/vision.md` — the layer above the chain](#docsuxvisionmd--the-layer-above-the-chain)
+- [`docs/ux/foundation.md`](#docsuxfoundationmd)
+- [`docs/ux/flows.md`](#docsuxflowsmd)
+- [`docs/ux/screens.md` — the UI map](#docsuxscreensmd--the-ui-map)
+- [`docs/ux/scenarios.md`](#docsuxscenariosmd)
+- [Audit report — `docs/ux/audits/YYYY-MM-DD[-scope].md`](#audit-report--docsuxauditsyyyy-mm-dd-scopemd)
+- [UX plan — `docs/ux/plans/YYYY-MM-DD-<scope>.md`](#ux-plan--docsuxplansyyyy-mm-dd-scopemd)
+- [Linter codes — what `docs/ux/lint.py` can say](#linter-codes--what-docsuxlintpy-can-say)
+
+
 ## Files in the target project
 
 ```

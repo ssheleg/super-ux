@@ -4,6 +4,17 @@ Text drafted by a model has measurable habits. This file names them, grades
 them, and — more importantly — bounds the repair, because an unbounded
 "make it sound human" pass destroys meaning while improving rhythm.
 
+## Contents
+
+- [Severity](#severity)
+- [Naturalness grade — applied to the result](#naturalness-grade--applied-to-the-result)
+- [The markers](#the-markers)
+- [Density threshold](#density-threshold)
+- [The change-rate guard](#the-change-rate-guard)
+- [Semantic-preservation check — mandatory before output](#semantic-preservation-check--mandatory-before-output)
+- [What "human" is not](#what-human-is-not)
+
+
 Used by the `Humanize` mode of `copywriting` and by `B060` in
 `brand_lint.py`. Voice, once the generic is gone, comes from
 [voice-packs.md](voice-packs.md) via the project's `voice.md`.

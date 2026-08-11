@@ -4,6 +4,17 @@ The whole system on one page. Every skill points here so an agent entering
 from any trigger sees where it is and what else exists. Read this first when
 unsure.
 
+## Contents
+
+- [The pipeline](#the-pipeline)
+- [Files in a target project (`docs/ux/`)](#files-in-a-target-project-docsux)
+- [The reference shelves — this map names them, and links none](#the-reference-shelves--this-map-names-them-and-links-none)
+- [Skills & the one entry point](#skills--the-one-entry-point)
+- [The four rules that keep agents in sync](#the-four-rules-that-keep-agents-in-sync)
+- [Companions (recommended, never forced)](#companions-recommended-never-forced)
+- [When entering mid-project](#when-entering-mid-project)
+
+
 ## The pipeline
 
 ```

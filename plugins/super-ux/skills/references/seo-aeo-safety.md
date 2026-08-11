@@ -2,6 +2,17 @@
 
 Two modes, and confusing them is expensive.
 
+## Contents
+
+- [The absolute rule](#the-absolute-rule)
+- [Safety — the veto list](#safety--the-veto-list)
+- [Safety — the anti-patterns](#safety--the-anti-patterns)
+- [Optimization — what makes content extractable](#optimization--what-makes-content-extractable)
+- [Engines differ, but less than the noise suggests](#engines-differ-but-less-than-the-noise-suggests)
+- [Technical floor](#technical-floor)
+- [The relationship to SEO](#the-relationship-to-seo)
+
+
 **Safety** is always on and mechanically enforced: do not write text that
 looks like an attempt to game a crawler. Most of it is in `brand_lint.py`.
 

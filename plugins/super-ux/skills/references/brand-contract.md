@@ -7,6 +7,23 @@ statuses or surface names — tooling keys off them. The reasoning behind the
 model lives in [surface-registers.md](surface-registers.md); the pack library
 it selects from is [voice-packs.md](voice-packs.md).
 
+## Contents
+
+- [Files in the target project](#files-in-the-target-project)
+- [The marker](#the-marker)
+- [Where the voice comes from](#where-the-voice-comes-from)
+- [`voice.md`](#voicemd)
+- [`terminology.md`](#terminologymd)
+- [`facts.md`](#factsmd)
+- [`channels.md`](#channelsmd)
+- [`strings.md`](#stringsmd)
+- [`locales/<code>.md`](#localescodemd)
+- [`README.md` and the `Sources:` block](#readmemd-and-the-sources-block)
+- [The three rules that hold the layer together](#the-three-rules-that-hold-the-layer-together)
+- [The check codes](#the-check-codes)
+- [Versioning](#versioning)
+
+
 `docs/ux/` answers **what the product does**. `docs/brand/` answers **how it
 speaks**. They are separate roots on purpose: the brand pack also governs
 surfaces that are not UX at all — a blog post, a store listing, an ad.

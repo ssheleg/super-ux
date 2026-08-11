@@ -7,6 +7,17 @@ provenance. Field names come from [brand-contract.md](brand-contract.md);
 register deltas are applied per surface as described in
 [surface-registers.md](surface-registers.md).
 
+## Contents
+
+- [The pack contract](#the-pack-contract)
+- [operator-brief](#operator-brief)
+- [calm-expert](#calm-expert)
+- [peer-builder](#peer-builder)
+- [editorial-premium](#editorial-premium)
+- [plain-service](#plain-service)
+- [playful-consumer](#playful-consumer)
+
+
 Picking one is not a taste question. Read `foundation.md` first: who the
 persona is, what job the product is hired for, and — the deciding input —
 **what the user loses when the product fails**. A voice that is charming when

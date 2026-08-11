@@ -6,6 +6,17 @@ mechanics: [channel-playbooks.md](channel-playbooks.md). Anything a search
 engine or answer engine will read also passes
 [seo-aeo-safety.md](seo-aeo-safety.md).
 
+## Contents
+
+- [Before writing](#before-writing)
+- [Page structure](#page-structure)
+- [The seven sweeps](#the-seven-sweeps)
+- [Word-level defaults](#word-level-defaults)
+- [Long form: grounding](#long-form-grounding)
+- [Comparison and competitor pages](#comparison-and-competitor-pages)
+- [Blog and changelog](#blog-and-changelog)
+
+
 Marketing copy is read once, by someone who did not ask for it, who is
 deciding whether to keep reading. Every rule below follows from that.
 

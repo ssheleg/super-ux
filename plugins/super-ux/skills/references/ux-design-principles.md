@@ -6,6 +6,21 @@ audits cite its principle IDs. This is the "taste" layer — formats live in
 [scenario-format.md](scenario-format.md), proven tactics in
 [best-practices.md](best-practices.md).
 
+## Contents
+
+- [The pipeline (any product)](#the-pipeline-any-product)
+- [Task analysis (method for step 3)](#task-analysis-method-for-step-3)
+- [Flow design rules (method for step 3, continued)](#flow-design-rules-method-for-step-3-continued)
+- [Screen & interaction rules (method for steps 4–7)](#screen--interaction-rules-method-for-steps-47)
+- [Heuristics checklist (Nielsen's ten: PRN-01 – PRN-10)](#heuristics-checklist-nielsens-ten-prn-01--prn-10)
+- [Cognitive principles (PRN-11..PRN-16)](#cognitive-principles-prn-11prn-16)
+- [Motivation principles (PRN-17..PRN-21)](#motivation-principles-prn-17prn-21)
+- [Voice principles (PRN-22..PRN-24)](#voice-principles-prn-22prn-24)
+- [Improving existing UX (heuristic evaluation procedure)](#improving-existing-ux-heuristic-evaluation-procedure)
+- [Wireframes & storyboards (optional artifacts)](#wireframes--storyboards-optional-artifacts)
+- [Anti-patterns (stop signals)](#anti-patterns-stop-signals)
+
+
 ## The pipeline (any product)
 
 ```

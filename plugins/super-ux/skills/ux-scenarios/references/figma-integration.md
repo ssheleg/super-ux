@@ -7,6 +7,18 @@ screen/state spec, the recorded style pack, and the visual-craft practices
 (BP-079..090). This is an opt-in capability, **enabled by default**;
 text-only design is always a valid fallback.
 
+## Contents
+
+- [When to ask](#when-to-ask)
+- [Preflight (only when Figma is chosen)](#preflight-only-when-figma-is-chosen)
+- [Which tool for which job](#which-tool-for-which-job)
+- [Recording the file (foundation.md → Design tooling)](#recording-the-file-foundationmd--design-tooling)
+- [Design loop with Figma (inside ux-flows Design)](#design-loop-with-figma-inside-ux-flows-design)
+- [Improve mode with Figma](#improve-mode-with-figma)
+- [Keeping Figma in sync (same-change rule)](#keeping-figma-in-sync-same-change-rule)
+- [Boundaries](#boundaries)
+
+
 ## When to ask
 
 At the START of any design task (`/ux` step 0, `ux-flows` Design), ask once,
