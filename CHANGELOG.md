@@ -1,6 +1,16 @@
 # Changelog
 
-## [0.34.1] — 2026-08-11
+## 0.34.2 — 2026-08-11
+
+### Fixed
+
+- **The 0.34.1 heading was `## [0.34.1]` and the release workflow extracts
+  `## <version>`.** The notes came back empty, the job failed before creating
+  anything, and the tag sat there looking delivered — the same shape that kept
+  `agent-sync` off npm for three releases. This repo's own history uses the
+  bare form; only the new entry deviated.
+
+## 0.34.1 — 2026-08-11
 
 ### Changed
 
