@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..206 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..210 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -10,7 +10,8 @@ personalization BP-143..144, trend governance BP-145..146, growth loops and
 referral BP-147..151, empty states BP-152, authentication and form recovery
 BP-153..156, motion craft BP-157..164, perceived quality BP-165..168,
 generated-default tells BP-169..172, interface state and platform surfaces
-BP-173..179, information architecture BP-180..181, verbal identity BP-182..206;
+BP-173..179, information architecture BP-180..181, verbal identity BP-182..206,
+developer products BP-207..210;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -98,6 +99,9 @@ the Step-2 sets:
 | Sign-up / sign-in / password | BP-119, BP-153..156; PRN-05, PRN-09 |
 | Growth loop / referral program | BP-147..151, BP-067, BP-073 |
 | Landing / campaign page | BP-116, BP-117, BP-077, BP-132, BP-133, BP-169..172; PRN-08 |
+| Developer landing (API, SDK, CLI, MCP) | BP-207, BP-208, BP-117, BP-116; PRN-08 |
+| Capability / per-feature page | BP-210, BP-208, BP-194..197; PRN-23 |
+| First-run or setup checklist | BP-209, BP-004, BP-012, BP-206 |
 | Pricing page (web) | BP-118, BP-022, BP-073; PRN-08 |
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
