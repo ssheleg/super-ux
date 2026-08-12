@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.35.3 — 2026-08-12
+
+### Changed
+
+- **`best-practices.md` gains a `## Contents` that can actually navigate it.** At 1650
+  lines it is the largest reference in the family and had no list at all; a list of its
+  two `##` headings would have satisfied the check and served nobody, because the
+  catalog's structure lives one level down — 29 `###` categories over 206 practices.
+  The list carries both levels, so an agent reading the head learns what the rest holds,
+  which is the only reason the rule exists.
+- Written to `skills/references/best-practices.md` — the source of truth — and
+  propagated by `test/sync_references.py` to the four skills that ship it. The drift
+  guard caught an earlier attempt that edited the copies directly, which is exactly what
+  it is for.
+
 ## 0.35.2 — 2026-08-12
 
 ### Changed

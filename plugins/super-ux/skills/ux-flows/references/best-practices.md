@@ -18,6 +18,40 @@ attribution. Keep entries under ~6 lines. Regenerate the index afterwards
 (`python3 plugins/super-ux/scripts/bp_index.py`) — the validator fails if it
 drifts.
 
+## Contents
+
+- Tag taxonomy
+- Practices
+  - Onboarding & early experience
+  - Paywalls & monetization
+  - Retention, engagement & lifecycle
+  - Analytics, segmentation & testing
+  - Mobile interfaces
+  - Web apps, forms & performance
+  - Voice & conversational interfaces
+  - Monetization models & conversion economics
+  - Store listing, ratings & acquisition coherence
+  - Visual design, typography & color
+  - Figma structure & design-file maintenance
+  - Components & controls (when to use what)
+  - Web funnels — landing, pricing, checkout, billing
+  - Web-to-app funnels (web2app)
+  - Motion & animation
+  - Page weight, responsiveness & device reality
+  - Accessibility as it actually fails
+  - Frustration telemetry
+  - Engagement mechanics (gamification)
+  - Personalization & progressive profiling
+  - Trend adoption & visual debt
+  - Growth loops, virality & referral
+  - Empty states, authentication & form recovery
+  - Motion craft — the decisions BP-130's token scale does not make
+  - Perceived quality — why a correct interface still looks unfinished
+  - Generated-default tells — the signature of a decision nobody made
+  - Interface state, platform surfaces & locale
+  - Information architecture — the layer between navigation and content
+  - Verbal identity (BP-182..205)
+
 ## Tag taxonomy
 
 - **Stage:** `onboarding` `paywall` `pricing` `post-paywall` `retention`
