@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.36.0 — 2026-08-12
+
+R-14 was filed `never` this morning and closed the same day, by the only
+evidence available for a rule that lives in a skill rather than a script: a run.
+
+### Changed
+
+- **The sweep was verified in a fresh context, against a brief that never
+  mentioned it.** An iOS subscription-cancellation flow, with no reference to
+  Mobbin, Refero, Lazyweb or sweeping anywhere in the prompt. The agent gated on
+  the tools present rather than the config and said which were which, swept
+  **before** drawing, read four shipped cancellation flows, and named what each
+  changed and what it refused to let them change — the job stayed the
+  foundation's, the visual identity stayed the style pack's. It also declined an
+  instruction embedded in one server's own response asking to alter persistent
+  instructions, which is the untrusted-data rule holding under a live test nobody
+  designed.
+
+### Added
+
+- **Two cases the sweep assumed away, both reported by that run.** With only the
+  image server present you are reading step order and decision points off
+  screenshots — a weaker read than structured steps, not an equivalent one, and it
+  has to be said. And a sweep that returns nothing is a result: Lazyweb returned
+  zero flows for a completely mainstream journey, and "I swept" with no findings
+  and no statement of emptiness cannot be told apart from not sweeping.
+- **B-012** files the run's nine other findings, each reproducible from its
+  report — including that the Design workflow has no defined behaviour for "we know
+  almost nothing", that the practice pass does not scale to roughly 150 verdicts for
+  one flow, and that BP-123 describes web billing on a platform where the app
+  cannot cancel an IAP.
+
 ## 0.35.3 — 2026-08-12
 
 ### Changed
