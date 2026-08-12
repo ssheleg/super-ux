@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.36.1 — 2026-08-12
+
+Four of the R-14 run's findings actioned, and a defect class ported from the
+sibling repository.
+
+### Fixed
+
+- **BP-123 described web billing and was applied to "any subscription billed
+  self-serve".** On a store-billed subscription the app **cannot cancel**: the
+  terminal step hands off to the store's own sheet and the app does not
+  synchronously know whether the user went through. A flow designed from the old
+  sentence cannot be built on a phone — which is exactly what a fresh-context
+  agent produced, correctly, from what the entry said. It now branches on who
+  holds the billing and requires the third state, *unverified*, that claims
+  neither outcome.
+- **A save offer must name the mechanism that delivers it.** BP-123 listed
+  "pause, downgrade, discount" — and **billing pause is not an iOS mechanism**, so
+  a product-side pause worded as a billing pause is a lie in copy at the moment
+  the user is deciding whether to trust you.
+- **BP-102 and BP-206 collided with no cross-reference.** On a cancellation screen
+  the exit is both the destructive action and the thing the user came for. Both
+  entries now carry the resolution: destructive *styling* is required, destructive
+  *weight* is not — full width, same type size and tap target, reachable without
+  scrolling.
+- **"Diverge before converging" had nowhere to land.** `ux-flows` requires two
+  structurally different shapes and one line on why the loser lost; the `flows.md`
+  contract had no field for it, so the rejected shape evaporated and the next agent
+  re-litigated it. The contract gains `Rejected shape:`.
+- **The Figma question said "at the start" from inside step 6.**
+  `figma-integration.md` places it at step 0 and is right; the flows skill now says
+  so instead of contradicting it.
+
+### Added
+
+- **A check-count ratchet, ported from `sheleg-design`.** That repository's
+  retrospective recorded the class: a gate whose count can fall silently cannot
+  detect a deleted requirement. This one had no ratchet at all, so every
+  requirement deletion here was invisible **by construction**. `test/floors.json`
+  plus `check_floor()` inside `validate.py`, which CI already runs — watched saying
+  no against a planted impossible floor.
+
 ## 0.36.0 — 2026-08-12
 
 R-14 was filed `never` this morning and closed the same day, by the only

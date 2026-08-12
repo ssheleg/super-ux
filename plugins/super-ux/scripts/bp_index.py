@@ -71,6 +71,12 @@ def render(entries: list[tuple[str, str, list[str], str]]) -> str:
         f"change daily and make this generated file look permanently stale. Run "
         f"`bp_index.py --stale [months]` for the report.\n"
     )
+    # Past 100 lines a reference carries a Contents list, and this file is 300+.
+    # It is generated, so the list is generated with it — a hand-added one would be
+    # erased by the next run and the validator would call the file drifted.
+    out.append("\n## Contents\n")
+    out.append("- By tag")
+    out.append("- By id")
     out.append("\n## By tag\n")
     for tag in sorted(by_tag):
         out.append(f"- **`{tag}`** — {', '.join(by_tag[tag])}")

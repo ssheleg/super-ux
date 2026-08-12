@@ -244,6 +244,12 @@ One entry per user goal (one story or a tight story cluster):
   1. Understand what the app is for (value screen)
   2. Name the project (input; system may suggest a default)
   3. Confirm and land in the project
+- **Rejected shape:** one-field modal over the empty state — lost because the
+  project name is the first thing the user owns and a modal makes it feel like a
+  setting. *(Optional but expected on any flow carrying real weight: `ux-flows`
+  requires sketching two structurally different shapes and recording why the
+  loser lost. Until this field existed the requirement had nowhere to land, so
+  the rejected shape evaporated and the next agent re-litigated it.)*
 - **Flow:**
 ```
 

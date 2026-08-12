@@ -862,6 +862,15 @@ Design System.
 
 #### BP-102: One primary action, never destructive-as-primary
 - **Do:** exactly one visually dominant primary action per screen, assigned to the most likely choice; a destructive action never gets the primary role even when it's the likely tap — style it destructive.
+- **Do — where the destructive action *is* the way out, read this with BP-206.**
+  On a cancellation or downgrade screen the exit is both the destructive action
+  and the thing the user came for, so the two practices pull against each other:
+  this one says do not make it primary, BP-206 says do not make it quieter than
+  the accept "in wording **as well as in weight**". The resolution is not a
+  compromise on either: **destructive styling, full width, the same type size
+  and tap target as the neutral action, reachable without scrolling.** Style
+  carries BP-102; weight and reach carry BP-206. A designer reading this entry
+  alone builds precisely the pattern BP-206 exists to ban.
 - **Why:** two primaries = no primary; a destructive primary invites costly mis-taps.
 - **Apply when:** every screen with actions.
 - **Tags:** control, visual-hierarchy, error-recovery
@@ -1015,10 +1024,25 @@ screens.
 - **Source:** [CRO26]
 
 #### BP-123: Cancel is self-serve and honest; save-offer once
-- **Do:** cancellation reachable from settings in no more steps than upgrade; state exactly what happens and when (access until date, data retention, refund rule); at most one save offer (pause, downgrade, discount) with a reason survey — then let go and confirm in writing.
-- **Why:** hidden or hostile cancel flows convert into chargebacks, store refunds, and 1-star reviews (and in several jurisdictions, regulatory exposure); the reason survey is the input BP-035 winback needs.
-- **Apply when:** any subscription billed self-serve.
-- **Tags:** cancel, trust, retention, winback, web
+- **Do:** cancellation reachable from settings in no more steps than upgrade; state exactly what happens and when (access until date, data retention, refund rule); at most one save offer with a reason survey — then let go and confirm in writing.
+- **Do — branch on who holds the billing.** The sentence above describes **web
+  billing**, where the app both cancels and observes the result. On a
+  store-billed subscription (iOS IAP, Play Billing) the app **cannot cancel**:
+  the terminal step hands off to the store's own management sheet, and after it
+  dismisses the app **does not synchronously know whether the user went
+  through**. So a store-billed flow owes a third state — *unverified* — that
+  claims neither outcome, refreshes, and reconciles from the server
+  notification. A flow designed off the web sentence alone cannot be built on a
+  phone. (Companion to BP-127, which says the same about the purchase side.)
+- **Do — a save offer names the mechanism that delivers it, or it is not
+  offered.** "Pause, downgrade, discount" is a menu of web-billing levers;
+  **billing pause is not an iOS mechanism**, and a product-side pause worded as
+  a billing pause is a lie in copy at the exact moment the user is deciding
+  whether to trust you. State the mechanism (a real crossgrade within the
+  subscription group, a real promotional offer) or drop the offer.
+- **Why:** hidden or hostile cancel flows convert into chargebacks, store refunds, and 1-star reviews (and in several jurisdictions, regulatory exposure); the reason survey is the input BP-035 winback needs. The platform branch is here because a fresh-context agent designing an iOS cancellation flow from the web sentence produced a flow the platform does not permit — and it was right to, because the entry said "any subscription billed self-serve".
+- **Apply when:** any subscription billed self-serve, on any platform — read the branch that matches who holds the billing.
+- **Tags:** cancel, trust, retention, winback, web, mobile
 - **Source:** [CRO26]/[NNg]
 
 ### Web-to-app funnels (web2app)
@@ -1676,6 +1700,10 @@ no date at all.
 
 #### BP-206: The way out is worded plainly, and never shames
 - **Do:** give every paywall, upgrade prompt, popup, consent dialog and cancellation flow a visible decline whose words say what declining does — "Not now", "Continue on Free", "Keep the current plan". Never phrase the refusal as a self-criticism the user has to click, and never make it quieter than the accept in wording as well as in weight.
+- **Do — on a screen where the way out is also the destructive action**, see
+  BP-102's second clause: destructive *styling* is required and destructive
+  *weight* is not. Quieting the exit to satisfy BP-102 is how this practice gets
+  violated by someone who thought they were obeying the catalog.
 - **Why:** confirmshaming buys a small immediate lift and spends the relationship: it is the one dark pattern users quote back verbatim and screenshot, it is increasingly named in consumer-protection guidance, and a decline someone has to insult themselves to reach is not a decision they made freely. The escape hatch is required by BP-023 and the paywall practices; this is the half that governs its wording (PRN-24).
 - **Apply when:** paywalls and upgrade prompts, popups, consent dialogs, downgrade and cancellation flows, any dismissible ask.
 - **Tags:** copy, microcopy, trust, conversion, legal

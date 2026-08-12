@@ -16,6 +16,11 @@ then open only those entries. The selection protocol
 25 carry a `Checked` review date; 181 predate the field. Ages are deliberately not written here -- they would change daily and make this generated file look permanently stale. Run `bp_index.py --stale [months]` for the report.
 
 
+## Contents
+
+- By tag
+- By id
+
 ## By tag
 
 - **`accessibility`** — BP-050, BP-051, BP-054, BP-059, BP-079, BP-081, BP-083, BP-084, BP-101, BP-104, BP-108, BP-110, BP-115, BP-131, BP-132, BP-134, BP-135, BP-136, BP-137, BP-138, BP-146, BP-154, BP-156, BP-164, BP-166, BP-168, BP-169, BP-176, BP-179
@@ -64,7 +69,7 @@ then open only those entries. The selection protocol
 - **`lifecycle`** — BP-034, BP-035, BP-036, BP-037, BP-039, BP-071, BP-076, BP-122
 - **`maintainability`** — BP-091, BP-092, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-099, BP-100, BP-101, BP-130, BP-140, BP-145, BP-165, BP-169, BP-172, BP-184, BP-203, BP-204
 - **`microcopy`** — BP-089, BP-152, BP-170, BP-181, BP-182, BP-186, BP-187, BP-188, BP-189, BP-202, BP-206
-- **`mobile`** — BP-002, BP-008, BP-049, BP-050, BP-051, BP-052, BP-053, BP-054, BP-055, BP-057, BP-059, BP-064, BP-075, BP-076, BP-079, BP-111, BP-112, BP-126, BP-131, BP-138, BP-164, BP-178
+- **`mobile`** — BP-002, BP-008, BP-049, BP-050, BP-051, BP-052, BP-053, BP-054, BP-055, BP-057, BP-059, BP-064, BP-075, BP-076, BP-079, BP-111, BP-112, BP-123, BP-126, BP-131, BP-138, BP-164, BP-178
 - **`motion`** — BP-054, BP-130, BP-131, BP-132, BP-157, BP-158, BP-159, BP-160, BP-161, BP-162, BP-163, BP-164, BP-167
 - **`narrative`** — BP-183, BP-185
 - **`navigation`** — BP-049, BP-051, BP-052, BP-173, BP-180, BP-181

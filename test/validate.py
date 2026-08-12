@@ -897,6 +897,41 @@ def validate_run_instructions() -> None:
         )
 
 
+
+# --------------------------------------------------------------- the ratchet
+#
+# Ported from sheleg-design, whose retrospective recorded the class: a gate
+# whose check count can fall silently cannot detect a deleted requirement --
+# there, stripping four required headings dropped the count by one and the
+# suite stayed green. This repository had no ratchet at all, so the same
+# deletion here was invisible by construction rather than by accident.
+FLOORS = ROOT / "test" / "floors.json"
+
+
+def check_floor(script: str, count: int) -> int:
+    """Non-zero when this run checked less than the recorded floor."""
+    if not FLOORS.is_file():
+        return 0
+    try:
+        floors = json.loads(FLOORS.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"FAIL: {FLOORS.name} is not valid JSON ({exc})", file=sys.stderr)
+        return 1
+    floor = floors.get(script)
+    if floor is None:
+        return 0
+    if count < floor:
+        print(
+            f"FAIL: {script} ran {count} checks, below its floor of {floor}. "
+            f"Checks do not disappear on their own -- something that used to be "
+            f"required is not being required any more. If the drop is intended, "
+            f"lower the floor in {FLOORS.name} in the same commit, with the reason.",
+            file=sys.stderr,
+        )
+        return 1
+    return 0
+
+
 def main() -> int:
     validate_manifests()
     validate_npm_payload()
@@ -925,6 +960,9 @@ def main() -> int:
             print(f"FAIL: {failure}")
         print(f"{len(failures)} failure(s) out of {checks} checks")
         return 1
+    rc = check_floor("validate.py", checks)
+    if rc:
+        return rc
     print(f"OK ({checks} checks)")
     return 0
 
