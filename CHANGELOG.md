@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.35.1 — 2026-08-12
+
+### Fixed
+
+- **0.35.0 said Refero was the one server that returns flows. Mobbin returns them
+  too.** `mcp__mobbin__search_flows` has always existed; it was invisible because
+  Mobbin was registered and unauthenticated, so the sentence shipped as a claim
+  nobody in that session could check — while the paragraph beside it said to gate
+  on the tools present, not on the config. The rule was right and was not applied
+  to its own author. Corrected the hour Mobbin was signed in, against its live
+  tool surface.
+- **The real distinction, now that both are visible: they answer in different
+  media.** Refero returns each step as structure — a goal, an action, a system
+  response — which is the shape this skill draws. Mobbin returns each step as a
+  preview image, which is how you judge whether it reads. Read Refero to draw the
+  diagram; look at Mobbin to check it.
+
 ## 0.35.0 — 2026-08-12
 
 ### Added

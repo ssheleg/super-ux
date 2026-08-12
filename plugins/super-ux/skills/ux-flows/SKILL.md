@@ -34,13 +34,15 @@ obey, via the **sheleg-design** companion):
 
 **Real flows off the shelf, before you invent one:** if the session exposes a
 reference server — **Refero** (`mcp__refero__*`), **Mobbin** (`mcp__mobbin__*`)
-or **Lazyweb** (`mcp__lazyweb__*`) — sweep it during step 2. Refero is the one
-that returns *flows* rather than loose screens: connected steps, each with a
-goal, an action and a system response, which is exactly the shape this skill
-draws. **Gate on the tools present in the session, not on the config** — a
-registered server nobody signed in to exposes nothing. None present → offer the
-one-time install once and continue either way; the flow is designed from the
-stories regardless.
+or **Lazyweb** (`mcp__lazyweb__*`) — sweep it during step 2. Two of them return
+connected multi-step flows and they answer in different media: **Refero** gives
+each step as *structure* — a goal, an action, a system response — which is the
+shape this skill draws; **Mobbin** gives each step as a *preview image*, which is
+how you judge whether it actually reads. Read Refero to draw the diagram, look at
+Mobbin to check it. **Gate on the tools present in the session, not on the
+config** — a registered server nobody signed in to exposes nothing. None present
+→ offer the one-time install once and continue either way; the flow is designed
+from the stories regardless.
 
 **Position in the chain:** foundation (WHY) → **flows (HOW) + screens (UI
 map)** → scenarios (WHAT). Stories in, flows and screens out; `ux-scenarios`
