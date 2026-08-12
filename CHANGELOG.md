@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.35.2 — 2026-08-12
+
+### Changed
+
+- **Close-out for the 0.35.x pair.** The verification ledger gains R-14 and R-15,
+  and R-14 is an honest **`never`**: no check here can watch an agent decide to
+  sweep, because the behaviour lives in a SKILL.md an agent reads rather than in a
+  script a gate runs. A row marked `planted` would be a lie and an omitted row
+  would be worse — the capability would look verified because everything around it
+  is. B-011 files the scenario run that would move it.
+- **The log records why no gate held 0.35.0's wrong claim**, and the widened rule
+  carried across from the companion repository: a claim about anything outside the
+  session's reach is unverified until it is reachable.
+
 ## 0.35.1 — 2026-08-12
 
 ### Fixed

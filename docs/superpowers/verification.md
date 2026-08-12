@@ -8,6 +8,28 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-12 — the reference sweep for flows, v0.35.0 → v0.35.1
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-14 | `ux-flows` step 2 sweeps a reference server before a node is drawn, gated on tools present rather than config | `python3 test/validate.py` — structure only | **never** — see the note below |
+| R-15 | Refero and Mobbin both return multi-step flows, in different media (structure vs preview images) | Live tool surfaces: `tools/list` on `api.refero.design`, and one `mcp__mobbin__search_flows` query returning a twenty-screen flow | observed — and it **refuted** the claim shipped in 0.35.0 |
+
+**R-14 is the honest `never` in this ledger, and it is honest on purpose.** No
+check in this repository can watch an agent decide to sweep, because the
+behaviour lives in a SKILL.md an agent reads rather than in a script a gate
+runs. `validate.py` confirms the section exists and says what it says; it cannot
+confirm anyone acted on it. The only evidence that would move this row to
+`observed` is a scenario run in a fresh context with a reference server present —
+filed as B-011. A row marked `planted` here would be a lie, and a row left out
+would be worse: the capability would look verified because everything around it
+is.
+
+**R-15 is why the ledger earns its keep.** 0.35.0 shipped the claim that Refero
+was the only server returning flows, written while Mobbin was registered and
+unauthenticated — invisible, therefore uncheckable. Signing in refuted it inside
+an hour. The correction is 0.35.1.
+
 ## 2026-08-10 — UX linter codes and coverage, v0.34.0
 
 | REQ | What ships | Verified by | Watched |

@@ -66,6 +66,39 @@ Newest last.
 | 2026-08-10 | Structural audit of 0.31.0 → 22 findings closed, three composition gates, dogfood chain + brand pack; v0.32.0 | yes — see below |
 | 2026-08-10 | Web surface in the contract, four routing rows, composite briefs, B007 + B026, ux_lint fixture harness; v0.33.0 | yes — see below |
 | 2026-08-10 | B-010 + B-002 — UX linter codes U001..U054, 43 fixtures, coverage gate, run-instruction gate; v0.34.0 | yes — see below |
+| 2026-08-12 | Reference sweep for flows in `ux-flows` (Refero, Mobbin, Lazyweb), gated on tools not config; v0.35.0 → v0.35.1 | yes — see below |
+
+---
+
+## 2026-08-12 — a comparison whose third term was invisible
+
+**Symptom.** 0.35.0 added a reference sweep to `ux-flows` step 2 and said Refero
+was the server that returns flows "rather than loose screens". Mobbin returns
+them too. 0.35.1 corrected it the same hour, alongside the identical correction
+in `sheleg-design`.
+
+**Root cause.** The sentence compared three servers and one of them could not be
+inspected: Mobbin was registered and unauthenticated, so its tool surface was
+invisible. The claim was written in the same voice as the two halves that had
+been checked, sitting between them. The rule that forbids it — *gate on the tools
+present in the session, not on the config* — was in the paragraph directly above,
+written for the reader of the skill and never turned on its author.
+
+**Why no gate held it.** None can. `validate.py` reads files; it cannot open an
+MCP server and ask what it exposes, and a check that tried would fail for every
+reader who has not signed in. This repository's ledger now carries that limit
+explicitly: R-14 is `never`, and says why.
+
+**What replaced it is better than what was wrong.** Both servers return flows, in
+different media — Refero as structure (goal, action, system response per step),
+Mobbin as preview images per step. So the instruction is now *read one to draw
+the diagram, look at the other to check it*, which is actionable in a way "only
+one has flows" never was.
+
+**Carried across.** The companion repository widened its standing instruction from
+*a pack needs a reachable reference* to *any claim about something outside the
+session's reach*. The same rule applies here and is why R-15 was recorded as
+`observed` against a live query rather than against a tool description.
 
 ---
 
