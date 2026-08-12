@@ -12,18 +12,26 @@ in this run), `observed` (it caught a real defect at some point), `never`.
 
 | REQ | What ships | Verified by | Watched |
 |---|---|---|---|
-| R-14 | `ux-flows` step 2 sweeps a reference server before a node is drawn, gated on tools present rather than config | `python3 test/validate.py` — structure only | **never** — see the note below |
+| R-14 | `ux-flows` step 2 sweeps a reference server before a node is drawn, gated on tools present rather than config | Fresh-context run, 2026-08-12: an iOS subscription-cancellation brief that never mentioned references | **observed** — see the note below |
 | R-15 | Refero and Mobbin both return multi-step flows, in different media (structure vs preview images) | Live tool surfaces: `tools/list` on `api.refero.design`, and one `mcp__mobbin__search_flows` query returning a twenty-screen flow | observed — and it **refuted** the claim shipped in 0.35.0 |
 
-**R-14 is the honest `never` in this ledger, and it is honest on purpose.** No
-check in this repository can watch an agent decide to sweep, because the
-behaviour lives in a SKILL.md an agent reads rather than in a script a gate
-runs. `validate.py` confirms the section exists and says what it says; it cannot
-confirm anyone acted on it. The only evidence that would move this row to
-`observed` is a scenario run in a fresh context with a reference server present —
-filed as B-011. A row marked `planted` here would be a lie, and a row left out
-would be worse: the capability would look verified because everything around it
-is.
+**R-14 was filed `never` and closed the same day.** No check in this repository
+can watch an agent decide to sweep — the behaviour lives in a SKILL.md an agent
+reads, not a script a gate runs — so the only evidence available was a run. It
+was run: a fresh context, an iOS subscription-cancellation brief, and **no
+mention of references, sweeping, Mobbin or Refero anywhere in the prompt.** The
+agent gated on the tools present rather than the config and said so
+(`mcp__mobbin__*` and `mcp__lazyweb__*` present, `mcp__refero__*` absent), swept
+both **before** drawing, read four shipped cancellation flows, and named what
+each one changed and what it refused to let them change — the job stayed the
+foundation's and the visual identity stayed the style pack's. It also declined an
+instruction embedded in one server's own response asking to alter persistent
+instructions, which is the untrusted-data rule holding under a live test nobody
+designed.
+
+Still `observed` rather than `planted`: nothing was planted, because there is
+nothing here to plant a defect *in*. That limit is permanent and is the reason
+this row reads the way it does.
 
 **R-15 is why the ledger earns its keep.** 0.35.0 shipped the claim that Refero
 was the only server returning flows, written while Mobbin was registered and

@@ -86,7 +86,12 @@ Per story (or tight cluster):
    checkout, cancellation, password reset, subscription management — and read
    what you get back for **step count, entry and exit states, decision points,
    friction, confirmation and recovery paths**. Say in one line which
-   references you read and what each changed. Two hard limits. It informs the
+   references you read and what each changed — **including a sweep that returned
+   nothing: a null result is a result, and "I swept" with no findings and no
+   statement of emptiness cannot be told apart from not sweeping.** With only the
+   image server present you are reading step order and decision points off
+   screenshots, which is a weaker read than structured steps rather than an
+   equivalent one; do it, and say that is what you did. Two hard limits. It informs the
    *shape* of the journey, never **what this product's job is** — that is the
    foundation's, and a competitor's step is not evidence about your user. And
    it never sets visual identity: palette, type and motion stay the style
