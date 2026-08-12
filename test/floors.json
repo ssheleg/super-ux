@@ -1,6 +1,6 @@
 {
-  "_why": "Ratchet floors, ported from sheleg-design after its retro recorded the class: a gate whose check count can fall silently cannot detect a deleted requirement. Stripping a required section there made the suite drop by one check and stay green. This repository had no ratchet at all until 2026-08-12, so every requirement deletion here was invisible by construction. Raise freely; lowering one needs a reason in the same commit.",
-  "_measured_on": "fix/practice-catalog-findings-v0.36.1, 2026-08-12",
+  "_why": "Ratchet floors, ported from sheleg-design after its retro recorded the class: a gate whose check count can fall silently cannot detect a deleted requirement. Raise freely; lowering one needs a reason in the same commit.",
+  "_measured_on": "feat/decisions-from-the-r14-run-v0.37.0, 2026-08-12",
   "validate.py": 3160,
   "ux_lint_test.py": 43,
   "brand_lint_test.py": 51

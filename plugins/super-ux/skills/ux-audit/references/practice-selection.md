@@ -146,6 +146,18 @@ shrug) / `deferred` (what unblocks it). Rules:
 
 - Every practice from the mandatory sets and the artifact row gets a
   verdict. No silent skips.
+- **Granularity, because "every practice" does not scale and pretending it does
+  produces the skip it forbids.** A mobile subscription product pulls roughly
+  **150 practices for a single flow**; the worked example above has four rows, and
+  the honest output at that scale is a compliance table longer than the design it
+  documents. So: **per-practice verdicts for the artifact row and for anything the
+  artifact actually touches; one band verdict — with its reason — for each
+  remaining set.** A band reads `BP-002..015 — rejected (band): onboarding
+  practices, no onboarding surface in this flow`. A band with no reason is a
+  silent skip wearing a table row, and a set that turns out to contain one
+  practice the artifact touches is un-banded and given its own row. This was
+  improvised by a fresh-context agent that ran the pass at real scale, said it was
+  deviating, and was right to.
 - `applied`/`adapted` must be visible in the artifact (flow node, scenario
   field, plan row) — a verdict without a trace is fiction.
 - Rejections owned by the user (taste, brand, strategy) are recorded as

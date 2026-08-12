@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.37.0 — 2026-08-12
+
+The last five findings from the R-14 run — the ones that needed a **decision**
+rather than a correction. In every case the fresh-context agent had already
+improvised the right answer, said out loud that it was deviating, and explained
+why. The answer was accepted rather than re-invented.
+
+### Added
+
+- **A declared branch for "we know almost nothing".** The Design workflow read
+  *per story* and built its practice profile from `foundation.md`, while the
+  commonest real brief has neither — and nothing said what to do. Step 0 now
+  requires three things instead of silent improvisation: a **provisional
+  profile** where every dimension names its provenance (`brief` / `inferred` /
+  `assumed`, and an assumed dimension that decides the flow's shape is called
+  out), `Traces:` as an **unbacked provisional job** in the user's words, and an
+  **open decisions** list saying what each would change. A flow built this way is
+  honest input; built without the three blocks it is invented personas with a
+  diagram on top.
+- **A granularity rule for the practice pass, because "every practice" does not
+  scale.** A mobile subscription product pulls roughly **150 practices for one
+  flow**; the worked example has four rows. Per-practice verdicts for the artifact
+  row and anything the artifact touches; **one band verdict, with its reason**,
+  per remaining set. A band with no reason is a silent skip wearing a table row.
+- **`blocked` joins the screen status enum** — designed, complete, and unsafe to
+  build because a decision outside UX would change it. Name the decision and its
+  owner on the same line. That state used to live in prose, where no linter and no
+  next agent reliably finds it, and `designed` quietly read as ready.
+- **A state is not a screen, with a test.** One `SCR-ID` per place the user can
+  be; split only when a variation owns distinct copy, distinct elements **and** its
+  own primary action. A confirm dialog with its own words is a screen; a table with
+  no rows is a state. Two agents given the same app produced incompatible
+  `screens.md` files for exactly this.
+- **The platform-permits rule, generalised out of BP-123.** Where a step belongs
+  to the OS or a store — store billing, a permission prompt, a share sheet,
+  biometrics — two non-design questions decide the diagram: can the app perform
+  the action at all, and does it learn the outcome synchronously. A "no" to the
+  second is a **third branch**. Drawing only success and failure there ships a flow
+  that cannot be built.
+
 ## 0.36.1 — 2026-08-12
 
 Four of the R-14 run's findings actioned, and a defect class ported from the

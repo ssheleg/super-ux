@@ -341,10 +341,24 @@ one entry per screen.
 - **Coverage:** src/onboarding/Welcome.tsx:1 (or `none yet`)
 - **Scenarios:** SCN-001, SCN-002
 - **Resources:** <related components, shared assets, API/data deps, links>
-- **Status:** designed | built | drifted | retired
+- **Status:** designed | blocked | built | drifted | retired
 ```
 
 Rules:
+
+- **`blocked` means designed and unsafe to build**: the spec is complete but a
+  decision outside UX would change it — a data-retention policy that decides
+  whether a line of copy is true, a purchase surface that decides which node is
+  terminal, an unrecorded style pack. Name the decision and its owner on the same
+  line. Without this value that state lives in prose, where no linter and no next
+  agent reliably finds it, and `designed` quietly reads as ready.
+- **A state is not a screen.** One `SCR-ID` per *place the user can be*; the
+  variations that place goes through — loading, empty, error, success, and any
+  product-specific ones — are **states of it**, not siblings. Split into a second
+  `SCR-ID` only when the variation owns distinct copy, distinct elements **and**
+  its own primary action; a confirm dialog with its own words is a screen, a table
+  with no rows is a state. Two agents given the same app produced incompatible
+  `screens.md` files for exactly this, and the linter cannot see the difference.
 
 - IDs `SCR-NN`, sequential, never reused; retired screens kept with a
   reason.

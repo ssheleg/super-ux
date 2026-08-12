@@ -74,6 +74,21 @@ this product as well. Each money flow uses its checklist row from
 
 Per story (or tight cluster):
 
+0. **No foundation? Say so, then design anyway — in a declared shape.** The
+   steps below read "per story" and the practice pass builds its profile from
+   `foundation.md`, but the commonest real brief is *"we know almost nothing"*,
+   and until now nothing said what to do with it. Recommend `ux-foundation`
+   first (that stands), and if the work proceeds without it, carry three things
+   explicitly rather than improvising silently: a **provisional profile** table
+   with each dimension's value and where it came from (`brief` / `inferred` /
+   `assumed` — and an assumed dimension that decides the flow's shape is called
+   out as such); `Traces:` written as an **unbacked provisional job** in the
+   user's words, to be replaced with JTBD/ST ids when the foundation lands; and
+   an **open decisions** list naming what each one would change. Screens whose
+   spec depends on one of those decisions take `Status: blocked`, not
+   `designed`. A flow built this way is honest input for the next stage; a flow
+   built this way *without* the three blocks is a set of invented personas with
+   a diagram on top.
 1. **Task analysis** (principles doc, method section): goal in the user's
    words → minimal user-visible micro-steps → cut/merge/default-away every
    step that doesn't serve the job → mark the first-value step and pull it
@@ -81,6 +96,17 @@ Per story (or tight cluster):
 2. **Draw the flow** (mermaid, node conventions from the contract): every
    decision an explicit branch; every error edge lands on recovery; all
    entry points enumerated; happy path ≤5 steps or justified.
+   **Check what the platform permits before you draw a node it owns.** Where a
+   step belongs to the operating system or a store rather than to you — store
+   billing, a permission prompt, a share sheet, biometrics, a system settings
+   deep link — two questions decide the diagram and neither is a design
+   question: *can the app perform this action at all*, and *does the app learn
+   the outcome synchronously*. A "no" to the second is a **third branch** that
+   claims neither outcome and reconciles later; drawing only success and failure
+   there ships a flow that cannot be built. BP-123 carried this wrong for a
+   release — it described web billing and was applied to any subscription, on a
+   platform where the app cannot cancel and cannot observe the result — so the
+   rule is here as well as in the practice.
    **Sweep shipped flows first, while there is still nothing to defend.**
    With a reference server present, search the journey by name — onboarding,
    checkout, cancellation, password reset, subscription management — and read
