@@ -59,6 +59,8 @@ after frames exist:
      `workbench` (quiet light/dark, ships both themes);
    - dark, high-signal instrument surfaces → `instrument-console`;
    - warm editorial / brand-led marketing → `editorial-luxury`;
+   - a developer product whose hero is a code sample — API, SDK, CLI, MCP
+     server → `manpage` (see BP-207..210 for what goes where on it);
    - a cinematic scroll-driven landing or hero → the pack **plus** the
      motion methodology (that is what the skill is built for);
    - nothing fits → author a new pack against the skill's pack contract

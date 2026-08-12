@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.38.0 — 2026-08-12
+
+Four practices for developer products, from a measured reading of a live
+developer landing page (`zernio.com`, 2026-08-12) rather than from a survey.
+
+### Added
+
+- **BP-207..210, a new catalog band: "Developer products — the landing, the
+  capability page, the first run."** A developer product is evaluated from the
+  code sample and the reference, not from the benefit statement, and these are
+  the composition consequences:
+  - **BP-207 — the hero is the call, not a screenshot.** The focal element of the
+    first viewport is a runnable request with its filename and language; it
+    scrolls horizontally and never reflows or shrinks below body size, and the
+    fold is allowed to crop it. A wrapped sample stops being evidence, which is
+    the failure mode of pasting code into a hero without its own scroll
+    container.
+  - **BP-208 — one measure per content role, not one container width.** A ladder
+    tied to what the content *is*: the argument in a narrow reading measure,
+    proof one step wider, logo walls widest, the whole ladder collapsing on a
+    phone. A single width forces one compromise on every content type — prose
+    past the 45–75-character measure BP-087 requires, grids cramped.
+  - **BP-209 — the setup checklist arrives already partly complete.** Steps
+    satisfied by signing up arrive ticked and the list opens on the first
+    outstanding one, which is the endowed-progress effect. Carries its own
+    honesty condition: pre-ticking a step the user has *not* completed spends the
+    trust the pattern runs on, and every step keeps a postpone link that names
+    the consequence, so the list never becomes a gate (BP-206).
+  - **BP-210 — a capability page answers one question per heading.** Every `h2`
+    is a question a buyer asks, every `h3` one capability in one sentence, the
+    endpoint beside the capability. Search, answer engines and a scanning
+    developer all want the same shape; a features grid serves none of them,
+    because a grid cell cannot be quoted as an answer.
+- **Three routing rows** in `practice-selection.md`: developer landing,
+  capability page, first-run checklist — the new entries are reachable from the
+  surfaces that need them, not only from the catalog.
+- **`visual-identity.md` routes the `manpage` pack** for developer products whose
+  hero is a code sample, alongside the existing pack choices, and points at
+  BP-207..210 for what goes where on such a page.
+
+### Fixed
+
+- `best-practices.md`'s section heading read **`Verbal identity (BP-182..205)`**
+  while BP-206 had been sitting inside it since 0.37.0. Section-heading spans are
+  not covered by the id, routing or index gates — only `practice-selection.md`'s
+  header span is checked — so this one drifted silently. Corrected to BP-182..206.
+- `README.md` said **206 proven practices** against a catalog of 210.
+
+### Changed
+
+- `test/floors.json`: `validate.py` 3160 → 3236 — four entries, their field and
+  tag checks, and three routing rows.
+
+
 ## 0.37.0 — 2026-08-12
 
 The last five findings from the R-14 run — the ones that needed a **decision**

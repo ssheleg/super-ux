@@ -1491,7 +1491,7 @@ the defects are few and repetitive, which is what makes them checkable.
 - **Tags:** navigation, microcopy, readability, insight
 - **Source:** [NNg]
 
-### Verbal identity (BP-182..205)
+### Verbal identity (BP-182..206)
 
 Written against `brand-contract v1`. These carry a sixth field, **Checked** —
 the date the practice was last verified against its source. It starts here on
@@ -1709,3 +1709,42 @@ no date at all.
 - **Tags:** copy, microcopy, trust, conversion, legal
 - **Source:** [NNg]
 - **Checked:** 2026-08-05
+
+### Developer products — the landing, the capability page, the first run (BP-207..210)
+
+A developer product is evaluated by someone who will decide from the code sample
+and the reference, not from the benefit statement. These four are the composition
+consequences. The visual layer for such a page is `sheleg-design`'s `manpage`
+pack; this section governs what goes where, not how it looks.
+
+#### BP-207: On a developer landing page the hero is the call, not a screenshot
+- **Do:** make the focal element of the first viewport a real, runnable request — the import, the client construction, and the one endpoint the product exists for — with the filename and language visible. Let it scroll horizontally and never reflow or shrink its type below the body size; let the fold crop it, because the crop is what says there is more. Keep the benefit sentence, but put it above the snippet as a subhead rather than in place of it.
+- **Why:** the evaluating developer's first question is what the call looks like, and a screenshot of someone else's dashboard does not answer it; a wrapped or shrunken sample stops being evidence and becomes decoration, which is the failure mode of pasting code into a hero without giving it its own scroll container.
+- **Apply when:** the landing page of any API, SDK, CLI, MCP server, protocol or developer-infrastructure product.
+- **Tags:** landing-page, layout, visual-hierarchy, conversion, trust, web
+- **Source:** [CRO26]/[WIG]
+- **Checked:** 2026-08-12
+
+#### BP-208: One measure per content role, not one container width
+- **Do:** give the page a small ladder of widths tied to what the content *is* — the argument in a narrow reading measure, social proof one step wider, logo walls and footers widest — and collapse the whole ladder to the narrow measure on a phone, letting vertical rhythm carry the structure instead. Name each step as a token so the roles cannot drift into one another.
+- **Why:** a single container width forces one compromise on every content type: prose ends up past the 45–75-character measure BP-087 requires while a three-column proof grid ends up cramped. Widening only the evidence keeps the reading line correct where it matters without wasting the viewport where it does not.
+- **Apply when:** any marketing, documentation or long-form page; especially one that mixes prose with grids, logo walls or code.
+- **Tags:** layout, readability, typography, responsive, visual-hierarchy, web
+- **Source:** [Type]/[Baymard]
+- **Checked:** 2026-08-12
+
+#### BP-209: The setup checklist arrives already partly complete
+- **Do:** where first-run is a checklist, let the steps the user has *already* satisfied by signing up arrive ticked — the key that was issued, the credit that was granted — and open on the first genuinely outstanding step. State the number of steps up front, and give every step a visible way to postpone it that names the consequence ("I'll do this later").
+- **Why:** a checklist that opens at zero of four asks for commitment before showing any; the same list opening at two of four reads as a run already in progress, which is the endowed-progress effect and the cheapest activation lever on the surface. It is only honest when the ticked steps really are done — pre-ticking a step the user has not completed spends the trust the pattern depends on, and the postpone link is what keeps the list from becoming a gate (BP-206).
+- **Apply when:** any first-run, setup or integration checklist, in-product or in a developer console.
+- **Tags:** onboarding, activation, commitment, friction-reduction, conversion
+- **Source:** [48Laws]/[SDT]
+- **Checked:** 2026-08-12
+
+#### BP-210: A capability page answers one question per heading
+- **Do:** build the per-capability page as a flat sequence where every `h2` is a question a buyer actually asks ("what does it cost", "which countries", "how do I turn it on") and every `h3` under it is one capability with one sentence; put the endpoint or command beside the capability rather than in a separate reference section. One page per capability, and the same skeleton for all of them.
+- **Why:** these pages are read by search, by answer engines and by a developer scanning for one fact, and all three want the same shape — a question with its answer adjacent and extractable. A features grid answers none of the three, because a grid cell is not an answer to anything and cannot be quoted as one.
+- **Apply when:** per-feature, per-integration or per-capability pages, including programmatically generated sets.
+- **Tags:** landing-page, seo, aeo, layout, navigation, insight, web
+- **Source:** [GEO24]/[CRO26]
+- **Checked:** 2026-08-12
