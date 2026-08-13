@@ -955,6 +955,29 @@ def main() -> int:
     validate_brand_lint_coverage()
     validate_ux_lint_coverage()
     validate_run_instructions()
+    # A release must not publish over a red `validate`.
+    #
+    # On 2026-08-12 `sheleg-dev` tagged v0.4.1 while its own validate run for that exact
+    # tag FAILED, and npm served 0.4.1 four minutes later — two separate workflows with
+    # nothing connecting them. Six of the family's nine repositories were in that state.
+    # `workflow_call` connects them; these three keep the connection there, because a
+    # dependency nobody checks is a dependency somebody removes.
+    _wf = ROOT / ".github" / "workflows"
+    _val, _rel = _wf / "validate.yml", _wf / "release.yml"
+    if _val.is_file() and _rel.is_file():
+        _v, _r = _val.read_text(encoding="utf-8"), _rel.read_text(encoding="utf-8")
+        check(bool(re.search(r"^\s*workflow_call:\s*$", _v, re.M)),
+              ".github/workflows/validate.yml: no `workflow_call:` trigger — the release "
+              "workflow cannot run this suite, so a publish goes out over whatever subset "
+              "it runs itself")
+        check(bool(re.search(r"^\s*uses:\s*\./\.github/workflows/validate\.yml\s*$", _r, re.M)),
+              ".github/workflows/release.yml: does not call ./.github/workflows/validate.yml "
+              "— a red validate would not stop a publish")
+        check(bool(re.search(r"^\s*needs:\s*(?:\[[^\]]*\bvalidate\b[^\]]*\]|validate)\s*$", _r, re.M)),
+              ".github/workflows/release.yml: no job declares `needs: validate` — calling the "
+              "suite without depending on it lets the release run beside it rather than "
+              "after it, which looks gated and is not")
+
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")
