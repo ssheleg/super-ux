@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.39.0 — 2026-08-14
+
+The em-dash reflex has been in `ai-tells.md` since the verbal identity layer
+shipped, graded S2 and worded "one or two in a piece is normal". The linter
+never looked for it: `S1_MARKERS` held twelve string literals, none of them a
+dash. A title ending in a full stop was caught only inside the string
+registry, by `B026`, so every heading and page title outside it went
+unchecked. Both are now checks.
+
+**The rule is a distinction, not a ban.** A dash standing in for a full stop,
+a comma or a colon is out. A dash the language requires stays, because a
+global ban makes Russian ungrammatical on its first line: the copula
+(«Москва — столица»), numeric ranges and direct speech are orthography.
+
+- **`B062`** errors on what can be established without parsing grammar: a
+  dash before a coordinating conjunction, which is always a comma's job and
+  which a copula dash never takes, and paired dashes bracketing an aside
+  inside one sentence. In a locale with no grammatical dash it errors on
+  every dash that is not a range. Where a locale has one, it reports and
+  leaves the judgement to the doctrine rather than claiming a distinction it
+  cannot measure. Every finding quotes the dash in context with its line,
+  because forty findings reading "a dash stands in for a full stop" is a
+  report nobody can act on.
+- **`B063`** carries `B026`'s rule to document titles and headings, allowing
+  what is not the defect: a question mark, an ellipsis, a trailing
+  abbreviation, and a title that is genuinely several sentences.
+
+`ai-tells.md` was rewritten around them. Every marker now carries an id
+(`AT-01`..`AT-15`), so coverage over the set is computable rather than
+asserted, and four markers were added: `AT-07` the full-stopped title,
+`AT-11` "not just X, but Y", `AT-12` the bold reflex, `AT-13` the colon hook.
+The dash rule gets its own section with a replacement table, because a comma,
+a colon and a full stop state three different relationships and
+find-and-replace picks the wrong one.
+
+The rule also enters the **Brand voice hard rule**, so it reads in every
+session of every project that installs it rather than only when an agent
+opens the reference.
+
+**Seven planted defects, each turning exactly one fixture red.** Two found
+holes in the fixtures rather than in the code: an English conjunction case
+stayed green when the conjunction branch was deleted, because the strict
+branch produced the same code by another path and a set comparison cannot
+tell them apart; and the fenced-block case was masked by the inline-code
+stripper. Both were rewritten to isolate their branch, and both plants then
+landed.
+
+**Dogfood went from red to clean.** `docs/brand/lint.py` had been failing on
+`B030` before any of this, because `facts.md` was itself three counts stale:
+206 practices against 210, 33 lint checks against 37, 3107 validator checks
+against 3240. Every row is recomputed and re-dated, and the file's preamble
+now records that naming the command is not the same as running it.
+
+The doctrine prose lost **144 of its 158 dashes** across the eleven
+copywriting and brand-voice references; the fourteen that remain are quoted
+examples and table cells standing for "no value". The README and the
+installer's interface strings were swept with them, both being declared
+public surfaces in this project's own pack.
+
+Gates, each run alone: `validate.py` 3240, `brand_lint_test.py` 61,
+`ux_lint_test.py` 43, `docs/ux/lint.py` and `docs/brand/lint.py` clean.
+Floors raised to match.
 ## 0.38.2 — 2026-08-14
 
 A red `validate` could not stop a publish anywhere in this family, and one member
