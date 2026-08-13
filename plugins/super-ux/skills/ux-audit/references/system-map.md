@@ -8,7 +8,7 @@ unsure.
 
 - [The pipeline](#the-pipeline)
 - [Files in a target project (`docs/ux/`)](#files-in-a-target-project-docsux)
-- [The reference shelves — this map names them, and links none](#the-reference-shelves--this-map-names-them-and-links-none)
+- [The reference shelves: this map names them, and links none](#the-reference-shelves-this-map-names-them-and-links-none)
 - [Skills & the one entry point](#skills--the-one-entry-point)
 - [The four rules that keep agents in sync](#the-four-rules-that-keep-agents-in-sync)
 - [Companions (recommended, never forced)](#companions-recommended-never-forced)
@@ -32,8 +32,8 @@ after this chain is designed and approved (and, with Figma on, mocked up).
 
 **Two layers answer a question shaped like "what", and confusing them is the
 one mistake this map exists to prevent.** `vision.md` answers *what the
-product is* — its essence, its principles, and what it refuses to become.
-`scenarios.md` answers *what it does* — every step, state and error. A
+product is*: its essence, its principles, and what it refuses to become.
+`scenarios.md` answers *what it does*: every step, state and error. A
 feature can be perfectly scenario'd and still violate the anti-vision, which
 is why the alignment check runs before the chain, not inside it.
 
@@ -51,25 +51,25 @@ is why the alignment check runs before the chain, not inside it.
 | `wireframes/…` | optional | `ux-flows` | low-fi ASCII wireframes / storyboards |
 | `README.md`, `lint.py`, `doctor.py` | meta | seeded | this map (project copy), the drift linter, the contract doctor |
 
-Beside the chain, one more root — **`docs/brand/`**, the verbal identity
-(`brand-contract v1` — named here, not linked; the shelf note below says
+Beside the chain, one more root: **`docs/brand/`**, the verbal identity
+(`brand-contract v1`, named here and not linked; the shelf note below says
 why):
 
 | File | Owner skill | Holds |
 |------|-------------|-------|
 | `voice.md` | `brand-voice` | pack, five axes, narrative, invariants, locales |
 | `terminology.md` | `brand-voice` | our words, banned words, entity and tier names |
-| `facts.md` | `brand-voice` | canonical numbers — the only source of a figure |
+| `facts.md` | `brand-voice` | canonical numbers, the only source of a figure |
 | `channels.md` | `brand-voice` | one record per surface: register, limits, bans |
 | `strings.md` | `brand-voice` | interface string registry → `file:line` → scenario |
 | `locales/<code>.md` | `brand-voice` | per-locale delta |
-| `lint.py` | seeded | `brand_lint.py`, 35 deterministic checks (B001..B073) |
+| `lint.py` | seeded | `brand_lint.py`, 37 deterministic checks (B001..B073) |
 
-It is a separate root because the brand also governs surfaces that are not UX
-— a store listing, an ad, a post. The pack derives from `foundation.md` and
+It is a separate root because the brand also governs surfaces that are not
+UX: a store listing, an ad, a post. The pack derives from `foundation.md` and
 never the reverse. `copywriting` writes from it and never to it.
 
-## The reference shelves — this map names them, and links none
+## The reference shelves: this map names them, and links none
 
 **Every link in a skill is a shipping instruction.** `test/sync_references.py`
 copies the transitive closure of a skill's links into that skill, so that the
@@ -77,11 +77,11 @@ contracts arrive intact on Cursor, Codex and every other agent that ships one
 directory. Because *every skill points at this map*, a link from here is a
 link from all of them at once: one pointer to `brand-contract.md` once put all
 nine brand contracts inside every UX skill, 352K of App Store guidance riding
-along in `ux-foundation`. So the rule here is absolute — **this map names a
+along in `ux-foundation`. So the rule here is absolute: **this map names a
 contract, it never links one.** Each skill links exactly what it reads, and
 carries exactly that.
 
-*The chain shelf.* `scenario-format.md` — the format contract. Design
+*The chain shelf.* `scenario-format.md` is the format contract. Design
 reasoning: `ux-design-principles.md` (PRN-01..24). Practices:
 `best-practices.md`, selected via `practice-selection.md` and previewed
 through `best-practices-index.md`; control choice:
@@ -98,17 +98,17 @@ voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
 
 ## Skills & the one entry point
 
-- **`/ux`** — the only command a user needs. Asks the task in plain words,
+- **`/ux`** is the only command a user needs. It asks the task in plain words,
   routes to the right workflow, reports status. Users never pick skills.
   Everything below is reachable from it; a skill `/ux` cannot route to is a
   skill nobody runs.
-- `vision` — the layer above the chain: what the product is and what it
+- `vision` is the layer above the chain: what the product is and what it
   refuses to become. Also installs the **vision-alignment rule**, which
   checks a proposed feature against the anti-vision before the chain starts.
-- `ux-foundation` · `ux-flows` · `ux-scenarios` — build/maintain the layers.
-- `ux-audit` — verify code against the chain (depths quick/standard/deep;
+- `ux-foundation` · `ux-flows` · `ux-scenarios` build and maintain the layers.
+- `ux-audit` verifies code against the chain (depths quick/standard/deep;
   scope `copy` judges text against the brand pack).
-- `brand-voice` · `copywriting` — define the voice, then write in it.
+- `brand-voice` · `copywriting` define the voice, then write in it.
 - Direct commands: `/vision` `/ux-init` `/ux-foundation` `/ux-flows`
   `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` `/ux-doctor`; `/brand`
   `/brand-init` `/brand-update` `/brand-lint` `/copy`.
@@ -119,7 +119,7 @@ voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
    flow → screen → scenario), validated and approved, before any UI code.
 2. **Same-change.** Any interface/behavior change updates the affected
    layers in the SAME change: scenarios always; flows when navigation
-   changes; `screens.md` whenever a screen changes; and — Figma on — the
+   changes; `screens.md` whenever a screen changes; and, with Figma on, the
    Figma frame plus its link.
 3. **No drift.** Code diverging from a screen's `screens.md` record, a
    stale/broken Figma link, an orphan, or a broken trace is a finding, not
@@ -130,12 +130,12 @@ voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
 
 ## Companions (recommended, never forced)
 
-- **sheleg-design** — the visual identity: one locked style pack (palette,
+- **sheleg-design** carries the visual identity: one locked style pack (palette,
   type, texture, motion tokens, bans) + ready token CSS, plus the motion
   methodology for cinematic scroll-driven pages. Used at VISUALIZE/BUILD,
   recorded once in `screens.md` → Design system. The protocol lives in
   `visual-identity.md`, carried by the skills that draw.
-- **task-pipeline** — implements a finished UX plan end-to-end (spec → plan →
+- **task-pipeline** implements a finished UX plan end-to-end (spec → plan →
   subagent build → tests → deploy → docs). Offered after audits and Improve
   passes.
 
@@ -145,5 +145,5 @@ install, then the user's answer stands.
 ## When entering mid-project
 
 Run `/ux` (or `python3 docs/ux/lint.py`) first: it reports which layers
-exist, what's stale, and the one recommended next action — reconstruct
+exist, what's stale, and the one recommended next action. Reconstruct
 nothing by hand.

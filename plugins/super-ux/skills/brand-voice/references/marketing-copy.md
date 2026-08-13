@@ -1,4 +1,4 @@
-# Marketing copy — pages, posts and long form
+# Marketing copy: pages, posts and long form
 
 Craft for the marketing surfaces in [brand-contract.md](brand-contract.md).
 Register per surface: [surface-registers.md](surface-registers.md). Platform
@@ -25,13 +25,13 @@ deciding whether to keep reading. Every rule below follows from that.
 Four inputs, and none of them are optional:
 
 - **The one action** this surface is asking for.
-- **The reader**, from `foundation.md` — which persona, which job, which
+- **The reader**, from `foundation.md`: which persona, which job, which
   stage of the journey.
 - **Their words**, from the customer-language section of the foundation and
   from `terminology.md`. Copy that names the problem in the reader's words
   outperforms copy that names it in the company's, and the gap is not close.
 - **The proof**, from `facts.md`. A claim with no row there does not get
-  written — it gets reported as a missing fact.
+  written. It gets reported as a missing fact.
 
 ## Page structure
 
@@ -60,18 +60,18 @@ knows, not by preference.
 
 ### Page types
 
-- **Homepage** — several audiences without becoming generic: lead with the
+- **Homepage.** Several audiences without becoming generic. Lead with the
   broadest true claim, then split the paths.
-- **Landing page** — one message, one action, argument complete on the page.
+- **Landing page.** One message, one action, argument complete on the page.
   The headline matches the ad or link that brought the reader; a mismatch is
   the fastest bounce there is.
-- **Pricing** — the anxiety is choosing wrong, not the number. Make the
+- **Pricing.** The anxiety is choosing wrong, not the number. Make the
   recommended plan obvious, say what happens at the boundary between plans,
   and state what happens at renewal.
-- **Feature** — feature to benefit to outcome, then a way to try it.
-- **About** — why the product exists, connected to what the reader gets. It
+- **Feature.** Feature to benefit to outcome, then a way to try it.
+- **About.** Why the product exists, connected to what the reader gets. It
   still carries an action.
-- **Comparison** — see the honesty rule below.
+- **Comparison.** See the honesty rule below.
 
 ## The seven sweeps
 
@@ -105,9 +105,13 @@ Replace: utilize → use · leverage → use · facilitate → help · implement
 set up · robust → the specific number · seamless → name the step that
 disappeared · innovative → say what is different.
 
-Active voice. One idea per sentence. Vary sentence length deliberately —
+Active voice. One idea per sentence. Vary sentence length deliberately:
 uniform length is the most audible tell of machine drafting, and the fix is
 rhythm, not vocabulary (see [ai-tells.md](ai-tells.md)).
+
+No rhetorical dash and no full stop after a title. Both are `AT-06` and
+`AT-07`, both are checked by `B062` and `B063`, and the replacement is
+chosen from the meaning rather than by find-and-replace.
 
 ## Long form: grounding
 
@@ -124,7 +128,7 @@ piece. Demand too much up front and you shut out the readers you wanted;
 ground too much inside and the opening drowns in definitions. Decide it
 before the first paragraph, write it down, and when a section turns out to
 need something ungrounded, the fix is a grounding passage before it or a
-promotion to prerequisite — never proceeding and hoping.
+promotion to prerequisite, never proceeding and hoping.
 
 Keep a running list of what is grounded. It is also the outline.
 
@@ -135,7 +139,7 @@ The one place copy is most tempted to lie, and where it is checked hardest.
 - Compare against the competitor's **current, real** configuration, not a
   straw one. Date the comparison and say when it was checked.
 - Name at least one thing they do better. A comparison with no such line is
-  read as an advertisement and discounted entirely — the concession is what
+  read as an advertisement and discounted entirely. The concession is what
   makes the rest credible.
 - Never quote a competitor's number that is not published by them.
 - Where they are simply different rather than worse, say different.
