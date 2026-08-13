@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Consistency validator for the super-ux repo (stdlib only).
 
-Checks (spec docs/superpowers/specs/2026-07-19-super-ux-design.md, section 9):
+Checks (spec docs/evidence/specs/2026-07-19-super-ux-design.md, section 9):
   0. Every asset bin/super-ux.js copies is shipped by package.json files[].
   1. Manifests parse, required fields present, versions in sync with CHANGELOG.
   2. Every skill has front-matter: name (matching its directory), description.
@@ -415,7 +415,7 @@ NUMBER_WORDS = {
 
 # Prose lives in these; the per-skill `references/` copies are byte-identical
 # to their source and would multiply every finding by seven. `CHANGELOG.md` and
-# `docs/superpowers/` are history: a number that was right at v0.30.0 must stay
+# `docs/evidence/` are history: a number that was right at v0.30.0 must stay
 # written as it was.
 def _prose_files() -> list[Path]:
     out = [ROOT / "README.md", ROOT / "CONTRIBUTING.md", ROOT / "SECURITY.md"]

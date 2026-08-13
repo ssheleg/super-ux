@@ -14,7 +14,7 @@ inside an hour of writing the scenarios it should have had.
 |---|---|
 | `docs/ux/` | This project's own chain — vision, foundation, flows, screens, scenarios |
 | `docs/brand/` | This project's own verbal identity, and the surfaces it governs |
-| `docs/superpowers/` | Pipeline records: briefs, specs, plans, `retro.md`, `backlog.md`, `verification.md` |
+| `docs/evidence/` | Pipeline records: briefs, specs, plans, `retro.md`, `backlog.md`, `verification.md` |
 | `plugins/super-ux/skills/references/` | **Source of truth** for every contract. After editing, run `python3 test/sync_references.py` |
 | `templates/` | Seeds seen by target projects — including both hard rules, whose only source these are |
 
