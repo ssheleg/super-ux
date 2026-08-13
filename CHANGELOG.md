@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.38.1 — 2026-08-13
+
+This project's own pipeline paperwork moved from `docs/superpowers/` to
+`docs/evidence/`, following `task-pipeline` v1.53.0, which renamed the default and made
+the root resolvable. **A patch, deliberately: nothing a consumer of this skill can see
+changed.** The directory, this repository's own validator paths and its CI plants moved
+together; the records inside the directory were NOT rewritten — a brief describes where
+things were when it was written.
+
 ## 0.38.0 — 2026-08-12
 
 Four practices for developer products, from a measured reading of a live
