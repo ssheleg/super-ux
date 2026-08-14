@@ -1,5 +1,76 @@
 # Changelog
 
+## 0.40.0 — 2026-08-14
+
+A 42-page practitioner guide on building web2app funnels was read against the
+catalog, and most of what it teaches was already here: BP-001 on adapting rather
+than copying, BP-005 on loading screens that sell, BP-010 and BP-029 on echoing
+the stated goal, BP-116..123 on the surfaces, BP-124..129 on the web2app chain.
+What was missing had one thing in common. **Every gap was something that fails
+without changing what the funnel looks like.**
+
+Five practices, `BP-211..215`, in a section named for that property:
+
+- **BP-211 — personalize the wording, never the price.** The catalog said to
+  branch the offer on the quiz answer and never said where the branch stops.
+  Two rules: the product and its price are identical across every branch, and
+  the branch has a default, because the person who skips the question currently
+  meets an empty offer at the moment of highest intent.
+- **BP-212 — publicly addressable before it takes money, instrumented before it
+  takes traffic.** Both orderings are forced rather than tidy. A provider
+  confirms a charge by calling a public address, so the whole post-payment path
+  is untestable on a laptop; and traffic bought before instrumentation cannot be
+  read afterwards, because the sessions are spent and the losing step was never
+  recorded.
+- **BP-213 — a collected answer carries three decisions no screen shows:** who
+  may read the row, when the person was told, how they get it deleted. `[GDPR]`
+  Art. 13 fixes the timing at *the moment the data is obtained*, which is why
+  this is a design-time decision and not a launch-week chore, and Art. 17 is why
+  a funnel with no deletion route has promised something it cannot do.
+- **BP-214 — the legal text is sourced, never generated.** A policy is a
+  statement about your own processing, so generated prose is a fabricated claim
+  about it: BP-194's failure with a regulator for a reader.
+- **BP-215 — access after payment is a ladder, and the link carries a token
+  rather than a person.** Each rung above the first adds a service that fails
+  independently of the funnel, so the rung below stays reachable; and a URL is a
+  bearer credential, so what is encoded in it is readable by everyone it is
+  forwarded to.
+
+**BP-118 gained the unit web funnels actually anchor on.** It stopped at the
+monthly equivalent of an annual plan. The per-day figure is the same mechanism
+one step further, and it ships beside the billed amount rather than instead of
+it, because a price the buyer is never charged is the shape a dark pattern takes
+here.
+
+**`funnel-research.md` is new**, and it is a method rather than a practice:
+`FR-01..FR-07`, from finding the funnels running in a category to landing each
+finding in the chain. It leads with the constraint that makes it a method at
+all — you cannot see anyone's revenue, so every signal is spend, and spend is
+somebody else's judgement you cannot inspect. Its last section names the step
+chain a corpus keeps producing and the practice specifying each step; its final
+section is what the method **cannot** do. Carried by `ux-foundation` and
+`ux-flows`, and by neither of the other five, because a link in a skill is a
+shipping instruction.
+
+**Two new gates, because a numbered set with nothing counting it is a promise.**
+
+- `validate_reference_contents` — every `## Contents` anchor in a reference
+  resolves to a heading in that file. The Contents list is the one part of the
+  shelf that goes stale by somebody else's edit: rename a heading and the entry
+  above it still looks right. 150 checks over 21 files, and it recorded the
+  slug rule it needed to get right, because a checker that collapses the double
+  hyphen an em dash leaves behind reports 22 failures on a clean shelf.
+- The `FR-01..NN` range check, in the form `PRN-01..NN` already had, so a step
+  added without updating its carriers goes red in all three of them.
+
+Both were watched failing against planted defects, each isolated so only the
+branch under test could fire it. Disarming the anchor loop drops the count from
+3500 to 3354, which the floor ratchet refuses on its own.
+
+`docs/brand/facts.md` was recomputed rather than edited: `B030` went red on
+`215` in the README before this run had touched the table, which is the sequence
+the check exists for.
+
 ## 0.39.0 — 2026-08-14
 
 The em-dash reflex has been in `ai-tells.md` since the verbal identity layer

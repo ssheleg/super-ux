@@ -10,10 +10,10 @@ then open only those entries. The selection protocol
 *mandatory* to consider; this only makes finding them cheap.
 
 
-**210 practices, 82 tags in use.**
+**215 practices, 82 tags in use.**
 
 
-29 carry a `Checked` review date; 181 predate the field. Ages are deliberately not written here -- they would change daily and make this generated file look permanently stale. Run `bp_index.py --stale [months]` for the report.
+34 carry a `Checked` review date; 181 predate the field. Ages are deliberately not written here -- they would change daily and make this generated file look permanently stale. Run `bp_index.py --stale [months]` for the report.
 
 
 ## Contents
@@ -27,48 +27,48 @@ then open only those entries. The selection protocol
 - **`activation`** — BP-003, BP-004, BP-040, BP-041, BP-042, BP-071, BP-072, BP-129, BP-148, BP-152, BP-188, BP-209
 - **`aeo`** — BP-194, BP-195, BP-196, BP-197, BP-210
 - **`ai-chat`** — BP-060, BP-061, BP-063, BP-066
-- **`analytics`** — BP-039, BP-040, BP-041, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-048, BP-072, BP-129, BP-139, BP-140, BP-149, BP-151
+- **`analytics`** — BP-039, BP-040, BP-041, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-048, BP-072, BP-129, BP-139, BP-140, BP-149, BP-151, BP-212
 - **`anchoring`** — BP-022, BP-118
 - **`android`** — BP-053, BP-127, BP-201
 - **`aso`** — BP-201, BP-205
 - **`attribution`** — BP-043, BP-077, BP-078, BP-116, BP-126, BP-129
-- **`auth`** — BP-153, BP-154, BP-155
+- **`auth`** — BP-153, BP-154, BP-155, BP-215
 - **`billing`** — BP-122, BP-128
 - **`brand-voice`** — BP-182, BP-183, BP-184, BP-185
 - **`cancel`** — BP-123
 - **`channel-physics`** — BP-184, BP-198, BP-199, BP-200
-- **`checkout`** — BP-055, BP-056, BP-057, BP-120, BP-121, BP-128
+- **`checkout`** — BP-055, BP-056, BP-057, BP-120, BP-121, BP-128, BP-212
 - **`color`** — BP-081, BP-082, BP-083, BP-084, BP-172, BP-176
 - **`commitment`** — BP-002, BP-209
 - **`component`** — BP-101, BP-109, BP-111, BP-114, BP-115, BP-136, BP-165, BP-166
 - **`control`** — BP-101, BP-102, BP-105, BP-106, BP-107, BP-108, BP-110, BP-112, BP-113, BP-115, BP-135, BP-136, BP-146, BP-164, BP-167, BP-178
-- **`conversion`** — BP-001, BP-002, BP-005, BP-006, BP-010, BP-011, BP-013, BP-014, BP-015, BP-016, BP-017, BP-018, BP-019, BP-021, BP-023, BP-024, BP-025, BP-026, BP-027, BP-029, BP-034, BP-036, BP-037, BP-055, BP-056, BP-057, BP-058, BP-067, BP-069, BP-070, BP-071, BP-072, BP-073, BP-074, BP-075, BP-076, BP-077, BP-116, BP-117, BP-118, BP-119, BP-120, BP-121, BP-124, BP-133, BP-134, BP-139, BP-143, BP-147, BP-148, BP-150, BP-155, BP-156, BP-171, BP-189, BP-190, BP-191, BP-192, BP-193, BP-198, BP-201, BP-202, BP-206, BP-207, BP-209
-- **`copy`** — BP-182, BP-183, BP-184, BP-185, BP-186, BP-187, BP-188, BP-189, BP-190, BP-191, BP-192, BP-193, BP-194, BP-195, BP-196, BP-197, BP-198, BP-199, BP-200, BP-201, BP-202, BP-203, BP-204, BP-205, BP-206
+- **`conversion`** — BP-001, BP-002, BP-005, BP-006, BP-010, BP-011, BP-013, BP-014, BP-015, BP-016, BP-017, BP-018, BP-019, BP-021, BP-023, BP-024, BP-025, BP-026, BP-027, BP-029, BP-034, BP-036, BP-037, BP-055, BP-056, BP-057, BP-058, BP-067, BP-069, BP-070, BP-071, BP-072, BP-073, BP-074, BP-075, BP-076, BP-077, BP-116, BP-117, BP-118, BP-119, BP-120, BP-121, BP-124, BP-133, BP-134, BP-139, BP-143, BP-147, BP-148, BP-150, BP-155, BP-156, BP-171, BP-189, BP-190, BP-191, BP-192, BP-193, BP-198, BP-201, BP-202, BP-206, BP-207, BP-209, BP-211, BP-212
+- **`copy`** — BP-182, BP-183, BP-184, BP-185, BP-186, BP-187, BP-188, BP-189, BP-190, BP-191, BP-192, BP-193, BP-194, BP-195, BP-196, BP-197, BP-198, BP-199, BP-200, BP-201, BP-202, BP-203, BP-204, BP-205, BP-206, BP-214
 - **`dark-mode`** — BP-084, BP-095, BP-168, BP-176
 - **`design-system`** — BP-091, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-100, BP-130, BP-145, BP-165, BP-166
 - **`dialog`** — BP-106, BP-107, BP-108, BP-109, BP-161, BP-168, BP-174, BP-178
 - **`email`** — BP-034
 - **`engagement`** — BP-007, BP-008, BP-009, BP-012, BP-013, BP-015, BP-018, BP-021, BP-025, BP-031, BP-032, BP-038, BP-049, BP-052, BP-053, BP-054, BP-062, BP-063, BP-065, BP-082, BP-086, BP-090, BP-141, BP-142, BP-144, BP-148, BP-152, BP-157, BP-158, BP-159, BP-162, BP-163, BP-173, BP-180, BP-188, BP-191, BP-198, BP-199, BP-200
-- **`error-recovery`** — BP-060, BP-061, BP-063, BP-066, BP-083, BP-102, BP-106, BP-107, BP-114, BP-121, BP-122, BP-125, BP-140, BP-156, BP-174, BP-175, BP-186, BP-187
+- **`error-recovery`** — BP-060, BP-061, BP-063, BP-066, BP-083, BP-102, BP-106, BP-107, BP-114, BP-121, BP-122, BP-125, BP-140, BP-156, BP-174, BP-175, BP-186, BP-187, BP-213, BP-215
 - **`feedback`** — BP-054, BP-058, BP-064, BP-065, BP-083, BP-130, BP-139, BP-162
 - **`feedback-ui`** — BP-105, BP-114, BP-115, BP-152, BP-163, BP-167
 - **`figma`** — BP-091, BP-092, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-099, BP-100
-- **`forms`** — BP-055, BP-056, BP-057, BP-119, BP-143, BP-153, BP-154, BP-155, BP-156, BP-175, BP-177, BP-189
+- **`forms`** — BP-055, BP-056, BP-057, BP-119, BP-143, BP-153, BP-154, BP-155, BP-156, BP-175, BP-177, BP-189, BP-211, BP-213
 - **`forms-ui`** — BP-103, BP-104, BP-110, BP-113
 - **`freemium`** — BP-024, BP-025, BP-026, BP-027, BP-067, BP-073, BP-074, BP-147
 - **`friction-reduction`** — BP-003, BP-008, BP-011, BP-012, BP-014, BP-019, BP-049, BP-050, BP-051, BP-055, BP-056, BP-057, BP-060, BP-062, BP-074, BP-089, BP-103, BP-109, BP-113, BP-119, BP-135, BP-143, BP-153, BP-154, BP-155, BP-156, BP-157, BP-174, BP-178, BP-182, BP-189, BP-192, BP-209
 - **`gamification`** — BP-141, BP-142
 - **`habit`** — BP-032, BP-033, BP-038, BP-041, BP-141, BP-142
-- **`handoff`** — BP-091, BP-092, BP-093, BP-094, BP-098, BP-099, BP-100, BP-125, BP-126
+- **`handoff`** — BP-091, BP-092, BP-093, BP-094, BP-098, BP-099, BP-100, BP-125, BP-126, BP-215
 - **`i18n`** — BP-177, BP-202, BP-203, BP-204, BP-205
 - **`insight`** — BP-040, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-052, BP-066, BP-088, BP-129, BP-139, BP-140, BP-144, BP-147, BP-149, BP-180, BP-181, BP-185, BP-195, BP-205, BP-210
 - **`ios`** — BP-030, BP-031, BP-033, BP-053, BP-127, BP-201
 - **`landing-page`** — BP-116, BP-117, BP-132, BP-133, BP-169, BP-170, BP-171, BP-207, BP-210
 - **`layout`** — BP-085, BP-086, BP-087, BP-090, BP-097, BP-134, BP-171, BP-172, BP-177, BP-179, BP-203, BP-207, BP-208, BP-210
-- **`legal`** — BP-137, BP-138, BP-153, BP-187, BP-190, BP-194, BP-206
+- **`legal`** — BP-137, BP-138, BP-153, BP-187, BP-190, BP-194, BP-206, BP-213, BP-214
 - **`lifecycle`** — BP-034, BP-035, BP-036, BP-037, BP-039, BP-071, BP-076, BP-122
 - **`maintainability`** — BP-091, BP-092, BP-093, BP-094, BP-095, BP-096, BP-097, BP-098, BP-099, BP-100, BP-101, BP-130, BP-140, BP-145, BP-165, BP-169, BP-172, BP-184, BP-203, BP-204
-- **`microcopy`** — BP-089, BP-152, BP-170, BP-181, BP-182, BP-186, BP-187, BP-188, BP-189, BP-202, BP-206
+- **`microcopy`** — BP-089, BP-152, BP-170, BP-181, BP-182, BP-186, BP-187, BP-188, BP-189, BP-202, BP-206, BP-214
 - **`mobile`** — BP-002, BP-008, BP-049, BP-050, BP-051, BP-052, BP-053, BP-054, BP-055, BP-057, BP-059, BP-064, BP-075, BP-076, BP-079, BP-111, BP-112, BP-123, BP-126, BP-131, BP-138, BP-164, BP-178
 - **`motion`** — BP-054, BP-130, BP-131, BP-132, BP-157, BP-158, BP-159, BP-160, BP-161, BP-162, BP-163, BP-164, BP-167
 - **`narrative`** — BP-183, BP-185
@@ -76,11 +76,11 @@ then open only those entries. The selection protocol
 - **`navigation-ui`** — BP-111, BP-112, BP-161
 - **`onboarding`** — BP-001, BP-002, BP-003, BP-004, BP-005, BP-006, BP-007, BP-008, BP-009, BP-010, BP-011, BP-012, BP-013, BP-014, BP-015, BP-041, BP-043, BP-069, BP-072, BP-075, BP-077, BP-078, BP-124, BP-143, BP-152, BP-188, BP-209
 - **`page-weight`** — BP-133
-- **`paywall`** — BP-001, BP-005, BP-010, BP-016, BP-017, BP-018, BP-019, BP-020, BP-021, BP-023, BP-028, BP-029, BP-030, BP-067, BP-069, BP-070, BP-074
+- **`paywall`** — BP-001, BP-005, BP-010, BP-016, BP-017, BP-018, BP-019, BP-020, BP-021, BP-023, BP-028, BP-029, BP-030, BP-067, BP-069, BP-070, BP-074, BP-211
 - **`performance`** — BP-058, BP-065, BP-132, BP-133, BP-157, BP-158, BP-167, BP-179
-- **`personalization`** — BP-004, BP-007, BP-009, BP-010, BP-029, BP-048, BP-126, BP-143, BP-144
+- **`personalization`** — BP-004, BP-007, BP-009, BP-010, BP-029, BP-048, BP-126, BP-143, BP-144, BP-211
 - **`post-paywall`** — BP-004
-- **`pricing`** — BP-017, BP-020, BP-022, BP-023, BP-028, BP-030, BP-067, BP-068, BP-070, BP-073, BP-078, BP-118, BP-119, BP-120, BP-127
+- **`pricing`** — BP-017, BP-020, BP-022, BP-023, BP-028, BP-030, BP-067, BP-068, BP-070, BP-073, BP-078, BP-118, BP-119, BP-120, BP-127, BP-211
 - **`push`** — BP-013, BP-036, BP-037, BP-038
 - **`readability`** — BP-079, BP-080, BP-081, BP-084, BP-085, BP-086, BP-087, BP-088, BP-089, BP-090, BP-170, BP-177, BP-180, BP-181, BP-196, BP-197, BP-208
 - **`referral`** — BP-148, BP-150, BP-151
@@ -94,15 +94,15 @@ then open only those entries. The selection protocol
 - **`seo`** — BP-190, BP-193, BP-194, BP-195, BP-196, BP-197, BP-205, BP-210
 - **`social-proof`** — BP-005, BP-006, BP-016, BP-075, BP-117
 - **`subscription-app`** — BP-001, BP-016, BP-022, BP-067, BP-068, BP-069, BP-070, BP-078, BP-124, BP-125
-- **`testing`** — BP-001, BP-003, BP-011, BP-039, BP-044, BP-046, BP-047, BP-070
+- **`testing`** — BP-001, BP-003, BP-011, BP-039, BP-044, BP-046, BP-047, BP-070, BP-212
 - **`trend-governance`** — BP-145, BP-146
-- **`trust`** — BP-006, BP-009, BP-013, BP-015, BP-016, BP-019, BP-020, BP-021, BP-053, BP-059, BP-060, BP-061, BP-064, BP-066, BP-073, BP-076, BP-077, BP-080, BP-082, BP-083, BP-089, BP-116, BP-120, BP-123, BP-125, BP-128, BP-131, BP-136, BP-137, BP-138, BP-144, BP-146, BP-150, BP-151, BP-153, BP-154, BP-169, BP-170, BP-173, BP-174, BP-175, BP-177, BP-182, BP-183, BP-186, BP-187, BP-190, BP-192, BP-193, BP-194, BP-200, BP-204, BP-206, BP-207
+- **`trust`** — BP-006, BP-009, BP-013, BP-015, BP-016, BP-019, BP-020, BP-021, BP-053, BP-059, BP-060, BP-061, BP-064, BP-066, BP-073, BP-076, BP-077, BP-080, BP-082, BP-083, BP-089, BP-116, BP-120, BP-123, BP-125, BP-128, BP-131, BP-136, BP-137, BP-138, BP-144, BP-146, BP-150, BP-151, BP-153, BP-154, BP-169, BP-170, BP-173, BP-174, BP-175, BP-177, BP-182, BP-183, BP-186, BP-187, BP-190, BP-192, BP-193, BP-194, BP-200, BP-204, BP-206, BP-207, BP-211, BP-213, BP-214, BP-215
 - **`typography`** — BP-079, BP-080, BP-081, BP-087, BP-088, BP-208
 - **`virality`** — BP-147, BP-148, BP-149
 - **`visual-hierarchy`** — BP-080, BP-082, BP-085, BP-086, BP-090, BP-102, BP-117, BP-130, BP-145, BP-146, BP-160, BP-161, BP-165, BP-166, BP-168, BP-171, BP-172, BP-207, BP-208
 - **`voice`** — BP-060, BP-061, BP-062, BP-063, BP-064, BP-065
-- **`web`** — BP-050, BP-052, BP-054, BP-055, BP-056, BP-058, BP-059, BP-064, BP-078, BP-079, BP-116, BP-117, BP-118, BP-119, BP-120, BP-121, BP-123, BP-128, BP-131, BP-132, BP-133, BP-134, BP-135, BP-136, BP-137, BP-138, BP-139, BP-173, BP-176, BP-179, BP-207, BP-208, BP-210
-- **`web2app`** — BP-124, BP-125, BP-126, BP-127, BP-129
+- **`web`** — BP-050, BP-052, BP-054, BP-055, BP-056, BP-058, BP-059, BP-064, BP-078, BP-079, BP-116, BP-117, BP-118, BP-119, BP-120, BP-121, BP-123, BP-128, BP-131, BP-132, BP-133, BP-134, BP-135, BP-136, BP-137, BP-138, BP-139, BP-173, BP-176, BP-179, BP-207, BP-208, BP-210, BP-212, BP-213
+- **`web2app`** — BP-124, BP-125, BP-126, BP-127, BP-129, BP-212, BP-215
 - **`widgets`** — BP-031, BP-033
 - **`winback`** — BP-017, BP-027, BP-028, BP-035, BP-121, BP-123, BP-142
 
@@ -318,3 +318,8 @@ then open only those entries. The selection protocol
 - **BP-208** — One measure per content role, not one container width
 - **BP-209** — The setup checklist arrives already partly complete
 - **BP-210** — A capability page answers one question per heading
+- **BP-211** — Personalize the wording, never the price
+- **BP-212** — Publicly addressable before it takes money, instrumented before it takes traffic
+- **BP-213** — A collected answer carries three decisions no screen shows
+- **BP-214** — The legal text is sourced, never generated
+- **BP-215** — Access after payment is a ladder, and the link carries a token rather than a person

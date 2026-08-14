@@ -44,6 +44,18 @@ config** — a registered server nobody signed in to exposes nothing. None prese
 → offer the one-time install once and continue either way; the flow is designed
 from the stories regardless.
 
+**A paid-acquisition funnel has a second shelf, and it is public:** the
+competitor funnels running right now behind the ads in your category.
+[funnel-research.md](references/funnel-research.md) is the method for reading
+them — `FR-01` where they are visible, `FR-02` the four signals that survive when
+revenue is not, `FR-03` the fields that make a corpus comparable, `FR-06` the
+stop before copying. Its last section names the step chain the corpus keeps
+producing (ad → landing → quiz → loading → offer → paywall → checkout →
+success) and the practice that specifies each step, which is the diagram this
+skill draws. Every step there is a screen in `screens.md` and a scenario in
+`scenarios.md`, **the loading screen and the missing-answer branch included** —
+those two are the ones that get built and never recorded.
+
 **Position in the chain:** foundation (WHY) → **flows (HOW) + screens (UI
 map)** → scenarios (WHAT). Stories in, flows and screens out; `ux-scenarios`
 then covers every node and edge with scenarios. If foundation is missing on

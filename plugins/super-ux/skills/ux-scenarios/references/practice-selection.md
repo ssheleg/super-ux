@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..210 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..215 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -11,7 +11,7 @@ referral BP-147..151, empty states BP-152, authentication and form recovery
 BP-153..156, motion craft BP-157..164, perceived quality BP-165..168,
 generated-default tells BP-169..172, interface state and platform surfaces
 BP-173..179, information architecture BP-180..181, verbal identity BP-182..206,
-developer products BP-207..210;
+developer products BP-207..210, funnel wiring BP-211..215;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -73,10 +73,11 @@ has them, which is every product with an interface.
 | app-store | BP-075, BP-076 |
 | paid-ads | BP-043, BP-077, BP-078 |
 | web-direct / both, money ≠ none | BP-116..123 (landing → pricing → checkout → billing → cancel) |
-| purchase surface: web checkout or web2app | + BP-127, BP-128 (storefront rules, billing duties) |
+| purchase surface: web checkout or web2app | + BP-127, BP-128 (storefront rules, billing duties), BP-212..215 (stand-up order, the three decisions on collected data, sourced legal text, the access ladder) |
 | purchase surface: web2app | + BP-124..126, BP-129 (funnel, handoff, deferred deep link, whole-chain measurement) |
 | analytics: yes | BP-040..048, BP-139, BP-140 |
-| personalization ≠ none | BP-143, BP-144 |
+| personalization ≠ none | BP-143, BP-144, BP-211 (what the branch may vary, and its default) |
+| the funnel stores anything about a person | BP-213, BP-214 — and this row has no "no" branch on a funnel with a quiz or a checkout |
 | engagement mechanics ≠ none | BP-141, BP-142, BP-032 |
 
 "Mandatory consideration" = each practice in the set gets an explicit
@@ -105,7 +106,10 @@ the Step-2 sets:
 | Pricing page (web) | BP-118, BP-022, BP-073; PRN-08 |
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
-| Web2app funnel + paid handoff | BP-124..129, BP-030, BP-078; PRN-01, PRN-09 |
+| Web2app funnel + paid handoff | BP-124..129, BP-211..215, BP-030, BP-078; PRN-01, PRN-09 |
+| Quiz / survey-driven offer | BP-211, BP-002, BP-010, BP-029, BP-143; PRN-02, PRN-12 |
+| Post-payment access delivery | BP-215, BP-125, BP-126, BP-121; PRN-01, PRN-09 |
+| Reading a funnel market before designing one | `funnel-research.md` FR-01..FR-07, then BP-001 |
 | Navigation / IA | BP-049, BP-051..053, BP-173, BP-180, BP-181; PRN-06, PRN-14 |
 | Any user-visible string | BP-182, BP-185, BP-189; PRN-22 |
 | Error, empty or loading state | BP-186, BP-187, BP-188; PRN-24 |

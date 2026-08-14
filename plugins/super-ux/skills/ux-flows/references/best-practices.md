@@ -110,13 +110,22 @@ NIST SP 800-63B rev. 4, Digital Identity Guidelines (August 2025);
 K-factor distributions, viral-cycle timing, referral-program industry
 reports); **[EmilK]** = Emil Kowalski's design-engineering writing on
 interface motion (animations.dev, Sonner/Vaul build notes); **[WIG]** = Web
-Interface Guidelines (Vercel Labs, maintained rule set).
+Interface Guidelines (Vercel Labs, maintained rule set); **[GDPR]** =
+Regulation (EU) 2016/679, cited by article; **[FFox26]** = *How to vibe-code
+web2app funnels* (FunnelFox, 2026) — a **vendor** practitioner guide.
 
 Figures from `[CRO26]`/`[W2A26]`/`[CSq]`/`[HTTPArchive]` are industry
 aggregates, not laws: they justify the *shape* of a practice, and the
 product's own numbers overrule them the moment they exist. Vendor-published
 survey figures (design-tool and marketing-suite "state of" reports) are
 treated as directional only and never as a practice's sole justification.
+
+`[FFox26]` is marked a vendor guide for the same reason and one more: it
+publishes no method, so it can attest that practitioners do a thing and never
+that the thing works. It is cited for **provenance of the observation only**,
+and every practice carrying it argues its own mechanism from something
+checkable — a platform constraint, a documented default, or law. None of them
+restates a figure from it, because it states none.
 
 ### Onboarding & early experience
 
@@ -989,8 +998,8 @@ screens.
 - **Source:** [CRO26]/[NNg]
 
 #### BP-118: Pricing page — three tiers, one visibly recommended, annual framed in money
-- **Do:** three tiers (five-plus creates decision fatigue), one marked recommended with a real visual anchor, monthly/annual toggle stating the annual saving as an absolute amount ("save $240/year"), and annual plans also shown as their monthly equivalent.
-- **Why:** an unhighlighted lineup gives no entry point and measurably underconverts; absolute savings trigger loss aversion harder than a percentage, and monthly-equivalent framing lifts annual selection.
+- **Do:** three tiers (five-plus creates decision fatigue), one marked recommended with a real visual anchor, monthly/annual toggle stating the annual saving as an absolute amount ("save $240/year"), and annual plans also shown as their monthly equivalent. Where the product is consumed daily, the per-day figure is the unit web funnels actually anchor on — and it ships **beside** the billed amount and period, never instead of them, because a price the buyer is never charged is the shape a dark pattern takes here.
+- **Why:** an unhighlighted lineup gives no entry point and measurably underconverts; absolute savings trigger loss aversion harder than a percentage, and monthly-equivalent framing lifts annual selection. The smaller unit works by the same mechanism one step further — it compares the subscription to an everyday purchase rather than to a bill — which is exactly why the amount that will leave the account has to stay legible next to it.
 - **Apply when:** any self-serve pricing page — the web sibling of BP-022.
 - **Tags:** pricing, anchoring, revenue, conversion, web
 - **Source:** [CRO26]/[PLG25]
@@ -1748,3 +1757,54 @@ pack; this section governs what goes where, not how it looks.
 - **Tags:** landing-page, seo, aeo, layout, navigation, insight, web
 - **Source:** [GEO24]/[CRO26]
 - **Checked:** 2026-08-12
+
+### Standing a web funnel up — the decisions no screen shows (BP-211..215)
+
+BP-116..123 design the surfaces and BP-124..129 the web2app chain. These five
+are about the wiring underneath, and they share one property: **each fails
+invisibly.** The funnel renders, clicks through and takes money in every one of
+these failure modes, which is why none of them is caught by looking at it.
+
+The method for reading a market before designing any of this — where competitor
+funnels are visible, which signals survive when revenue is not, and what a
+corpus of them can and cannot tell you — is `funnel-research.md`.
+
+#### BP-211: Personalize the wording, never the price
+- **Do:** save only the answers the offer will repeat, each under a named key (`goal`, `level`) in session state; branch the offer's **text and imagery** on them with one explicit rule per value; keep product, tiers and price identical across every branch; and give the rule a default, so a skipped question yields the default copy rather than a blank. Check it by running the funnel three times — answer A, answer B, question skipped — and confirming the wording changes, the default appears, and the price never moves.
+- **Why:** BP-010 and BP-029 establish that echoing the stated goal lifts conversion; neither says where the branch must stop. Varying price on a quiz answer is discriminatory pricing that a user discovers by retaking the quiz in a second tab, converting a relevance gain into a trust loss no headline recovers — and it is the one branch that also changes what the payment provider must charge, so it cannot stay a copy decision. The missing default is the commoner failure: the branch was written for the answers the designer imagined, and the person who skips the question meets an empty offer at the moment of highest intent.
+- **Apply when:** any quiz-, onboarding- or survey-driven offer, on the web or in-app.
+- **Tags:** personalization, paywall, conversion, trust, pricing, forms
+- **Source:** [FFox26]/[48Laws]
+- **Checked:** 2026-08-14
+
+#### BP-212: Publicly addressable before it takes money, instrumented before it takes traffic
+- **Do:** order the build so the funnel has a real public address before a payment provider is wired to it, and so product analytics and the ad-platform pixel are live before the first paid click. Treat each as a gate on the next step, not as a task to catch up on.
+- **Why:** both orderings are forced rather than tidy. A provider confirms a charge by calling an address on the public internet, so the whole post-payment path — entitlement written, success screen shown, access delivered — is untestable while the funnel exists only on a laptop, and the usual way to find that out is the first real card. Traffic bought before instrumentation cannot be read afterwards either: the sessions are spent, the step that was losing people was never recorded, and the campaign gets judged on a total that names nothing. BP-039 orders lifecycle after the funnel for the same reason one level up.
+- **Apply when:** standing up any web funnel, or adding a payment step to one that had none.
+- **Tags:** checkout, analytics, web2app, conversion, testing, web
+- **Source:** [FFox26]/[CRO26]
+- **Checked:** 2026-08-14
+
+#### BP-213: A collected answer carries three decisions no screen shows
+- **Do:** for every field the funnel stores — quiz answers, email, payment status — decide and record three things: who may read the row, when the person was told what is collected and why, and how they get it deleted. Default the datastore to deny and reach it only through your own server path; put the notice and consent **before the first write**, not on the paywall; give the deletion request a real route rather than an address nobody reads.
+- **Why:** not one of the three is visible from the front end, so a funnel that renders correctly and takes money looks finished while its answers table is readable by anyone who guesses the endpoint — hosted datastores are open until a row policy is written, and a generated funnel does not write one unless told to. The timing is not a preference: `[GDPR]` Art. 13 requires the identity, the purposes and the legal basis to be given *at the time the data is obtained*, and Art. 17 gives the person erasure without undue delay, so a funnel with no deletion route has promised something it cannot do.
+- **Apply when:** the funnel stores anything about a person — every funnel with a quiz or a checkout.
+- **Tags:** legal, trust, forms, error-recovery, web
+- **Source:** [FFox26]/[GDPR]
+- **Checked:** 2026-08-14
+
+#### BP-214: The legal text is sourced, never generated
+- **Do:** take the privacy policy and the terms from a generator, a regional template or counsel, and give the agent only the technical half — place the document, put the consent gate before the first write, wire the deletion route. Review the sourced text against what the system actually does before publishing it.
+- **Why:** a policy is a statement about your own processing, so generated prose is a fabricated claim about it — BP-194's failure with a regulator for a reader and an enforceable claim as the artifact. `[GDPR]` Art. 13(1) requires the purposes and the legal basis specifically, which is the part a model has no way to know and every incentive to fill in fluently. The failure is quiet: the text reads well, cites the right regulation, and describes a product that does not exist.
+- **Apply when:** any surface publishing a policy, terms, or a consent notice.
+- **Tags:** legal, trust, copy, microcopy
+- **Source:** [FFox26]/[GDPR]
+- **Checked:** 2026-08-14
+
+#### BP-215: Access after payment is a ladder, and the link carries a token rather than a person
+- **Do:** choose a rung deliberately — the buyer re-enters the email they paid with; a link carrying a one-time token arrives by email; a deep link carries the purchase context into the app — and keep the rung below reachable as the fallback, because every rung above the first adds a mail or link service that fails independently of your funnel. Put nothing in the link but a short-lived token bound to the purchase record: not the email, not the plan, not the answers.
+- **Why:** BP-125 requires the handoff to have failure branches and BP-126 requires the context to survive the store gap; the ladder is what makes both affordable — ship the rung you can support, climb when the friction is worth the dependency, and a paying user is never stranded because one provider is down. The token rule is not a detail: a URL is a bearer credential that lands in mail clients, link previews, referrer headers and support tickets, so whatever is encoded in it is readable by everyone it is ever forwarded to.
+- **Apply when:** any purchase completed on one surface and consumed on another — web2app, web checkout beside IAP, gift and team invitations.
+- **Tags:** web2app, handoff, auth, trust, error-recovery
+- **Source:** [FFox26]/[W2A26]
+- **Checked:** 2026-08-14

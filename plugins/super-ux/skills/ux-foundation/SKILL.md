@@ -34,6 +34,15 @@ and trace to these IDs — the full chain gives every scenario its context.
   filling opportunities, consult
   [best-practices.md](references/best-practices.md) by stage tags for
   proven mechanisms.
+- **On a paid-acquisition product, the market read comes before the personas
+  are written,** because the buyer arrives through somebody's ad and the
+  category has already paid to learn who answers it.
+  [funnel-research.md](references/funnel-research.md) is the method: `FR-01`
+  collects the live funnels, `FR-02` reads the four signals that survive when
+  revenue is invisible, `FR-05` names which adjacent categories transfer.
+  Its `FR-07` lands each finding here rather than in a document of its own.
+  It informs the personas; it never decides them — a foundation built from a
+  corpus alone is aimed at a competitor's audience.
 - **Stories** pass INVEST; acceptance criteria are Given/When/Then and
   observable. A story that can't be verified is not done being written.
 - Evidence beats opinion: repeated pain across users, observable

@@ -87,7 +87,10 @@ reasoning: `ux-design-principles.md` (PRN-01..24). Practices:
 through `best-practices-index.md`; control choice:
 `component-guidelines.md`. Figma workflow: `figma-integration.md`; file
 structure and naming: `figma-structure.md`. Visual identity (style pack via
-the **sheleg-design** companion): `visual-identity.md`.
+the **sheleg-design** companion): `visual-identity.md`. On a paid-acquisition
+product, the step before the foundation is reading the funnels already running
+in the category: `funnel-research.md` (FR-01..FR-07), carried by `ux-foundation`
+and `ux-flows`.
 
 *The brand shelf,* reached through `brand-contract.md`. `voice-packs.md` is
 the library the voice is chosen from (six archetypes, each declaring its own

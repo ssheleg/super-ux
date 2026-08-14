@@ -8,6 +8,19 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-14 — web funnel mechanics, v0.40.0
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-27 | BP-211 states the personalization boundary: named state keys, a mandatory default, and product and price identical across every branch | The entry, its tags, and `bp_index --check` agreeing with the catalog | **observed** — the gap it closes was measured before it was written: BP-010 and BP-029 both say to branch and neither says where the branch stops |
+| R-28 | BP-212 states the stand-up order, BP-213 the three decisions on a stored answer, BP-214 that legal text is sourced, BP-215 the access ladder and its token rule | Each entry; `validate_stated_numbers` recomputes the 215 the README quotes | **observed** — `B030` refused `215` in the README until `facts.md` was recomputed |
+| R-29 | `[GDPR]` Art. 13 fixes the notice at the moment data is obtained, and Art. 17 gives erasure without undue delay | Both articles fetched from the regulation text rather than recalled, before either practice was written | **observed** — the timing claim in BP-213 is the article's, not a paraphrase |
+| R-30 | Every `## Contents` anchor in a reference resolves to a heading in that file | `validate_reference_contents`, 150 checks over 21 files; plant: `## FR-04 — Turn the corpus into two lists` renamed **and the copies re-synced**, so only this branch could fire | **planted** — one failure, exactly the renamed anchor |
+| R-31 | The plant is keyed to the branch, not to the code arriving | With `for anchor in re.findall(...)` replaced by `for anchor in []`, the same planted rename exits 0 and the count drops 3500 → 3354 | **planted** — standing instruction #5 applied to this run's own check; the deletion is caught by the floor, not by the fixture |
+| R-32 | `FR-01..NN` in prose equals the highest FR id in `funnel-research.md` | The range check, in the form `PRN-01..NN` already had; plant: an `FR-08` step appended | **planted** — three carriers went red (README, `practice-selection.md`, `system-map.md`); the two SKILL.md files cite ids individually and correctly did not fire |
+| R-33 | `funnel-research.md` reaches `ux-foundation` and `ux-flows` byte-identically, and reaches no other skill | `sync_references.py` then `validate_shipped_references`; both skills moved 10 → 11 contracts, `ux-scenarios` stayed at 10 | **observed** |
+| R-34 | The five practices are reachable by the selection protocol rather than only present in the catalog | Two Step-2 rows and four Step-3 rows in `practice-selection.md` | never — the protocol is doctrine an agent reads, and `validate.py` can confirm only that the rows exist. The same limit `R-14` records for the reference sweep |
+
 ## 2026-08-14 — the rhetorical dash and the full-stopped title, v0.39.0
 
 | REQ | What ships | Verified by | Watched |

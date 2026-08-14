@@ -365,6 +365,39 @@ def validate_links() -> None:
             )
 
 
+def validate_reference_contents() -> None:
+    """Every `## Contents` anchor in a reference resolves to a heading in that file.
+
+    Past 100 lines a reference carries a Contents list, which makes it the one
+    part of the shelf that goes stale by someone else's edit: rename a heading
+    and the entry above it still looks right. Nothing pointed at it, so nothing
+    would have said so — standing instruction #4 on the oldest hand-kept set here.
+
+    The slug rule is GitHub's, and the difference matters: punctuation is dropped
+    and every remaining space becomes one hyphen, never collapsed. A heading
+    written `## FR-01 — Collect the funnels` therefore anchors as
+    `#fr-01--collect-the-funnels`, with TWO hyphens, and a checker that collapses
+    them reports 22 false failures across a shelf that is in fact clean. That
+    happened while this check was being written, which is why it is written down.
+    """
+    def slug(heading: str) -> str:
+        s = re.sub(r"[^\w \-]", "", heading.strip().lower())
+        return s.replace(" ", "-")
+
+    src = ROOT / "plugins/super-ux/skills/references"
+    for path in sorted(src.glob("*.md")):
+        text = read(path) or ""
+        block = re.search(r"^## Contents\n(.*?)(?=^## )", text, re.M | re.S)
+        if not block:
+            continue
+        headings = {slug(h) for h in re.findall(r"^#{2,4} (.+)$", text, re.M)}
+        for anchor in re.findall(r"\]\(#([a-z0-9_-]+)\)", block.group(1)):
+            check(
+                anchor in headings,
+                f"{path.relative_to(ROOT)}: Contents links #{anchor}, no heading slugs to it",
+            )
+
+
 def validate_shipped_references() -> None:
     """Every skill must carry its OWN copy of the contracts it links.
 
@@ -448,11 +481,15 @@ def validate_stated_numbers() -> None:
     principles = read(ROOT / "plugins/super-ux/skills/references/ux-design-principles.md") or ""
     prn_nums = [int(n) for n in re.findall(r"PRN-(\d+)", principles)]
     prn_max = max(prn_nums) if prn_nums else 0
+    funnel = read(ROOT / "plugins/super-ux/skills/references/funnel-research.md") or ""
+    fr_nums = [int(n) for n in re.findall(r"FR-(\d+)", funnel)]
+    fr_max = max(fr_nums) if fr_nums else 0
     skills = _skill_names()
 
     check(bp_count > 0, "best-practices.md: no `#### BP-NNN:` entries to count")
     check(brand_codes > 0, "brand_lint.py: no check codes to count")
     check(prn_max > 0, "ux-design-principles.md: no PRN ids to count")
+    check(fr_max > 0, "funnel-research.md: no FR ids to count")
 
     for path in _prose_files():
         rel = path.relative_to(ROOT)
@@ -470,6 +507,13 @@ def validate_stated_numbers() -> None:
             check(int(stated) == prn_max,
                   f"{rel}: claims the heuristic catalog spans PRN-01..{stated}, "
                   f"ux-design-principles.md ends at PRN-{prn_max}")
+        # Same form, same reason: `FR-01..NN` claims to span the funnel-research
+        # method. A genuine sub-range is written `FR-03 – FR-05`, so this one is
+        # unambiguous and a step added without updating the carriers goes red.
+        for stated in re.findall(r"FR-01\.\.(?:FR-)?(\d+)", text):
+            check(int(stated) == fr_max,
+                  f"{rel}: claims the funnel-research method spans FR-01..{stated}, "
+                  f"funnel-research.md ends at FR-{fr_max}")
         for word in re.findall(r"\b(one|two|three|four|five|six|seven|eight|nine|ten) skills\b", text):
             check(NUMBER_WORDS[word] == len(skills),
                   f"{rel}: says '{word} skills', the plugin ships {len(skills)} "
@@ -958,6 +1002,7 @@ def main() -> int:
     validate_hard_rule_copies()
     validate_linter()
     validate_links()
+    validate_reference_contents()
     validate_shipped_references()
     validate_catalog()
     validate_stated_numbers()
