@@ -12,3 +12,6 @@ graphify-out/.graphify_*
 graphify-out/cache/
 graphify-out/cost.json
 graphify-out/graph.html
+
+# agent-sync run state — per-machine, never shared
+.agent-sync/
