@@ -1,5 +1,27 @@
 # Graph Report - .  (2026-08-10)
 
+> **STALE as of 2026-08-14, and this says exactly how.** The graph below describes
+> the tree at 1206 nodes and its labels still say "206 practices"; the catalog holds
+> **215** and `funnel-research.md` does not appear in the graph at all
+> (`funnel-research nodes: 0`). Eight commits have landed since it was built.
+>
+> **The refresh was attempted and did not run.** `graphify . --update` reported
+> `11 code, 52 docs changed; 60 unchanged; 18 deleted` and then
+> `error: no LLM API key found (52 doc/paper/image file(s) need semantic
+> extraction)`. No LLM key is present in this environment — verified rather than
+> assumed — and `graphify-out/graph.json` was left byte-for-byte unchanged, which
+> `git status` confirms. `--code-only` would index without a key and is the wrong
+> trade here: this repository is mostly doctrine, so a code-only graph would answer
+> fewer questions than the stale one while looking current.
+>
+> The remaining path is the skill's documented fallback, where the host agent's own
+> subagents do the semantic extraction. That was not taken in this run.
+> Filed as a board row rather than left to be noticed.
+>
+> A stale graph is a false premise carrying the authority of a machine: a wrong doc
+> gets argued with, a wrong graph gets believed. Read the two numbers above before
+> trusting anything below them.
+
 ## Corpus Check
 - 118 files · ~153,329 words
 - Verdict: corpus is large enough that graph structure adds value.
