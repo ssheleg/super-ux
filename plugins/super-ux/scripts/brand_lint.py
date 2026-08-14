@@ -71,6 +71,35 @@ def read(path: Path) -> str | None:
         return None
 
 
+def content_date(path: Path) -> str | None:
+    """The date this file's content last changed, as `YYYY-MM-DD`.
+
+    Git first, mtime only as a fallback. A fresh clone stamps every file with
+    the checkout time, so an mtime-based answer says "changed today" about a
+    file nobody has touched in months -- which made `B005` fire on every CI
+    run the moment this project put its own linter in CI, and would have
+    trained a reader to ignore the one gate it was added to enforce.
+    """
+    try:
+        import subprocess
+
+        out = subprocess.run(
+            ["git", "log", "-1", "--format=%cs", "--", path.name],
+            cwd=path.parent, capture_output=True, text=True, timeout=10,
+        )
+        stamp = out.stdout.strip()
+        if out.returncode == 0 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", stamp):
+            return stamp
+    except Exception:
+        pass
+    try:
+        import datetime
+
+        return datetime.date.fromtimestamp(path.stat().st_mtime).isoformat()
+    except OSError:
+        return None
+
+
 def header_field(text: str, key: str) -> str | None:
     """A `Key: value` line from a file's header block."""
     match = re.search(rf"^{re.escape(key)}:\s*(.+?)\s*$", text, re.M)
@@ -180,11 +209,8 @@ def check_contract(brand_dir: Path) -> list[Finding]:
         calibrated = header_field(voice, "Last calibrated")
         if foundation is not None and calibrated:
             try:
-                stamp = (brand_dir.parent / "ux" / "foundation.md").stat().st_mtime
-                import datetime
-
-                changed = datetime.date.fromtimestamp(stamp).isoformat()
-                if changed > calibrated:
+                changed = content_date(brand_dir.parent / "ux" / "foundation.md")
+                if changed and changed > calibrated:
                     findings.append(Finding(
                         "B005", SEVERITY_WARN, "voice.md", 1,
                         f"foundation.md changed on {changed}, after the voice "

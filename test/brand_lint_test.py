@@ -11,6 +11,9 @@ Run: python3 test/brand_lint_test.py
 from __future__ import annotations
 
 import datetime
+import os
+import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -78,6 +81,63 @@ def case(name: str, files: dict, expect: set, project: dict | None = None) -> No
     if got != expect:
         failures.append(
             f"{name}: expected {sorted(expect)}, got {sorted(got)}"
+        )
+
+
+def git_date_beats_mtime() -> None:
+    """B005 dates a file by its commit, not by when it landed on this disk.
+
+    A fresh clone stamps every file's mtime with the checkout time, so an
+    mtime answer says "changed today" about a file nobody has touched. That
+    is not hypothetical: it turned this project's own CI red the first run
+    after `docs/brand/lint.py` was added to the workflow, on a pack that was
+    clean locally and clean in fact.
+
+    The fixture commits `foundation.md` with a back-dated commit and a
+    deliberately fresh mtime. Under git, no finding. Under mtime, `B005`.
+    """
+    global checks
+    checks += 1
+    git = shutil.which("git")
+    if not git:
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        brand = root / "docs" / "brand"
+        brand.mkdir(parents=True)
+        files = {**MINIMAL, "voice.md": MINIMAL["voice.md"]
+                 .replace("Derived-from: inferred", "Derived-from: P-01")
+                 .replace(f"Last calibrated: {TODAY}", "Last calibrated: 2020-06-01")}
+        for rel, body in files.items():
+            (brand / rel).write_text(body, encoding="utf-8")
+        ux = root / "docs" / "ux"
+        ux.mkdir(parents=True)
+        (ux / "foundation.md").write_text("### P-01: the operator\n", encoding="utf-8")
+
+        env = {
+            **os.environ,
+            "GIT_AUTHOR_DATE": "2020-01-01T00:00:00",
+            "GIT_COMMITTER_DATE": "2020-01-01T00:00:00",
+            "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+            "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+        }
+        run = lambda *a: subprocess.run(
+            [git, *a], cwd=root, env=env, capture_output=True, text=True)
+        run("init", "-q")
+        run("add", "-A")
+        result = run("commit", "-q", "-m", "seed")
+        if result.returncode != 0:
+            failures.append(f"git fixture: commit failed -- {result.stderr.strip()[:120]}")
+            return
+
+        # The mtime says now; the commit says 2020-01-01, before the voice was
+        # calibrated on 2020-06-01. Only one of those answers is right.
+        (ux / "foundation.md").touch()
+        got = {f.code for f in brand_lint.run(brand)}
+    if got:
+        failures.append(
+            f"git date: expected no finding from a 2020-01-01 commit against a "
+            f"2020-06-01 calibration, got {sorted(got)}"
         )
 
 
@@ -537,6 +597,7 @@ def main() -> int:
         {"B005"},
         project={"docs/ux/foundation.md": "### P-01: the operator\n"},
     )
+    git_date_beats_mtime()
     case(
         "the title promises more than the body delivers",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},

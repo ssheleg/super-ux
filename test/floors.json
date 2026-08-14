@@ -3,5 +3,5 @@
   "_measured_on": "feat/natural-tone-rules rebased onto v0.38.2, 2026-08-14",
   "validate.py": 3243,
   "ux_lint_test.py": 43,
-  "brand_lint_test.py": 61
+  "brand_lint_test.py": 62
 }

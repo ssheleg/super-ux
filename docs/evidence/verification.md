@@ -21,6 +21,7 @@ in this run), `observed` (it caught a real defect at some point), `never`.
 | R-22 | Every marker carries an id, so coverage over the set is computable | The `AT-01`..`AT-15` table in `ai-tells.md`, each row naming its checker | never, nothing counts ids against the prose yet; filed as B-016 |
 | R-23 | The rule reaches a project through the Brand voice hard rule, in all three carriers | `validate_hard_rule_copies` went red on the template edit before the carrier was re-copied, and green after | **observed**, it caught this run's own divergence |
 | R-24 | This project's own chain and brand pack are gated in CI | Two new workflow steps. `docs/brand/lint.py` was red on `B030` before this run and nothing reported it | **observed**, the absence is the defect it was added for |
+| R-25 | `B005` dates `foundation.md` by its commit, not by its mtime, and CI checks out full history so the commit is there to read | Fixture `git_date_beats_mtime`; plant: the `git log` branch of `content_date` replaced by `pass`, falling back to mtime | **planted**, and **observed** first: it turned CI red on the run that added the dogfood step |
 
 **Two plants failed to land, and both were fixture defects rather than code
 defects.** R-16's first fixture was written in English, where deleting the

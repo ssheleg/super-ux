@@ -59,9 +59,24 @@ examples and table cells standing for "no value". The README and the
 installer's interface strings were swept with them, both being declared
 public surfaces in this project's own pack.
 
-Gates, each run alone: `validate.py` 3240, `brand_lint_test.py` 61,
+**This project's own chain and brand pack now run in CI**, which they never
+did. `validate.yml` ran the validator and the two fixture suites and neither
+`docs/ux/lint.py` nor `docs/brand/lint.py`, which is how the pack sat red with
+nothing reporting it. The hard rule this repository installs into other
+projects has always required exactly that wiring.
+
+Adding it found a second defect within one run. `B005` asks whether
+`foundation.md` changed after the voice was last calibrated, and answered from
+the file's **mtime**, which in a fresh clone is the checkout time: every file
+reads as "changed today", so the check fired on every CI run about a file
+nobody had touched. It now answers from `git log`, falling back to mtime only
+outside a repository, and the checkout uses full history so the commit is there
+to read. An eighth plant covers it.
+
+Gates, each run alone: `validate.py` 3243, `brand_lint_test.py` 62,
 `ux_lint_test.py` 43, `docs/ux/lint.py` and `docs/brand/lint.py` clean.
 Floors raised to match.
+
 ## 0.38.2 — 2026-08-14
 
 A red `validate` could not stop a publish anywhere in this family, and one member

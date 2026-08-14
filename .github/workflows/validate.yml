@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # B005 asks whether foundation.md changed after the voice was last
+          # calibrated, and answers from git. The default shallow checkout
+          # leaves one commit, so every file's last change resolves to HEAD
+          # and the check fires on every run. Full history is what makes the
+          # question answerable.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
