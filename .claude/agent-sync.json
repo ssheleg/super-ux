@@ -13,8 +13,7 @@
     "docs/evidence/verification.md",
     "docs/evidence/retro.md",
     ".github/workflows/*.yml",
-    "test/validate.py",
-    "test/negatives.py"
+    "test/validate.py"
   ],
   "claimTags": {},
   "gates": [],

@@ -17,6 +17,7 @@ inside an hour of writing the scenarios it should have had.
 | `docs/evidence/` | Pipeline records: briefs, specs, plans, `retro.md`, `backlog.md`, `verification.md` |
 | `plugins/super-ux/skills/references/` | **Source of truth** for every contract. After editing, run `python3 test/sync_references.py` |
 | `templates/` | Seeds seen by target projects — including both hard rules, whose only source these are |
+| `docs/AGENT_SYNC.md` | How coordination is wired here, and what it does NOT guarantee. **Generated** from `.claude/agent-sync.json` — read it before editing a guarded file, and regenerate it in the same change that alters the config |
 
 ## Gates
 
