@@ -39,15 +39,23 @@
   the banned ones), `facts.md` (the only source of any public figure),
   `channels.md` (one record per surface), `strings.md` (the interface string
   registry), `locales/<code>.md`.
-- Any change to public-facing text — an interface string, a landing page, a
-  post, a store listing, an ad, an email — updates `docs/brand/` in the SAME
+- Any change to public-facing text (an interface string, a landing page, a
+  post, a store listing, an ad, an email) updates `docs/brand/` in the SAME
   change. A new string with no registry row is drift, not a detail.
 - **Never quote a number that has no row in `facts.md`,** and never invent a
   fact, statistic, quote or expert to fill a gap. Report the gap instead.
 - **One action keeps one name** across button, confirmation, toast, history,
   notification and accessible name. Search `strings.md` before naming one.
 - **No humor, exclamation marks or emoji** on error, destructive confirm,
-  billing or paywall surfaces — in any voice.
+  billing or paywall surfaces, in any voice.
+- **No rhetorical dash, and no full stop after a title.** A dash standing in
+  for a full stop, a comma or a colon is the loudest machine-drafting marker
+  the pack has, and a heading, button, menu item or page title is a name
+  rather than a statement. The dash a language requires stays: the Russian
+  copula, numeric ranges, direct speech. Choose the replacement from the
+  meaning, because a comma, a colon and a full stop state three different
+  relationships and find-and-replace picks the wrong one. `B062` and `B063`
+  catch what a machine can prove; the rest is in the skill's `ai-tells.md`.
 - Run `python3 docs/brand/lint.py` after any text change and before calling
   work done. It must exit clean; wire it into CI or pre-commit alongside the
   UX linter so copy drift cannot merge.

@@ -1,4 +1,4 @@
-# Locales — one voice, several languages
+# Locales: one voice, several languages
 
 A voice does not survive translation intact. Some of it is invariant, some of
 it has to be decided again per language, and the difference has to be written
@@ -24,12 +24,12 @@ File shape: [brand-contract.md](brand-contract.md). Locale files live at
 `voice.md` splits its own axes into two lists, and that split is the whole
 model.
 
-**Invariant** — the things that make the brand itself, expressed differently
+**Invariant.** The things that make the brand itself, expressed differently
 but never abandoned: whether it hedges, whether it claims what it cannot
 prove, whether it leads with the reader's problem, whether it names its
 limits.
 
-**Reconsidered per locale** — the things that are conventions rather than
+**Reconsidered per locale.** The things that are conventions rather than
 character:
 
 - **Address form.** German `Sie`/`du`, French `vous`/`tu`, Russian
@@ -41,7 +41,7 @@ character:
 - **Directness.** A register that reads as confident in one market reads as
   rude in another, and the reverse.
 - **Idiom and wordplay.** Dead on arrival. Listed in `Dead idioms` with a
-  replacement that does the same job — not a translation of the joke.
+  replacement that does the same job, not a translation of the joke.
 
 ## Length
 
@@ -54,7 +54,7 @@ Japanese 0.6, Korean 0.7, Chinese 0.5.
 
 The tightest surfaces break first: buttons, tab labels, store titles and
 subtitles. A 30-character App Store title at 1.3 leaves 23 characters of
-meaning — which is a design constraint on the English original, not a
+meaning, which is a design constraint on the English original, not a
 translation problem discovered later.
 
 ## The primary locale is the source of meaning, not of form
@@ -67,7 +67,7 @@ So the rule: translate the **job** the string does, then write the string
 that does that job in the target language. `B072` flags strings that look
 like literal renderings of the primary CTA.
 
-Same for headlines, taglines and store captions. Same for anything short —
+Same for headlines, taglines and store captions. Same for anything short:
 the shorter the string, the more its impact depends on idiom, and the worse
 literal translation performs.
 
@@ -82,8 +82,8 @@ lagging strings. A partial locale that declares itself is a known state; one
 that does not is a surprise waiting for a user who does not speak the
 fallback.
 
-Fallback behaviour is a product decision that belongs in scenarios, not here
-— but the copy layer's rule is that a fallback is visible, never silent.
+Fallback behaviour is a product decision that belongs in scenarios, not
+here, but the copy layer's rule is that a fallback is visible, never silent.
 
 ## Keywords are researched, never translated
 
@@ -99,7 +99,7 @@ the headings differ.
 
 Recorded in `Never translated`: the product name, entity names, tier names,
 and any term the dictionary in `terminology.md` marks as ours. A tier called
-`Pro` stays `Pro` in every locale — translating tier names breaks support,
+`Pro` stays `Pro` in every locale, because translating tier names breaks support,
 billing conversations and every screenshot ever taken.
 
 ## Legal and regulatory differences
@@ -107,7 +107,7 @@ billing conversations and every screenshot ever taken.
 Some locales require copy that others do not: an Impressum in Germany, VAT
 inclusive pricing in the EU, specific consent wording, cooling-off periods.
 These are recorded per locale as `Legal differences` and treated as required
-strings, not optional ones — a missing legally required string is a defect
+strings, not optional ones. A missing legally required string is a defect
 even when parity is otherwise complete.
 
 ## Who decides

@@ -1,4 +1,4 @@
-# Store listings — App Store and Google Play
+# Store listings: App Store and Google Play
 
 Field limits, indexing rules and craft for the two store surfaces. Field
 values live in the project's `channels.md`; the limits below are what the
@@ -36,7 +36,7 @@ Two structural differences that change how each is written:
 
 - **App Store has a hidden keyword field; Google Play indexes the
   description.** So the App Store description is written entirely for humans,
-  while the Play description carries the terms as well — naturally, at the
+  while the Play description carries the terms as well, naturally, at the
   density prose tolerates.
 - **App Store keyword changes need a submission; promotional text does not.**
   Promotional text is the only field that can be changed between releases,
@@ -46,13 +46,13 @@ Two structural differences that change how each is written:
 
 100 characters, and most listings waste a third of them.
 
-- **No space after commas.** `task,todo,planner` — each space is a character
-  bought for nothing.
+- **No space after commas.** `task,todo,planner`, because each space is a
+  character bought for nothing.
 - **No plurals.** Both forms are matched from the singular; `reminders` costs
   a character for no reach.
 - **Nothing already in the title or subtitle.** Those are indexed at higher
   weight; repeating them here spends the field twice.
-- **No competitor brand names.** Not a style preference — it is grounds for
+- **No competitor brand names.** Not a style preference: it is grounds for
   rejection.
 - **Singular concepts, comma-separated**, ordered by relevance. The field is
   a bag of terms, not a phrase.
@@ -78,20 +78,20 @@ carries the benefit, in the user's words, with the secondary term.
 ✓  MyTasks: Todo List & Planner
 ```
 
-Neither field is a place for a sentence. Read them together — they appear
-together everywhere in the store.
+Neither field is a place for a sentence. Read them together, because they
+appear together everywhere in the store.
 
 ## Description
 
 The first two or three lines are visible before "more". Almost nobody
 expands. Write the opening as if it were the whole listing.
 
-1. **Opening** — the user's problem, then what the app does about it, then
+1. **Opening.** The user's problem, then what the app does about it, then
    one piece of proof. No throat-clearing, no company history.
-2. **Benefits** — five short bullets, outcome-first. Not a feature dump.
-3. **Proof** — rating, install count, a named award or press mention. Every
+2. **Benefits.** Five short bullets, outcome-first. Not a feature dump.
+3. **Proof.** Rating, install count, a named award or press mention. Every
    figure traceable to `facts.md`.
-4. **Close** — the next step and the reassurance that removes the hesitation
+4. **Close.** The next step and the reassurance that removes the hesitation
    (`no account needed`, `free to try`, `cancel anytime`).
 
 Keyword density above the `B051` threshold reads as stuffing to the store's
@@ -114,7 +114,7 @@ to seven is the practical range.
 ## What's new
 
 Play truncates at 500 characters, so the first line has to carry the release.
-Write what changed for the user — the changelog rule from
+Write what changed for the user; the changelog rule from
 [channel-playbooks.md](channel-playbooks.md) applies unchanged. "Bug fixes
 and performance improvements" as the entire entry is a wasted surface that
 users do read.
@@ -136,7 +136,7 @@ most damaging: the title and subtitle are short enough that a literal
 translation reads as obviously foreign.
 
 - Keyword research is redone per locale. Translated keywords are not
-  keywords — see [localization.md](localization.md).
+  keywords, so see [localization.md](localization.md).
 - Length coefficients bite hardest here, because these are the tightest
   fields in the product. A 30-character title at a 1.3 coefficient has 23
   characters of usable meaning.

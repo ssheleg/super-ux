@@ -1,8 +1,8 @@
-# Channel playbooks — the physics of each surface
+# Channel playbooks: the physics of each surface
 
 One playbook per marketing surface. Everything here is **platform physics**:
-what the surface rewards, what it suppresses, what it limits. The register —
-how the voice shifts — lives in
+what the surface rewards, what it suppresses, what it limits. The register,
+meaning how the voice shifts, lives in
 [surface-registers.md](surface-registers.md), and the two are kept apart on
 purpose, because merged they become indistinguishable within a quarter and
 nobody can tell which half is safe to revisit when a platform changes.
@@ -26,7 +26,7 @@ Anything a crawler or answer engine reads also passes
 
 > **Physics decays.** Every ranking behaviour below carries the date it was
 > last checked. A rule older than its review date is a hypothesis, not a
-> constraint — re-verify before treating it as one. Recording the date is
+> constraint, so re-verify before treating it as one. Recording the date is
 > what makes that possible; a rule with no date cannot be audited, only
 > believed.
 
@@ -41,7 +41,7 @@ Anything a crawler or answer engine reads also passes
   question outperforms content that ends in a claim.
 - Bookmarks weigh heavily: tactical, save-worthy posts (a list, a framework,
   a checklist) accumulate reach for days.
-- Threads: 5–12 posts. Each one has to stand alone — a weak post mid-thread
+- Threads: 5–12 posts. Each one has to stand alone, because a weak post mid-thread
   costs the whole thread. The first line decides everything; if it does not
   stop the scroll, nothing after it is read.
 - Editing within the first half hour resets distribution.
@@ -80,7 +80,7 @@ Anything a crawler or answer engine reads also passes
 
 *Physics checked 2026-08-05.*
 
-- State what it is, what it does not do, and what it costs — in the first
+- State what it is, what it does not do, and what it costs, in the first
   three sentences. Anything read as positioning gets answered as positioning,
   and that thread is unrecoverable.
 - The title carries no adjectives. `Show HN: <what it does>` is the whole
@@ -95,7 +95,7 @@ Anything a crawler or answer engine reads also passes
 ## Blog
 
 - Ranking and citation mechanics: [seo-aeo-safety.md](seo-aeo-safety.md).
-- Ground terms in order — the grounding model is in
+- Ground terms in order; the grounding model is in
   [marketing-copy.md](marketing-copy.md).
 - Length follows the argument. A post padded to a word count is visible as
   padding, and padding is one of the strongest machine-drafting tells.

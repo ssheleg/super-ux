@@ -3,7 +3,7 @@
 This is THE contract for `docs/brand/` in a target project. The `brand-voice`
 and `copywriting` skills, the `copy` scope of `ux-audit`, `brand_lint.py` and
 the Cursor rules all follow it. Do not deviate from file names, field names,
-statuses or surface names — tooling keys off them. The reasoning behind the
+statuses or surface names, because tooling keys off them. The reasoning behind the
 model lives in [surface-registers.md](surface-registers.md); the pack library
 it selects from is [voice-packs.md](voice-packs.md).
 
@@ -26,7 +26,7 @@ it selects from is [voice-packs.md](voice-packs.md).
 
 `docs/ux/` answers **what the product does**. `docs/brand/` answers **how it
 speaks**. They are separate roots on purpose: the brand pack also governs
-surfaces that are not UX at all — a blog post, a store listing, an ad.
+surfaces that are not UX at all: a blog post, a store listing, an ad.
 
 ## Files in the target project
 
@@ -34,7 +34,7 @@ surfaces that are not UX at all — a blog post, a store listing, an ad.
 docs/brand/
 ├── voice.md              # identity: pack, axes, narrative, locale transfer
 ├── terminology.md        # our words, banned words, entity and tier names
-├── facts.md              # canonical numbers and proof — the only source
+├── facts.md              # canonical numbers and proof, the only source
 ├── channels.md           # one record per surface: register, limits, bans
 ├── strings.md            # interface string registry -> file:line -> scenario
 ├── locales/
@@ -54,13 +54,13 @@ Contract: brand-contract v1
 
 `brand_lint.py` reports a missing marker as `B001` and disagreeing markers
 across files as `B002`. `ux_doctor.py` reads the same line to tell a base
-written to an old contract from one written to the current one — a base three
+written to an old contract from one written to the current one. A base three
 versions behind is internally consistent, which is precisely why a linter
 cannot see it.
 
 ## Where the voice comes from
 
-The pack is **derived from** `docs/ux/foundation.md` — personas, jobs, and
+The pack is **derived from** `docs/ux/foundation.md`: personas, jobs, and
 what the user stands to lose when the product fails. The dependency runs one
 way. A persona does not change because a tone was appealing.
 
@@ -120,7 +120,7 @@ below which `B071` warns. `Derived-from` lists `P-` / `JTBD-` ids from
 **Status lifecycle.** Same as a scenario: `draft` until the operator has seen
 and approved it, then `validated`. Any edit drops it back to `draft`.
 
-**The five axes are fixed** — `Confidence`, `Register`, `Distance`, `Humor`,
+**The five axes are fixed**: `Confidence`, `Register`, `Distance`, `Humor`,
 `Density`. A pack fills them; a project may sharpen the wording but may not
 add or remove an axis, because `channels.md` expresses register as deltas
 against exactly these five.
@@ -132,13 +132,13 @@ against exactly these five.
 ```markdown
 Contract: brand-contract v1
 
-## Product terms — always
+## Product terms: always
 
 | Our term | Never write | Applies to |
 |---|---|---|
 | Run | Execution, Job | what the product performs |
 
-## Entity and tier names — exact spelling
+## Entity and tier names: exact spelling
 
 | Name | Wrong forms seen |
 |---|---|
@@ -161,8 +161,8 @@ The **Banned** table seeds from three places at init: weak verbs and
 buzzwords, hedging chains, and the marker vocabulary in
 [ai-tells.md](ai-tells.md). Calibration adds what is specific to the product.
 
-`brand_lint.py` reads the first column of **Product terms** and **Banned** —
-`B010`, `B011` — and the **Entity and tier names** table for `B012`.
+`brand_lint.py` reads the first column of **Product terms** and **Banned**
+for `B010` and `B011`, and the **Entity and tier names** table for `B012`.
 
 ---
 
@@ -204,7 +204,7 @@ Locales:    de headline budget 60 * 1.30
 
 **Register** is expressed as deltas against the five axes in `voice.md`.
 **Forbidden** always carries both halves, `physics:` and `brand:`, even when
-one is `none` — see the second rule below.
+one is `none`; see the second rule below.
 
 ### Surfaces
 
@@ -237,7 +237,7 @@ Statuses: `agreed` · `proposed` · `drifted` · `orphan`.
 **This is a decision registry, not a message catalog.** It does not replace
 i18n keys and holds no translations. It records which strings have been
 reconciled with the pack, which scenario each serves, and where it lives.
-It is what makes `B020` — one action, two names — checkable at all; without
+It is what makes `B020`, one action under two names, checkable at all; without
 it that defect is only findable by reading the whole interface.
 
 `Key` is dot-separated and stable. Two rows sharing a `Key` with different
@@ -297,7 +297,7 @@ the linter refuses to report a clean run over a surface it never read. Any
 subset may be declared; checks whose source is absent are counted as skipped
 in the summary, never silently passed.
 
-`ui` and `marketing` also classify a finding — several checks apply to only
+`ui` and `marketing` also classify a finding, because several checks apply to only
 one of the two.
 
 ---
@@ -312,11 +312,11 @@ one of the two.
 2. **Platform physics and brand choice are separate fields.** "A link in the
    post body suppresses reach" and "we do not post links" are different
    claims. Merged into one line, nobody can tell six months later which was
-   an algorithm and which was a decision — so `Forbidden:` always carries
+   an algorithm and which was a decision, so `Forbidden:` always carries
    both halves.
 
 3. **Humor is forbidden on `error`, `destructive confirm`,
-   `billing and receipts` and `paywall and upgrade`** — in every pack,
+   `billing and receipts` and `paywall and upgrade`**, in every pack,
    including `playful-consumer`. The user is losing data, access or money at
    that moment; a joke reads as mockery. Enforced as `B061`, not left to
    taste.
@@ -339,7 +339,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B003 | W | `voice.md` is `draft` while `strings.md` holds agreed rows |
 | B004 | E | `Derived-from` cites an id absent from `foundation.md` |
 | B005 | W | `foundation.md` changed after `Last calibrated` |
-| B006 | E | `README.md` has no `Sources:` block — nothing to scan |
+| B006 | E | `README.md` has no `Sources:` block, so nothing to scan |
 | B007 | W | `## Voice references` names no admired or no refused brand, once the voice leaves `draft` |
 | B010 | E | a banned word appears in a registered string |
 | B011 | E | a generic word used where a product term exists |
@@ -365,6 +365,8 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B054 | W | the title promises more than the body delivers |
 | B060 | W/E | machine-drafting markers; error at three S1 |
 | B061 | E | humor where the user is losing something |
+| B062 | E | AT-06, a rhetorical dash standing in for a full stop, comma or colon |
+| B063 | W | AT-07, a document title or heading ends in a full stop |
 | B070 | E | a declared locale has no locale file |
 | B071 | W | locale parity below the declared threshold |
 | B072 | W | a locale row left identical to the primary |
@@ -375,7 +377,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 ## Versioning
 
 The version in the marker moves when a field is renamed or removed, or when a
-new required field appears. Adding an **optional** field does not move it —
+new required field appears. Adding an **optional** field does not move it,
 the same rule the UX contract follows. `ux_doctor.py` reports what each
 version introduced, so a project can see what it is missing without reading
 the diff.

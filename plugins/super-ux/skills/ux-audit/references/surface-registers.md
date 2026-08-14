@@ -1,16 +1,16 @@
-# Surface registers — one voice, many surfaces
+# Surface registers: one voice, many surfaces
 
 A product has **one** voice and roughly two dozen surfaces. The mistake this
-reference exists to prevent is solving that with two dozen voices — which is
+reference exists to prevent is solving that with two dozen voices, which is
 how a product ends up reading like three different companies, and is the
 verbal twin of the visual drift a style pack prevents.
 
 ## Contents
 
 - [The model](#the-model)
-- [Rule 1 — a register moves the axes, never the invariants](#rule-1--a-register-moves-the-axes-never-the-invariants)
-- [Rule 2 — platform physics and brand choice are different fields](#rule-2--platform-physics-and-brand-choice-are-different-fields)
-- [Rule 3 — humor is forbidden where the user is losing something](#rule-3--humor-is-forbidden-where-the-user-is-losing-something)
+- [Rule 1: a register moves the axes, never the invariants](#rule-1-a-register-moves-the-axes-never-the-invariants)
+- [Rule 2: platform physics and brand choice are different fields](#rule-2-platform-physics-and-brand-choice-are-different-fields)
+- [Rule 3: humor is forbidden where the user is losing something](#rule-3-humor-is-forbidden-where-the-user-is-losing-something)
 - [Product surfaces](#product-surfaces)
 - [Marketing surfaces](#marketing-surfaces)
 
@@ -33,10 +33,10 @@ voice.md            axes + invariants          (one per product)
 ```
 
 Deltas are written as signed steps on named axes: `humor -2, density +1`.
-A step is a perceptible shift, not a percentage — three steps in either
+A step is a perceptible shift, not a percentage. Three steps in either
 direction is the practical range before the voice stops being recognisable.
 
-## Rule 1 — a register moves the axes, never the invariants
+## Rule 1: a register moves the axes, never the invariants
 
 `voice.md` lists what is invariant. A Reddit post may run long, drop the CTA,
 and turn self-deprecating; if the brand does not hedge, it does not hedge
@@ -48,7 +48,7 @@ is one of two things, and neither is breaking it quietly: the invariant was
 wrong and `voice.md` changes for the whole product, or the surface is wrong
 for this product and is not used. Both are decisions with an owner.
 
-## Rule 2 — platform physics and brand choice are different fields
+## Rule 2: platform physics and brand choice are different fields
 
 "A link in the post body suppresses reach" is a fact about an algorithm.
 "We do not post links" is a decision someone made. Written on one line they
@@ -66,11 +66,11 @@ The linter enforces the physics half (`B042`, `B043`, `B040`) because it is
 mechanical. The brand half is judged by the `copy` audit scope, because it is
 a decision.
 
-## Rule 3 — humor is forbidden where the user is losing something
+## Rule 3: humor is forbidden where the user is losing something
 
 On `error`, `destructive confirm`, `billing and receipts` and
 `paywall and upgrade`, humor, exclamation marks and emoji are banned in every
-pack — including `playful-consumer`. The user is losing data, access or money
+pack, `playful-consumer` included. The user is losing data, access or money
 at that moment, and levity reads as mockery of a loss the product caused.
 
 This is `B061` and it blocks. It is not a register delta, because a delta is
@@ -88,7 +88,7 @@ overrides both.
 
 The button that carries the screen. Verb phrase naming the outcome, not the
 mechanism: `Publish`, not `Submit`. One action keeps one name across the
-whole flow — button `Publish`, toast `Published`, history entry `Published`.
+whole flow: button `Publish`, toast `Published`, history entry `Published`.
 Two names for one action is `B020` and it is the single most common copy
 defect in a product built screen by screen.
 
@@ -99,12 +99,12 @@ worth putting there, and the one action that starts it. An empty state that
 only says "Nothing here yet" wastes the highest-attention moment a feature
 gets.
 
-Register: humor unchanged — this is where a warm pack earns its keep.
+Register: humor unchanged. This is where a warm pack earns its keep.
 
 ### error
 
 Three facts, in this order: what happened, what was **not** affected, and the
-one next step. The middle one is the one products skip and users need most —
+one next step. The middle one is the one products skip and users need most:
 "your draft was saved" turns a failure into an interruption.
 
 Never blame the user, never say "unexpected", never show a code without a
@@ -139,7 +139,7 @@ a trick, and the read is not unfair.
 
 Name the object, the consequence, and whether it is reversible. `Delete
 project "Atlas" and its 340 files. This cannot be undone.` The confirming
-verb matches the destructive verb — `Delete`, never `OK`. Humor −3.
+verb matches the destructive verb: `Delete`, never `OK`. Humor −3.
 
 ### billing and receipts
 
@@ -148,7 +148,7 @@ or to the account itself. Humor −3.
 
 ### settings and legal
 
-Labels label, help text explains, examples demonstrate — one job per string.
+Labels label, help text explains, examples demonstrate. One job per string.
 Plain language applies to legal text too: a consent notice nobody understands
 is not consent.
 
@@ -160,7 +160,7 @@ happened" is a notification that gets disabled.
 
 ### docs and help
 
-Humor −2, density −1. Ground a term before leaning on it — see the grounding
+Humor −2, density −1. Ground a term before leaning on it; see the grounding
 model in [marketing-copy.md](marketing-copy.md). The reader is here because
 something did not work; every sentence either moves them forward or is cut.
 
@@ -168,8 +168,8 @@ something did not work; every sentence either moves them forward or is cut.
 
 ## Marketing surfaces
 
-Per-platform mechanics — limits, what suppresses reach, what each surface
-rewards — live in [channel-playbooks.md](channel-playbooks.md). This section
+Per-platform mechanics (limits, what suppresses reach, what each surface
+rewards) live in [channel-playbooks.md](channel-playbooks.md). This section
 covers only the register.
 
 ### landing hero
@@ -221,7 +221,7 @@ positioning gets answered as positioning.
 
 ### App Store and Google Play
 
-Density +2 — the field limits leave no room for register at all. Craft rules
+Density +2, because the field limits leave no room for register at all. Craft rules
 are in [store-copy.md](store-copy.md).
 
 ### ads

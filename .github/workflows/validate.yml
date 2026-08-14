@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # B005 asks whether foundation.md changed after the voice was last
+          # calibrated, and answers from git. The default shallow checkout
+          # leaves one commit, so every file's last change resolves to HEAD
+          # and the check fires on every run. Full history is what makes the
+          # question answerable.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
@@ -22,6 +29,17 @@ jobs:
         run: python3 test/brand_lint_test.py
       - name: UX linter fixtures
         run: python3 test/ux_lint_test.py
+
+      # This project's own chain and brand pack, run by the linters it ships.
+      # Absent until 0.39.0, which is why docs/brand/ sat red on B030 with a
+      # facts.md three counts stale and nothing said so. The hard rule this
+      # repo installs into other projects has always required exactly this
+      # ("wire it into CI or pre-commit alongside the UX linter so copy drift
+      # cannot merge"); the repo was the one project not obeying it.
+      - name: Dogfood the UX chain
+        run: python3 docs/ux/lint.py
+      - name: Dogfood the brand pack
+        run: python3 docs/brand/lint.py
 
       - name: Official Claude Code conformance (plugin + marketplace, strict)
         run: |

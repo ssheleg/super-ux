@@ -19,7 +19,7 @@ const ROOT = path.resolve(__dirname, '..');
 const REPO = 'ssheleg/super-ux';
 
 const MENU_ITEMS = [
-  { key: 'skills', label: 'Skills for any AI agent (Claude Code, Codex, Cursor, 70+ — opens agent picker)' },
+  { key: 'skills', label: 'Skills for any AI agent (Claude Code, Codex, Cursor, 70+; opens agent picker)' },
   { key: 'cursor', label: 'Cursor rules + docs/ux skeleton + docs/brand pack + linters, into a project' },
   { key: 'claude', label: 'Claude Code plugin (skills + /ux commands, user-global)' },
 ];
@@ -168,12 +168,12 @@ function installClaudePlugin() {
     return;
   }
   if (run('claude', ['plugin', 'marketplace', 'add', REPO]) !== 'ok') {
-    console.log('(marketplace may already be added — continuing)');
+    console.log('(marketplace may already be added, continuing)');
   }
   if (run('claude', ['plugin', 'install', 'super-ux@super-ux']) === 'ok') {
     console.log('Claude Code plugin installed (scope: user). Restart sessions to pick it up; then run /ux in any project.');
   } else {
-    console.error('warning: claude plugin install failed — see output above');
+    console.error('warning: claude plugin install failed, see output above');
   }
 }
 
@@ -306,7 +306,7 @@ async function selectFallback(items, prompter) {
 }
 
 async function menu() {
-  console.log('super-ux — scenario-driven UI development. Select what to install:\n');
+  console.log('super-ux: scenario-driven UI development. Select what to install:\n');
   const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
 
   // ONE prompter for the whole flow: with piped stdin, all pending lines are
@@ -333,7 +333,7 @@ async function menu() {
   let cursorDir = null;
   if (keys.includes('cursor')) {
     if (!prompter) prompter = makePrompter();
-    const dir = (await prompter.ask('Cursor rules — project directory [.]: ')).trim() || '.';
+    const dir = (await prompter.ask('Cursor rules, project directory [.]: ')).trim() || '.';
     cursorDir = path.resolve(dir);
   }
   if (prompter) prompter.close();

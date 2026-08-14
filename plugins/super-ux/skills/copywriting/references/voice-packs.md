@@ -1,4 +1,4 @@
-# Voice packs — the archetype library
+# Voice packs: the archetype library
 
 Six packs. A pack is a **starting position**, not the answer: `brand-voice`
 picks one from the foundation, then calibrates it against the product until
@@ -19,7 +19,7 @@ register deltas are applied per surface as described in
 
 
 Picking one is not a taste question. Read `foundation.md` first: who the
-persona is, what job the product is hired for, and — the deciding input —
+persona is, what job the product is hired for, and, the deciding input,
 **what the user loses when the product fails**. A voice that is charming when
 the stakes are a playlist is intolerable when the stakes are payroll.
 
@@ -31,19 +31,19 @@ list, not improvised.
 | Field | Holds |
 |---|---|
 | `Use for` | product categories this voice fits |
-| `Not for` | where it actively misfires — the honest half |
+| `Not for` | where it actively misfires, the honest half |
 | `Axes` | the five fixed axes filled as IS / IS NOT |
 | `Narrative template` | hero, enemy, product role, promise |
 | `Lexicon` | favoured verbs, sentence shapes, length |
 | `Pack bans` | what this voice never does, regardless of surface |
 | `Register deltas` | how it shifts on the surfaces that stress it most |
-| `Ready lines` | six to ten samples — how it sounds, not what to copy |
+| `Ready lines` | six to ten samples: how it sounds, not what to copy |
 | `Failure mode` | the degenerate form it collapses into when overdone |
 
 ### Why `Failure mode` is mandatory
 
 Every voice has an overshoot, and the overshoot always sounds *more* like the
-pack, not less — which is why nobody catches it from inside. Naming it up
+pack, not less, which is why nobody catches it from inside. Naming it up
 front turns "this feels like too much" into a checkable finding: the `copy`
 audit scope looks for exactly the degeneration the pack declared. A pack
 without it is an instruction to overshoot with no brake.
@@ -78,7 +78,7 @@ wrong.
 - Product role: instrument
 - Promise: you stop guessing, and you can show the work
 
-**Lexicon.** Command verbs — run, deploy, trace, verify, cut, ship. Short
+**Lexicon.** Command verbs: run, deploy, trace, verify, cut, ship. Short
 declaratives; a comma is a hint the sentence should be two. Numbers before
 adjectives. No adverbs: "it fails fast" beats "it fails very quickly."
 Sentence length 6–14 words in body copy.
@@ -87,7 +87,7 @@ Sentence length 6–14 words in body copy.
 voice · feature dumps · generic CTAs ("Get started", "Learn more") · any
 sentence that would sit unchanged on a competitor's page.
 
-**Register deltas.** Error: humor −2, distance −1 — state what happened, what
+**Register deltas.** Error: humor −2, distance −1, so state what happened, what
 was preserved, what to do. Onboarding: density −1, the terseness that reads
 as confident to an expert reads as withholding to a newcomer. Reddit:
 distance −1, humor +1, drop the CTA entirely. Docs: humor −2, density −1.
@@ -111,7 +111,7 @@ gatekeeping.
 
 ## calm-expert
 
-**Use for:** fintech, health, compliance, legal, insurance, enterprise B2B —
+**Use for:** fintech, health, compliance, legal, insurance, enterprise B2B,
 anywhere a mistake is expensive and the reader is already anxious.
 
 **Not for:** products competing on delight or novelty, or launches that need
@@ -144,7 +144,7 @@ time" without a real limit · minimising risk language ("just", "simply",
 "only takes a second") · claims without a dated source · humor on anything
 the user could lose.
 
-**Register deltas.** Error: density +1 — say what happened, what it did not
+**Register deltas.** Error: density +1, so say what happened, what it did not
 affect, and what happens next. Pricing: confidence +1, every number sourced.
 Landing hero: density −1, this is the one surface where the voice may be
 brief. Lifecycle email: distance +1.
@@ -193,14 +193,14 @@ than as respect.
 
 **Lexicon.** Concrete nouns. Real numbers with units. Trade-offs stated as
 trade-offs. Code where prose would be longer. "Here is where it breaks" as a
-section, not an apology. Terms grounded before use — see the grounding model
+section, not an apology. Terms grounded before use; see the grounding model
 in [marketing-copy.md](marketing-copy.md).
 
 **Pack bans.** Benchmarks without methodology · "blazingly fast" and its
 family · claiming a category nobody uses · hiding limits in a FAQ · comparing
 against a straw configuration of a competitor.
 
-**Register deltas.** Landing hero: density −1 — the one place the audience
+**Register deltas.** Landing hero: density −1, the one place the audience
 has not opted in yet. Error: humor −2. Changelog: distance −1, humor +1.
 Docs: humor −1, density +1. Ads: density −2, an ad has no room to ground a
 term.
@@ -218,7 +218,7 @@ term.
 newcomers cannot enter, and the humor lands only for people who already use
 the product. The tell is a homepage that assumes the reader already knows
 what the category is called. Second form: honesty performed rather than
-practised — limits listed for credit while the real one stays buried.
+practised, with limits listed for credit while the real one stays buried.
 
 ---
 
@@ -238,7 +238,7 @@ evaluation, or any funnel where comprehension speed beats atmosphere.
 | Register | considered, literary restraint | flowery, ornamental |
 | Distance | curator to an equal of taste | luxury brand to aspirant |
 | Humor | dry, occasional, never broad | jokes, wordplay for its own sake |
-| Density | spare — silence is a device | sparse because there is nothing to say |
+| Density | spare, because silence is a device | sparse because there is nothing to say |
 
 **Narrative template**
 
@@ -255,7 +255,7 @@ deliberately, and let a short sentence land. White space is content.
 "bespoke", "elevated", "crafted" used as filler · superlatives · borrowed
 prestige (name-dropping unrelated brands) · urgency of any kind.
 
-**Register deltas.** Error: density +1, humor −2 — atmosphere is not an
+**Register deltas.** Error: density +1, humor −2. Atmosphere is not an
 excuse for vagueness when something failed. Pricing: density +1, be plain
 about money. Onboarding: density +1. App Store: density +2, the field limits
 leave no room for atmosphere.
@@ -312,7 +312,7 @@ non-native readers) · abbreviations without expansion · nested conditionals ·
 cheerfulness about a difficult process · any word that a reader might have to
 look up.
 
-**Register deltas.** Error: density +1 — name what happened, what it did not
+**Register deltas.** Error: density +1, so name what happened, what it did not
 affect, and the next step. Landing hero: unchanged, this voice does not
 perform anywhere. Legal: density +1, plainness applies to legal text too.
 Marketing surfaces generally: this pack barely moves, which is the point.
@@ -336,7 +336,7 @@ simplification that removes the information the reader actually needed.
 ## playful-consumer
 
 **Use for:** consumer apps, habit and wellness, social, learning, creative
-tools — products used voluntarily, often daily, where warmth earns retention.
+tools, products used voluntarily, often daily, where warmth earns retention.
 
 **Not for:** anything holding money, health records or irreversible actions
 as its core object. Also poor for enterprise buyers, who read levity as
@@ -368,7 +368,7 @@ stacked more than one per screen · humor on error, billing, destructive
 confirm or paywall · pretending a limit is a feature · emoji standing in for
 a word the copy should have written.
 
-**Register deltas.** Error: humor −3, density +1 — the ban is absolute here.
+**Register deltas.** Error: humor −3, density +1. The ban is absolute here.
 Billing and paywall: humor −3, distance +1; a joke while asking for money
 reads as a trick. Empty state: humor unchanged, this is the surface the pack
 is best at. Ads: density −1.
@@ -384,6 +384,6 @@ is best at. Ads: density −1.
 
 **Failure mode.** Cringe: personality applied where the user wanted an
 answer, until the product sounds like it is entertaining itself. The tell is
-copy that is funny on the first read and obstructive on the fortieth —
+copy that is funny on the first read and obstructive on the fortieth:
 microcopy is read hundreds of times, and a joke has a half-life. Second
 form: warmth used to soften a refusal the product should state plainly.

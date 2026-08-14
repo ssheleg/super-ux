@@ -8,6 +8,37 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-14 — the rhetorical dash and the full-stopped title, v0.39.0
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-16 | `B062` errors on a dash before a coordinating conjunction | Fixture "a dash introduces a conjunction, where strict is off"; plant: `conj = DASH_CONJ_RE.search(...)` → `conj = None` | **planted** |
+| R-17 | `B062` errors on paired dashes bracketing an aside | Fixture "a pair of dashes brackets an aside, where strict is off"; plant: `if bare >= 2:` → `if False:` | **planted** |
+| R-18 | `B062` errors on every non-range dash where the locale has no grammatical one | Fixture "a lone dash where the locale has no grammatical dash"; plant: `if strict and bare > 0:` → `if False:` | **planted** |
+| R-19 | The Russian copula, direct speech and numeric ranges are never findings | Three negative fixtures; plants: `COPULA_LOCALES = ()` with a never-matching `CYRILLIC_RE`, and a never-matching `DASH_RANGE_RE` | **planted** |
+| R-20 | A dash inside a fenced block is code, not prose | Fixture "a dash inside a fenced block is code, not prose"; plant: the fence `re.sub` replaced by `pass` | **planted**, see the note below |
+| R-21 | `B063` errors on a title or heading ending in a full stop, and spares `?`, `…` and abbreviations | Two positive fixtures, one negative; plant: `return not ABBREVIATION_RE.search(text)` → `return True` | **planted** |
+| R-22 | Every marker carries an id, so coverage over the set is computable | The `AT-01`..`AT-15` table in `ai-tells.md`, each row naming its checker | never, nothing counts ids against the prose yet; filed as B-016 |
+| R-23 | The rule reaches a project through the Brand voice hard rule, in all three carriers | `validate_hard_rule_copies` went red on the template edit before the carrier was re-copied, and green after | **observed**, it caught this run's own divergence |
+| R-24 | This project's own chain and brand pack are gated in CI | Two new workflow steps. `docs/brand/lint.py` was red on `B030` before this run and nothing reported it | **observed**, the absence is the defect it was added for |
+| R-25 | `B005` dates `foundation.md` by its commit, not by its mtime, and CI checks out full history so the commit is there to read | Fixture `git_date_beats_mtime`; plant: the `git log` branch of `content_date` replaced by `pass`, falling back to mtime | **planted**, and **observed** first: it turned CI red on the run that added the dogfood step |
+| R-26 | A seeded script that has fallen behind its source fails the gate | `validate_seeded_scripts` gains byte equality; plant: two lines appended to `docs/brand/lint.py` | **planted**, and **observed** first: `docs/brand/lint.py` was 227 lines behind `brand_lint.py` for the whole of this run's dogfood |
+
+**Two plants failed to land, and both were fixture defects rather than code
+defects.** R-16's first fixture was written in English, where deleting the
+conjunction branch still produced `B062` from the strict branch: same code,
+different path, and a set comparison cannot tell them apart. Rewritten in
+Russian, where strict is off and only the branch under test can emit. R-20's
+first fixture used a plain fenced block, and the inline-code stripper happened
+to pair the fence markers around the dash and remove it anyway; a lone backtick
+inside the fence makes the fence pass load-bearing. Both plants landed after
+the rewrite.
+
+This is the class the 2026-08-10 audit found when `B005`, `B054`, `B060` and
+`B072` were emitting with no fixture: a fixture can be green for a reason
+nobody checked. The difference is that the plant found it here before the
+release rather than an audit finding it four versions later.
+
 ## 2026-08-12 — the reference sweep for flows, v0.35.0 → v0.35.1
 
 | REQ | What ships | Verified by | Watched |

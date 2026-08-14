@@ -71,6 +71,35 @@ def read(path: Path) -> str | None:
         return None
 
 
+def content_date(path: Path) -> str | None:
+    """The date this file's content last changed, as `YYYY-MM-DD`.
+
+    Git first, mtime only as a fallback. A fresh clone stamps every file with
+    the checkout time, so an mtime-based answer says "changed today" about a
+    file nobody has touched in months -- which made `B005` fire on every CI
+    run the moment this project put its own linter in CI, and would have
+    trained a reader to ignore the one gate it was added to enforce.
+    """
+    try:
+        import subprocess
+
+        out = subprocess.run(
+            ["git", "log", "-1", "--format=%cs", "--", path.name],
+            cwd=path.parent, capture_output=True, text=True, timeout=10,
+        )
+        stamp = out.stdout.strip()
+        if out.returncode == 0 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", stamp):
+            return stamp
+    except Exception:
+        pass
+    try:
+        import datetime
+
+        return datetime.date.fromtimestamp(path.stat().st_mtime).isoformat()
+    except OSError:
+        return None
+
+
 def header_field(text: str, key: str) -> str | None:
     """A `Key: value` line from a file's header block."""
     match = re.search(rf"^{re.escape(key)}:\s*(.+?)\s*$", text, re.M)
@@ -180,11 +209,8 @@ def check_contract(brand_dir: Path) -> list[Finding]:
         calibrated = header_field(voice, "Last calibrated")
         if foundation is not None and calibrated:
             try:
-                stamp = (brand_dir.parent / "ux" / "foundation.md").stat().st_mtime
-                import datetime
-
-                changed = datetime.date.fromtimestamp(stamp).isoformat()
-                if changed > calibrated:
+                changed = content_date(brand_dir.parent / "ux" / "foundation.md")
+                if changed and changed > calibrated:
                     findings.append(Finding(
                         "B005", SEVERITY_WARN, "voice.md", 1,
                         f"foundation.md changed on {changed}, after the voice "
@@ -757,6 +783,155 @@ EMOJI_RE = re.compile(
     "[\U0001F300-\U0001FAFF☀-➿️]"
 )
 
+# AT-06, the rhetorical dash. The rule is a distinction, not a ban: a dash
+# standing in for a full stop, a comma or a colon is the machine-drafting
+# marker, and a dash the language requires is grammar. Stripping both
+# produces ungrammatical Russian, so the checks below are ordered by what
+# can actually be established without parsing the sentence.
+DASH = "—"
+
+# Never a finding. A range is arithmetic and direct speech is a convention.
+DASH_RANGE_RE = re.compile(rf"\d\s*{DASH}\s*\d")
+DASH_SPEECH_RE = re.compile(rf"^\s*{DASH}\s")
+
+# Rhetorical in every language: a dash cannot introduce a coordinating
+# conjunction, because that is a comma's job. The copula dash is never
+# followed by one, which is what makes this safe to run on Russian.
+DASH_CONJ_RE = re.compile(
+    rf"{DASH}\s+(?:и|а|но|или|да|and|but|or|so|yet|nor)\s",
+    re.I,
+)
+
+# Locales whose orthography requires a dash between subject and predicate
+# when the verb is absent (<<Москва — столица>>). Deliberately short: a
+# language belongs here only when the construction is a rule of its
+# orthography rather than a stylistic option, and a wrong entry silently
+# switches the strict check off for a whole language.
+COPULA_LOCALES = ("ru", "uk", "be")
+CYRILLIC_RE = re.compile("[Ѐ-ӿ]")
+
+# A title is a name. `.` ends a statement, so it does not belong; `?` and
+# `…` do, because a title may genuinely ask or genuinely trail off.
+ABBREVIATION_RE = re.compile(r"(?:\b[A-Za-z]\.[A-Za-z]\.|\b(?:etc|vs|Inc|Ltd|Co|jr|sr|no)\.|\.[a-z]{2,4})$", re.I)
+
+
+def prose_only(text: str) -> str:
+    """Fenced blocks and inline code are not prose and never carry a tell."""
+    text = re.sub(r"```.*?```", "", text, flags=re.S)
+    text = re.sub(r"`[^`]*`", "", text)
+    return text
+
+
+def sentences(text: str) -> list[str]:
+    """Crude split, sufficient to count dashes inside one sentence."""
+    return [p for p in re.split(r"(?<=[.!?])\s+|\n\s*\n", text) if p.strip()]
+
+
+def grammatical_dash_language(text: str, primary: str | None) -> bool:
+    """Does a grammatical dash exist in the language this text is written in?
+
+    Two signals, and either is enough, because the consequence of guessing
+    wrong in one direction is a linter that calls correct Russian an error.
+    A missed rhetorical dash is a style note; a false error on grammar is
+    how a check gets switched off.
+    """
+    if primary and primary.split("-")[0].lower() in COPULA_LOCALES:
+        return True
+    return bool(CYRILLIC_RE.search(text))
+
+
+def _around(sentence: str, width: int = 34) -> str:
+    """The dash with enough either side to find it and decide the fix."""
+    flat = " ".join(sentence.split())
+    at = flat.find(DASH)
+    if at < 0:
+        return flat[:width * 2]
+    start, end = max(0, at - width), min(len(flat), at + width)
+    return ("…" if start else "") + flat[start:end] + ("…" if end < len(flat) else "")
+
+
+def dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding]:
+    """AT-06 over one body of prose. `strict` bans every non-range dash.
+
+    Every finding quotes the dash in context and carries the line it sits on.
+    Thirty-seven findings reading "a dash stands in for a full stop" is a
+    report nobody can act on, and a check nobody can act on gets switched
+    off rather than obeyed.
+    """
+    findings: list[Finding] = []
+    body = prose_only(text)
+    if DASH not in body:
+        return findings
+
+    # Line numbers come from the stripped body, so a dash inside a fenced
+    # block cannot shift the number of one in the prose after it.
+    offsets = {}
+    cursor = 0
+    for number, line in enumerate(body.splitlines(keepends=True), start=1):
+        offsets[cursor] = number
+        cursor += len(line)
+
+    def line_of(fragment: str) -> int:
+        at = body.find(fragment[:40])
+        if at < 0:
+            return 0
+        best = 0
+        for start, number in offsets.items():
+            if start <= at:
+                best = number
+            else:
+                break
+        return best
+
+    for sentence in sentences(body):
+        if DASH not in sentence:
+            continue
+        if DASH_SPEECH_RE.match(sentence):
+            continue
+
+        line = line_of(sentence)
+        quoted = _around(sentence)
+
+        conj = DASH_CONJ_RE.search(sentence)
+        if conj:
+            findings.append(Finding(
+                code, SEVERITY_ERROR, path, line,
+                f'a dash introduces "{conj.group(0).strip()}", which is a '
+                f"comma's job; no language puts a grammatical dash before a "
+                f'conjunction: "{quoted}"',
+            ))
+            continue
+
+        bare = sentence.count(DASH) - len(DASH_RANGE_RE.findall(sentence))
+        if bare >= 2:
+            findings.append(Finding(
+                code, SEVERITY_ERROR, path, line,
+                f"{bare} dashes bracket an aside in one sentence, which is "
+                f'the parenthetical reflex; use commas or brackets: "{quoted}"',
+            ))
+            continue
+
+        if strict and bare > 0:
+            findings.append(Finding(
+                code, SEVERITY_ERROR, path, line,
+                f"a dash stands in for a full stop, a comma or a colon, and "
+                f"this locale has no grammatical dash; pick the mark that "
+                f'states the real relationship: "{quoted}"',
+            ))
+    return findings
+
+
+def title_full_stop(title: str) -> bool:
+    """AT-07. True when a title ends in a full stop that is a full stop."""
+    text = title.strip()
+    if not text.endswith("."):
+        return False
+    if text.endswith("..") or text.endswith("…"):
+        return False
+    if ". " in text:            # several sentences -- a different defect
+        return False
+    return not ABBREVIATION_RE.search(text)
+
 
 def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
     """B050-B054 -- do not write text that looks like gaming a crawler."""
@@ -838,8 +1013,16 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
 
 
 def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
-    """B060-B061 -- machine-drafting markers, and the one absolute ban."""
+    """B060-B063 -- machine-drafting markers, and the one absolute ban.
+
+    B060 counts vocabulary markers, B061 bans levity where the user is
+    losing something, B062 is AT-06 (the rhetorical dash) and B063 is AT-07
+    (a title that ends in a full stop) outside the string registry, which
+    B026 already covers. The grades and the reasoning are in
+    `references/ai-tells.md`; this file carries only the provable subset.
+    """
     findings: list[Finding] = []
+    primary, _others = declared_locales(brand_dir)
 
     for path, _fields, body in documents(brand_dir, sources, "marketing"):
         lowered = body.lower()
@@ -853,6 +1036,38 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
             f"{len(hits)} S1 marker(s) -- {', '.join(sorted(hits))}. "
             f"Naturalness grade {grade}",
         ))
+
+    # B062 -- the rhetorical dash, in every surface that ships prose.
+    for key in ("marketing", "store"):
+        for path, fields, body in documents(brand_dir, sources, key):
+            text = f"{fields.get('title', '')}\n{body}"
+            strict = not grammatical_dash_language(text, primary)
+            findings.extend(dash_findings("B062", path, body, strict))
+
+    for row in registry(brand_dir):
+        strict = not grammatical_dash_language(row["text"], primary)
+        findings.extend(dash_findings("B062", row["location"], row["text"], strict))
+
+    # B063 -- AT-07 outside the registry: document titles and the headings
+    # inside them. B026 owns the same rule for `strings.md`, and the two are
+    # split by artifact rather than by rule so that neither can be satisfied
+    # by fixing the other.
+    for key in ("marketing", "store"):
+        for path, fields, body in documents(brand_dir, sources, key):
+            title = fields.get("title", "")
+            if title and title_full_stop(title):
+                findings.append(Finding(
+                    "B063", SEVERITY_WARN, path, 0,
+                    f'the title ends in a full stop: "{title.strip()}". '
+                    f"A title is a name, not a statement",
+                ))
+            for heading in re.findall(r"^#{1,6}\s+(.+?)\s*$", prose_only(body), re.M):
+                if title_full_stop(heading):
+                    findings.append(Finding(
+                        "B063", SEVERITY_WARN, path, 0,
+                        f'a heading ends in a full stop: "{heading.strip()}". '
+                        f"A heading is a name, not a statement",
+                    ))
 
     for row in registry(brand_dir):
         if not row["key"].startswith(SENSITIVE_PREFIXES):

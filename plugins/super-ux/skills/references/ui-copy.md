@@ -1,4 +1,4 @@
-# UI copy — the strings inside the product
+# UI copy: the strings inside the product
 
 Craft for the twelve product surfaces listed in
 [brand-contract.md](brand-contract.md). Register deltas per surface live in
@@ -27,7 +27,7 @@ Where the two bodies of craft disagree, this is why.
 ## The four laws
 
 1. **One action, one name.** An action carries the same word everywhere it
-   appears — button, confirmation, toast, history, notification, docs.
+   appears: button, confirmation, toast, history, notification, docs.
    `Publish` → `Published`, never `Publish` → `Submitted`. Two names for one
    action is `B020`, and it is the most common defect in a product built
    screen by screen, because each screen was individually correct.
@@ -38,7 +38,8 @@ Where the two bodies of craft disagree, this is why.
 
 3. **One job per string.** A label labels. Help text explains. An example
    demonstrates. A placeholder is not a label, and a label is not
-   instructions — placeholder text disappears exactly when the user needs it.
+   instructions, and placeholder text disappears exactly when the user
+   needs it.
 
 4. **Sentence case throughout.** Title Case On Buttons reads as a
    proper noun and slows scanning. Declared once in `voice.md`, enforced as
@@ -48,7 +49,7 @@ Where the two bodies of craft disagree, this is why.
 
 Three facts, in this order:
 
-1. **What happened**, in the product's own vocabulary — not the exception's.
+1. **What happened**, in the product's own vocabulary, not the exception's.
 2. **What was not affected.** The one products skip and users need most.
    "Your draft was saved" turns a failure into an interruption.
 3. **One next step**, phrased as something the user can actually do.
@@ -60,7 +61,7 @@ Three facts, in this order:
    Try again, or publish without the attachments.
 ```
 
-Never blame the user. Never say "unexpected" — it tells the reader the team
+Never blame the user. Never say "unexpected": it tells the reader the team
 was surprised, which is not reassuring. Never show a code without a sentence
 beside it; a code alone is a support ticket the user has to write.
 
@@ -87,7 +88,7 @@ failure).
 
 ## Loading and progress
 
-Under ~400ms, say nothing — a flash of text is worse than a pause. Longer
+Under ~400ms, say nothing. A flash of text is worse than a pause. Longer
 than that, name what is happening in the product's own words. Longer than
 about ten seconds, say what the user can do meanwhile.
 
@@ -106,14 +107,14 @@ The confirming button repeats the destructive verb.
 ```
 
 `OK` on a destructive confirm is a defect: the user clicks it having read
-only the button. If the action is reversible, say so — it is the difference
+only the button. If the action is reversible, say so: it is the difference
 between a confirmation and an interrogation. If undo exists, prefer undo over
 a dialog entirely.
 
 ## Forms
 
 Labels above fields, always visible. Requirements stated **before** the user
-types, not after they fail — "at least 12 characters" belongs under the field
+types, not after they fail; "at least 12 characters" belongs under the field
 from the start, not in a red message afterwards.
 
 Validation messages say what is wrong and what is valid, in that order:
@@ -127,7 +128,7 @@ A toast is the past tense of the action's verb. `Published.` Nothing else
 fits in the time it is on screen.
 
 A push notification with no object is a notification that gets disabled.
-`Atlas finished building` — not `Something happened in your workspace`.
+`Atlas finished building`, not `Something happened in your workspace`.
 
 Transactional email: one purpose per message, named in the subject and
 delivered in the first sentence.
@@ -148,8 +149,8 @@ point (`2 hours ago`); never relative past about a week.
 
 ## Accessibility is copy work too
 
-The accessible name is the visible label wherever a visible label exists —
-a button reading `Delete` with an accessible name of `Remove item` is two
+The accessible name is the visible label wherever a visible label exists.
+A button reading `Delete` with an accessible name of `Remove item` is two
 names for one action, which is `B020` with a screen reader as the witness.
 Alt text describes the function in context, not the picture. An icon-only
 control still needs a name, and that name is a verb phrase like any other

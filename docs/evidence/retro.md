@@ -48,6 +48,20 @@ stamps — and log the deletion as one line under *Retired*.
    coverage gate exists for every generated or hand-kept set in the repo, or
    after five stamps with no recurrence.)*
 
+5. **(2026-08-14)** **A fixture that asserts a set of codes proves the code
+   arrived, not which branch produced it.** Where two branches of one check emit
+   the same code, deleting either leaves the suite green and the plant reports
+   nothing. Both of this run's misses were this: an English fixture for the
+   dash-before-conjunction branch stayed green when that branch was deleted,
+   because the strict branch emitted `B062` by another path; and a fenced-block
+   fixture stayed green when the fence stripper was deleted, because the
+   inline-code stripper removed the same dash. **The fix is to write the fixture
+   in the conditions where only the branch under test can fire** — Russian for
+   the conjunction case, since strict is off there; a lone backtick inside the
+   fence for the other, since that defeats the inline pass. *(Retire when the
+   harness asserts which branch fired rather than which code arrived, or after
+   five stamps with no recurrence.)*
+
 ## Retired
 
 *(nothing yet)*
@@ -67,8 +81,80 @@ Newest last.
 | 2026-08-10 | Web surface in the contract, four routing rows, composite briefs, B007 + B026, ux_lint fixture harness; v0.33.0 | yes — see below |
 | 2026-08-10 | B-010 + B-002 — UX linter codes U001..U054, 43 fixtures, coverage gate, run-instruction gate; v0.34.0 | yes — see below |
 | 2026-08-12 | Reference sweep for flows in `ux-flows` (Refero, Mobbin, Lazyweb), gated on tools not config; v0.35.0 → v0.35.1 | yes — see below |
+| 2026-08-14 | The rhetorical dash and the full-stopped title become `B062`/`B063`; markers get ids `AT-01..15`; doctrine prose swept; dogfood wired into CI; v0.39.0 | yes — see below |
+
+**Prune, 2026-08-14.** All four checked against the three retirement triggers.
+**#2 fired hardest and fired on this run's own hands:** the first plant harness
+read `python3 test/brand_lint_test.py 2>&1 | head -4; echo "exit=$?"`, printed
+`exit=0`, and a `FAIL:` line scrolled past inside it. Three stamps, three
+catches. **#3 fired** and passed: the new checks were run against a freshly
+seeded `templates/brand/` pack before anything else, and it linted clean. **#4
+fired twice** — the `AT-` ids were given precisely so coverage could be computed
+and nothing computes it (`B-017`), and the dogfood linters turned out never to
+have been in CI, which is why `docs/brand/lint.py` sat red on `B030` with a
+three-count-stale `facts.md` and nothing said so. **#1 did not fire**; no tag
+was cut in this run, and it is one stamp old on that count. Nothing retired,
+**one added (#5)**, so the list stands at five against a cap of ten.
 
 ---
+
+## 2026-08-14 — the doctrine had the habit it was written to name
+
+**Symptom.** `ai-tells.md` had carried "Em-dash reflex" since the verbal
+identity layer shipped, graded S2, worded *"one or two in a piece is normal"*.
+The file making that observation contained 28 em dashes in 163 lines. The
+eleven references around it carried 158 between them. Meanwhile `S1_MARKERS` in
+`brand_lint.py` held twelve string literals and no dash among them, so the
+marker the doctrine named was the one thing the linter could not see.
+
+**Surfaced at** stage 0, from the operator's own reading of the pack rather
+than from any check. **Owned by** stage 5 of the run that introduced the marker
+in v0.30.0: a marker was written into a reference and no check was written
+beside it, which is the same shape as the four codes the 2026-08-10 audit found
+emitting with no fixture.
+
+**Root cause.** Doctrine and enforcement were added in different steps, and
+nothing asks whether a named marker is checked. `validate_brand_lint_coverage`
+runs the question in one direction (every emitted code needs a fixture and a
+contract row) and there is no arrow the other way, from the prose to the code.
+That gap is now `B-017`, filed against this run's own `AT-` ids so the same
+thing cannot be said about them.
+
+**Fix, by grade.** *Mechanism:* `B062` and `B063`, with seven planted defects
+and a locale-aware allowance so the rule does not ban correct Russian.
+*Mechanism:* the dogfood linters entered CI, which is what would have caught the
+adjacent defect this run found by accident — `docs/brand/lint.py` had been
+failing on `B030` with a `facts.md` three counts stale, and nothing reported it
+because nothing ran it. *Doctrine:* every marker now carries an id.
+*Housekeeping:* 144 of the 158 dashes are gone from the shelf.
+
+**The check that catches it next time.** For the dash, `B062`. For the class,
+`B-017`. For the meta-failure — a repository that installs a "wire the linter
+into CI" rule into other projects while not obeying it itself — the two new
+workflow steps, which fail on this project's own pack exactly as the hard rule
+has always demanded of everyone else's.
+
+**The dogfood it added measured the wrong file for most of the run.**
+`docs/brand/lint.py` is a **copy** of `brand_lint.py`, seeded by `/brand-init`,
+and it was 227 lines behind. So the pack was linted twice with two different
+answers to what "the linter" means: the source, which had `B062` and `B063` and
+drove every fix; and the copy, which had neither and still reported clean. Both
+said clean, and only one had been asked the new questions.
+
+`validate_seeded_scripts` could not see it, because it verified that *a command
+instructs the copy*, not that the copy is current. It now compares bytes, and a
+planted two-line append turns it red. This is standing instruction #4 again on a
+third artifact: a copy that nobody notices falling behind is not a copy, it is a
+fork with a misleading name.
+
+**A correction this run made out loud.** Mid-run it claimed the Brand voice hard
+rule had no drift gate, on the evidence that `HARD_RULES` names only the UX
+scenarios and vision headings. That was wrong: the check compares the **whole
+template file** against one embedded block, and the heading only selects the
+block, so the Brand section was covered all along. The gate proved it by going
+red on the template edit before the carrier was re-copied. What is genuinely
+ungated is the third copy, in this repository's own `CLAUDE.md`, filed as
+`B-018`.
 
 ## 2026-08-12 — a comparison whose third term was invisible
 

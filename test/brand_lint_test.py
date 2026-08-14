@@ -11,6 +11,9 @@ Run: python3 test/brand_lint_test.py
 from __future__ import annotations
 
 import datetime
+import os
+import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -78,6 +81,63 @@ def case(name: str, files: dict, expect: set, project: dict | None = None) -> No
     if got != expect:
         failures.append(
             f"{name}: expected {sorted(expect)}, got {sorted(got)}"
+        )
+
+
+def git_date_beats_mtime() -> None:
+    """B005 dates a file by its commit, not by when it landed on this disk.
+
+    A fresh clone stamps every file's mtime with the checkout time, so an
+    mtime answer says "changed today" about a file nobody has touched. That
+    is not hypothetical: it turned this project's own CI red the first run
+    after `docs/brand/lint.py` was added to the workflow, on a pack that was
+    clean locally and clean in fact.
+
+    The fixture commits `foundation.md` with a back-dated commit and a
+    deliberately fresh mtime. Under git, no finding. Under mtime, `B005`.
+    """
+    global checks
+    checks += 1
+    git = shutil.which("git")
+    if not git:
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        brand = root / "docs" / "brand"
+        brand.mkdir(parents=True)
+        files = {**MINIMAL, "voice.md": MINIMAL["voice.md"]
+                 .replace("Derived-from: inferred", "Derived-from: P-01")
+                 .replace(f"Last calibrated: {TODAY}", "Last calibrated: 2020-06-01")}
+        for rel, body in files.items():
+            (brand / rel).write_text(body, encoding="utf-8")
+        ux = root / "docs" / "ux"
+        ux.mkdir(parents=True)
+        (ux / "foundation.md").write_text("### P-01: the operator\n", encoding="utf-8")
+
+        env = {
+            **os.environ,
+            "GIT_AUTHOR_DATE": "2020-01-01T00:00:00",
+            "GIT_COMMITTER_DATE": "2020-01-01T00:00:00",
+            "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+            "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+        }
+        run = lambda *a: subprocess.run(
+            [git, *a], cwd=root, env=env, capture_output=True, text=True)
+        run("init", "-q")
+        run("add", "-A")
+        result = run("commit", "-q", "-m", "seed")
+        if result.returncode != 0:
+            failures.append(f"git fixture: commit failed -- {result.stderr.strip()[:120]}")
+            return
+
+        # The mtime says now; the commit says 2020-01-01, before the voice was
+        # calibrated on 2020-06-01. Only one of those answers is right.
+        (ux / "foundation.md").touch()
+        got = {f.code for f in brand_lint.run(brand)}
+    if got:
+        failures.append(
+            f"git date: expected no finding from a 2020-01-01 commit against a "
+            f"2020-06-01 calibration, got {sorted(got)}"
         )
 
 
@@ -537,6 +597,7 @@ def main() -> int:
         {"B005"},
         project={"docs/ux/foundation.md": "### P-01: the operator\n"},
     )
+    git_date_beats_mtime()
     case(
         "the title promises more than the body delivers",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
@@ -554,6 +615,91 @@ def main() -> int:
                  "It is important to note that teams delve into this. "
                  "In conclusion, it is worth noting the result.\n"},
     )
+    # AT-06 -- B062. The rule is a distinction, so the negative cases carry
+    # as much weight as the positive ones: a check that cannot tell the
+    # Russian copula from the rhetorical reflex would ban correct grammar,
+    # and the first project it did that to would switch it off.
+    def page(body: str, title: str = "Ship") -> dict:
+        return {"content/a.md":
+                f"---\nsurface: landing hero\ntitle: {title}\n---\n\n{body}\n"}
+
+    # These two are written in Russian on purpose. In English the strict rule
+    # fires on any bare dash, so an English fixture stays green when the
+    # conjunction rule is deleted -- the same code arrives from a different
+    # branch and a set comparison cannot tell them apart. Planting that
+    # deletion is how the hole was found. In Russian the strict rule is off,
+    # so only the branch under test can produce the code.
+    case(
+        "a dash introduces a conjunction, where strict is off",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("Это работает — и работает быстро."),
+    )
+    case(
+        "a pair of dashes brackets an aside, where strict is off",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("Результат — которого никто не ждал — пришёл вовремя."),
+    )
+    case(
+        "a lone dash where the locale has no grammatical dash",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("One thing matters — speed."),
+    )
+    case(
+        "the Russian copula is grammar, not a tell",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project=page("Москва — столица России."),
+    )
+    case(
+        "Russian direct speech is a convention, not a tell",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project=page("— Привет, — сказал он."),
+    )
+    case(
+        "a numeric range is arithmetic, not a tell",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project=page("The window runs 2020—2024 without a gap."),
+    )
+    # The lone backtick inside the fence is load-bearing. Without it the
+    # inline-code stripper happens to pair the fence markers around the dash
+    # and removes it anyway, so deleting the fence stripper leaves the suite
+    # green -- watched, on a planted deletion. With it, the inline pass
+    # leaves the dash standing and only the fence pass can clear it.
+    case(
+        "a dash inside a fenced block is code, not prose",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project=page("Run it.\n\n```\nusage: `ship — fast\n```\n"),
+    )
+
+    # AT-07 -- B063, the same rule B026 applies to the registry, applied to
+    # documents. Split by artifact rather than by rule, so that neither can
+    # be satisfied by fixing the other.
+    case(
+        "a document title ends in a full stop",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B063"},
+        project=page("A body with nothing wrong in it.", title="Ship faster."),
+    )
+    case(
+        "a heading ends in a full stop",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B063"},
+        project=page("## Why it matters.\n\nA body with nothing wrong in it."),
+    )
+    case(
+        "a heading that asks, and one that abbreviates, are both names",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project=page("## Why does it matter?\n\n## Built on Node.js\n\n"
+                     "## Logs, metrics, traces, etc.\n\nA clean body."),
+    )
+
     case(
         "a locale row left identical to the primary",
         {**MINIMAL,
