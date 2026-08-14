@@ -541,6 +541,22 @@ def validate_seeded_scripts() -> None:
     texts = {p.name: (read(p) or "") for p in commands}
     for dest, source in SEEDED_SCRIPTS:
         seeders = [n for n, txt in texts.items() if source in txt and dest in txt]
+        # A seeded copy that has fallen behind its source is worse than a
+        # missing one: it runs, it reports, and it reports the previous
+        # release's rules. `docs/brand/lint.py` sat 227 lines behind
+        # `brand_lint.py` through this repo's own dogfood, so the pack was
+        # linted twice and neither pass used the checks that had just been
+        # added. Byte equality, because these are copies and not renderings.
+        src_path, dst_path = ROOT / "plugins/super-ux/scripts" / source, ROOT / dest
+        src_text, dst_text = read(src_path), read(dst_path)
+        if check(src_text is not None, f"{source}: source script missing") and \
+           check(dst_text is not None, f"{dest}: seeded copy missing"):
+            check(
+                src_text == dst_text,
+                f"{dest} has drifted from {source} — re-seed it (`cp` in the "
+                f"same change), because a stale copy runs the previous "
+                f"release's rules and says nothing about it",
+            )
         check(
             bool(seeders),
             f"no command copies {source} to {dest}, yet something instructs the "

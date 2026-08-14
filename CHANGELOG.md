@@ -73,7 +73,14 @@ nobody had touched. It now answers from `git log`, falling back to mtime only
 outside a repository, and the checkout uses full history so the commit is there
 to read. An eighth plant covers it.
 
-Gates, each run alone: `validate.py` 3243, `brand_lint_test.py` 62,
+And a third, found by the second. `docs/brand/lint.py` is a **copy** of
+`brand_lint.py` seeded by `/brand-init`, and it was 227 lines behind: the pack
+was being linted by a file that had neither `B062` nor `B063` in it.
+`validate_seeded_scripts` verified that a command *instructs* the copy, never
+that the copy is current, so it compares bytes now and a planted two-line
+append turns it red.
+
+Gates, each run alone: `validate.py` 3252, `brand_lint_test.py` 62,
 `ux_lint_test.py` 43, `docs/ux/lint.py` and `docs/brand/lint.py` clean.
 Floors raised to match.
 

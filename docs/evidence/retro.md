@@ -134,6 +134,19 @@ into CI" rule into other projects while not obeying it itself — the two new
 workflow steps, which fail on this project's own pack exactly as the hard rule
 has always demanded of everyone else's.
 
+**The dogfood it added measured the wrong file for most of the run.**
+`docs/brand/lint.py` is a **copy** of `brand_lint.py`, seeded by `/brand-init`,
+and it was 227 lines behind. So the pack was linted twice with two different
+answers to what "the linter" means: the source, which had `B062` and `B063` and
+drove every fix; and the copy, which had neither and still reported clean. Both
+said clean, and only one had been asked the new questions.
+
+`validate_seeded_scripts` could not see it, because it verified that *a command
+instructs the copy*, not that the copy is current. It now compares bytes, and a
+planted two-line append turns it red. This is standing instruction #4 again on a
+third artifact: a copy that nobody notices falling behind is not a copy, it is a
+fork with a misleading name.
+
 **A correction this run made out loud.** Mid-run it claimed the Brand voice hard
 rule had no drift gate, on the evidence that `HARD_RULES` names only the UX
 scenarios and vision headings. That was wrong: the check compares the **whole
