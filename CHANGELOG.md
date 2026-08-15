@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.41.3 — 2026-08-16
+
+**`facts.md` is a document, not only a facts table.** `facts()` took any
+six-column row anywhere in the file, and a project that keeps a product ledger
+there has one whose columns mean something else entirely:
+`Product | App Store name | id | Released | Sold | Publisher today`. Its **Sold**
+year landed in `Review`, so three completed sales produced "was due for review
+on 2022" warnings, and the ledger's own header row became a fact called
+`Product`. Four phantom rows in a registry of 43.
+
+Scoped by header now — a table qualifies when its first column says `Fact`,
+which is the only thing in a markdown table that declares what its columns
+mean. A `tables()` helper groups rows per table beside the existing
+`table_rows()`, which flattens every table in a file and is right for a caller
+that wants every row.
+
+Found on `sshlg.me` and fixed there first, in that project's copy of the linter,
+where it would have been overwritten by the next sync — a plugin-owned file
+edited in a downstream project serves that project until the day it silently
+does not. Ported up with its fixture, which was watched failing.
+
 ## 0.41.2 — 2026-08-16
 
 **A source file is not prose, and the prose rules were reading all of it.** On

@@ -702,17 +702,61 @@ def surfaces(brand_dir: Path) -> dict[str, dict]:
     return out
 
 
+def tables(text: str) -> list[tuple[list[str], list[list[str]]]]:
+    """The same rows, but grouped per table as (header, data rows).
+
+    `table_rows` flattens every table in a file into one list, which is right
+    for a caller that wants every row and wrong for one that wants the rows of
+    a particular table. `facts()` was the second kind and used the first: it
+    took any six-column row anywhere in facts.md, so the App Store table --
+    `Product | App Store name | id | Released | Sold | Publisher today` -- was
+    read as six fact fields. Its **Sold** year landed in `Review`, which
+    produced three "was due for review on 2022" warnings about sales that
+    completed on schedule, and its own header row became a fact called
+    `Product`. Four phantom rows in a registry of 43.
+
+    What it did **not** do, checked before this comment was written: the App
+    Store ids were already registered properly, by the `Sold-app store ids` row,
+    so the B030 corpus was never widened by the bug. Only the product names
+    entered it, and B030 only reads numbers.
+
+    A table is identified by its header, because that is the only thing in a
+    markdown table that says what its columns mean.
+    """
+    blocks, current = [], []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("|") and stripped.endswith("|"):
+            current.append(line)
+        elif current:
+            rows = table_rows("\n".join(current))
+            if rows:
+                blocks.append((rows[0], rows[1:]))
+            current = []
+    if current:
+        rows = table_rows("\n".join(current))
+        if rows:
+            blocks.append((rows[0], rows[1:]))
+    return blocks
+
+
 def facts(brand_dir: Path) -> list[dict]:
     rows = []
-    for cells in table_rows(read(brand_dir / "facts.md") or ""):
-        if len(cells) < 6 or cells[0].strip().lower() == "fact":
+    for header, body in tables(read(brand_dir / "facts.md") or ""):
+        # Scoped by header rather than by column count -- see tables(). Any
+        # six-column table in this file used to qualify, and one of them is a
+        # product ledger whose columns mean something else entirely.
+        if len(header) < 6 or header[0].strip().lower() != "fact":
             continue
-        if unfilled(cells[0]) or unfilled(cells[1]):
-            continue
-        rows.append({
-            "fact": cells[0], "value": cells[1], "source": cells[2],
-            "checked": cells[3], "review": cells[4], "public": cells[5],
-        })
+        for cells in body:
+            if len(cells) < 6:
+                continue
+            if unfilled(cells[0]) or unfilled(cells[1]):
+                continue
+            rows.append({
+                "fact": cells[0], "value": cells[1], "source": cells[2],
+                "checked": cells[3], "review": cells[4], "public": cells[5],
+            })
     return rows
 
 

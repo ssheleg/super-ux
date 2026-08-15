@@ -817,6 +817,25 @@ def main() -> int:
                  'const u = "https://example.com/docs"; // a note — with a dash\n'},
     )
 
+    # facts.md is a document, not only a facts table: it also carries product
+    # ledgers, and one of them has six columns whose meanings are nothing like
+    # a fact row's. Scoping by header rather than by column count is what keeps
+    # a sale year out of the Review column.
+    ledger_facts = (
+        MARKER + "\n\n"
+        "| Fact | Value | Source | Checked | Review | Public |\n"
+        "|---|---|---|---|---|---|\n"
+        "| Name | Acme | owner-stated | 2026-01-01 | 2099-01-01 | yes |\n"
+        "\n## Sold\n\n"
+        "| Product | App Store name | id | Released | Sold | Publisher today |\n"
+        "|---|---|---|---|---|---|\n"
+        "| Thing | Thing App | 1449023197 | 2019-04-05 | 2022 | Someone Ltd |\n"
+    )
+    case(
+        "a product ledger in facts.md is not read as six fact fields",
+        {**MINIMAL, "facts.md": ledger_facts}, set(),
+    )
+
     # Density is a property of the document a reader meets. A word can be 6% of
     # one small data file and under 1% of the page that file is a tenth of, and
     # only the second number is about the reader. Literals stay under the 200
