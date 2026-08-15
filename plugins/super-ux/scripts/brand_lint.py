@@ -378,6 +378,71 @@ CODE_FRAGMENT_RE = re.compile(
 )
 
 
+# Where a build puts the page a reader actually gets. Checked in this order and
+# the first one that exists wins; a project with none of them is checked against
+# its source, exactly as before.
+RENDER_DIRS = ("dist", "build", "out", "_site")
+
+_ENTITIES = {"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"',
+             "&#39;": "'", "&apos;": "'", "&nbsp;": " ", "&#8217;": "\u2019",
+             "&#8216;": "\u2018", "&#8212;": "\u2014", "&#8211;": "\u2013"}
+
+_rendered_cache: dict = {}
+
+
+def normalise(text: str) -> str:
+    """Collapse whitespace so an 80-column wrap and a rendered line agree.
+
+    Punctuation spacing is normalised too, and that is not cosmetic tidying.
+    Stripping `<strong>people</strong>,` leaves `people ,` once the tag becomes
+    a space, so an inline span inside a sentence would fail the comparison over
+    a space no reader can see. Applied to both sides, so the check still
+    compares wording and no longer compares markup.
+    """
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"\s+([,.;:!?%)\]}\u00bb\u201d\u2019])", r"\1", text)
+    return re.sub(r"([(\[{\u00ab\u201c])\s+", r"\1", text)
+
+
+def rendered_text(root: Path) -> str | None:
+    """All built HTML as one normalised string, or None if nothing is built.
+
+    B021 asks whether the registry's string is what a reader sees, and used to
+    look for it in the component source. Two things make that unanswerable
+    there: an interpolated value never appears literally -- `{years} years,
+    installable.` cannot contain `13 years, installable.` -- and an inline
+    `<strong>` or `<a>` splits a sentence the registry stores whole. On one site
+    that was five errors nobody could fix, and both honest repairs were bad:
+    hardcode the number and lose the guarantee that it is derived, or delete the
+    rows and lose the check.
+
+    The text a reader gets exists, just not in `src/`. Tags come out, entities
+    come back, whitespace collapses, and the same comparison then answers the
+    question it was always asking.
+    """
+    if root in _rendered_cache:
+        return _rendered_cache[root]
+    out = None
+    for name in RENDER_DIRS:
+        built = root / name
+        if not built.is_dir():
+            continue
+        chunks = []
+        for page in sorted(built.rglob("*.html")):
+            html = read(page) or ""
+            html = re.sub(r"<(script|style)\b.*?</\1>", " ", html, flags=re.S | re.I)
+            html = re.sub(r"<[^>]+>", " ", html)
+            for ent, ch in _ENTITIES.items():
+                html = html.replace(ent, ch)
+            html = re.sub(r"&#(\d+);", lambda m: chr(int(m.group(1))), html)
+            chunks.append(html)
+        if chunks:
+            out = normalise(" ".join(chunks))
+            break
+    _rendered_cache[root] = out
+    return out
+
+
 def _looks_like_copy(literal: str) -> bool:
     """A quoted literal that could plausibly be user-visible text."""
     if not literal or literal[0].islower() and " " not in literal:
@@ -468,11 +533,23 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
             lit for _q, lit in LITERAL_RE.findall(body) if _looks_like_copy(lit)
         ]
         if literals:
-            if row["text"] not in body and row["text"].strip() not in body:
+            # The registry records what a reader sees, so the built page is the
+            # authority whenever there is one. Source is the fallback and stays
+            # byte-exact for projects that do not build.
+            built = rendered_text(root)
+            if built is not None:
+                if normalise(row["text"]) not in built:
+                    findings.append(Finding(
+                        "B021", SEVERITY_ERROR, location, 0,
+                        f"`{row['key']}` is \"{row['text']}\" in the registry, "
+                        f"but that text is not on the rendered page",
+                    ))
+            elif row["text"] not in body and row["text"].strip() not in body:
                 findings.append(Finding(
                     "B021", SEVERITY_ERROR, location, 0,
                     f"`{row['key']}` is \"{row['text']}\" in the registry, "
-                    f"but that text is not in {file_part}",
+                    f"but that text is not in {file_part} (no build found; "
+                    f"checked the source)",
                 ))
             if file_part not in swept:
                 swept.add(file_part)
