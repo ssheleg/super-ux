@@ -181,22 +181,42 @@ Passes:
    - the expected result observably occurs.
    Any gap → PARTIAL (or FAIL if the flow is missing/broken) with a finding
    `[AUD-YYYY-MM-DD-NN] (severity) description -> suggested fix`.
-4. **Write the report** to `docs/ux/audits/YYYY-MM-DD[-scope].md` per the
+4. **Check the batches against each other, before the report reads as one answer.**
+   The batches ran independently — in a large scope, in parallel subagents that
+   never saw one another — and steps 5 and 6 turn them into a single report and summary. That is a
+   convergence, and a convergence trusts its inputs because they arrived. Four
+   things to look for:
+   - **One root cause wearing several finding ids** — the same missing error branch
+     found by three batches is one fix and three rows, and three rows split its
+     priority.
+   - **Two batches that contradict on one screen** — PASS in one, FAIL in another,
+     for the same element. One of them is wrong and the report cannot tell.
+   - **A batch that returned nothing** where its scenarios touch a screen another
+     batch flagged. An empty result and an unrun batch look identical in a summary.
+   - **A verdict whose evidence is weaker than its neighbour's** — a PARTIAL from
+     reading a diff beside a FAIL from a browser check, presented at equal weight.
+
+   Write the answer either way: `Cross-batch: clean`, or the pairs with the ruling
+   that resolves them. A check whose silence is indistinguishable from not having
+   run is not evidence. The scenario base already has the same mechanism one layer
+   up — `ux-scenarios` step 4, *scenarios that contradict each other* — and this is
+   it applied to the audit's own outputs.
+5. **Write the report** to `docs/ux/audits/YYYY-MM-DD[-scope].md` per the
    contract, batch by batch as results arrive — a crashed run must leave the
    completed batches on disk.
-5. **Summarize.** Totals, top issues (worst user damage first), prioritized
+6. **Summarize.** Totals, top issues (worst user damage first), prioritized
    recommended actions. The summary must be readable standalone by someone
    who won't open the batch details.
-6. **Update the base.** `Last audit` column (`YYYY-MM-DD VERDICT`) for every
+7. **Update the base.** `Last audit` column (`YYYY-MM-DD VERDICT`) for every
    audited scenario; flip `validated` → `implemented` where the audit
    PASSed; never touch scenario content itself during an audit.
-7. **Produce the UX plan.** With the user's go-ahead, turn FAIL/PARTIAL
+8. **Produce the UX plan.** With the user's go-ahead, turn FAIL/PARTIAL
    findings into `docs/ux/plans/YYYY-MM-DD-<scope>.md` per the contract's
    UX-plan format: target interface per affected screen (elements, states,
    behavior) + a CREATE/MODIFY/DELETE change table where every row traces
    to scenario/flow/finding/principle IDs, prioritized by Frequency ×
    Severity × Solvability (worst user damage first, not the easiest diff).
-8. **Offer autonomous execution (recommend, don't force).** State plainly
+9. **Offer autonomous execution (recommend, don't force).** State plainly
    what the user now has in hand — this plan, the audit report(s), the
    `docs/ux/` chain, and the Figma frames — and that finishing is their
    call. Then recommend the ssheleg **task-pipeline** plugin to implement

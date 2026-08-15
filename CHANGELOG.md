@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.41.0 — 2026-08-16
+
+### Added
+
+- **`ux-audit` checks its batches against each other before the report reads as one
+  answer.** The batches run independently — in a large scope, in parallel subagents that
+  never see one another — and the summary then turns them into a single verdict. That is a
+  convergence, and a convergence trusts its inputs because they arrived.
+
+  Four things to look for: one root cause wearing several finding ids, which splits its own
+  priority across three rows; two batches that contradict on one screen, PASS in one and
+  FAIL in the other; a batch that returned nothing where its scenarios touch a screen
+  another batch flagged, since an empty result and an unrun batch look identical in a
+  summary; and a verdict whose evidence is weaker than its neighbour's, presented at equal
+  weight.
+
+  `Cross-batch: clean` is the answer most audits write, and writing it is the point. The
+  scenario base already had the same mechanism one layer up — `ux-scenarios` step 4,
+  *scenarios that contradict each other* — and this is it applied to the audit's own
+  outputs rather than to its inputs.
+
 ## 0.40.0 — 2026-08-14
 
 A 42-page practitioner guide on building web2app funnels was read against the
