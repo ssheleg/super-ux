@@ -576,6 +576,103 @@ def _front_matter(text: str) -> tuple[dict, str]:
     return fields, text[match.end():]
 
 
+# A source file is not prose, and the prose rules were reading all of it. On
+# sshlg.me that produced 20 rhetorical-dash errors inside `//` comments and 7
+# keyword-stuffing errors on `const`, `string` and `name` -- 27 standing errors
+# that no edit to the copy could clear, in a report meant to be read. A report
+# nobody can act on is a report nobody reads, which is the same failure as a
+# rule that contradicts a threshold.
+#
+# For a code file the body is its copy: the string literals `_looks_like_copy`
+# accepts, which is the definition `B022` already sweeps with. A comment is
+# addressed to a maintainer and an identifier is not a word; a brand pack has no
+# opinion about either.
+CODE_SUFFIXES = {
+    ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs",
+    ".py", ".go", ".rb", ".rs", ".java", ".kt", ".swift", ".php",
+}
+
+# `${...}` in a template literal is a value, not a word.
+#
+# Replaced by a space rather than dropped, so `founder of ${n} products` does not
+# collapse into one word. Substituted rather than left in place, because
+# `CODE_FRAGMENT_RE` rejects any literal carrying an interpolation -- so without
+# this line every interpolated string would fail `_looks_like_copy` and
+# interpolated copy would lose its coverage entirely. That would be a worse bug
+# than the one this fixes: on sshlg.me the whole biography is interpolated.
+INTERPOLATION_RE = re.compile(r"\$\{[^{}]*\}")
+
+
+# Languages whose line comment is `#` rather than `//`.
+HASH_COMMENT_SUFFIXES = {".py", ".rb"}
+
+
+def _strip_comments(text: str, suffix: str) -> str:
+    """Remove comments, leaving string literals untouched.
+
+    A regex cannot do this and the first version of this fix tried: `"https://x"`
+    contains `//`, and a comment can quote a phrase, which is how
+    `// "AI integrations" named nothing checkable -- and "AI" is the medium` came
+    back as a rhetorical-dash error in copy on the first run of the very change
+    that was supposed to stop reading comments.
+
+    The scanner is small because it only has to know one thing at a time:
+    whether it is currently inside a quote.
+    """
+    hashed = suffix in HASH_COMMENT_SUFFIXES
+    out: list[str] = []
+    quote = None
+    i, n = 0, len(text)
+    while i < n:
+        ch = text[i]
+        if quote:
+            out.append(ch)
+            if ch == "\\" and i + 1 < n:      # an escaped quote is not the end
+                out.append(text[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                quote = None
+            i += 1
+            continue
+        if ch in "\"'`":
+            quote = ch
+            out.append(ch)
+            i += 1
+            continue
+        if hashed and ch == "#":
+            while i < n and text[i] != "\n":
+                i += 1
+            continue
+        if not hashed and text.startswith("//", i):
+            while i < n and text[i] != "\n":
+                i += 1
+            continue
+        if not hashed and text.startswith("/*", i):
+            end = text.find("*/", i + 2)
+            i = n if end == -1 else end + 2
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def _copy_in_code(text: str, suffix: str = ".ts") -> str:
+    """The user-visible strings in a source file, joined as prose."""
+    out = []
+    for _quote, literal in LITERAL_RE.findall(_strip_comments(text, suffix)):
+        candidate = re.sub(r"\s{2,}", " ", INTERPOLATION_RE.sub(" ", literal)).strip()
+        # A literal with no space is an import path, an identifier or a one-word
+        # label. None of them can carry a rhetorical dash or stuff a keyword, and
+        # `"@/data/site"` counted as copy would put `data` into the density
+        # figures. B022 still sees them; these checks do not need to.
+        if " " not in candidate:
+            continue
+        if _looks_like_copy(candidate):
+            out.append(candidate)
+    return "\n\n".join(out)
+
+
 def documents(brand_dir: Path, sources: dict, key: str) -> list[tuple]:
     """(relative path, front matter, body) for one declared source key."""
     root = brand_dir.parent.parent
@@ -585,6 +682,8 @@ def documents(brand_dir: Path, sources: dict, key: str) -> list[tuple]:
             if not path.is_file():
                 continue
             fields, body = _front_matter(read(path) or "")
+            if path.suffix in CODE_SUFFIXES:
+                body = _copy_in_code(body, path.suffix)
             out.append((path.relative_to(root).as_posix(), fields, body))
     return out
 
@@ -975,7 +1074,26 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
                 ))
 
     records = surfaces(brand_dir)
-    for path, fields, body in documents(brand_dir, sources, "marketing"):
+    marketing = documents(brand_dir, sources, "marketing")
+
+    # Density is a property of the DOCUMENT a reader meets, and a code file is
+    # not one. A project that keeps its copy in `src/data/*.ts` splits one page
+    # across seven files, and measuring each file separately measures the split:
+    # on sshlg.me that produced six errors -- `co-founder` at 2.0% of
+    # `track-record.ts`, `account` at 1.2% of `site.ts` -- while the rendered
+    # page carried nothing above 1% and those two words sat at 0.07% and 0.04%.
+    #
+    # So the code files are pooled into one document and the markdown ones are
+    # not, because there one file really is one page. The pooled finding names
+    # the set rather than a file, since no single file is the defect.
+    pooled = [d for d in marketing if Path(d[0]).suffix in CODE_SUFFIXES]
+    per_file = [d for d in marketing if Path(d[0]).suffix not in CODE_SUFFIXES]
+    if pooled:
+        label = (f"{len(pooled)} source file(s) pooled"
+                 if len(pooled) > 1 else pooled[0][0])
+        per_file.append((label, {}, "\n\n".join(d[2] for d in pooled)))
+
+    for path, fields, body in per_file:
         words = [w.lower().strip(".,:;!?()\"'") for w in body.split()]
         real = [w for w in words if len(w) > 3 and w not in STOPWORDS]
         if len(real) >= 40:
@@ -991,6 +1109,8 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
                         f"lowers citation likelihood rather than raising it",
                     ))
                     break
+
+    for path, fields, body in marketing:
 
         opening = body.strip().lower()[:120]
         for filler in FILLER_OPENERS:

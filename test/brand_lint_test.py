@@ -780,6 +780,91 @@ def main() -> int:
         set(), project={"src/a.ts": "Welcome. Let us begin.\n"},
     )
 
+    # A source file is not prose: comments and identifiers are addressed to a
+    # maintainer, and the prose rules were reading both. The three cases below
+    # are the fix and its two boundaries -- what stops being read, what keeps
+    # being read, and the interpolated case that would have been lost silently.
+    marketing = {**MINIMAL,
+                 "README.md": MARKER + "\n\nSources:\n  ui: src/**/*.ts\n"
+                                       "  marketing: src/**/*.ts\n"}
+
+    case(
+        "a rhetorical dash inside a code comment is not copy",
+        marketing, set(),
+        project={"src/a.ts": "// this clause — and that one\nconst x = 1;\n"},
+    )
+    case(
+        "a rhetorical dash inside a rendered string still is",
+        marketing, {"B062"},
+        project={"src/a.ts":
+                 'export const t = "this clause — and the one after it";\n'},
+    )
+    case(
+        "an interpolated template literal keeps its coverage",
+        marketing, {"B062"},
+        project={"src/a.ts":
+                 "export const t = `we shipped ${n} of them — and it held`;\n"},
+    )
+    case(
+        "an identifier repeated fifty times is not keyword stuffing",
+        marketing, set(),
+        project={"src/a.ts": "const value = 1;\n" * 50},
+    )
+    case(
+        "a URL is not a comment, and its literal survives the scanner",
+        marketing, set(),
+        project={"src/a.ts":
+                 'const u = "https://example.com/docs"; // a note — with a dash\n'},
+    )
+
+    # Density is a property of the document a reader meets. A word can be 6% of
+    # one small data file and under 1% of the page that file is a tenth of, and
+    # only the second number is about the reader. Literals stay under the 200
+    # characters LITERAL_RE allows, which is why the fixtures are built from many
+    # short strings rather than one long one.
+    dense = (
+        'export const a0 = "cofounder cofounder cofounder alpha1 alpha2 alpha3";\n'
+        + "".join(f'export const a{i} = "delta{i} echo{i} foxtrot{i} golf{i} '
+                  f'hotel{i}";\n' for i in range(1, 10))
+    )
+    sparse = "".join(
+        f'export const b{i} = "india{i} juliett{i} kilo{i} lima{i} mike{i}";\n'
+        for i in range(60)
+    )
+    case(
+        "density is measured over the pooled copy, not per source file",
+        marketing, set(), project={"src/a.ts": dense, "src/b.ts": sparse},
+    )
+    case(
+        "a word dense across the whole pool still fires",
+        marketing, {"B051"},
+        project={"src/a.ts": dense,
+                 "src/c.ts": dense.replace("a0", "c0").replace("const a", "const c")},
+    )
+
+    # The scanner is the load-bearing half of that fix, so it is tested directly
+    # as well: the end-to-end cases above would pass with a regex that happened
+    # to be wrong in a way no fixture reached.
+    global checks
+    for name, src, suffix, present, absent in (
+        ("a // inside a URL is not a comment",
+         'const u = "https://x.dev/a";  // note', ".ts", "https://x.dev/a", "note"),
+        ("a quoted phrase inside a comment goes with it",
+         '// "AI integrations" named nothing', ".ts", "", '"AI integrations"'),
+        ("a block comment goes, the literal stays",
+         '/* "dropped" */ const a = "kept here";', ".ts", "kept here", '"dropped"'),
+        ("a hash comment is a comment in Python only",
+         'x = "kept"  # "dropped"', ".py", "kept", '"dropped"'),
+        ("an escaped quote does not end the string",
+         'const s = "he said \\"hi\\" then left";', ".ts", "then left", None),
+    ):
+        checks += 1
+        got = brand_lint._strip_comments(src, suffix)
+        if present and present not in got:
+            failures.append(f"strip_comments: {name}: lost {present!r}")
+        if absent and absent in got:
+            failures.append(f"strip_comments: {name}: kept {absent!r}")
+
     fix_idempotent()
 
     if failures:

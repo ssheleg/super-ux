@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.41.2 — 2026-08-16
+
+**A source file is not prose, and the prose rules were reading all of it.** On
+`sshlg.me`, whose `Sources:` block points `marketing` at `src/data/*.ts`, that
+produced 20 rhetorical-dash errors inside `//` comments and 7 keyword-stuffing
+errors on `const`, `string`, `name` and `category`. Twenty-seven standing errors
+that no edit to the copy could clear, sitting in a report meant to be read. The
+failure is the same one 0.40.1 fixed from the other direction: a check nobody
+can act on gets ignored, and then it is not a check.
+
+For a file with a code suffix the body is now its **copy** — the string literals
+`_looks_like_copy` already accepts, which is the definition `B022` sweeps with.
+A comment is addressed to a maintainer and an identifier is not a word.
+
+Three things this had to get right, and the first two were found by getting them
+wrong:
+
+- **Comments are stripped by a scanner, not a regex.** `"https://x"` contains
+  `//`. The first attempt used a pattern and immediately reported a rhetorical
+  dash inside a comment that quoted a phrase — in the very change meant to stop
+  reading comments.
+- **`${...}` is substituted, not dropped.** `CODE_FRAGMENT_RE` rejects any
+  literal carrying an interpolation, so without this every interpolated string
+  would fail `_looks_like_copy`. On the site that would have silently dropped the
+  whole biography. It turns out interpolated copy was **not** covered before
+  either: the fixture for it fails against 0.40.1, so this widens coverage rather
+  than preserving it.
+- **A literal with no space is skipped.** `"@/data/site"` counted as copy would
+  put `data` into the density figures.
+
+Ten fixtures, five end-to-end and five on the scanner directly. Four were watched
+failing before the fix went in; the fifth end-to-end case is the boundary that
+must not move — a rhetorical dash in a rendered string is still an error.
+
+**And the same sentence has a second half: a source file is not a *document*
+either.** `B051` measures keyword density, which is a property of the page a
+reader meets. A project that keeps its copy in `src/data/*.ts` splits one page
+across seven files, so measuring each file separately measures the split. On
+`sshlg.me` that produced six errors — `co-founder` at 2.0% of
+`track-record.ts`, `account` at 1.2% of `site.ts` — while the rendered page
+carried **nothing above 1%** and those two words sat at 0.07% and 0.04%.
+
+Code files are pooled into one document for that check; markdown sources are
+not, because there one file really is one page. A pooled finding names the set
+rather than a file, since no single file is the defect. The fixture that proves
+it has a twin that must keep firing: a word genuinely dense across the whole
+pool is still an error.
+
+Measured on `sshlg.me`: **32 errors to 5**, and the five that remain are one
+class — `B021` on registry rows whose text carries an interpolated count or an
+inline link, which needs a linter that reads `dist/` rather than `src/`. One
+real finding surfaced on the way: a rhetorical dash in live copy that had been
+buried under twenty false ones.
+
 ## 0.41.1 — 2026-08-16
 
 **`B024` fined the writer for meeting a threshold this pack sets.** The
