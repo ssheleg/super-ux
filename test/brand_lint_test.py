@@ -289,6 +289,22 @@ def main() -> int:
         {"B024"}, project={"src/a.ts": "x\n"},
     )
     case(
+        "a contraction of I inside a sentence is not Title Case",
+        {**MINIMAL, "strings.md": registry(
+            "| section.a.lede | Tell me what you want and by when. "
+            "Where it does not fit I'm going to say so. "
+            "| src/a.ts:1 | SCN-001 | agreed |\n")},
+        set(), project={"src/a.ts": "x\n"},
+    )
+    case(
+        "a contraction of any other pronoun still is",
+        {**MINIMAL, "strings.md": registry(
+            "| section.b.lede | Tell me what you want and by when. "
+            "Where it does not fit We're going to say so. "
+            "| src/a.ts:1 | SCN-001 | agreed |\n")},
+        {"B024"}, project={"src/a.ts": "x\n"},
+    )
+    case(
         "button label is not a verb phrase",
         {**MINIMAL, "strings.md": registry(
             "| button.ok | OK | src/a.ts:1 | SCN-001 | agreed |\n")},

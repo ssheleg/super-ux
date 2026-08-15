@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.41.1 — 2026-08-16
+
+**`B024` fined the writer for meeting a threshold this pack sets.** The
+sentence-case check reads any capitalised word inside a sentence as Title Case,
+and a contraction of the first person survived every exemption it had: `I'm` is
+not upper-case, is in no entity table, and starts with a capital. So it fired.
+
+That is not a cosmetic false positive. `formats.md` asks for **4 to 8
+contractions per 1000 words** on a published surface and names their absence as
+"the single loudest reason our prose reads as assembled" — and the first-person
+contractions are the loudest ones available. The check and the threshold were
+pulling in opposite directions, and the only repair available to a writer was to
+delete the contraction the pack had just asked for. Found on `sshlg.me`, where
+three registry rows tripped it on 2026-08-15 and none of them was miscased.
+
+`I'm`, `I'll`, `I've` and `I'd` are now exempt, with either apostrophe. Nothing
+else is: `We're` and `They'd` inside a sentence really are miscased, and the
+capital is grammar only for the first person. Both halves are fixtures, so the
+exemption cannot widen without a test saying so.
+
 ## 0.41.0 — 2026-08-16
 
 ### Added
@@ -256,7 +276,6 @@ developer landing page (`zernio.com`, 2026-08-12) rather than from a survey.
 
 - `test/floors.json`: `validate.py` 3160 → 3236 — four entries, their field and
   tag checks, and three routing rows.
-
 
 ## 0.37.0 — 2026-08-12
 

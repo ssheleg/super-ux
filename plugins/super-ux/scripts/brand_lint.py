@@ -351,6 +351,11 @@ def check_terminology(brand_dir: Path) -> list[Finding]:
     return findings
 
 
+# `I'm`, `I'll`, `I've`, `I'd`, with either apostrophe. Nothing else: `We're`
+# and `They'd` mid-sentence really are miscased, and only the first person has a
+# capital that is grammar rather than a choice.
+CONTRACTED_I = re.compile(r"^I['\u2019](m|ll|ve|d)$")
+
 WEAK_LABELS = {
     "ok", "yes", "no", "submit", "done", "go", "click here",
     "learn more", "get started", "continue",
@@ -506,6 +511,14 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
             if not bare or bare in entity_words:
                 continue
             if bare.isupper() and len(bare) <= 4:
+                continue
+            # A contraction of "I" is not Title Case, and flagging it fought a
+            # threshold this pack sets on purpose: formats.md asks for 4-8
+            # contractions per 1000 words and the first-person ones are the
+            # loudest available. Three registry rows on sshlg.me tripped this on
+            # 2026-08-15 and none of them was miscased; the writer's only repair
+            # was to delete the contraction the pack had asked for.
+            if CONTRACTED_I.match(bare):
                 continue
             if bare[0].isupper():
                 findings.append(Finding(
