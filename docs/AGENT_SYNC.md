@@ -1,4 +1,4 @@
-<!-- agent-sync:generated source=super-ux@b026c13 cfg=7dcedebd99ad at=2026-08-14T14:30:31Z — regenerate with `agent_sync.py setup`, do not hand-edit -->
+<!-- agent-sync:generated source=super-ux@213ae1b cfg=9d3dbe8b5729 at=2026-08-15T23:50:49Z — regenerate with `agent_sync.py setup`, do not hand-edit -->
 
 # How documentation and coordination work in super-ux
 
@@ -19,7 +19,7 @@ them is the finding.** Reconcile before starting a task and after finishing it.
 
 - record plane: **fs** · lease: **local** — exclusive on this machine, advisory across machines · runs recorded **gated**
 - lease TTL 2700s, renewed every 300s
-- credentials read from `.env.agent-sync` in sshlg-skills — gitignored, never committed
+- credentials read from `(none found)` — gitignored, never committed
 
 ### Id registers — reserve before you write
 
@@ -35,7 +35,10 @@ None declared here. Ids live in the parent repository; reserve them there.
 - `docs/evidence/verification.md`
 - `docs/evidence/retro.md`
 - `.github/workflows/*.yml`
-- `test/validate.py`
+- `plugins/*/scripts/*.py`
+- `docs/brand/lint.py`
+- `docs/ux/lint.py`
+- `test/*.py`
 
 ### Gates run before a change is considered done
 

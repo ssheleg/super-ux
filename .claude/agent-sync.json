@@ -13,7 +13,10 @@
     "docs/evidence/verification.md",
     "docs/evidence/retro.md",
     ".github/workflows/*.yml",
-    "test/validate.py"
+    "plugins/*/scripts/*.py",
+    "docs/brand/lint.py",
+    "docs/ux/lint.py",
+    "test/*.py"
   ],
   "claimTags": {},
   "gates": [],
