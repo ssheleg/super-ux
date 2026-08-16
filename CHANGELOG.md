@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.41.5 — 2026-08-16
+
+**`copywriting` now answers when somebody asks for a landing page.** The unqualified
+`сделай лендинг` and `build a landing page` reached no route at all — a landing is the
+canonical two-craft surface, and the ask for one arrived at neither craft.
+
+Both phrases are advertised here and in `sheleg-design`, so they reach the two together,
+which is what the family's composition order says a landing needs. Verb phrases rather than
+the bare noun: with a bare `лендинг` trigger, `напиши текст для лендинга` picked up a
+visual route it never asked for. With the phrase it stays copywriting alone, measured
+before and after.
+
 ## 0.41.4 — 2026-08-16
 
 **This gate can now see an invariant it breaks one repository away.** The family umbrella
