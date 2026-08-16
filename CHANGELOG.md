@@ -90,6 +90,11 @@ Both are recoveries from the same mistake, and only one of them is safe.
 
 ## 0.41.2 — 2026-08-16
 
+> **Never released on its own.** There is no `v0.41.2` tag and no `0.41.2` on npm,
+> so `npm install super-ux@0.41.2` and `git checkout v0.41.2` both fail. This section
+> describes work that shipped inside a later version. The note is here because
+> the section reads as a release (2026-08-17, umbrella `B-71`).
+
 **A source file is not prose, and the prose rules were reading all of it.** On
 `sshlg.me`, whose `Sources:` block points `marketing` at `src/data/*.ts`, that
 produced 20 rhetorical-dash errors inside `//` comments and 7 keyword-stuffing
@@ -143,6 +148,11 @@ real finding surfaced on the way: a rhetorical dash in live copy that had been
 buried under twenty false ones.
 
 ## 0.41.1 — 2026-08-16
+
+> **Never released on its own.** There is no `v0.41.1` tag and no `0.41.1` on npm,
+> so `npm install super-ux@0.41.1` and `git checkout v0.41.1` both fail. This section
+> describes work that shipped inside a later version. The note is here because
+> the section reads as a release (2026-08-17, umbrella `B-71`).
 
 **`B024` fined the writer for meeting a threshold this pack sets.** The
 sentence-case check reads any capitalised word inside a sentence as Title Case,
@@ -1246,6 +1256,11 @@ copy.
   BP-077 (points to progressive profiling).
 
 ## 0.25.0 — 2026-07-29
+
+> **Never released on its own.** There is no `v0.25.0` tag and no `0.25.0` on npm,
+> so `npm install super-ux@0.25.0` and `git checkout v0.25.0` both fail. This section
+> describes work that shipped inside a later version. The note is here because
+> the section reads as a release (2026-08-17, umbrella `B-71`).
 
 The catalog knew how to sell inside an app and almost nothing about selling
 on the web. Two funnels were missing: web-to-web (landing → pricing →
