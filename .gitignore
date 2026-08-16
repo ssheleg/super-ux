@@ -12,6 +12,11 @@ graphify-out/.graphify_*
 graphify-out/cache/
 graphify-out/cost.json
 graphify-out/graph.html
+# A dated run directory is a snapshot of the three committed files as they stood
+# on that date — history git already keeps, growing one folder per refresh. It was
+# covered by no rule here, so `git status` in the umbrella read this submodule dirty
+# permanently and the stage-10 "every repo clean" check had a standing false positive.
+graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 
 # agent-sync run state — per-machine, never shared
 .agent-sync/
