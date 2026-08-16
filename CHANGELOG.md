@@ -21,6 +21,42 @@ where it would have been overwritten by the next sync — a plugin-owned file
 edited in a downstream project serves that project until the day it silently
 does not. Ported up with its fixture, which was watched failing.
 
+### Three more changes landed in this version, from a concurrent session
+
+They carry the same `0.41.3` in every manifest and sit inside the tag, so the
+entry names them rather than leaving a release whose changelog describes a
+quarter of it. Summarised from their own commit messages, not re-derived.
+
+- **`B021` reads the built page** (`6fe309e`). The registry records what a
+  reader sees, and the check looked for that string in component *source*, where
+  an interpolated value never appears literally and an inline `<strong>` or `<a>`
+  splits a sentence the registry stores whole. On `sshlg.me` that was five errors
+  with no honest repair — hardcode the number and lose the guarantee it is
+  derived, or delete the rows and lose the check. `rendered_text()` now reads
+  `dist`, `build`, `out` or `_site`, first that exists, and a project that does
+  not build keeps the byte-exact source comparison. The message says which of the
+  two it checked. **This closes the last class `sshlg.me` had open**: that
+  project went from five errors to zero.
+- **The same fix, applied to the script this package actually ships**
+  (`213ae1b`). It had gone into `docs/brand/lint.py`, the dogfood copy, while
+  `plugins/super-ux/scripts/brand_lint.py` is what `package.json` ships and what
+  `validate.py` reads as the authority — so it reached this repository's own
+  linting and no installed project. The pair check was red the whole time and the
+  commit went in without running it, which its author recorded rather than
+  quietly fixed.
+- **`guardedFiles` covers the linters** (`3e133ab`). The manifests, the evidence
+  ledgers and `test/validate.py` were guarded; `docs/brand/lint.py` and
+  `plugins/super-ux/scripts/brand_lint.py` were not, and that is exactly where two
+  agents collided on 2026-08-16 and lost about twenty minutes. "A config that
+  guards what is edited rarely and leaves what is edited hourly open describes a
+  project nobody works on."
+
+**The tag was placed on the tip rather than on the release commit**, by the run
+that wrote the section above this one: `git tag` was given no target and took
+`HEAD`, which by then carried three commits it had not seen. Left where it is —
+a published tag is not moved — and the entry was widened to match it instead.
+Both are recoveries from the same mistake, and only one of them is safe.
+
 ## 0.41.2 — 2026-08-16
 
 **A source file is not prose, and the prose rules were reading all of it.** On
