@@ -82,6 +82,19 @@ was the only server returning flows, written while Mobbin was registered and
 unauthenticated — invisible, therefore uncheckable. Signing in refuted it inside
 an hour. The correction is 0.35.1.
 
+## 2026-08-17 (second) — reference sweeps become askable, v0.43.0
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-01 | The capability predates the routing by eight releases | `ux-flows/SKILL.md` carries *"Real flows off the shelf, before you invent one"* with the Refero/Mobbin distinction, and `references/funnel-research.md` FR-01 collects live competitor funnels; neither word was in any `description` | observed |
+| R-02 | The cost was a routing dead zone | before, through the umbrella's matcher: `найди референсы дизайна`, `подбери референсы`, `find reference screens` → `[]`; after → `["super-ux"]` | observed |
+| R-03 | The split is the other pack's own rule, not a preference | `sheleg-design/DESIGN_SYNC_BRIDGE.md` §4: *"A reference sweep answers what a good version of this screen contains — sections, hierarchy, content order. It never answers what it looks like."* Structure lands here; the visual half went to `sheleg-design` 1.40.0 | observed |
+| R-04 | Both routers rise when a prompt names both halves | `нужны визуальные референсы` → `["super-ux","sheleg-design"]` | observed |
+| R-05 | The addition paid for itself in characters | the funnel clause was rewritten rather than extended: 893 → 940, leaving 30 free under the 970 working limit | observed |
+| R-06 | The gate is green | `python3 test/validate.py` → `OK (3500 checks)`; `npm test` exit 0 across all four suites | observed |
+
+**Rows at `never`: 0.**
+
 ## 2026-08-17 — the growth vocabulary becomes advertised, v0.42.0
 
 | REQ | What ships | Verified by | Watched |

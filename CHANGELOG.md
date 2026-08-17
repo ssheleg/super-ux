@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.43.0 — 2026-08-17
+
+**`ux-flows` has told agents to sweep real products before inventing a flow since 0.35.0,
+and no prompt could ask for it.** The body carries the rule — *"Real flows off the shelf,
+before you invent one"*, with Refero read for structure and Mobbin looked at for whether it
+reads — and `references/funnel-research.md` FR-01 collects live competitor funnels. The
+`description` said flows, wireframes and task analysis, so `найди референсы дизайна`,
+`подбери референсы` and `find reference screens` all reached no route at all.
+
+The word is now advertised: the funnel clause reads *"read against reference screens from
+products already in the category"*, which says the same thing in fewer characters and makes
+`reference screens` / `референсы` routable.
+
+**Why this skill and not the visual one.** `sheleg-design`'s own `DESIGN_SYNC_BRIDGE.md` §4
+opens with *"A reference sweep answers what a good version of this screen contains —
+sections, hierarchy, content order. It never answers what it looks like."* Structure is this
+chain's ground, so the unqualified word lands here; the visual half (`visual reference` /
+`визуальные референсы`) went to `sheleg-design` 1.40.0 in the same pass. A prompt naming both
+— `нужны визуальные референсы` — now raises both routers, which is the wanted answer.
+
+**Budget:** 893 → 940 characters, 30 free under the 970 working limit; the rewritten funnel
+clause paid for most of the addition.
+
 ## 0.42.0 — 2026-08-17
 
 **The pack has carried the growth vocabulary since long before it could be asked for it.**
