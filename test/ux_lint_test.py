@@ -244,6 +244,65 @@ silent("U021 clean when a built screen names its code",
        {"screens.md": screens("- **Purpose:** p\n- **Coverage:** src/a.tsx:1\n"
                               "- **Status:** built\n")}, {"U021"})
 
+# --- U055/U056: a Coverage claim is a claim about code ---------------------
+#
+# Both directions, per the standard: the defect each must catch, and the shapes
+# each must NOT flag. The counter-cases are the expensive half here — a widened
+# path pattern flagged three correct prose entries before it was narrowed.
+
+case("U055 a partial claim that names no file",
+     {"screens.md": screens("- **Purpose:** p\n- **Coverage:** partial — the route is built\n"
+                            "- **Status:** built\n")},
+     warns={"U055"})
+silent("U055 clean when the claim cites a file",
+       {"screens.md": screens("- **Purpose:** p\n- **Coverage:** partial — src/a.tsx\n"
+                              "- **Status:** built\n")},
+       {"U055"}, root_files={"src/a.tsx": "x\n"})
+silent("U055 silent on `none`, which claims nothing about code",
+       {"screens.md": screens("- **Purpose:** p\n- **Coverage:** none — not built yet\n"
+                              "- **Status:** designed\n")}, {"U055"})
+silent("U055 silent on a screen with no Coverage line at all",
+       {"screens.md": screens("- **Purpose:** p\n- **Status:** designed\n")}, {"U055"})
+silent("U055 silent on prose carrying a slash but no file",
+       {"screens.md": screens("- **Purpose:** p\n"
+                              "- **Coverage:** partial — client/server split, see src/a.tsx\n"
+                              "- **Status:** built\n")},
+       {"U055"}, root_files={"src/a.tsx": "x\n"})
+
+case("U056 a cited file that does not exist",
+     {"screens.md": screens("- **Purpose:** p\n- **Coverage:** full — src/gone.tsx\n"
+                            "- **Status:** built\n")},
+     errors={"U056"})
+silent("U056 clean when the cited file exists",
+       {"screens.md": screens("- **Purpose:** p\n- **Coverage:** full — src/a.tsx\n"
+                              "- **Status:** built\n")},
+       {"U056"}, root_files={"src/a.tsx": "x\n"})
+# --- U057: a flow's verdict must be measurable, not inherited --------------
+
+case("U057 a flow whose screens name no implementing file",
+     {"flows.md": "# F\n\n### FLW-01: a\n- **Screens traversed:** SCR-01\n",
+      "screens.md": screens("- **Used by:** FLW-01 (step 1)\n"
+                            "- **Coverage:** partial — the route is built\n"
+                            "- **Status:** built\n")},
+     warns={"U057"})
+silent("U057 clean when one of the flow's screens cites a file",
+       {"flows.md": "# F\n\n### FLW-01: a\n- **Screens traversed:** SCR-01\n",
+        "screens.md": screens("- **Used by:** FLW-01 (step 1)\n"
+                              "- **Coverage:** full — src/a.tsx\n"
+                              "- **Status:** built\n")},
+       {"U057"}, root_files={"src/a.tsx": "x\n"})
+silent("U057 silent on a flow that names no screen — that is U010's subject",
+       {"flows.md": "# F\n\n### FLW-02: b\n- **Screens traversed:** SCR-01\n",
+        "screens.md": screens("- **Used by:** FLW-02 (step 1)\n"
+                              "- **Coverage:** full — src/a.tsx\n"
+                              "- **Status:** built\n")},
+       {"U057"}, root_files={"src/a.tsx": "x\n"})
+
+silent("U056 tolerates a line suffix on the citation",
+       {"screens.md": screens("- **Purpose:** p\n- **Coverage:** full — src/a.tsx:42\n"
+                              "- **Status:** built\n")},
+       {"U056"}, root_files={"src/a.tsx": "x\n"})
+
 # --- U030..U033: the vision layer -----------------------------------------
 
 case("U030 a vision missing one of the nine sections",

@@ -728,3 +728,6 @@ here — the meaning of a rule never lives only in its source.
 | U052 | W | the project declares web surfaces and no screen carries the block |
 | U053 | E | a `Web surface:` block is missing one of its five required fields |
 | U054 | W | a flow starts at a URL while the project declares no web surfaces |
+| U055 | W | a `Coverage:` value other than `none` names no file — a claim about code that cites no code is unfalsifiable |
+| U056 | E | a path cited in `Coverage:` does not exist under the project root |
+| U057 | W | a flow whose screens name no implementing file — its coverage can only be inherited, never measured |

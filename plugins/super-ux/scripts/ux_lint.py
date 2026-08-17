@@ -102,6 +102,14 @@ def entry_blocks(text: str, prefix: str) -> dict[str, str]:
     return out
 
 
+# A cited path, deliberately narrow: it must carry a slash AND an extension, so
+# `src/routes/x.tsx:12` matches and prose like "partial — client/server split"
+# or "the route is built" does not. Widening this to any slash-bearing token was
+# tried and flagged three correct prose entries, which is the false positive that
+# gets a rule switched off.
+CITED_PATH = re.compile(r"\b([\w.-]+(?:/[\w.-]+)+\.[A-Za-z][\w]{0,4}(?::\d+)?)")
+
+
 def screen_blocks(text: str) -> dict[str, str]:
     """Map SCR-id -> its section body."""
     return entry_blocks(text, "SCR")
@@ -289,6 +297,33 @@ def main() -> int:
         for orphan in sorted(screen_ids - used):
             warn(f"[U011] screens.md: {orphan} is used by no flow (orphan)")
 
+        # --- A flow's verdict must be measurable, not inherited -------------
+        #
+        # The layer order is foundation → flows → screens → scenarios, and audits
+        # in practice attach to the two ENDS. Flows sit between and are the only
+        # layer with no artefact of their own to measure: a flow is a path across
+        # screens, so the cheap thing is to derive its verdict from theirs — and a
+        # derived verdict presented as a measured one is what let one project's
+        # `flows.md` carry no code verdict for 42 flows across three weeks, its
+        # header delegating to an audit that had itself derived them.
+        #
+        # This does not verdict a flow. It reports the flows for which no verdict
+        # can be measured at all, which is the state that was invisible.
+        for fid, fbody in sorted(entry_blocks(flows, "FLW").items()):
+            mine = [b for b in screen_blocks(screens).values()
+                    if re.search(r"\*\*Used by:\*\*[^\n]*\b" + re.escape(fid) + r"\b", b)]
+            if not mine:
+                continue  # a flow naming no screen is U010's subject, not this one
+            cited_anywhere = False
+            for b in mine:
+                m = re.search(r"\*\*Coverage:\*\*\s*(.+)", b)
+                if m and CITED_PATH.search(m.group(1)):
+                    cited_anywhere = True
+                    break
+            if not cited_anywhere:
+                warn(f"[U057] flows.md: {fid} has no screen naming an implementing "
+                     f"file, so its coverage cannot be measured — only inherited")
+
     # --- Scenario traces resolve ---
     if ids(scenarios, "SCN"):
         story_ids = set(ids(foundation, "ST"))
@@ -317,6 +352,9 @@ def main() -> int:
     # --- Screen-level: Figma frames, coverage, drift status ---
     if has_screens:
         fig = figma_enabled(foundation)
+        # Cited paths are project-relative, so they resolve against the tree the
+        # ux directory sits in — the same derivation `check_links` already uses.
+        screens_root = ux.parent.parent if ux.name == "ux" else ux.parent
         for sid, body in screen_blocks(screens).items():
             status_m = re.search(r"\*\*Status:\*\*\s*(designed|built|drifted|retired)", body)
             status = status_m.group(1) if status_m else None
@@ -335,6 +373,22 @@ def main() -> int:
             cov = cov_m.group(1).strip() if cov_m else ""
             if status == "built" and (not cov or cov.lower().startswith("none")):
                 warn(f"[U021] screens.md: {sid} is 'built' but has no Coverage")
+            # A Coverage value other than `none` is a CLAIM ABOUT CODE, and a claim
+            # about code that names no code is unfalsifiable — not by a script and
+            # not by a reader, who has nowhere to go to disagree. Measured in a real
+            # project: five screens carried `partial` in the index while their
+            # entries named no file, and one of them said `none — no route exists`
+            # about a route a task had built the day before. Two fields of one
+            # record contradicting each other, neither checked against the other.
+            if cov and not cov.lower().startswith("none"):
+                cited = CITED_PATH.findall(cov)
+                if not cited:
+                    warn(f"[U055] screens.md: {sid} claims Coverage '{cov}' and names no file")
+                for rel in cited:
+                    # The line suffix is part of a citation, not of the path.
+                    target = (screens_root / rel.split(":", 1)[0])
+                    if not target.exists():
+                        err(f"[U056] screens.md: {sid} cites '{rel}', which does not exist")
 
     check_vision(ux, vision)
     check_web_surface(screens, flows)

@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.44.0 — 2026-08-17
+
+**Three lint codes for the two layers whose claims nothing could check.** `U055`, `U056` and
+`U057`; the linter goes 43 → **54** fixtures, each code carrying the defect it must catch and
+the shapes it must **not**.
+
+### A `Coverage` claim is a claim about code (`U055`, `U056`) — closes #6
+
+Measured in a real project: five screens carried `partial` in the index while their entries
+named no file, and one said `none — no per-account memberships route exists` about a route a
+task had built the day before. **Two fields of one record contradicted each other for a day,
+and neither was checked against the other.**
+
+- `U055` (warn) — a `Coverage` value other than `none` that names no file. A claim about code
+  citing no code cannot be checked by a script *or* by a reader, who has nowhere to go to
+  disagree.
+- `U056` (error) — a cited path that does not exist. A stale citation is the same defect with
+  the means to notice.
+
+**The path pattern is deliberately narrow and that was the design decision, not a detail.** It
+requires a slash **and** an extension, so `src/routes/x.tsx:12` matches while *"partial —
+client/server split"* and *"the route is built"* do not. A wider pattern was tried first and
+flagged three correct prose entries — the false positive that gets a rule switched off inside a
+day, taking the real check with it.
+
+### A flow's verdict must be measurable, not inherited (`U057`) — closes #7
+
+The chain is foundation → flows → screens → scenarios, and audits in practice attach to the two
+**ends**. Flows sit between and are the only layer with no artefact of their own: a flow is a
+path across screens, so the cheap thing is to derive its verdict from theirs — and a derived
+verdict presented as a measured one is how one project's `flows.md` carried **no code verdict
+for 42 flows across three weeks**, its header delegating to an audit that had itself derived
+them, and a later scenario walk refuting that audit on every clause without touching flows.
+
+`U057` does not verdict a flow. It reports the flows for which **no verdict can be measured at
+all** — the state that was invisible. A flow naming no screen stays `U010`'s subject, not this
+one.
+
+Run against this repository's own chain: clean.
+
 ## 0.43.0 — 2026-08-17
 
 **`ux-flows` has told agents to sweep real products before inventing a flow since 0.35.0,
