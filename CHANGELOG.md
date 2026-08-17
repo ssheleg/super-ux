@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.42.0 — 2026-08-17
+
+**The pack has carried the growth vocabulary since long before it could be asked for it.**
+Counted across `plugins/super-ux`: **448** mentions of funnels, **499** of onboarding, **493**
+of paywalls, **196** of retention, **171** of activation, **100** of referral. `retention`,
+`onboarding`, `paywall`, `winback`, `lifecycle`, `activation`, `virality` and `referral` are
+first-class tags in the practice taxonomy. `references/funnel-research.md` is 190 lines of
+method, `FR-01`..`FR-07`. And not one of those words appeared in any skill's `description`.
+
+That mattered more than it looks, because **a description is a routing surface**. The
+umbrella's prompt hook may only fire on words the skill itself advertises — the fixture that
+enforces it does a literal substring check — so fifteen of fifteen realistic growth prompts
+reached no route at all: `как повысить ретеншн пользователей`, `спроектируй воронку
+активации`, `добавь пейволл после онбординга`, `improve user retention`, `reduce churn on the
+trial`, `add a paywall screen`. Measured by `test/route_coverage.js` in the umbrella.
+
+### Two descriptions, and which word goes where is not a preference
+
+`funnel-research.md`'s own `FR-07` already says where each finding lands, so the split follows
+it rather than convenience:
+
+| Word | Skill | Why that one |
+|---|---|---|
+| funnel, onboarding, paywall, activation funnel | `ux-flows` | *"The funnel's step chain and its branches → `docs/ux/flows.md`"* — and this skill's body already names the chain (ad → landing → quiz → loading → offer → paywall → checkout → success) |
+| user retention, churn | `ux-foundation` | *"Who the buyer is, what job they are hiring the product for → `foundation.md`"*; a journey covers before, **during and after**, which is where retention is won and churn starts |
+
+Neither skill could carry the other's words honestly, which is why the route now fronts two
+skills rather than one.
+
+### The English half is phrases and the Russian half is bare words, and that was measured
+
+A first pass advertised the bare `activation` and `retention`. The umbrella's matcher stems
+them to `activat-` and `retent-`, and the probe caught the cost immediately: `activate the
+virtualenv` and `activate the feature flag` routed to `/ux`, and so did `retention policy for
+logs`. The English words became `activation funnel` and `user retention`; «активация» and
+«ретеншн» stayed single words, because nobody here writes «активация» about a virtualenv.
+After the change all three noise cases are silent and every growth prompt still routes.
+
+**Budget:** `ux-flows` 592 → 884 characters, `ux-foundation` 401 → 619. Both inside the 970
+working limit with room left, which was the point of not spending it on the bare words.
+
+`python3 test/validate.py` → `OK (3500 checks)`; the full gate green.
+
 ## 0.41.5 — 2026-08-16
 
 **`copywriting` now answers when somebody asks for a landing page.** The unqualified

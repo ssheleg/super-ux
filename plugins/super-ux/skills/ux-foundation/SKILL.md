@@ -1,6 +1,6 @@
 ---
 name: ux-foundation
-description: Use when defining or revising WHO the users are and WHY they use the product - personas, Jobs to Be Done, customer journey maps, user stories with acceptance criteria. Maintains docs/ux/foundation.md, the WHY layer that UX scenarios trace to. Triggers - "jtbd" / "джобы", "customer journey" / "карта пути", "user story" / "юзер стори", "personas" / "персоны", "who is this for", new product discovery.
+description: Use when defining or revising WHO the users are and WHY they use the product - personas, Jobs to Be Done, customer journey maps, user stories with acceptance criteria. A journey covers the end-to-end experience including what happens after the first session - where a user comes back, where user retention is won, and where churn actually starts. Maintains docs/ux/foundation.md, the WHY layer that UX scenarios trace to. Triggers - "jtbd" / "джобы", "customer journey" / "карта пути", "user story" / "юзер стори", "personas" / "персоны", "who is this for", "user retention" / "ретеншн", "churn" / "отток", new product discovery.
 license: MIT
 ---
 

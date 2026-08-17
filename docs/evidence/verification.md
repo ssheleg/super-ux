@@ -82,6 +82,22 @@ was the only server returning flows, written while Mobbin was registered and
 unauthenticated — invisible, therefore uncheckable. Signing in refuted it inside
 an hour. The correction is 0.35.1.
 
+## 2026-08-17 — the growth vocabulary becomes advertised, v0.42.0
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-01 | The pack carried the knowledge and advertised none of it | `grep -roicE` over `plugins/super-ux`: funnel 448, onboarding 499, paywall 493, retention 196, activation 171, referral 100; zero of those words in any `description:` before this release | observed |
+| R-02 | The cost was a routing dead zone, not a documentation gap | the umbrella's `node test/route_coverage.js`: 15 of 15 growth prompts reached `[]` | observed |
+| R-03 | Which word goes to which skill follows `FR-07`, not convenience | `references/funnel-research.md` FR-07 maps the step chain to `flows.md` and the buyer/after-the-session layer to `foundation.md`; `ux-flows` takes funnel/onboarding/paywall/activation funnel, `ux-foundation` takes user retention/churn | observed |
+| R-04 | The bodies already backed both descriptions | `ux-flows` names funnels five times including the ad→landing→quiz→offer→paywall→checkout chain; `ux-foundation` line 31 defines a journey as before, during **and after** the product | observed |
+| R-05 | Bare English stems were tried and measured, then narrowed | with bare `activation`/`retention` the umbrella matcher stemmed to `activat-`/`retent-` and routed `activate the virtualenv`, `activate the feature flag` and `retention policy for logs` to `/ux`; as `activation funnel` and `user retention` all three go silent and every growth prompt still routes | planted — the noise cases were driven through the real matcher before and after the narrowing |
+| R-06 | The Russian half stays bare, deliberately | «активация» and «ретеншн» carry no second trade in this vocabulary; both still match their inflected forms («активацию», «ретеншн») through the umbrella's stemmer | observed |
+| R-07 | Budget spent and budget left | `ux-flows` 592 → 884 chars, `ux-foundation` 401 → 619; the 970 working limit holds with 86 and 351 free | observed |
+| R-08 | The gate is green | `python3 test/validate.py` → `OK (3500 checks)`; `npm test` exit 0 across all four suites | observed |
+| R-09 | The advertised trigger list matches what is advertised | the `Triggers -` lists were corrected to `"activation funnel"` and `"user retention"` in the same edit that changed the prose, so the description does not advertise one word and list another | observed |
+
+**Rows at `never`: 0.**
+
 ## 2026-08-10 — UX linter codes and coverage, v0.34.0
 
 | REQ | What ships | Verified by | Watched |
