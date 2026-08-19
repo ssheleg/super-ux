@@ -375,11 +375,133 @@ silent("U054 clean on an in-app entry point",
                     "- **Screens traversed:** SCR-01\n",
         "screens.md": screens("- **Purpose:** p\n- **Status:** designed\n")}, {"U054"})
 
+# --- U060..U065: a requirement with no observable is unfinished -------------
+#
+# The rule the requirement layer stated in prose and had no mechanism for: a
+# scenario or a story that names no observable cannot be connected to evidence
+# afterwards without inventing the test after reading the implementation. The
+# screens layer below it got exactly this check (U055/U056); the layer that
+# DEFINES the requirement did not, so `ux_lint.py` never opened a scenario body
+# at all -- measured by grep: no rule read `Expected result`, `Acceptance
+# criteria` or `Coverage` above the screens layer.
+#
+# Field spelling is deliberately tolerant (`Expected result` / `Expected`,
+# `Acceptance criteria` / `Acceptance`): the question these codes ask is whether
+# an observable EXISTS, and a rule that answered "the field is spelled the long
+# way" would be a different rule wearing this one's number.
+
+
+def scn(body: str, sid: str = "SCN-001") -> str:
+    """A scenarios.md with one indexed entry -- the smallest shape U060 reads."""
+    return (f"# Scenarios\n\n| ID | Title |\n|---|---|\n| {sid} | a |\n\n"
+            f"### {sid}: a\n{body}")
+
+
+def story(body: str, sid: str = "ST-001") -> str:
+    """A foundation.md with one user story."""
+    return f"# Foundation\n\n### {sid}: a\n{body}"
+
+
+STEPS = "- **Steps:**\n  1. user acts -> system responds\n"
+
+case("U060 an implemented scenario that states no observable",
+     {"scenarios.md": scn(STEPS + "- **Status:** implemented\n"
+                          "- **Coverage:** src/a.tsx\n")},
+     errors={"U060"}, root_files={"src/a.tsx": "x\n"})
+silent("U060 clean when the scenario states its expected result",
+       {"scenarios.md": scn(STEPS + "- **Expected result:** the project appears in the sidebar\n"
+                            "- **Status:** implemented\n- **Coverage:** src/a.tsx\n")},
+       {"U060"}, root_files={"src/a.tsx": "x\n"})
+silent("U060 accepts the short `Expected:` spelling this pack's own chain uses",
+       {"scenarios.md": scn(STEPS + "- **Expected:** the project appears in the sidebar\n"
+                            "- **Status:** implemented\n- **Coverage:** src/a.tsx\n")},
+       {"U060"}, root_files={"src/a.tsx": "x\n"})
+silent("U060 silent while the scenario is still a draft, which declares itself unfinished",
+       {"scenarios.md": scn(STEPS + "- **Status:** draft\n")}, {"U060"})
+silent("U060 silent on a retired scenario",
+       {"scenarios.md": scn(STEPS + "- **Status:** retired\n")}, {"U060"})
+case("U060 a placeholder standing in for an observable",
+     {"scenarios.md": scn("- **Expected result:** <what the user observes on success>\n"
+                          "- **Status:** validated\n")},
+     errors={"U060"})
+
+case("U061 a story that states no acceptance criteria",
+     {"foundation.md": story("- **Story:** As P-01, I want x, so that y.\n"
+                             "- **Priority:** could\n- **Status:** delivered\n")},
+     errors={"U061"})
+silent("U061 clean when the story carries Given/When/Then criteria",
+       {"foundation.md": story("- **Story:** As P-01, I want x, so that y.\n"
+                               "- **Acceptance criteria:**\n"
+                               "  - Given a TTY, when I run it, then a list appears.\n"
+                               "- **Priority:** could\n- **Status:** delivered\n")},
+       {"U061", "U062"})
+silent("U061 silent while the story is only proposed",
+       {"foundation.md": story("- **Story:** As P-01, I want x, so that y.\n"
+                               "- **Priority:** could\n- **Status:** proposed\n")},
+       {"U061"})
+case("U061 an acceptance field with nothing under it",
+     {"foundation.md": story("- **Acceptance criteria:**\n"
+                             "- **Priority:** could\n- **Status:** delivered\n")},
+     errors={"U061"})
+
+case("U062 acceptance criteria that state no observable outcome",
+     {"foundation.md": story("- **Acceptance criteria:**\n"
+                             "  - The installer is fast and the menu is legible.\n"
+                             "- **Status:** delivered\n")},
+     warns={"U062"})
+silent("U062 accepts a criterion compressed to Given/then, the shape this pack writes",
+       {"foundation.md": story("- **Acceptance:**\n"
+                               "  - Given an existing rule file, then the line reads `skip:`.\n"
+                               "- **Status:** delivered\n")},
+       {"U062"})
+
+IMPLEMENTED = "- **Expected result:** the project appears\n- **Status:** implemented\n"
+
+case("U063 an implemented scenario naming no code",
+     {"scenarios.md": scn(IMPLEMENTED)},
+     warns={"U063"})
+silent("U063 clean when the implemented scenario cites its code",
+       {"scenarios.md": scn(IMPLEMENTED + "- **Coverage:** src/a.tsx:12\n")},
+       {"U063"}, root_files={"src/a.tsx": "x\n"})
+silent("U063 silent on a scenario that does not claim to be implemented",
+       {"scenarios.md": scn("- **Expected result:** the project appears\n"
+                            "- **Status:** validated\n")}, {"U063"})
+
+case("U064 a scenario Coverage claim that names no file",
+     {"scenarios.md": scn(IMPLEMENTED + "- **Coverage:** partial — the route is built\n")},
+     warns={"U064"})
+silent("U064 clean when the scenario claim cites a file",
+       {"scenarios.md": scn(IMPLEMENTED + "- **Coverage:** partial — src/a.tsx\n")},
+       {"U064"}, root_files={"src/a.tsx": "x\n"})
+silent("U064 silent on `none`, which claims nothing about code",
+       {"scenarios.md": scn("- **Expected result:** the project appears\n"
+                            "- **Status:** draft\n- **Coverage:** none yet\n")}, {"U064"})
+
+case("U065 a scenario citing a file that does not exist",
+     {"scenarios.md": scn(IMPLEMENTED + "- **Coverage:** src/gone.tsx\n")},
+     errors={"U065"})
+silent("U065 clean when the cited file exists",
+       {"scenarios.md": scn(IMPLEMENTED + "- **Coverage:** src/a.tsx:42\n")},
+       {"U065"}, root_files={"src/a.tsx": "x\n"})
+
+
 # --- the shipped template must pass from the first second ------------------
 
 silent("the shipped screens template lints clean",
        {"screens.md": (ROOT / "templates" / "screens.md").read_text(encoding="utf-8")},
-       {f"U{n:03d}" for n in range(1, 60)})
+       {f"U{n:03d}" for n in range(1, 70)})
+
+# Standing instruction #3: a new check runs against the seeded template before
+# it runs against anything else. The requirement layer's two templates are all
+# HTML comments by design, and `read()` strips those -- so a check that read the
+# raw text would fail on every fresh install, which is the one habit this
+# product cannot survive.
+silent("the shipped scenarios template lints clean",
+       {"scenarios.md": (ROOT / "templates" / "scenarios.md").read_text(encoding="utf-8")},
+       {f"U{n:03d}" for n in range(1, 70)})
+silent("the shipped foundation template lints clean",
+       {"foundation.md": (ROOT / "templates" / "foundation.md").read_text(encoding="utf-8")},
+       {f"U{n:03d}" for n in range(1, 70)})
 
 
 if failures:
@@ -387,4 +509,16 @@ if failures:
     for f in failures:
         print("  -", f)
     raise SystemExit(1)
+
+# The ratchet, applied to the file that carries it. `test/floors.json` has held a
+# floor for this script since v0.36.1 and nothing read it: `check_floor` was
+# called for `validate.py` alone, so two of the three recorded floors were
+# decorative and a deleted fixture would have dropped the count in silence —
+# which is the exact failure the floors file exists to make impossible.
+sys.path.insert(0, str(ROOT / "test"))
+from validate import check_floor  # noqa: E402
+
+rc = check_floor("ux_lint_test.py", checks)
+if rc:
+    raise SystemExit(rc)
 print(f"OK ({checks} checks)")

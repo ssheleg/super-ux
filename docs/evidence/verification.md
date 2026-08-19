@@ -8,6 +8,56 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-19 — the requirement layer gets its observable, SU-01 (M-17)
+
+Manifesto M-17: *a requirement with no observable is unfinished, because you
+cannot connect it to the evidence graph later without inventing the test after
+seeing the implementation.* The layer that defines the requirement had the rule
+in prose and no mechanism: before this change `plugins/super-ux/scripts/ux_lint.py`
+contained the strings `Expected` and `Acceptance criteria` **zero** times
+(`git show a8640b1:plugins/super-ux/scripts/ux_lint.py | grep -c "Expected\|Acceptance
+criteria"` → 0) and never read a scenario or
+story body. The screens layer one level below had had exactly this check since
+`U055`/`U056`.
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-35 | `U060` refuses a scenario past `draft` that states no observable result, and treats a `<placeholder>` as no answer | Fixtures "U060 an implemented scenario that states no observable" and "U060 a placeholder standing in for an observable", against four negative twins (long spelling, short spelling, `draft`, `retired`); plant: `if not stated(field_body(body, SCENARIO_OBSERVABLE)):` → `if False:` | **planted** — exactly the two U060 cases red, every twin still green |
+| R-36 | `U061` refuses a story past `proposed` that states no acceptance criteria, including a label with nothing under it | Fixtures "U061 a story that states no acceptance criteria" and "U061 an acceptance field with nothing under it"; plant: `if not stated(criteria):` → `if False:` | **planted** — exactly the two U061 cases; see the note below, the first attempt at this plant did not land |
+| R-37 | `U062` warns when acceptance criteria name no outcome, and accepts the `Given …, then …` compression this pack writes | Fixture "U062 acceptance criteria that state no observable outcome" plus its negative twin; plant: `elif not re.search(r"\bthen\b", …)` → `elif False:` | **planted** — one case |
+| R-38 | `U063` warns when a scenario claims `implemented` and names no code | Fixture "U063 an implemented scenario naming no code" plus two twins; plant: `if status == "implemented" and (not cov or …)` → `if False:` | **planted**, and **observed** first — it fired on 15 of this pack's own 15 scenarios the first time it ran |
+| R-39 | `U064`/`U065` hold a scenario's `Coverage` to the same standard as a screen's: name a file, and the file resolves | Fixtures for both, with `none`-and-no-file twins; plants: `if unfalsifiable:` → `if False:` (one case), `for rel in missing:` → `for rel in []:` (one case), and `missing = []` inside `coverage_claim` — which turns **U056 and U065** red together, which is the evidence that the two layers share one owner rather than two copies | **planted** |
+| R-40 | This pack's own 15 scenarios cite the implementing code they were measured against, and the citations are re-resolved by the gate | `python3 docs/ux/lint.py` → exit 0, `OK — docs/ux is consistent`; plants **in the real chain**: `SCN-001` coverage → `bin/gone.js:1` gave `ERROR: [U065] … which does not exist`, exit 1; deleting `SCN-001`'s `**Expected:**` gave `ERROR: [U060]`, exit 1; a prose claim `full — the list is built` gave `warn: [U064]`, exit 0 as a warning should | **observed** then **planted** — the file was 15 for 15 unfalsifiable before this row, and `npm test` exited 0 over it |
+| R-41 | Every floor recorded in `test/floors.json` is read by the script it names | `check_floor` wired into `ux_lint_test.py` and `brand_lint_test.py`; plant: each floor set to 9999 in turn → exit 1, naming the script and the count it ran | **planted**, and **observed** first — the floors for both harnesses had been recorded since v0.36.1 and read by nothing, so a deleted fixture would have dropped the count in silence. Standing instruction #4 on the ratchet itself |
+
+**Rows at `never`: 0.**
+
+**The U061 plant did not land on its first attempt, and the miss was worth
+more than the plant.** Disabling the `U061` branch left `criteria` as `None` on
+the way into the `U062` `elif`, so `re.search(…, None)` raised `TypeError` and
+the harness died with a traceback instead of two clean red cases — exit 1 for
+the wrong reason, which is indistinguishable from a pass if only the exit code
+is read. The state is unreachable in the shipped code (`stated(None)` is always
+false, so the `elif` is never taken), but this file's own linter promises that
+malformed markdown is *reported, never raised*. `field_body(...) or ""` closes
+the crash path, and only then did the plant land as two red cases. Standing
+instruction #5, arrived at from the other direction: writing the fixture where
+only one branch can fire also means the branch must be *disableable* without
+taking the file down.
+
+**What the honest outcome was on the pack's own chain.** All 15 scenarios
+already carried an observable — spelled `**Expected:**`, the short form — so
+`U060` fired on none of them, and all 7 stories carry Given/When/Then criteria,
+so `U061` and `U062` fired on none. What was missing was the other half of
+M-17, the path from the observable to the evidence: 15 of 15 claimed
+`Status: implemented` and named no code. All 15 now cite the implementing
+ranges in `bin/super-ux.js` (and, for `SCN-011`, the two templates that decide
+the outcome), each verified by reading the file rather than by recall. **No
+scenario was marked covered that is not**, and no rule was weakened to get
+there: the tolerance for the short field spelling is a decision about the
+question `U060` asks, filed as `SU-02` so the field vocabulary gets its own
+code rather than being absorbed into this one.
+
 ## 2026-08-14 — web funnel mechanics, v0.40.0
 
 | REQ | What ships | Verified by | Watched |

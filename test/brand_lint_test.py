@@ -891,6 +891,14 @@ def main() -> int:
             print(f"FAIL: {failure}")
         print(f"{len(failures)} failure(s) out of {checks} checks")
         return 1
+    # See the note in ux_lint_test.py: this script's floor was recorded and
+    # never read, so a deleted fixture dropped the count in silence.
+    sys.path.insert(0, str(ROOT / "test"))
+    from validate import check_floor
+
+    rc = check_floor("brand_lint_test.py", checks)
+    if rc:
+        return rc
     print(f"OK ({checks} checks)")
     return 0
 

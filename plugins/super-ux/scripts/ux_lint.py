@@ -115,6 +115,133 @@ def screen_blocks(text: str) -> dict[str, str]:
     return entry_blocks(text, "SCR")
 
 
+def coverage_claim(cov: str, root: Path) -> tuple[bool, list[str]]:
+    """A `Coverage:` value read as the claim about code that it is.
+
+    Returns `(names_no_file, cited_paths_that_do_not_exist)`. One owner for two
+    layers: `screens.md` and the requirement layer above it ask the same two
+    questions of the same field, and an answer that differed between them would
+    be a second contract wearing one field's name.
+    """
+    cited = CITED_PATH.findall(cov)
+    missing = [rel for rel in cited if not (root / rel.split(":", 1)[0]).exists()]
+    return (not cited, missing)
+
+
+# --- The observable a requirement is unfinished without --------------------
+#
+# `Expected result` on a scenario and `Acceptance criteria` on a story are the
+# contract's names for the same thing: the thing a reader can watch happen and
+# disagree about. Until this block existed, no rule in this file opened a
+# scenario or a story body at all -- the contract asked for an observable and
+# nothing read for one, so a scenario could reach `implemented` having never
+# said what would be true if it worked.
+#
+# Field spelling is read tolerantly on purpose. `Expected:` and `Acceptance:`
+# are the short forms in live use (this pack's own chain writes both), and the
+# question these codes ask is whether an observable EXISTS. A rule that failed a
+# scenario for spelling its field the short way would be a different rule
+# wearing this one's number, and it would be the false positive that gets the
+# whole family switched off.
+SCENARIO_OBSERVABLE = re.compile(r"\*\*Expected(?:\s+result)?:\*\*[ \t]*(.*)")
+STORY_OBSERVABLE = re.compile(r"\*\*Acceptance(?:\s+criteria)?:\*\*[ \t]*(.*)")
+FIELD_START = re.compile(r"^\s*(?:[-*]\s+)?\*\*[^*]+:\*\*")
+PLACEHOLDER = re.compile(r"^(?:[-—–]+|<[^>]*>|tbd|todo|n/?a|\?+)$", re.IGNORECASE)
+
+# A scenario or story that declares itself unfinished is not a finding: it has
+# already said what these codes would say. `retired` and `dropped` are gone, and
+# `draft`/`proposed` are the states in which the observable is still being
+# written. Every other value -- including an unstated one -- is a claim to be
+# finished, and that claim is what gets checked.
+SCENARIO_UNFINISHED = ("draft", "retired")
+STORY_UNFINISHED = ("proposed", "dropped")
+
+
+def field_body(body: str, pattern: re.Pattern) -> str | None:
+    """A `**Field:**` value: the rest of its line plus the lines beneath it.
+
+    `None` when the field is absent, `""` when it carries nothing. Reading the
+    lines beneath is what makes `Acceptance criteria` legible at all -- the
+    contract puts its Given/When/Then bullets under the label, not after it.
+    """
+    m = pattern.search(body)
+    if m is None:
+        return None
+    out = [m.group(1).strip()]
+    for line in body[m.end():].splitlines():
+        if not line.strip():
+            continue
+        if FIELD_START.match(line) or line.lstrip().startswith("#"):
+            break
+        out.append(line.strip())
+    return "\n".join(part for part in out if part).strip()
+
+
+def stated(value: str | None) -> bool:
+    """Does this field say anything? A placeholder is not an answer."""
+    if value is None:
+        return False
+    for line in value.splitlines():
+        line = line.strip().lstrip("-*").strip()
+        if line and not PLACEHOLDER.match(line):
+            return True
+    return False
+
+
+def declared_status(body: str) -> str | None:
+    m = re.search(r"\*\*Status:\*\*\s*([A-Za-z-]+)", body)
+    return m.group(1).lower() if m else None
+
+
+def check_observables(scenarios: str, foundation: str, root: Path) -> None:
+    """A requirement with no observable is unfinished, and says so or is told.
+
+    The reason this is a gate and not advice: an observable added after the
+    implementation is read is not a test of the requirement, it is a
+    description of the code. By then the only honest thing left to measure is
+    whether the code does what the code does. So the observable is required at
+    the layer that DEFINES the requirement, where it is still cheap, and the
+    citation that connects it to code is required the moment the requirement
+    claims to be implemented.
+    """
+    for sid, body in sorted(entry_blocks(scenarios, "SCN").items()):
+        status = declared_status(body)
+        if status in SCENARIO_UNFINISHED:
+            continue
+        if not stated(field_body(body, SCENARIO_OBSERVABLE)):
+            err(f"[U060] scenarios.md: {sid} states no observable result — add "
+                f"**Expected result:**. A requirement with no observable cannot be "
+                f"connected to evidence later without inventing the test after "
+                f"reading the implementation")
+        cov_m = re.search(r"\*\*Coverage:\*\*\s*(.+)", body)
+        cov = cov_m.group(1).strip() if cov_m else ""
+        if status == "implemented" and (not cov or cov.lower().startswith("none")):
+            warn(f"[U063] scenarios.md: {sid} is 'implemented' and names no code — "
+                 f"the status claims an audit passed and nothing says against what")
+        if cov and not cov.lower().startswith("none"):
+            unfalsifiable, missing = coverage_claim(cov, root)
+            if unfalsifiable:
+                warn(f"[U064] scenarios.md: {sid} claims Coverage '{cov}' and names no file")
+            for rel in missing:
+                err(f"[U065] scenarios.md: {sid} cites '{rel}', which does not exist")
+
+    for sid, body in sorted(entry_blocks(foundation, "ST").items()):
+        status = declared_status(body)
+        if status in STORY_UNFINISHED:
+            continue
+        # `or ""` so the second question is never asked of None: the linter's
+        # promise is that malformed markdown is reported, not raised, and the
+        # only way to watch the first branch fail is to disable it.
+        criteria = field_body(body, STORY_OBSERVABLE) or ""
+        if not stated(criteria):
+            err(f"[U061] foundation.md: {sid} states no acceptance criteria — a story "
+                f"whose delivery nobody can witness is unfinished, whatever its status")
+        elif not re.search(r"\bthen\b", criteria, re.IGNORECASE):
+            warn(f"[U062] foundation.md: {sid} acceptance criteria name no outcome "
+                 f"(no 'then') — the contract's shape is Given/When/Then, and the "
+                 f"'then' is the only half an audit can check")
+
+
 WEB_SURFACE_FIELDS = ("Route", "Answers", "Indexable", "Without JS", "Entity")
 
 
@@ -261,6 +388,10 @@ def main() -> int:
     screens = read(ux / "screens.md")
     scenarios = read(ux / "scenarios.md")
 
+    # Cited paths are project-relative, so they resolve against the tree the
+    # ux directory sits in — the same derivation `check_links` already uses.
+    project_root = ux.parent.parent if ux.name == "ux" else ux.parent
+
     has_flows = bool(ids(flows, "FLW"))
     has_screens = bool(ids(screens, "SCR"))
     has_stories = bool(ids(foundation, "ST"))
@@ -352,9 +483,7 @@ def main() -> int:
     # --- Screen-level: Figma frames, coverage, drift status ---
     if has_screens:
         fig = figma_enabled(foundation)
-        # Cited paths are project-relative, so they resolve against the tree the
-        # ux directory sits in — the same derivation `check_links` already uses.
-        screens_root = ux.parent.parent if ux.name == "ux" else ux.parent
+        screens_root = project_root
         for sid, body in screen_blocks(screens).items():
             status_m = re.search(r"\*\*Status:\*\*\s*(designed|built|drifted|retired)", body)
             status = status_m.group(1) if status_m else None
@@ -381,15 +510,15 @@ def main() -> int:
             # about a route a task had built the day before. Two fields of one
             # record contradicting each other, neither checked against the other.
             if cov and not cov.lower().startswith("none"):
-                cited = CITED_PATH.findall(cov)
-                if not cited:
+                # The line suffix is part of a citation, not of the path --
+                # `coverage_claim` owns that, for this layer and the one above.
+                unfalsifiable, missing = coverage_claim(cov, screens_root)
+                if unfalsifiable:
                     warn(f"[U055] screens.md: {sid} claims Coverage '{cov}' and names no file")
-                for rel in cited:
-                    # The line suffix is part of a citation, not of the path.
-                    target = (screens_root / rel.split(":", 1)[0])
-                    if not target.exists():
-                        err(f"[U056] screens.md: {sid} cites '{rel}', which does not exist")
+                for rel in missing:
+                    err(f"[U056] screens.md: {sid} cites '{rel}', which does not exist")
 
+    check_observables(scenarios, foundation, project_root)
     check_vision(ux, vision)
     check_web_surface(screens, flows)
     check_links(ux)

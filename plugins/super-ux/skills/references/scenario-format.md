@@ -162,6 +162,10 @@ One journey per persona × job that matters:
 Quality bar: INVEST (independent, negotiable, valuable, estimable, small,
 testable). Acceptance criteria are Given/When/Then and observable.
 
+A story past `proposed` with no acceptance criteria is `U061`, and criteria with
+no `then` are `U062`: the `given` and the `when` set the scene, and the `then`
+is the only half an audit can go and check.
+
 **Kill criteria** (optional) records, *before* the work starts, the signal
 that would say the bet was wrong: a metric, a threshold, a date, and what
 happens when it is missed. `dropped` already exists as a status and nothing
@@ -475,6 +479,17 @@ Field rules:
 - **Status** — `draft | validated | implemented | retired`.
 - **Coverage** — `file:line` references to implementing code, or `none yet`.
 
+**The observable is checked, not trusted.** `Expected result` is the field a
+requirement is unfinished without: an observable added *after* the
+implementation has been read is not a test of the requirement, it is a
+description of the code, and by then nothing is left to measure. So a scenario
+that has left `draft` states one (`U060`), a scenario that claims `implemented`
+names the code it was measured against (`U063`), and a `Coverage` value other
+than `none` cites a path that resolves (`U064`, `U065`). The short spellings in
+live use — `**Expected:**` for the field, `**Acceptance:**` in a story — are
+read as the long ones: the question is whether an observable exists, not how its
+label is spelled.
+
 ### ID and lifecycle rules
 
 - `SCN-NNN`, sequential, never reused; retired entries kept with a one-line
@@ -731,3 +746,9 @@ here — the meaning of a rule never lives only in its source.
 | U055 | W | a `Coverage:` value other than `none` names no file — a claim about code that cites no code is unfalsifiable |
 | U056 | E | a path cited in `Coverage:` does not exist under the project root |
 | U057 | W | a flow whose screens name no implementing file — its coverage can only be inherited, never measured |
+| U060 | E | a scenario that is not `draft`/`retired` states no observable result — a requirement with no observable cannot be connected to evidence later without inventing the test after reading the implementation |
+| U061 | E | a user story that is not `proposed`/`dropped` states no acceptance criteria |
+| U062 | W | acceptance criteria naming no outcome (no `then`) — the only half of Given/When/Then an audit can check |
+| U063 | W | a scenario marked `implemented` names no `Coverage` — the status claims an audit passed and nothing says against what |
+| U064 | W | a scenario's `Coverage:` value other than `none` names no file — same claim as U055, one layer up |
+| U065 | E | a path cited in a scenario's `Coverage:` does not exist under the project root |

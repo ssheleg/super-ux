@@ -46,7 +46,14 @@ stamps — and log the deletion as one line under *Retired*.
    Where the artifact is a set, give its members ids first: a rule set that
    cannot be enumerated cannot have coverage computed over it. *(Retire when a
    coverage gate exists for every generated or hand-kept set in the repo, or
-   after five stamps with no recurrence.)*
+   after five stamps with no recurrence.)* — **fired on 2026-08-19 (SU-01), on
+   the ratchet itself:** `test/floors.json` had held floors for
+   `ux_lint_test.py` and `brand_lint_test.py` since v0.36.1 and `check_floor`
+   was called for `validate.py` alone, so two of the three recorded floors were
+   decoration and a deleted fixture would have dropped either count in silence.
+   Both harnesses now read their own floor, watched refusing against a planted
+   9999. Kept — the trigger it names is not met while `SU-03` shows a layer
+   (`JTBD-NN`) whose ids no rule can even enumerate.
 
 5. **(2026-08-14)** **A fixture that asserts a set of codes proves the code
    arrived, not which branch produced it.** Where two branches of one check emit
@@ -82,6 +89,7 @@ Newest last.
 | 2026-08-10 | B-010 + B-002 — UX linter codes U001..U054, 43 fixtures, coverage gate, run-instruction gate; v0.34.0 | yes — see below |
 | 2026-08-12 | Reference sweep for flows in `ux-flows` (Refero, Mobbin, Lazyweb), gated on tools not config; v0.35.0 → v0.35.1 | yes — see below |
 | 2026-08-14 | The rhetorical dash and the full-stopped title become `B062`/`B063`; markers get ids `AT-01..15`; doctrine prose swept; dogfood wired into CI; v0.39.0 | yes — see below |
+| 2026-08-19 | SU-01 (manifesto M-17) — `U060..U065` give the requirement layer the observable it demands; the pack's own 15 scenarios cite their code; both harness floors become readable | no — single-row close; the one plant that missed is recorded in the ledger |
 
 **Prune, 2026-08-14.** All four checked against the three retirement triggers.
 **#2 fired hardest and fired on this run's own hands:** the first plant harness
