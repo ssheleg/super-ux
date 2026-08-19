@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.46.0 — 2026-08-20
+
+**The check that decides whether a public number is real accepted any substring of the
+others.** `B030` built its corpus as `" ".join(values)` and then asked whether the figure
+was *in* that string with the spaces removed — so the eight facts became the character
+sequence `7158215243770+`, and every substring of it was "sourced". Watched: appending
+*"super-ux is used by 58 teams and ships 1582 checks."* to `README.md` — a declared public
+surface — left `docs/brand/lint.py` printing `brand pack is clean`, exit 0. This is the one
+check the brand hard rule exists to enforce. Values are normalised and compared one at a
+time now, against a set.
+
+Twelve more, each reproduced before it was fixed and each new guard watched failing:
+
+- **`facts.md` had no duplicate-key rule**, and a second `| skills shipped | 99 |` row not
+  only stood beside the first but widened the sourced corpus, making `99` quotable in
+  public copy. `B033`.
+- **"every row names a command that recomputes it" ran nothing.** Two rows named no
+  command, and `repo validator checks` read 3500 against a measured 3539. Each `Source` is
+  executed now; the self-referential row runs the validator as a count-neutral child, and
+  the row that cannot be recomputed here is marked and **disclosed** rather than skipped.
+- **`Coverage:` line ranges were never resolved** — `bin/super-ux.js:99000-99999` in a
+  396-line file passed. `U071`/`U072`, and the fourteen live citations that had drifted are
+  rewritten.
+- **The job layer was invisible to every rule.** `ids()` required `### PREFIX-NN: <name>`
+  and this repo's jobs carry no name, so two identical `JTBD-01` ids passed. Entries are
+  matched by id now (`U073`, `U074`), and the three jobs carry the five fields the contract
+  requires.
+- **Nine `Status:` values sat on layers no enum covered**, and `voice.md` read `approved`
+  where the contract declares `draft|validated` — it worked only because the linter
+  compared `== "draft"`. Enums are declared per layer and parity-checked; the two layers
+  that legitimately have no status say so (`U075`, `B034`).
+- **The Cursor umbrella shipped a three-release-old system**: four workflows named of eight
+  rules shipped, with `vision`, `brand-voice` and `copywriting` at zero mentions. It must
+  name every shipped skill now.
+- **The `AT-` marker set had ids and no gate**: deleting a whole section while leaving its
+  table row kept the validator at `OK (3539 checks)`, exit 0. Covered both directions.
+- **The board reused ids** — `B-011`–`B-013` in two tables with different content — and
+  nothing read the board at all.
+- **The hard rule had four payload homes and `HARD_RULES` paired two** (320/2102 words and
+  chars against 349/2284 and 348/2204). Anchor parity now, derived from the template, with
+  the one legitimate exemption as data.
+- **The front-matter budget measured the wrong thing**: the whole block against 1024
+  instead of `name` ≤ 64 and `description` ≤ 1024 separately. No live violation; both
+  directions planted.
+- **One pack, two opposite exit policies.** `brand_lint.py` returned 1 on warnings-only
+  while `ux_lint.py` returned 0 unless `--strict`, so thirteen of thirty-seven codes turned
+  `npm test` red while printing `0 error(s)`. `--strict` added, warnings non-blocking by
+  default, and the three homes of that rule reworded in the same change.
+- **The literal extractor could not cross a newline**, so `usage()` — the most-read UI
+  surface the pack has — was invisible to the string registry. Sixteen findings came out of
+  it on the first run.
+
+Checks: `validate.py` 3539 → **3667**, `brand_lint_test.py` 77 → **89**, `ux_lint_test.py`
+106 → **133**, with `test/floors.json` raised to the measured per-block delta.
+
+Two findings came out of planting rather than reading: per-line template extraction
+produced six mid-sentence fragments no registry row can hold, and a reworded README line
+tripped the pack's own AI-tell check.
+
+
 ## 0.45.0 — 2026-08-19
 
 **The requirement layer could not see a requirement with no observable.** The contract said
