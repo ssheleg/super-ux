@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.45.0 — 2026-08-19
+
+**The requirement layer could not see a requirement with no observable.** The contract said
+one was unfinished without it; nothing read for one. `ux_lint.py` never opened a scenario or
+user-story body — no rule looked for `Expected result`, `Acceptance criteria` or a success
+metric — while the layer *below* it, screens, had carried that check since U055/U056.
+
+The dogfood is the argument: this pack's own 15 scenarios all read `Status: implemented`,
+**none cited any code**, no test touched `bin/super-ux.js`, and `npm test` exited 0 over all
+of it. A chain that demands the layers before code could not tell that its own chain closed
+on nothing.
+
+### U060–U065 — the requirement layer gets read
+
+A scenario or story with no observable is refused; a scenario claiming `implemented` must
+cite code that resolves. `U055/U056` and `U064/U065` now share one owner (`coverage_claim`),
+so two layers cannot answer the same question differently. All 15 own scenarios now cite
+implementing ranges in `bin/super-ux.js`, each read rather than recalled.
+
+### `Product:` — a shipped scenario stops counting as a validated one
+
+`unobserved | observed | contradicted`, distinct from `Status`, with **no floor and no
+target**: absence means `unobserved`, and neither `unobserved` nor `contradicted` fails
+anything. Outcome evidence often cannot exist yet, and saying so is not a defect.
+
+Four things stop an audit promoting it: `U068` refuses everything an audit produces as an
+outcome signal — a `file:line`, a PASS/FAIL verdict, a path into `docs/ux/audits/`; `U067`
+refuses `observed` with no signal; `U066` refuses an out-of-enum value outright, because an
+unrecognised value read as *no state* is how an enum drifts; and both homes of the
+after-a-run step carry **The audit never writes `Product:`**, with a gate that fails if
+either loses the sentence.
+
+**All 15 own scenarios now read `unobserved`.** Before this they read as fifteen validated
+bets, because `implemented` was the only state the chain had.
+
+### Found while there
+
+The screens status enum had **already** drifted: the contract declared five values and the
+linter matched four, so a `blocked` screen read as having *no* status and `U021` silently
+stopped applying. Fixed. Two further instances of the same class filed rather than hidden.
+
+The long spelling (`**Expected result:**`) is canonical; the short forms are still read, and
+`U069` warns rather than errors — failing a live project over a synonym is the false positive
+that gets a whole family switched off.
+
 ## 0.44.0 — 2026-08-17
 
 **Three lint codes for the two layers whose claims nothing could check.** `U055`, `U056` and
