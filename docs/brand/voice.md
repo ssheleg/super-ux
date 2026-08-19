@@ -3,8 +3,8 @@ Voice pack: peer-builder
 Locales: en (primary)
 Locale parity threshold: 80%
 Derived-from: P-01, P-02, JTBD-01, JTBD-02, JTBD-03
-Status: approved
-Last calibrated: 2026-08-19
+Status: validated
+Last calibrated: 2026-08-20
 
 # Voice
 

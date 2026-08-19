@@ -127,8 +127,10 @@ a rejected branch still lets the tag through.
   relationships and find-and-replace picks the wrong one. `B062` and `B063`
   catch what a machine can prove; the rest is in the skill's `ai-tells.md`.
 - Run `python3 docs/brand/lint.py` after any text change and before calling
-  work done. It must exit clean; wire it into CI or pre-commit alongside the
-  UX linter so copy drift cannot merge.
+  work done. It must exit 0 — an error blocks and a warning is advice, which
+  is the same policy the UX linter has; `--strict` makes warnings block too.
+  Wire it into CI or pre-commit alongside the UX linter so copy drift cannot
+  merge.
 
 ## Vision alignment — hard rule (super-ux)
 

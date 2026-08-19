@@ -8,7 +8,7 @@ Run the deterministic half of the brand check:
 python3 docs/brand/lint.py
 ```
 
-Exit codes: `0` clean, `1` warnings only, `2` any error.
+Exit codes: `0` clean or warnings only, `1` warnings under `--strict`, `2` any error. One pack, one policy: this linter returned `1` on warnings alone until 2026-08-20, while `docs/ux/lint.py` needed `--strict` for the same thing — so 13 of the 39 codes failed a build while reporting no error.
 
 Useful flags: `--fix` applies only the three changes that cannot be wrong
 (casing, the iOS keyword field, re-pointing a registry row whose string is

@@ -114,11 +114,24 @@ Promise: you stop guessing within one run
 [voice-packs.md](voice-packs.md) or `custom`. `Locales` lists every locale,
 marking exactly one `(primary)`. `Locale parity threshold` is the percentage
 below which `B071` warns. `Derived-from` lists `P-` / `JTBD-` ids from
-`foundation.md`, or the single word `inferred`. `Status` is `draft` or
-`validated`. `Last calibrated` is an ISO date.
+`foundation.md`, or the single word `inferred`. `Last calibrated` is an ISO date.
+
+**The `Status` enum, in one home:**
+
+- `voice.md` **Status** — `draft | validated`
+
+`validate_status_enums_match_contract` reads that line and compares it against
+`VOICE_STATUSES` in `brand_lint.py`, so neither side can move alone. It is here
+because the two had already disagreed and it worked by accident: this pack's own
+`voice.md` said `Status: approved` for two releases, and every read in the linter
+asked `== "draft"` or `!= "draft"` — so `approved` behaved like `validated` and
+would have read as **not** validated the first time any check tested for the
+value. An out-of-enum status is `B034`.
 
 **Status lifecycle.** Same as a scenario: `draft` until the operator has seen
-and approved it, then `validated`. Any edit drops it back to `draft`.
+and approved it, then `validated`. `approved` is not a third state; it is what
+the operator does, and `validated` is what the file then says. Any edit drops it
+back to `draft`.
 
 **The five axes are fixed**: `Confidence`, `Register`, `Distance`, `Humor`,
 `Density`. A pack fills them; a project may sharpen the wording but may not
@@ -354,6 +367,8 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B030 | E | a figure in public copy has no row in `facts.md` |
 | B031 | W | a fact has no source, or is past its `Review by` |
 | B032 | E | a superlative with no fact beside it |
+| B033 | E | two rows in `facts.md` under one `Fact` name — a figure cited by that name is ambiguous, and the duplicate also widened the sourced set |
+| B034 | E | `voice.md` carries a `Status` the contract does not declare — every read here asks whether it is `draft`, so an unrecognised value behaves like `validated` today and reads as not-validated the moment a check tests for the value |
 | B040 | E | a field exceeds its surface limit |
 | B041 | E | an iOS keyword-field rule broken |
 | B042 | E | a link in a body where the surface's physics forbid it |

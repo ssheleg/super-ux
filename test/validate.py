@@ -46,17 +46,19 @@ def read(path: Path) -> str | None:
 
 
 
-def raw_front_matter(path) -> str:
-    """The front-matter block verbatim -- what an agent host actually loads."""
-    text = read(path) or ""
-    if not text.startswith("---"):
-        return ""
-    end = text.find("\n---", 3)
-    return "" if end == -1 else text[4:end]
+def check_description_canon(rel, path, name: str, desc: str) -> None:
+    """The canon rules every skill description must satisfy, and its budgets.
 
-
-def check_description_canon(rel, path, desc: str) -> None:
-    """The three canon rules every skill description must satisfy."""
+    The budgets were measured against the wrong thing until 2026-08-20: the
+    check measured the whole front-matter block -- delimiters, `name`,
+    `description` and any other key -- and compared its length to 1024. The
+    Agent Skills standard budgets the two FIELDS: `name` at 64 characters and
+    `description` at 1024. So a 40-character name pushed a legal 1000-character
+    description over an imaginary line, while a `description` of 1024 with a
+    short name passed a limit it was exactly at rather than under. No skill here
+    was over either real budget, which is why nothing ever said so -- a check
+    measuring the wrong quantity looks identical to a check that holds.
+    """
     check(
         desc.startswith("Use when"),
         f"{rel}/SKILL.md: description must start with 'Use when' (canon)",
@@ -65,10 +67,15 @@ def check_description_canon(rel, path, desc: str) -> None:
         bool(re.search(r"[а-яё]", desc, re.I)),
         f"{rel}/SKILL.md: description must carry Russian trigger aliases beside the English ones (canon)",
     )
-    raw = raw_front_matter(path)
     check(
-        len(raw) <= 1024,
-        f"{rel}/SKILL.md: front-matter is {len(raw)} chars, must be under 1024 (canon)",
+        len(name) <= 64,
+        f"{rel}/SKILL.md: front-matter `name` is {len(name)} chars, the Agent "
+        f"Skills limit is 64",
+    )
+    check(
+        len(desc) <= 1024,
+        f"{rel}/SKILL.md: front-matter `description` is {len(desc)} chars, the "
+        f"Agent Skills limit is 1024",
     )
 
 
@@ -237,7 +244,8 @@ def validate_skills() -> None:
             continue
         check(fm.get("name") == skill.name, f"{rel}/SKILL.md: front-matter name != '{skill.name}'")
         check(bool(fm.get("description")), f"{rel}/SKILL.md: missing description")
-        check_description_canon(rel, skill / "SKILL.md", fm.get("description") or "")
+        check_description_canon(rel, skill / "SKILL.md",
+                                fm.get("name") or "", fm.get("description") or "")
     for ref in ("scenario-format.md", "best-practices.md", "ux-design-principles.md", "practice-selection.md", "figma-integration.md", "figma-structure.md", "component-guidelines.md", "system-map.md", "visual-identity.md"):
         check(
             (skills_dir / "references" / ref).is_file(),
@@ -567,6 +575,32 @@ def validate_skill_parity() -> None:
     for cmd in ("/ux-doctor", "/vision", "/brand-lint", "/copy"):
         check(cmd in smap, f"system-map.md does not list the {cmd} command")
 
+    # B-014: existence was checked and reachability was not. `cursor/rules/
+    # <name>.mdc` counted as one of the five places above, which is why
+    # `vision.mdc` existed -- and nothing asked whether the always-on umbrella
+    # rule names it. Measured 2026-08-20: `cursor/rules/super-ux.mdc:39` named
+    # four workflows against eight `.mdc` files shipped, and `grep -c` returned
+    # 0 for `vision`, `brand-voice` and `copywriting`. A Cursor user got three
+    # rule files nothing routed to and a chain missing its top layer, for three
+    # releases, on the one channel where a rule that is never named is a rule
+    # that is never loaded.
+    umbrella_rel = "cursor/rules/super-ux.mdc"
+    umbrella = read(ROOT / umbrella_rel) or ""
+    if check(bool(umbrella), f"{umbrella_rel}: missing — the always-on rule the "
+                             f"Cursor channel routes from"):
+        check(bool((front_matter(ROOT / umbrella_rel) or {}).get("alwaysApply")),
+              f"{umbrella_rel}: not alwaysApply — an umbrella nobody loads routes "
+              f"to nothing")
+        for name in skills:
+            check(name in umbrella,
+                  f"{umbrella_rel} does not name `{name}` — the Cursor channel "
+                  f"ships {name}.mdc and the always-on rule never routes to it, "
+                  f"so the file is present and unreachable")
+        for rule in sorted(rule_names - {"super-ux"} - set(skills)):
+            check(rule in umbrella,
+                  f"{umbrella_rel} does not name `{rule}`, a rule this repo ships "
+                  f"— every .mdc is reachable from the umbrella or from nothing")
+
 
 SEEDED_SCRIPTS = [
     ("docs/ux/lint.py", "ux_lint.py"),
@@ -890,6 +924,260 @@ def validate_brand_lint_coverage() -> None:
         )
 
 
+BOARD = "docs/evidence/backlog.md"
+LEDGER = "docs/evidence/verification.md"
+
+
+def validate_board_ids() -> None:
+    """A register whose ids are not unique cannot be cited.
+
+    B-016, found by stage-0 harvest and unfixable in passing: `B-011`, `B-012`
+    and `B-013` each appeared in BOTH the open table and the Closed table with
+    different content, so "closed in B-013" resolved to two rows. Three
+    collisions accumulated because nothing read the board at all -- it is the
+    one document in this repository that records what the repository owes, and
+    it had no gate of any kind.
+
+    Ids are read from the first cell of every row in either table, which is the
+    only place the board puts one, and every citation of a `B-`/`SU-` id in the
+    ledger must resolve to exactly one of them. The ledger citation is the half
+    that caught `R-22` filing the `AT-` gap as `B-016` where the board files it
+    as `B-017` -- a one-word error inside the register whose id reuse was itself
+    the open row above it.
+    """
+    board = read(ROOT / BOARD) or ""
+    if not check(bool(board), f"{BOARD}: missing or empty"):
+        return
+    ids = re.findall(r"^\|\s*((?:B|SU)-\d+)\s*\|", board, re.M)
+    check(bool(ids), f"{BOARD}: no `| B-NNN |` or `| SU-NN |` rows to check")
+    for rid in sorted({i for i in ids if ids.count(i) > 1}):
+        check(False, f"{BOARD}: {rid} appears {ids.count(rid)} times -- a register "
+                     f"whose ids are not unique cannot be cited, because "
+                     f"'closed in {rid}' resolves to more than one row")
+    known = set(ids)
+    ledger = read(ROOT / LEDGER) or ""
+    for cited in sorted(set(re.findall(r"\b(B-\d{3})\b", ledger))):
+        check(cited in known, f"{LEDGER} cites {cited}, which is not a row on the "
+                              f"board -- a ledger row pointing at no task is a "
+                              f"claim with nothing behind it")
+
+
+# Every live copy of a hard rule, and the anchors it is allowed not to carry.
+#
+# B-015 and B-018: the `UX scenarios` rule has four payload homes and
+# `HARD_RULES` pairs two of them byte for byte. Measured 2026-08-20:
+# `templates/claude-rule.md` 320 words / 2102 chars, `CLAUDE.md:68` 349 / 2284,
+# `cursor/rules/super-ux.mdc:6` 348 / 2204 -- and the `.mdc` named four
+# workflows out of the seven skills the pack ships, three releases behind.
+#
+# Byte equality is the wrong test for the copies that are NOT the carrier: this
+# repository's own `CLAUDE.md` diverges by choice and its wording is the better
+# one ("approved **for the change at hand**"). So the test is anchor parity --
+# every path, command and skill name the template names must be named by every
+# live copy -- and an exemption is DATA with a reason beside it, because the
+# alternative to naming one is a check nobody can pass and everybody deletes.
+HARD_RULE_HOMES = (
+    ("UX scenarios — hard rule (super-ux)", "CLAUDE.md", ()),
+    ("UX scenarios — hard rule (super-ux)", "cursor/rules/super-ux.mdc",
+     # Cursor has no slash commands: this channel routes by rule file, and the
+     # rules it must name are asserted by `validate_skill_parity` instead.
+     ("/ux",)),
+    ("Brand voice — hard rule (super-ux)", "CLAUDE.md", ()),
+)
+
+
+def _rule_section(text: str, heading: str) -> str | None:
+    """One hard-rule section, from its heading to the next same-or-higher one."""
+    match = re.search(rf"^(#{{1,3}})\s*{re.escape(heading)}\s*$", text, re.M)
+    if not match:
+        return None
+    rest = text[match.end():]
+    nxt = re.search(r"^#{1,2} ", rest, re.M)
+    return match.group(0) + (rest[:nxt.start()] if nxt else rest)
+
+
+def validate_hard_rule_anchors() -> None:
+    """Every live copy of a hard rule names everything its source names."""
+    template = read(ROOT / "templates/claude-rule.md") or ""
+    if not check(bool(template), "templates/claude-rule.md: missing"):
+        return
+    for heading, rel, exempt in HARD_RULE_HOMES:
+        source = _rule_section(template, heading)
+        if not check(source is not None,
+                     f"templates/claude-rule.md has no '{heading}' section -- the "
+                     f"anchors every copy is measured against come from it"):
+            continue
+        # Backticked tokens are the paths, commands and skill names the rule
+        # names; a bolded token with no space is a companion skill. Derived, not
+        # restated: adding an anchor to the template makes every copy answer for
+        # it, which is the only way a copy can fall behind and be noticed.
+        anchors = set(re.findall(r"`([^`\n]+)`", source))
+        anchors |= {t for t in re.findall(r"\*\*([^*\n]+)\*\*", source) if " " not in t}
+        anchors -= set(exempt)
+        check(bool(anchors), f"'{heading}': the template section names no anchor")
+        copy = _rule_section(read(ROOT / rel) or "", heading)
+        if not check(copy is not None,
+                     f"{rel}: no '{heading}' section -- a live copy of a hard rule "
+                     f"that has lost its heading is a copy nothing can compare"):
+            continue
+        for anchor in sorted(anchors):
+            check(anchor in copy,
+                  f"{rel}: its '{heading}' copy does not name `{anchor}`, which "
+                  f"templates/claude-rule.md does -- a copy that dropped a "
+                  f"requirement reads as a rule with one fewer requirement")
+
+
+FACTS = "docs/brand/facts.md"
+
+# Set on the nested run below. It skips the RECOMPUTATION and not the `check()`
+# calls, so the child performs exactly as many checks as the parent and the
+# count it prints is the count the parent would print. That is the whole trick,
+# and it is what makes the one self-referential row honest instead of clever:
+# the row's Source is `python3 test/validate.py`, so the check runs that command.
+FACTS_NESTED = "SUPER_UX_FACTS_RECOMPUTE_CHILD"
+
+# A Source that cannot be recomputed on this machine says so in these words.
+# `agents reachable via the skills CLI` is an external registry: there is no
+# command here that returns it, and the row that admits it is worth more than a
+# row that is quietly skipped by a loop claiming to check everything.
+NOT_HERE = "not recomputable here:"
+
+
+def _disclose(msg: str) -> None:
+    """A check that could not run, said out loud rather than counted as a pass."""
+    print(f"  unlooked: {msg}")
+
+
+def validate_facts_recompute() -> None:
+    """Every row in `facts.md` is what its own `Source` command returns.
+
+    `facts.md` has said "Every row below names a command that recomputes it"
+    since the table existed, and until 2026-08-20 nothing ran one. The file even
+    argued the point in its own prose -- "naming the command is not the same as
+    running it, and only running it produces a fact" -- three paragraphs above
+    seven hand-maintained integers. Recomputed by hand on 2026-08-20: six agreed
+    and `repo validator checks` read 3500 against a measured 3539, so the table
+    that exists to be the only source of any public figure was itself carrying a
+    stale one. The row is `Public: no`, which is why no `B030` ever pointed at
+    it: the wrong number was unquotable and therefore uncheckable.
+
+    Two rows are special and both are handled rather than skipped. The validator
+    row's Source is this very script, run as a child with `FACTS_NESTED` set. The
+    agents row names an external registry and is disclosed, not passed.
+    """
+    nested = os.environ.get(FACTS_NESTED) == "1"
+    text = read(ROOT / FACTS) or ""
+    if not check(bool(text), f"{FACTS}: missing or empty"):
+        return
+    check(
+        "names a command that recomputes it" in text,
+        f"{FACTS} no longer claims every row names a command that recomputes it "
+        f"-- this check exists because that sentence is in the file",
+    )
+    # `\|` inside a cell is a literal pipe, which every Source command here uses
+    # -- splitting naively cut each of them in half and reported six rows as
+    # naming no command at all. And the file holds a SECOND six-column table,
+    # for proof that is not a number, so the block is scoped by its header the
+    # way `brand_lint.facts()` scopes it rather than by column count.
+    def cells(line: str) -> list[str]:
+        parts = re.split(r"(?<!\\)\|", line.strip().strip("|"))
+        return [p.strip().replace(r"\|", "|") for p in parts]
+
+    facts, in_table = [], False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not (stripped.startswith("|") and stripped.endswith("|")):
+            in_table = False
+            continue
+        row = cells(line)
+        if row and row[0].lower() == "fact":
+            in_table = True
+            continue
+        if not in_table or set("".join(row)) <= set("-: "):
+            continue
+        if len(row) >= 6:
+            facts.append(row)
+    check(bool(facts), f"{FACTS}: no fact rows found to recompute")
+
+    for row in facts:
+        name, value, source = row[0], row[1], row[2]
+        if source.startswith(NOT_HERE):
+            _disclose(f"{FACTS} `{name}` — {source[len(NOT_HERE):].strip()}")
+            continue
+        command = re.search(r"`([^`]+)`", source)
+        if not check(
+            command is not None,
+            f"{FACTS}: `{name}` names no runnable command in its Source. Either "
+            f"give it one in backticks or mark it `{NOT_HERE} <why>` -- a row "
+            f"that is neither is a number nobody recomputes and nobody admits to",
+        ):
+            continue
+        if nested:
+            # Counted, not run: the parent is the run that recomputes, and the
+            # child exists only to print a total the parent can compare.
+            check(True, "")
+            continue
+        try:
+            proc = subprocess.run(
+                ["bash", "-c", command.group(1)], cwd=str(ROOT),
+                capture_output=True, text=True, timeout=300,
+                env={**os.environ, FACTS_NESTED: "1"},
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            check(False, f"{FACTS}: `{name}` -- its Source command could not run "
+                         f"({exc})")
+            continue
+        got = proc.stdout.strip()
+        check(
+            got == value,
+            f"{FACTS}: `{name}` records {value!r} and its own Source command "
+            f"returns {got!r} -- `{command.group(1)}`"
+            + (f" (stderr: {proc.stderr.strip()[:160]})" if proc.returncode else ""),
+        )
+
+
+def validate_ai_tell_coverage() -> None:
+    """Every `AT-` id in the table has a section, and every section a row.
+
+    B-017: the marker set was numbered `AT-01..AT-15` precisely so coverage
+    would be computable, and nothing computed it. Watched: deleting the whole
+    `### AT-15.` section while leaving its table row in place kept
+    `python3 test/validate.py` at `OK (3539 checks)`, exit 0 -- the ids were a
+    promise, not a mechanism. `validate_brand_lint_coverage` had done exactly
+    this for `B0NN` since v0.30.0; this is the same question asked of the only
+    other numbered set the pack ships.
+
+    Both directions, because they fail differently. A row with no section is a
+    marker an agent is told exists and can read nothing about. A section with no
+    row is a marker that is documented and unreachable from the index -- and the
+    index is what `ai-tells.md` is consulted through.
+    """
+    path = ROOT / "plugins/super-ux/skills/references/ai-tells.md"
+    text = read(path) or ""
+    if not check(bool(text), "references/ai-tells.md: missing or empty"):
+        return
+    rows = re.findall(r"^\|\s*(AT-\d+)\s*\|", text, re.M)
+    sections = re.findall(r"^###\s+(AT-\d+)\.", text, re.M)
+    check(bool(rows), "ai-tells.md: no `| AT-NN |` table rows to count")
+    check(bool(sections), "ai-tells.md: no `### AT-NN.` sections to count")
+    for dup, label in ((rows, "table row"), (sections, "section")):
+        seen = {i for i in dup if dup.count(i) > 1}
+        check(not seen, f"ai-tells.md: duplicate {label}(s) for {sorted(seen)}")
+    for at in sorted(set(rows) - set(sections)):
+        check(False, f"ai-tells.md: {at} has a table row and no `### {at}.` section "
+                     f"-- a marker an agent is told exists and can read nothing about")
+    for at in sorted(set(sections) - set(rows)):
+        check(False, f"ai-tells.md: {at} has a section and no table row -- the "
+                     f"index is how this file is consulted, so the marker is "
+                     f"documented and unreachable")
+    nums = sorted(int(i.split("-")[1]) for i in set(rows))
+    check(
+        nums == list(range(1, len(nums) + 1)),
+        f"ai-tells.md: the marker set is {nums} -- `AT-` ids are sequential from "
+        f"01, and a gap means a retired marker was deleted rather than kept",
+    )
+
+
 def validate_ux_lint_coverage() -> None:
     """Every code the UX linter can emit has a fixture, and the contract names it.
 
@@ -921,9 +1209,28 @@ def validate_ux_lint_coverage() -> None:
 # The contract's one home for every enum the linter matches on. Parsed, not
 # restated: a second copy here would be the third copy of a table that had
 # already drifted between the first two.
+#
+# The alternation was `(SCN|ST|SCR)` until 2026-08-20, and that short alphabet
+# was the whole defect: NINE live `Status:` values sat on layers this regex could
+# not name -- four flows, two personas, three jobs -- so the parity check was
+# real, passing, and blind to three quarters of the layers that carry a status.
+# A prefix added to the linter's table with no row in the contract now fails
+# here, which is what the check was always supposed to mean.
 ENUM_DECL_RE = re.compile(
-    r"^- `(SCN|ST|SCR)-N+` \*\*(Status|Product)\*\* — `([^`]+)`", re.MULTILINE
+    r"^- `(SCN|ST|SCR|P|JTBD)-N+` \*\*(Status|Product)\*\* — `([^`]+)`",
+    re.MULTILINE,
 )
+
+# A layer whose state lives on the document, not on an entry: `vision.md` in the
+# scenario contract, `voice.md` in the brand contract. Same shape, no id.
+DOC_ENUM_DECL_RE = re.compile(
+    r"^- `([\w.-]+\.md)` \*\*Status\*\* — `([^`]+)`", re.MULTILINE
+)
+
+# The layers the contract declares to have NO status. Read from the contract's
+# own sentence rather than restated, so deleting the sentence fails the check
+# that depends on it.
+STATUSLESS_DECL_RE = re.compile(r"A `Status` on either is `U075`")
 
 
 def _module_literals(source: str) -> dict:
@@ -996,6 +1303,63 @@ def validate_status_enums_match_contract() -> None:
             f"{sorted(declared.get(key) or [])} — one side moved alone, and a "
             f"value only the contract knows about reads as no value at all",
         )
+
+    # --- The document-level layers, and the two declared to have none ---------
+    doc_declared = {
+        name: {v.strip() for v in values.split("|") if v.strip()}
+        for name, values in DOC_ENUM_DECL_RE.findall(contract)
+    }
+    doc_matched = {
+        name: set(values)
+        for name, values in (literals.get("DOC_STATUS_ENUMS") or {}).items()
+    }
+    check(bool(doc_matched), "ux_lint.py: DOC_STATUS_ENUMS is not a readable literal")
+    for name in sorted(set(doc_matched) | set(doc_declared)):
+        check(
+            doc_matched.get(name) == doc_declared.get(name),
+            f"{name} Status: ux_lint.py matches {sorted(doc_matched.get(name) or [])} "
+            f"and scenario-format.md declares {sorted(doc_declared.get(name) or [])}",
+        )
+
+    statusless = {p for p, _f, _w in (literals.get("STATUSLESS_LAYERS") or ())}
+    check(
+        statusless == {"FLW", "JRN"},
+        f"ux_lint.py: STATUSLESS_LAYERS is {sorted(statusless)} — the contract's "
+        f"declared statusless layers are FLW and JRN",
+    )
+    check(
+        bool(STATUSLESS_DECL_RE.search(contract)),
+        "scenario-format.md no longer says that a `Status` on FLW or JRN is "
+        "`U075` — a layer declared to have no status only has none while the "
+        "contract says so",
+    )
+    for prefix in sorted(statusless):
+        check(
+            f"`{prefix}-NN` **Status**" not in contract,
+            f"scenario-format.md declares a Status enum for {prefix} while "
+            f"ux_lint.py refuses one there (U075) — the two cannot both be right",
+        )
+
+    # --- The brand layer, whose enum was outside this mechanism entirely ------
+    brand_lint = read(ROOT / "plugins/super-ux/scripts/brand_lint.py") or ""
+    brand_contract = read(
+        ROOT / "plugins/super-ux/skills/references/brand-contract.md"
+    ) or ""
+    brand_declared = {
+        name: {v.strip() for v in values.split("|") if v.strip()}
+        for name, values in DOC_ENUM_DECL_RE.findall(brand_contract)
+    }
+    brand_matched = set(_module_literals(brand_lint).get("VOICE_STATUSES") or ())
+    check(
+        bool(brand_matched),
+        "brand_lint.py: VOICE_STATUSES is not a readable literal",
+    )
+    check(
+        brand_declared.get("voice.md") == brand_matched,
+        f"voice.md Status: brand_lint.py matches {sorted(brand_matched)} and "
+        f"brand-contract.md declares {sorted(brand_declared.get('voice.md') or [])} "
+        f"— the layer whose out-of-enum value shipped for two releases",
+    )
 
 
 # The exact words the two homes of the after-a-run step must carry. An audit
@@ -1172,6 +1536,10 @@ def main() -> int:
     validate_status_enums_match_contract()
     validate_audit_leaves_product_alone()
     validate_run_instructions()
+    validate_ai_tell_coverage()
+    validate_board_ids()
+    validate_hard_rule_anchors()
+    validate_facts_recompute()
     # A release must not publish over a red `validate`.
     #
     # On 2026-08-12 `sheleg-dev` tagged v0.4.1 while its own validate run for that exact

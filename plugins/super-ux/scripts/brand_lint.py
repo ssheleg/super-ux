@@ -18,8 +18,16 @@ Read-only by default. `--fix` applies only the changes that cannot be wrong.
     python3 brand_lint.py [path] --fix     # apply the safe subset
     python3 brand_lint.py [path] --brief   # one line, for sweeping projects
     python3 brand_lint.py [path] --json    # machine-readable findings
+    python3 brand_lint.py [path] --strict  # warnings block too
 
-Exit codes: 0 clean, 1 warnings only, 2 any error.
+Exit codes: 0 clean or warnings only, 1 warnings under `--strict`, 2 any error.
+
+One pack, one policy: `ux_lint.py` has always blocked on errors and needed
+`--strict` before a warning could fail a build, and this file returned 1 for
+warnings alone -- so 13 of the 37 codes turned `npm test` red while printing
+`0 error(s), 1 warning(s)`. A gate whose two halves disagree about what a
+warning means gets the noisier half switched off, and the half switched off
+here is the one that guards public figures.
 """
 
 from __future__ import annotations
@@ -33,6 +41,20 @@ from pathlib import Path
 
 CONTRACT = "brand-contract"
 CONTRACT_VERSION = "v1"
+
+# The one enum this file matches on, kept as a module literal so
+# `validate_status_enums_match_contract` can read it out of the source and
+# compare it against `brand-contract.md`'s declaration -- the mechanism the UX
+# linter has carried since SU-02, applied to the layer that was left out of it.
+#
+# The defect it closes was live in this repository's own pack and worked by
+# accident: `brand-contract.md` declares `draft | validated`, `docs/brand/voice.md`
+# said `Status: approved`, and nothing caught it because every read here asked
+# `== "draft"` or `!= "draft"`. So `approved` behaved like `validated` today and
+# would have read as NOT validated the first time any check tested for the value
+# instead of against `draft`. Same class as the screens enum SU-02 closed: an
+# out-of-enum value that is neither refused nor accepted, and invisible.
+VOICE_STATUSES = ("draft", "validated")
 
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
@@ -184,6 +206,18 @@ def check_contract(brand_dir: Path) -> list[Finding]:
 
     voice = read(brand_dir / "voice.md") or ""
     status = header_field(voice, "Status")
+    # B034 -- an out-of-enum `Status` is refused rather than read as no status.
+    if status is not None and not unfilled(status) \
+            and status not in VOICE_STATUSES:
+        findings.append(Finding(
+            "B034", SEVERITY_ERROR, "voice.md", 1,
+            f"`Status: {status}` is not one of "
+            f"{' | '.join(VOICE_STATUSES)} -- every read in this file asks "
+            f"whether the status is `draft`, so an unrecognised value behaves "
+            f"like `validated` today and reads as not-validated the moment a "
+            f"check tests for the value instead of against `draft`",
+        ))
+
     strings = read(brand_dir / "strings.md") or ""
     agreed = [r for r in table_rows(strings) if r and r[-1] == "agreed"]
     if status == "draft" and agreed:
@@ -363,6 +397,41 @@ WEAK_LABELS = {
 
 LITERAL_RE = re.compile(r"""(["'`])((?:(?!\1)[^\n]){3,200})\1""")
 
+# A `'` or `"` literal cannot cross a newline in JS or TS, so `[^\n]` above is
+# right for those. A TEMPLATE literal can, and `usage()` in this pack's own
+# installer is twenty lines of exactly one -- the most-read UI surface the pack
+# has, invisible to the registry since B022 existed. `strings.md` recorded it as
+# needing "a per-language extractor"; it needed a second pattern.
+#
+# A multi-line template is split into PARAGRAPHS, not lines and not left whole.
+# Whole is useless: one 1800-character blob is a document, and nobody agrees or
+# retires a document. Per line is worse than it looks -- it was tried first, and
+# it turned wrapped prose into six findings no registry row could sensibly hold
+# ("docs/ux skeleton, the docs/brand pack, and all three linters" is half a
+# sentence). A blank-line-separated block is the unit a reader actually sees: a
+# title, a usage list, an explanation. The 4000-char ceiling guards against an
+# unbalanced backtick swallowing a file; it is not a claim about copy.
+TEMPLATE_RE = re.compile(r"`((?:[^`\\]|\\.){3,4000})`", re.DOTALL)
+
+
+def code_literals(text: str) -> list[str]:
+    """Every string literal in source, one entry per unit a reader would see.
+
+    Comments must already be stripped by the caller -- `_strip_comments` leaves
+    literals untouched, which is what makes both patterns below safe to run.
+    """
+    out: list[str] = [lit for _quote, lit in LITERAL_RE.findall(text)]
+    for block in TEMPLATE_RE.findall(text):
+        if "\n" not in block:
+            continue          # single-line backticks are already in `out`
+        for para in re.split(r"\n\s*\n", block):
+            joined = " ".join(
+                line.strip() for line in para.splitlines() if line.strip()
+            )
+            if len(joined) >= 3:
+                out.append(joined)
+    return out
+
 # A template literal's interpolations split it into pieces, and the pieces are
 # not strings: `${a} : ${b}` yielded a literal " : ". Running this check over
 # super-ux's own installer produced 598 such fragments and buried the four real
@@ -530,7 +599,8 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
 
         body = read(target) or ""
         literals = [
-            lit for _q, lit in LITERAL_RE.findall(body) if _looks_like_copy(lit)
+            lit for lit in code_literals(_strip_comments(body, target.suffix))
+            if _looks_like_copy(lit)
         ]
         if literals:
             # The registry records what a reader sees, so the built page is the
@@ -544,7 +614,19 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
                         f"`{row['key']}` is \"{row['text']}\" in the registry, "
                         f"but that text is not on the rendered page",
                     ))
-            elif row["text"] not in body and row["text"].strip() not in body:
+            # Byte-exact first, and that stays the invariant `strings.md`
+            # documents: escape sequences included, so a row holding `\n---`
+            # is compared as the three characters the source carries.
+            #
+            # The wrap-tolerant form is a FALLBACK, not a loosening, and it
+            # exists because without it a wrapped block is unregisterable by
+            # construction -- B022 would demand a row for `usage()` that B021
+            # would then refuse, which is a check with no passing answer. It
+            # compares the same wording across a newline the reader never sees,
+            # which is exactly what the rendered-page branch above already does.
+            elif row["text"] not in body \
+                    and row["text"].strip() not in body \
+                    and normalise(row["text"]) not in normalise(body):
                 findings.append(Finding(
                     "B021", SEVERITY_ERROR, location, 0,
                     f"`{row['key']}` is \"{row['text']}\" in the registry, "
@@ -737,7 +819,7 @@ def _strip_comments(text: str, suffix: str) -> str:
 def _copy_in_code(text: str, suffix: str = ".ts") -> str:
     """The user-visible strings in a source file, joined as prose."""
     out = []
-    for _quote, literal in LITERAL_RE.findall(_strip_comments(text, suffix)):
+    for literal in code_literals(_strip_comments(text, suffix)):
         candidate = re.sub(r"\s{2,}", " ", INTERPOLATION_RE.sub(" ", literal)).strip()
         # A literal with no space is an import path, an identifier or a one-word
         # label. None of them can carry a rhetorical dash or stuff a keyword, and
@@ -843,11 +925,59 @@ def _today() -> str:
     return datetime.date.today().isoformat()
 
 
+def _fact_figures(value: str) -> set[str]:
+    """Every figure ONE fact's `Value` sources, normalised the way copy is read.
+
+    B030 compares a figure in public copy against this set exactly. Until
+    2026-08-20 it compared against every value joined into a single string and
+    asked `compact not in known.replace(" ", "")` -- so the corpus was one
+    character sequence and every SUBSTRING of it counted as sourced. With this
+    pack's own seven public rows the corpus was `7158215243770+`, which sourced
+    the invented `1582` in "super-ux ... ships 1582 checks": the linter printed
+    `brand pack is clean` and exited 0. An invented public number passing the
+    check whose entire purpose is to refuse one is the worst failure this file
+    can have, because it is indistinguishable from working.
+
+    Three forms are accepted, and each is the same claim written differently:
+    the value with its whitespace removed; the same with a bound marker stripped,
+    so a row of `500+` sources the `500` a sentence writes; and whatever the
+    figure regex reads INSIDE the value, so `$3.10` and a thousands separator are
+    matched in the form copy uses. Nothing else -- a figure not written in the
+    table is not in the table.
+    """
+    compact = re.sub(r"\s+", "", value)
+    figures = {compact, compact.strip("+~><≈").strip()}
+    figures.update(m.replace(" ", "") for m in NUMBER_RE.findall(value))
+    return {f for f in figures if f}
+
+
 def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
-    """B030-B032 -- every figure traces to a row, every row to a source."""
+    """B030-B033 -- every figure traces to a row, every row to a source."""
     findings: list[Finding] = []
     rows = facts(brand_dir)
-    known = " ".join(r["value"] for r in rows if r["public"].lower() != "no")
+    known: set[str] = set()
+    for row in rows:
+        if row["public"].lower() != "no":
+            known |= _fact_figures(row["value"])
+
+    # B033 -- `Fact` is the key a figure is cited by, and a table with two rows
+    # under one key has no answer to "what is that number". Watched: a second
+    # `| skills shipped | 99 |` row left the pack clean AND put `99` into the
+    # sourced corpus, so the duplicate did not merely go unreported -- it
+    # licensed a wrong figure in public copy. An error, not a warning: the two
+    # rows disagree by construction and no reader can tell which one is meant.
+    by_key: dict[str, int] = {}
+    for row in rows:
+        key = normalise(row["fact"]).lower()
+        by_key[key] = by_key.get(key, 0) + 1
+    for key, count in sorted(by_key.items()):
+        if count > 1:
+            findings.append(Finding(
+                "B033", SEVERITY_ERROR, "facts.md", 0,
+                f"`{key}` has {count} rows -- a fact is cited by its name, and "
+                f"two rows under one name make every figure quoting it "
+                f"ambiguous. Retire one or rename both",
+            ))
 
     for row in rows:
         if unfilled(row["source"]):
@@ -868,7 +998,7 @@ def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
             compact = number.replace(" ", "")
             if YEAR_RE.match(compact):
                 continue
-            if compact not in known.replace(" ", ""):
+            if compact not in known:
                 findings.append(Finding(
                     "B030", SEVERITY_ERROR, path, 0,
                     f"`{number}` appears in public copy with no row in "
@@ -1539,6 +1669,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fix", action="store_true")
     parser.add_argument("--brief", action="store_true")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument(
+        "--strict", action="store_true",
+        help="let warnings fail the run too (same meaning as ux_lint.py --strict)",
+    )
     args = parser.parse_args(argv)
 
     brand_dir = Path(args.path)
@@ -1555,7 +1689,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if any(f.severity == SEVERITY_ERROR for f in findings):
         return 2
-    return 1 if findings else 0
+    # A warning is advice about a judgement a person still has to make -- an
+    # unregistered string, a fact past review, a label naming no outcome. It
+    # blocks only when the caller asks, which is what `--strict` is for.
+    return 1 if (args.strict and findings) else 0
 
 
 if __name__ == "__main__":

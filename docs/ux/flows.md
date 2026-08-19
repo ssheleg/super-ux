@@ -24,9 +24,15 @@ written and a reason given.
 
 ## Flows
 
+**No flow carries a `Status:`.** Four of them did, reading `confirmed`, and
+the contract gives this layer no status at all — so the value sat outside
+every enum, unrefused and unaccepted. A flow's delivery state is *measured*
+through the screens it traverses, which is the whole point of `U057`; a
+status declared here would be the inherited verdict that rule refuses,
+written into the record. `U075` now says so on every layer with no enum.
+
 ### FLW-01: Interactive install
 **Traces:** ST-001, ST-003, ST-006
-**Status:** confirmed
 
 ```mermaid
 flowchart TD
@@ -52,7 +58,6 @@ plus a stated reason. There is no third outcome.
 
 ### FLW-02: Piped / non-TTY install
 **Traces:** ST-002, ST-003
-**Status:** confirmed
 
 ```mermaid
 flowchart TD
@@ -72,7 +77,6 @@ would drop them. That is why one instance spans the whole flow.
 
 ### FLW-03: Direct project install
 **Traces:** ST-004, ST-005, ST-006
-**Status:** confirmed
 
 ```mermaid
 flowchart TD
@@ -98,7 +102,6 @@ reads as a decided one.
 
 ### FLW-04: Read before running
 **Traces:** ST-007
-**Status:** confirmed
 
 ```mermaid
 flowchart TD

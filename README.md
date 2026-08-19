@@ -129,11 +129,11 @@ Commands: `/brand` (status → one recommended action), `/brand-init`,
 python3 docs/brand/lint.py
 ```
 
-37 deterministic checks (`B001`..`B073`): banned words, one action under two names, a figure
+39 deterministic checks (`B001`..`B073`): banned words, one action under two names, a figure
 with no sourced fact, a field over its limit with the locale coefficient
 applied, blocked AI crawlers, keyword stuffing, humor on a billing screen,
 a rhetorical dash, a title that ends in a full stop, a locale that lags
-without saying so. Exit 0 clean, 1 warnings, 2 errors.
+without saying so. Exit 0 clean **or warnings only**, 1 warnings under `--strict`, 2 any error. That is the policy `docs/ux/lint.py` has always had, and one pack cannot hold two opposite meanings for a warning: this linter returned 1 on warnings alone until 2026-08-20, so 13 of its 39 codes turned a build red while printing `0 error(s), 1 warning(s)`.
 
 Clean means *checkable*, not *good*: tone drift, unproven claims and a voice
 that has overshot its own failure mode are judged by `/ux-audit copy`.

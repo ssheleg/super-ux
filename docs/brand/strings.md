@@ -18,6 +18,7 @@ requires.
 
 | Key | Text (primary) | Location | Scenario | Status |
 |---|---|---|---|---|
+| help.title | super-ux installer | bin/super-ux.js:28 | SCN-014 | agreed |
 | menu.item.skills | Skills for any AI agent (Claude Code, Codex, Cursor, 70+; opens agent picker) | bin/super-ux.js:22 | SCN-001 | agreed |
 | menu.item.cursor | Cursor rules + docs/ux skeleton + docs/brand pack + linters, into a project | bin/super-ux.js:23 | SCN-001 | agreed |
 | menu.item.claude | Claude Code plugin (skills + /ux commands, user-global) | bin/super-ux.js:24 | SCN-001 | agreed |
@@ -62,8 +63,16 @@ something it overwrote, this registry is what proves the string lied.
   prefix above; the rest is a path or an argument the user just typed. A row
   holding `error: unknown mode '…'` would never match the source and would
   turn `B021` into permanent noise.
-- **The usage block,** a multi-line template literal in `usage()`. Its
-  wording is governed by SCN-014, which states what it must contain.
+- **The usage block's option table,** the four `Usage:` lines in `usage()`.
+  Until 2026-08-20 the whole block was unregistered for a reason that was not
+  a decision: the literal extractor could not cross a newline, so a multi-line
+  template literal was invisible to `B022` and nothing here had to be argued.
+  It is visible now — the block's title line is registered above — and the
+  option table deliberately is not. A column-aligned table of flags is layout,
+  not language: its `Text` cell would carry a 34-space run and a registry of
+  layouts is a registry nobody reads. `B022` warns about it on every run, and
+  that standing warning is the honest state of a help screen nobody has agreed
+  — it is the finding, not noise. Its contents stay governed by SCN-014.
 - **ANSI control sequences and the selection glyphs** `◉` `◯` `❯`, which
   carry state, not language, and are specified in `docs/ux/screens.md` →
   Design system, where changing them is a UI decision rather than a copy

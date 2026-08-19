@@ -85,6 +85,20 @@ cannot produce one.
 - `ST-NNN` **Status** — `proposed | validated | delivered | dropped`
 - `ST-NNN` **Product** — `unobserved | observed | contradicted`
 - `SCR-NN` **Status** — `designed | blocked | built | drifted | retired`
+- `P-NN` **Status** — `proposed | confirmed | retired`
+- `JTBD-NN` **Status** — `proposed | confirmed | retired`
+- `vision.md` **Status** — `draft | approved`
+
+A persona and a job are either an assumption or something an observation has
+confirmed, and `proposed → confirmed` is the only claim either layer makes about
+itself. Both had been carrying `confirmed` with no enum anywhere covering them.
+
+**Two layers carry no status at all, and that is declared rather than left
+open.** `FLW-NN` and `JRN-NN` have no `Status` field: a flow's delivery state is
+*measured* through the screens it traverses — which is what `U057` exists for —
+so a status declared on the flow is the inherited verdict that rule refuses,
+written into the record. A journey is a map of what happens and has no delivery
+state of its own. A `Status` on either is `U075`.
 
 This list is the ONE home of every enum `docs/ux/lint.py` matches on, and
 `validate_status_enums_match_contract` compares it against the linter's own table
@@ -93,6 +107,12 @@ drifted: this contract declared five screen statuses — `blocked` among them, w
 a paragraph of rules of its own — while the linter matched four, so a `blocked`
 screen read as having **no** status and every rule keyed on one stopped applying
 to it in silence. A value outside its enum is `U070`, never "no status".
+
+Drifted again, in the other direction, and it took until 2026-08-20 to see:
+`ENUM_DECL_RE` accepted only `SCN`, `ST` and `SCR`, so **nine** live `Status:`
+values sat on layers no enum covered — four flows, two personas and three jobs —
+each of them unrefused, unaccepted and invisible. The parity check was real and
+its alphabet was short.
 
 ### `Product` — the state a shipped thing is still allowed to be in
 
@@ -835,3 +855,8 @@ here — the meaning of a rule never lives only in its source.
 | U068 | E | delivery proof offered as an outcome signal: a `file:line` (line ranges included), an audit verdict, or a path into `docs/ux/audits/`. Everything an audit can produce, and none of it is a user |
 | U069 | W | a required field spelled with a short form the contract does not declare (`Expected:`, `Acceptance:`) — read either way, but the vocabulary is not ungated |
 | U070 | E | a `Status:` value outside its layer's enum — an unrecognised status reads as no status, and every rule keyed on one silently stops applying |
+| U071 | E | a screen's `Coverage:` cites lines the file does not have — the path resolved and the numbers were decoration, which is how `bin/super-ux.js:99000-99999` passed against 396 lines |
+| U072 | E | a scenario's `Coverage:` cites lines the file does not have — same claim as U071, one layer up |
+| U073 | E | an entry header carries no `: <name>` — the id alone is what made the whole job layer invisible to every rule in the linter |
+| U074 | E | a job is missing one of `Statement`, `Personas`, `Type`, `Forces`, `Success metric` — the metric is the observable a job is unfinished without, one layer above a story's acceptance criteria |
+| U075 | E | a `Status:` on `FLW-NN` or `JRN-NN`, layers the contract deliberately gives none — silence about a state is not permission to invent a vocabulary for it |

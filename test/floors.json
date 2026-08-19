@@ -1,8 +1,8 @@
 {
   "_why": "Ratchet floors, ported from sheleg-design after its retro recorded the class: a gate whose check count can fall silently cannot detect a deleted requirement. Raise freely; lowering one needs a reason in the same commit. Every script listed here reads its own floor -- two of these three were recorded and never read until SU-01.",
-  "_measured_on": "SU-02 (manifesto M-21), 2026-08-19",
-  "_delta": "SU-02 raised validate.py 3518 -> 3539 (+21: five fixture-and-contract pairs in validate_ux_lint_coverage for U066..U070 = 10, eight in validate_status_enums_match_contract, two in validate_audit_leaves_product_alone, one Contents anchor) and ux_lint_test.py 76 -> 106 (+30 fixtures for the product state, the field vocabulary and the three status enums; two of them -- a citation with a line RANGE and two citations separated by a comma -- were added because the first plant against the real chain went clean and named a hole in the check; a third pins the audit report linked with prose around it). brand_lint_test.py unchanged at 77 -- SU-02 touched no brand code.",
-  "validate.py": 3539,
-  "ux_lint_test.py": 106,
-  "brand_lint_test.py": 77
+  "_measured_on": "SU-04 (13 measured defects), 2026-08-20",
+  "_delta": "SU-04 raised validate.py 3539 -> 3667 (+128), brand_lint_test.py 77 -> 89 (+12) and ux_lint_test.py 106 -> 133 (+27). The validate.py breakdown was MEASURED by disabling each block and re-running, not apportioned: validate_hard_rule_anchors 51 (one per derived anchor per live copy of a hard rule), validate_facts_recompute 17, validate_board_ids 14, umbrella reachability inside validate_skill_parity 9, the enum-parity widening 8, validate_ai_tell_coverage 6, the front-matter budgets 7 (two fields where one block was measured). The remaining 16 are the per-code coverage gates charging for the new codes -- a fixture row and a contract row for each of five new U codes and two new B codes -- plus the two claims validate_facts_recompute makes about facts.md itself. brand_lint_test.py: four B030 exactness fixtures, three B033, three B034, two for the multi-line template literal. ux_lint_test.py: seven for U071/U072, twelve for U073/U074 and the job layer's id uniqueness (the header check covers every entry layer), eight for U075 and the widened U070 on personas, jobs and the vision document. Every count here was produced by running something: the previous entry's own history records a run where two restated numbers were both wrong and the counted one was right.",
+  "validate.py": 3667,
+  "ux_lint_test.py": 133,
+  "brand_lint_test.py": 89
 }

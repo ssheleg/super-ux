@@ -6,36 +6,61 @@ alwaysApply: true
 # UX scenarios — hard rule (super-ux)
 
 - `docs/ux/scenarios.md` is the source of truth for all user-facing behavior;
-  `docs/ux/foundation.md` (personas, JTBD, journeys, user stories) is the WHY
-  layer scenarios trace to.
-- `docs/ux/screens.md` is the UI map: every screen + state with its wireframe
-  and (Figma on) its frame link. A screen that changes in code changes here in
-  the SAME change.
-- Run the linter after any UX change and before calling work done:
-  `python3 docs/ux/lint.py`. It must pass — drift must not merge; wire it
-  into CI/pre-commit.
-- Run `python3 docs/ux/doctor.py` when picking this base up after a while.
-  The linter checks the chain against itself and stays silent when the whole
-  base is written to an old contract; the doctor is what notices. Fix a
-  mixed or stale contract before designing on top of it.
-- Any change that touches user-facing behavior MUST update
-  `docs/ux/scenarios.md` in the same change (add/adjust scenarios, statuses,
-  coverage). New user-facing behavior with no scenario is a blocker, not a
-  warning.
+  `docs/ux/foundation.md` (personas, JTBD, journeys, stories) and
+  `docs/ux/flows.md` (user flows) are the WHY and HOW layers scenarios trace
+  to. Above all three sits `docs/ux/vision.md` — what the product is and
+  refuses to become — when the project has written one.
+- Any change that touches user-facing behavior or interface MUST update, in
+  the same change: `docs/ux/scenarios.md`; affected flows; the affected
+  screens in `docs/ux/screens.md` (the UI map — states, elements, coverage);
+  and, when Figma is enabled, the Figma frame(s) plus their links in
+  `screens.md`. A screen whose code diverges from its record, or a stale
+  Figma link, is drift — the exact thing this system prevents.
+- A `Coverage:` citation is a claim about code and is resolved as one: the
+  path must exist and the line range must be inside the file. Seven of this
+  pack's own citations were pre-shift ranges nothing re-resolved.
 - Any new feature or project STARTS with the chain: which job does it serve,
   which journey stage, which story — then flows and scenarios, validated
-  against the existing base (conflicts, overlaps, gaps), approved. An idea
-  serving no job is challenged, not silently accepted.
-- Do NOT write interface code until the UX workflow is done first: the
+  against the existing base, approved. An idea serving no job is challenged,
+  not silently accepted.
+- **Do NOT write interface code until the UX workflow is done first:** the
   foundation → flows → screens → scenarios chain is designed and approved,
   and — when Figma is enabled (default) — the UI is mocked up in Figma with
   every screen linked to its frame. Building UI before this is the exact
   mistake super-ux exists to prevent.
-- Visual identity is one locked style pack, recorded once in `screens.md` →
-  Design system and used by every frame and every built screen — picked with
-  the **sheleg-design** companion skill (`npx sheleg-design-skill`) when the
-  project has no design system of its own. Recommended, never forced; a
-  palette invented per screen is visual drift.
-- Workflows: `ux-foundation` rule (WHY), `ux-flows` rule (flows + Figma
-  mockups + style pack), `ux-scenarios` rule (scenario base), `ux-audit` rule
-  (evidence-backed audits).
+- Visual identity is ONE locked style pack, recorded in `docs/ux/screens.md`
+  → Design system and obeyed by every Figma frame and every built screen —
+  picked with the **sheleg-design** companion skill when the project has no
+  design system of its own (recommended, not required). Inventing a palette,
+  type pairing, or motion per screen is visual drift.
+- After any UX change and before calling the work done, run the linter
+  `python3 docs/ux/lint.py` — it must pass (errors are drift/broken
+  structure; wire it into CI/pre-commit). Run `python3 docs/ux/doctor.py`
+  when picking this base up after a while: the linter checks the chain
+  against itself and stays silent when the whole base is written to an old
+  contract, and the doctor is what notices.
+- Text a user reads is governed too. `docs/brand/` holds the voice, the
+  terminology, the string registry and `facts.md` — the only source of any
+  public figure — and `python3 docs/brand/lint.py` must pass beside the UX
+  linter. Never quote a number that has no row in `facts.md`.
+
+### Which rule owns which question
+
+Eight rules ship in `.cursor/rules/`, and this one routes to the other seven.
+A rule nobody names is a rule nobody loads.
+
+| Rule | Owns |
+|---|---|
+| `vision` | what the product is and refuses to become — the layer above the chain |
+| `ux-foundation` | the WHY layer: personas, jobs (`JTBD-NN`, each with a success metric), journeys, stories |
+| `ux-flows` | flows, Figma mockups and the locked style pack |
+| `ux-scenarios` | the scenario base and its maintenance |
+| `ux-audit` | evidence-backed audits: `file:line` or it did not happen |
+| `brand-voice` | how the product sounds — voice, terminology, facts, per-surface register |
+| `copywriting` | the text itself: interface strings, landing, pricing, changelog, posts |
+
+The chain runs `vision` → `ux-foundation` → `ux-flows` → `ux-scenarios`, with
+`ux-audit` checking the result against the code. `brand-voice` and
+`copywriting` read the same scenarios and do not wait on each other — but
+where both land on one screen, compare them before shipping: a label the
+layout has no room for is right in each and wrong on the screen.

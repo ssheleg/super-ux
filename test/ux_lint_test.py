@@ -659,6 +659,136 @@ silent("U070 silent when a status is not declared at all — a different rule's 
        {"U070"})
 
 
+# --- U071 / U072: a Coverage range resolved, not just its path ---------------
+#
+# B-004, open since 2026-08-10, and the plant that closed it: a citation was
+# split on `:` and only the path was resolved, so the line numbers were
+# decoration. `bin/super-ux.js:99000-99999` passed against a 396-line file and
+# `python3 docs/ux/lint.py` printed `OK`, exit 0. Underneath it, seven live
+# citations in this pack's own `screens.md` were pre-shift ranges — `SCR-01`
+# pointed at 223-284 while `selectInteractive` had moved to 235-296, and
+# `scenarios.md` had the same function right, so the two layers disagreed in
+# writing and nothing compared them.
+
+TEN_LINES = {"src/a.tsx": "".join(f"line {i}\n" for i in range(1, 11))}
+
+case("U071 a screen cites a range past the end of the file",
+     {"screens.md": screens("- **Purpose:** p\n- **Status:** built\n"
+                            "- **Coverage:** `src/a.tsx:900-999`\n")},
+     errors={"U071"}, root_files=TEN_LINES)
+case("U071 a screen cites a single line the file does not have",
+     {"screens.md": screens("- **Purpose:** p\n- **Status:** built\n"
+                            "- **Coverage:** `src/a.tsx:11`\n")},
+     errors={"U071"}, root_files=TEN_LINES)
+case("U071 a range that ends before it starts is not a range",
+     {"screens.md": screens("- **Purpose:** p\n- **Status:** built\n"
+                            "- **Coverage:** `src/a.tsx:8-3`\n")},
+     errors={"U071"}, root_files=TEN_LINES)
+silent("U071 clean on a range the file has",
+       {"screens.md": screens("- **Purpose:** p\n- **Status:** built\n"
+                              "- **Coverage:** `src/a.tsx:3-7`\n")},
+       {"U071"}, root_files=TEN_LINES)
+silent("U071 clean on a citation with no line at all — U055's question, not this one",
+       {"screens.md": screens("- **Purpose:** p\n- **Status:** built\n"
+                              "- **Coverage:** `src/a.tsx`\n")},
+       {"U071"}, root_files=TEN_LINES)
+case("U072 a scenario cites a range past the end of the file",
+     {"scenarios.md": scn("- **Expected result:** a\n- **Status:** implemented\n"
+                          "- **Coverage:** `src/a.tsx:200-300`\n")},
+     errors={"U072"}, root_files=TEN_LINES)
+silent("U072 clean on a range the file has",
+       {"scenarios.md": scn("- **Expected result:** a\n- **Status:** implemented\n"
+                            "- **Coverage:** `src/a.tsx:1-10`\n")},
+       {"U072"}, root_files=TEN_LINES)
+
+# --- U073 / U074: the job layer, invisible until 2026-08-20 ------------------
+#
+# SU-03, and two defects that hid each other. `ids()` and `entry_blocks()`
+# required `### PREFIX-NN:`; this pack's own three jobs are `### JTBD-01` with no
+# name, so the matcher returned zero entries and NOT ONE rule in the linter
+# applied to the layer — not id uniqueness, not the gap warning, not a required
+# field. Watched: two identical `### JTBD-01` headers passed the whole gate,
+# exit 0. Because the layer could not be seen, the missing `Success metric` on
+# all three could not be reported either.
+
+JOB_OK = ("- **Statement:** When x, I want y, so I can z.\n"
+          "- **Personas:** P-01\n"
+          "- **Type:** functional\n"
+          "- **Forces:** push: a; pull: b; anxiety: c; habit: d\n"
+          "- **Success metric:** the user stops doing x by hand\n")
+
+
+def jobs(body: str, sid: str = "JTBD-01", named: bool = True) -> str:
+    head = f"### {sid}: a job" if named else f"### {sid}"
+    return f"# Foundation\n\n## Jobs to Be Done\n\n{head}\n{body}"
+
+
+case("U073 a job header with the id alone", {"foundation.md": jobs(JOB_OK, named=False)},
+     errors={"U073"})
+case("U073 a persona header with the id alone",
+     {"foundation.md": "# Foundation\n\n### P-01\nwho they are\n"}, errors={"U073"})
+case("U073 a story header with the id alone",
+     {"foundation.md": "# Foundation\n\n### ST-001\n" + STORY_DONE}, errors={"U073"})
+case("U073 a scenario header with the id alone",
+     {"scenarios.md": "# Scenarios\n\n| ID | Title |\n|---|---|\n| SCN-001 | a |\n\n### SCN-001\n- **Expected result:** a\n"}, errors={"U073"})
+case("U073 a screen header with the id alone",
+     {"screens.md": "# UI Screen Registry\n\n## Web surfaces\n\n- **Web surfaces:** no\n\n## Screens\n\n### SCR-01\n- **Purpose:** p\n"}, errors={"U073"})
+case("U073 a flow header with the id alone",
+     {"flows.md": "# Flows\n\n### FLW-01\n**Traces:** ST-001\n"}, errors={"U073"})
+silent("U073 clean on the contract's named header",
+       {"foundation.md": jobs(JOB_OK)}, {"U073"})
+case("U074 a job with no Success metric",
+     {"foundation.md": jobs(JOB_OK.replace(
+         "- **Success metric:** the user stops doing x by hand\n", ""))},
+     errors={"U074"})
+case("U074 a job that is only a statement",
+     {"foundation.md": jobs("- **Statement:** When x, I want y, so I can z.\n")},
+     errors={"U074"})
+silent("U074 clean on a job carrying all five fields",
+       {"foundation.md": jobs(JOB_OK)}, {"U074"})
+silent("U074 silent on a retired job — a retired record is not an unfinished one",
+       {"foundation.md": jobs("- **Statement:** When x, I want y, so I can z.\n"
+                              "- **Status:** retired\n")}, {"U074"})
+case("U001 sees the job layer now: two entries under one id",
+     {"foundation.md": (jobs(JOB_OK) + "\n### JTBD-01: another job\n" + JOB_OK)},
+     errors={"U001"})
+
+# --- U075: a Status on a layer the contract gives none ----------------------
+#
+# Nine live values sat outside every enum: `confirmed` on four flows and on two
+# personas and three jobs, while the parity check's own regex accepted `SCN`,
+# `ST` and `SCR` only. The personas and jobs got an enum; the flows did not,
+# because a flow's coverage is measured through its screens (U057) and a status
+# declared on it is exactly the inherited verdict that rule refuses.
+
+case("U075 a flow declaring a status",
+     {"flows.md": "# Flows\n\n### FLW-01: install\n**Status:** confirmed\n"},
+     errors={"U075"})
+case("U075 a journey declaring a status",
+     {"foundation.md": "# Foundation\n\n### JRN-01: first install\n"
+                       "**Status:** confirmed\n"},
+     errors={"U075"})
+silent("U075 clean on a flow that declares no status",
+       {"flows.md": "# Flows\n\n### FLW-01: install\n**Traces:** ST-001\n"},
+       {"U075"})
+case("U070 reaches the persona layer it could not see before",
+     {"foundation.md": "# Foundation\n\n### P-01: the operator\n"
+                       "who they are. **Status:** shipped\n"},
+     errors={"U070"})
+case("U070 reaches the job layer too",
+     {"foundation.md": jobs(JOB_OK + "- **Status:** shipped\n")}, errors={"U070"})
+silent("U070 clean on `confirmed`, the value both foundation layers were using",
+       {"foundation.md": "# Foundation\n\n### P-01: the operator\n"
+                         "who they are. **Status:** confirmed\n"},
+       {"U070"})
+case("U070 a vision status outside `draft | approved`",
+     {"vision.md": "# P — Vision\n\n**Status:** shipped\n\n" + VISION_OK},
+     errors={"U070"}, root_files={"CLAUDE.md": RULE})
+silent("U070 clean on an approved vision",
+       {"vision.md": "# P — Vision\n\n**Status:** approved\n\n" + VISION_OK},
+       {"U070"}, root_files={"CLAUDE.md": RULE})
+
+
 # --- the shipped template must pass from the first second ------------------
 
 silent("the shipped screens template lints clean",

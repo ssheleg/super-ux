@@ -220,6 +220,70 @@ def main() -> int:
         },
         {"B003"}, project={"src/a.ts": "x\n"},
     )
+    # B034 -- an out-of-enum `Status`. This pack's own `voice.md` said
+    # `Status: approved` for two releases while `brand-contract.md` declared
+    # `draft | validated`, and it worked by accident: every read here asks
+    # `== "draft"` or `!= "draft"`, so `approved` behaved like `validated` and
+    # would have read as NOT validated the first time a check tested for the
+    # value. Same class as the screens enum SU-02 closed -- an out-of-enum value
+    # that is neither refused nor accepted, and invisible.
+    case(
+        "a voice status the contract does not declare",
+        {**MINIMAL, "voice.md": MINIMAL["voice.md"].replace(
+            "Status: validated", "Status: approved")},
+        {"B034"},
+    )
+    case(
+        "a plausible-looking third state is still not one",
+        {**MINIMAL, "voice.md": MINIMAL["voice.md"].replace(
+            "Status: validated", "Status: agreed")},
+        {"B034"},
+    )
+    case(
+        "`draft` is in the enum, and B003 is a different question",
+        {**MINIMAL, "voice.md": MINIMAL["voice.md"].replace(
+            "Status: validated", "Status: draft")},
+        set(),
+    )
+
+    # B022 reads a multi-line template literal as PARAGRAPHS since 2026-08-20 --
+    # `LITERAL_RE` used `[^\n]`, so `usage()` in this pack's own installer, the
+    # most-read UI surface it has, was invisible to the registry for as long as
+    # the code existed. A paragraph the source wraps cannot be a byte-exact
+    # registry row, so B021 falls back to the wrap-tolerant comparison the
+    # rendered-page branch already used; without it B022 would demand a row that
+    # B021 refuses, which is a check with no passing answer.
+    wrapped_src = (
+        "function usage() {\n"
+        "  console.log(`the tool that writes things down\n"
+        "\n"
+        "Every run prints one line per file it wrote\n"
+        "and one summary line at the end.\n"
+        "`);\n"
+        "}\n"
+    )
+    case(
+        "a string inside a multi-line template literal is swept",
+        {**MINIMAL, "README.md": MARKER + "\n\nSources:\n  ui: src/*.js\n",
+         "strings.md": MARKER + "\n"
+         "| Key | Text (primary) | Location | Scenario | Status |\n"
+         "|---|---|---|---|---|\n"
+         "| help.title | the tool that writes things down | src/a.js:2 | SCN-001 | agreed |\n"},
+        {"B022"},
+        project={"src/a.js": wrapped_src},
+    )
+    case(
+        "a wrapped paragraph registered in its collapsed form is not a divergence",
+        {**MINIMAL, "README.md": MARKER + "\n\nSources:\n  ui: src/*.js\n",
+         "strings.md": MARKER + "\n"
+         "| Key | Text (primary) | Location | Scenario | Status |\n"
+         "|---|---|---|---|---|\n"
+         "| help.title | the tool that writes things down | src/a.js:2 | SCN-001 | agreed |\n"
+         "| help.body | Every run prints one line per file it wrote and one "
+         "summary line at the end. | src/a.js:4 | SCN-001 | agreed |\n"},
+        set(),
+        project={"src/a.js": wrapped_src},
+    )
 
     banned = (
         MARKER + "\n\n## Banned\n"
@@ -420,6 +484,80 @@ def main() -> int:
          "| speed gain | 42% |  | 2026-08-01 | 2099-01-01 | yes |\n"},
         {"B031"},
         project={"content/a.md": page("landing hero", "Faster", "Hello.")},
+    )
+    # B030 compared a figure against every value joined into ONE string and
+    # asked `compact not in known.replace(" ", "")`, so the corpus was a single
+    # character sequence and every substring of it counted as sourced. Against
+    # this pack's own seven public rows the corpus was `7158215243770+`, which
+    # sourced the invented `1582` in "super-ux ... ships 1582 checks": the
+    # linter printed `brand pack is clean` and exited 0. An invented public
+    # number passing the check whose only purpose is to refuse one is the worst
+    # failure this file can have, because it is indistinguishable from working.
+    two_facts = (
+        MARKER + "\n\n"
+        "| Fact | Value | Source | Checked | Review by | Public |\n"
+        "|---|---|---|---|---|---|\n"
+        "| skills shipped | 7 | `ls skills \\| wc -l` | 2026-08-01 | 2099-01-01 | yes |\n"
+        "| practices | 215 | `grep -c BP- x.md` | 2026-08-01 | 2099-01-01 | yes |\n"
+    )
+    case(
+        "a figure that is only a SUBSTRING of the joined values is not sourced",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": two_facts},
+        {"B030"},
+        project={"content/a.md": page("landing hero", "Reach", "Ships 1582 checks.")},
+    )
+    case(
+        "a figure spanning two adjacent values is not sourced either",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": two_facts},
+        {"B030"},
+        project={"content/a.md": page("landing hero", "Reach", "Used by 7215 teams.")},
+    )
+    case(
+        "each value is still sourced on its own",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": two_facts},
+        set(),
+        project={"content/a.md": page(
+            "landing hero", "Catalog", "A catalog of 215 practices.")},
+    )
+    case(
+        "a bound marker in the value sources the figure a sentence writes",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": MARKER + "\n\n"
+         "| Fact | Value | Source | Checked | Review by | Public |\n"
+         "|---|---|---|---|---|---|\n"
+         "| agents | 500+ | registry | 2026-08-01 | 2099-01-01 | yes |\n"},
+        set(),
+        project={"content/a.md": page("landing hero", "Reach", "Reaches 500+ agents.")},
+    )
+    # B033 -- two rows under one `Fact` name. Watched: a second
+    # `| skills shipped | 99 | ... |` row left the pack clean AND put `99` into
+    # the sourced set, so the duplicate did not merely go unreported, it
+    # licensed a figure nobody had agreed.
+    case(
+        "two rows under one fact name",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": two_facts + "| skills shipped | 99 | `ls` | 2026-08-01 "
+                     "| 2099-01-01 | yes |\n"},
+        {"B033"},
+        project={"content/a.md": page("landing hero", "Hello", "Hello.")},
+    )
+    case(
+        "the same name spelled with different case is still one key",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": two_facts + "| Skills Shipped | 99 | `ls` | 2026-08-01 "
+                     "| 2099-01-01 | yes |\n"},
+        {"B033"},
+        project={"content/a.md": page("landing hero", "Hello", "Hello.")},
+    )
+    case(
+        "distinct fact names are not a duplicate",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero,
+         "facts.md": two_facts},
+        set(),
+        project={"content/a.md": page("landing hero", "Hello", "Hello.")},
     )
     case(
         "superlative with nothing to back it",

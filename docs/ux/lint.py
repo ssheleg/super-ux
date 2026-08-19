@@ -52,9 +52,32 @@ def find_ux_dir(arg: str | None) -> Path | None:
     return None
 
 
+# An entry header, matched by its ID and not by the shape of the rest of it.
+#
+# Requiring the colon is how a whole layer became invisible. This pack's own
+# three jobs are written `### JTBD-01` with no `: <name>`, so `ids()` and
+# `entry_blocks()` matched zero of them and NOT ONE rule in this file applied to
+# the layer -- not id uniqueness, not the gap warning, not a required field.
+# Watched: two identical `### JTBD-01` headers passed the whole gate, exit 0.
+# The contract has asked for `### JTBD-NN: <short job name>` since the layer
+# existed, and asking for it in the MATCHER meant a malformed entry was not
+# refused but erased, which is the same class as an out-of-enum status reading
+# as no status. So the header is matched loosely and its shape is then checked
+# (`U073`) -- an entry nobody can see cannot be told it is malformed.
+def _entry_header_re(prefix: str) -> re.Pattern:
+    return re.compile(rf"^###[ \t]+({prefix}-\d+)\b[ \t]*(:?)[ \t]*([^\n]*)$",
+                      re.MULTILINE)
+
+
 def ids(text: str, prefix: str) -> list[str]:
-    """All '### PREFIX-NN:' entry ids, in order."""
-    return re.findall(rf"^###\s+({prefix}-\d+):", text, re.MULTILINE)
+    """All '### PREFIX-NN' entry ids, in order, named or not."""
+    return [m.group(1) for m in _entry_header_re(prefix).finditer(text)]
+
+
+def entry_names(text: str, prefix: str) -> list[tuple[str, str, str]]:
+    """(id, colon, name) per entry header — what `U073` reads to check the shape."""
+    return [(m.group(1), m.group(2), m.group(3).strip())
+            for m in _entry_header_re(prefix).finditer(text)]
 
 
 def index_ids(text: str, prefix: str) -> set[str]:
@@ -92,13 +115,12 @@ def figma_enabled(foundation: str) -> bool | None:
 def entry_blocks(text: str, prefix: str) -> dict[str, str]:
     """Map PREFIX-id -> its section body (from its header to the next ### / ##)."""
     out: dict[str, str] = {}
-    parts = re.split(rf"^###\s+({prefix}-\d+):", text, flags=re.MULTILINE)
-    # parts = [pre, id1, body1, id2, body2, ...]
-    for i in range(1, len(parts), 2):
-        sid = parts[i]
-        body = parts[i + 1] if i + 1 < len(parts) else ""
+    headers = list(_entry_header_re(prefix).finditer(text))
+    for i, match in enumerate(headers):
+        stop = headers[i + 1].start() if i + 1 < len(headers) else len(text)
+        body = text[match.end():stop]
         body = re.split(r"^##\s", body, maxsplit=1, flags=re.MULTILINE)[0]
-        out[sid] = body
+        out[match.group(1)] = body
     return out
 
 
@@ -107,7 +129,11 @@ def entry_blocks(text: str, prefix: str) -> dict[str, str]:
 # or "the route is built" does not. Widening this to any slash-bearing token was
 # tried and flagged three correct prose entries, which is the false positive that
 # gets a rule switched off.
-CITED_PATH = re.compile(r"\b([\w.-]+(?:/[\w.-]+)+\.[A-Za-z][\w]{0,4}(?::\d+)?)")
+# The line suffix now includes a RANGE, because a range is what this layer
+# writes and stopping at the first number is what let one drift for a release.
+CITED_PATH = re.compile(
+    r"\b([\w.-]+(?:/[\w.-]+)+\.[A-Za-z][\w]{0,4}(?::\d+(?:-\d+)?)?)"
+)
 
 
 def screen_blocks(text: str) -> dict[str, str]:
@@ -115,17 +141,44 @@ def screen_blocks(text: str) -> dict[str, str]:
     return entry_blocks(text, "SCR")
 
 
-def coverage_claim(cov: str, root: Path) -> tuple[bool, list[str]]:
+def coverage_claim(cov: str, root: Path) -> tuple[bool, list[str], list[str]]:
     """A `Coverage:` value read as the claim about code that it is.
 
-    Returns `(names_no_file, cited_paths_that_do_not_exist)`. One owner for two
-    layers: `screens.md` and the requirement layer above it ask the same two
-    questions of the same field, and an answer that differed between them would
-    be a second contract wearing one field's name.
+    Returns `(names_no_file, paths_that_do_not_exist, spans_the_file_does_not
+    have)`. One owner for three layers: `screens.md` and the requirement layer
+    above it ask the same questions of the same field, and an answer that
+    differed between them would be a second contract wearing one field's name.
+
+    The third answer is the one B-004 was open for. Until 2026-08-20 a citation
+    was split on `:` and only its path was resolved, so a LINE NUMBER was
+    decoration: `bin/super-ux.js:99000-99999` passed against a 396-line file,
+    and seven live citations in this pack's own `screens.md` were pre-shift
+    ranges the gate could not see -- `SCR-01` pointed at 223-284 while
+    `selectInteractive` had moved to 235-296, and `scenarios.md` had the same
+    function right. A coverage claim whose numbers nobody resolves is a claim
+    about a file, not about code, and code is what it says it is about.
     """
     cited = CITED_PATH.findall(cov)
-    missing = [rel for rel in cited if not (root / rel.split(":", 1)[0]).exists()]
-    return (not cited, missing)
+    missing, beyond = [], []
+    for rel in cited:
+        path, _, span = rel.partition(":")
+        target = root / path
+        if not target.exists():
+            missing.append(rel)
+            continue
+        if not span:
+            continue
+        try:
+            total = len(target.read_text(encoding="utf-8").splitlines())
+        except (OSError, UnicodeDecodeError):
+            # A binary or unreadable target is not a citation defect. The path
+            # resolved; refusing it here would be a rule about file encodings.
+            continue
+        start, _, end = span.partition("-")
+        first, last = int(start), int(end or start)
+        if first < 1 or last < first or last > total:
+            beyond.append(f"{rel} ({path} has {total} lines)")
+    return (not cited, missing, beyond)
 
 
 # --- The observable a requirement is unfinished without --------------------
@@ -219,11 +272,15 @@ def check_observables(scenarios: str, foundation: str, root: Path) -> None:
             warn(f"[U063] scenarios.md: {sid} is 'implemented' and names no code — "
                  f"the status claims an audit passed and nothing says against what")
         if cov and not cov.lower().startswith("none"):
-            unfalsifiable, missing = coverage_claim(cov, root)
+            unfalsifiable, missing, beyond = coverage_claim(cov, root)
             if unfalsifiable:
                 warn(f"[U064] scenarios.md: {sid} claims Coverage '{cov}' and names no file")
             for rel in missing:
                 err(f"[U065] scenarios.md: {sid} cites '{rel}', which does not exist")
+            for rel in beyond:
+                err(f"[U072] scenarios.md: {sid} cites '{rel}' — the file resolves "
+                    f"and those lines do not, so the citation points at code that "
+                    f"is not there")
 
     for sid, body in sorted(entry_blocks(foundation, "ST").items()):
         status = declared_status(body)
@@ -312,7 +369,35 @@ STATUS_ENUMS = {
     "SCN": ("draft", "validated", "implemented", "retired"),
     "ST": ("proposed", "validated", "delivered", "dropped"),
     "SCR": ("designed", "blocked", "built", "drifted", "retired"),
+    # The two foundation layers that carry a state of their own. A persona and a
+    # job are either an assumption or something an observation has confirmed, and
+    # `proposed -> confirmed` is the only claim either layer can make about
+    # itself. Both were carrying `confirmed` in this pack's own foundation with
+    # no enum anywhere covering them: nine `**Status:**` values across three
+    # layers sat outside every table, unrefused and unaccepted.
+    "P": ("proposed", "confirmed", "retired"),
+    "JTBD": ("proposed", "confirmed", "retired"),
 }
+
+# A layer whose state lives on the DOCUMENT rather than on an entry. `vision.md`
+# has declared `draft | approved` since the layer shipped -- inside a fenced
+# example, not in the enum home -- and `check_vision` matched the single word
+# `approved` and nothing said what else was legal.
+DOC_STATUS_ENUMS = {
+    "vision.md": ("draft", "approved"),
+}
+
+# Layers the contract gives NO status, checked so that saying nothing about a
+# state is not the same as accepting any word for it. A flow's delivery state is
+# MEASURED through the screens it traverses -- that is what `U057` exists for --
+# so a declared `Status:` on a flow is the inherited verdict U057 refuses,
+# written into the record. This pack's own four flows each carried one.
+STATUSLESS_LAYERS = (
+    ("FLW", "flows.md", "a flow's coverage is measured through its screens (U057), "
+                        "never declared on the flow"),
+    ("JRN", "foundation.md", "a journey is a map of what happens, and a map has "
+                             "no delivery state of its own"),
+)
 
 # The canonical spelling of a field, and the short form in live use beside it.
 # `U060`/`U061` read both on purpose -- their question is whether an observable
@@ -401,11 +486,14 @@ def check_field_vocabulary(scenarios: str, foundation: str) -> None:
                      f"saying so")
 
 
-def check_status_enums(scenarios: str, foundation: str, screens: str) -> None:
+def check_status_enums(scenarios: str, foundation: str, screens: str,
+                       flows: str = "", vision: str = "") -> None:
     """A status outside its layer's enum is refused, not read as no status."""
     for text, prefix, name in ((scenarios, "SCN", "scenarios.md"),
                                (foundation, "ST", "foundation.md"),
-                               (screens, "SCR", "screens.md")):
+                               (screens, "SCR", "screens.md"),
+                               (foundation, "P", "foundation.md"),
+                               (foundation, "JTBD", "foundation.md")):
         allowed = STATUS_ENUMS[prefix]
         for sid, body in sorted(entry_blocks(text, prefix).items()):
             status = declared_status(body)
@@ -414,6 +502,73 @@ def check_status_enums(scenarios: str, foundation: str, screens: str) -> None:
             err(f"[U070] {name}: {sid} declares Status '{status}', which is not "
                 f"one of {' | '.join(allowed)} — an unrecognised status reads as "
                 f"no status, and every rule keyed on one silently stops applying")
+
+    # A layer the contract gives no status must not carry one. Silence about a
+    # state is not permission to invent a vocabulary for it: an undeclared value
+    # is outside every table, so no rule can key on it and no reader can be wrong
+    # about it out loud.
+    layers = {"FLW": flows, "JRN": foundation}
+    for prefix, name, why in STATUSLESS_LAYERS:
+        for sid, body in sorted(entry_blocks(layers[prefix], prefix).items()):
+            status = declared_status(body)
+            if status is None:
+                continue
+            err(f"[U075] {name}: {sid} declares Status '{status}' on a layer the "
+                f"contract gives no status — {why}")
+
+    for filename, allowed in sorted(DOC_STATUS_ENUMS.items()):
+        text = vision if filename == "vision.md" else ""
+        if not text.strip():
+            continue
+        status = declared_status(text)
+        if status is None or status in allowed:
+            continue
+        err(f"[U070] {filename}: declares Status '{status}', which is not one of "
+            f"{' | '.join(allowed)} — an unrecognised status reads as no status")
+
+
+# What the contract requires of a job, in the contract's own field names. The
+# `Success metric` is the M-17 observable one layer above a story: without it a
+# job is a sentence about a feeling, and no later evidence can be connected to it
+# without inventing the measure after seeing what shipped. None of this pack's
+# own three jobs carried one, and no rule could have said so -- the layer was
+# invisible (see `_entry_header_re`), which is why two defects hid each other.
+JOB_FIELDS = ("Statement", "Personas", "Type", "Forces", "Success metric")
+
+
+def check_jobs(foundation: str, scenarios: str = "", flows: str = "",
+               screens: str = "") -> None:
+    """The job layer: a named header, and the fields the contract asks for.
+
+    The header check covers EVERY entry layer, not only the one it was written
+    for. The invisibility was never specific to jobs -- any layer whose entries
+    drop the `: <name>` disappears from `ids()` and `entry_blocks()` the same
+    way, and it happened to be the job layer that did.
+    """
+    layers = (("P", "foundation.md", "persona", foundation),
+              ("JTBD", "foundation.md", "job", foundation),
+              ("JRN", "foundation.md", "journey", foundation),
+              ("ST", "foundation.md", "story", foundation),
+              ("SCN", "scenarios.md", "scenario", scenarios),
+              ("FLW", "flows.md", "flow", flows),
+              ("SCR", "screens.md", "screen", screens))
+    for prefix, name, label, text in layers:
+        for sid, colon, title in entry_names(text, prefix):
+            if colon and title:
+                continue
+            err(f"[U073] {name}: `### {sid}` carries no name — the contract's "
+                f"header is `### {sid}: <short {label} name>`, and an entry with "
+                f"no name is how this layer stayed invisible to every rule in "
+                f"this file for three releases")
+
+    for sid, body in sorted(entry_blocks(foundation, "JTBD").items()):
+        if declared_status(body) == "retired":
+            continue
+        for field in JOB_FIELDS:
+            if not re.search(rf"\*\*{re.escape(field)}:\*\*", body):
+                err(f"[U074] foundation.md: {sid} is missing **{field}:** — the "
+                    f"contract asks a job for all of "
+                    f"{', '.join(JOB_FIELDS)}")
 
 
 WEB_SURFACE_FIELDS = ("Route", "Answers", "Indexable", "Without JS", "Entity")
@@ -689,16 +844,21 @@ def main() -> int:
             if cov and not cov.lower().startswith("none"):
                 # The line suffix is part of a citation, not of the path --
                 # `coverage_claim` owns that, for this layer and the one above.
-                unfalsifiable, missing = coverage_claim(cov, screens_root)
+                unfalsifiable, missing, beyond = coverage_claim(cov, screens_root)
                 if unfalsifiable:
                     warn(f"[U055] screens.md: {sid} claims Coverage '{cov}' and names no file")
                 for rel in missing:
                     err(f"[U056] screens.md: {sid} cites '{rel}', which does not exist")
+                for rel in beyond:
+                    err(f"[U071] screens.md: {sid} cites '{rel}' — the file resolves "
+                        f"and those lines do not, so the citation points at code "
+                        f"that is not there")
 
     check_observables(scenarios, foundation, project_root)
     check_product_state(scenarios, foundation)
     check_field_vocabulary(scenarios, foundation)
-    check_status_enums(scenarios, foundation, screens)
+    check_status_enums(scenarios, foundation, screens, flows, vision)
+    check_jobs(foundation, scenarios, flows, screens)
     check_vision(ux, vision)
     check_web_surface(screens, flows)
     check_links(ux)

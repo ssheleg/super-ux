@@ -27,26 +27,43 @@ confirmed
 
 ## Jobs to Be Done
 
-### JTBD-01
-When I start letting an agent write my UI, I want a written model of what
-the product should do, so I stop re-explaining it every prompt and stop
-finding rewritten screens I already approved. **Forces:** push — silent
-rewrites; pull — a file the agent must read; anxiety — "another process to
-maintain"; habit — prompting and hoping. **Status:** confirmed
+### JTBD-01: Stop re-explaining the product to the agent
+- **Statement:** When I start letting an agent write my UI, I want a written
+  model of what the product should do, so I stop re-explaining it every prompt
+  and stop finding rewritten screens I already approved.
+- **Personas:** P-01, P-02
+- **Type:** functional
+- **Forces:** push — silent rewrites; pull — a file the agent must read;
+  anxiety — "another process to maintain"; habit — prompting and hoping.
+- **Success metric:** the operator stops restating approved behaviour from
+  memory in a new session, and stops discovering an approved screen rewritten
+  after the fact.
+- **Status:** confirmed
 
-### JTBD-02
-When I install a dev tool, I want to know exactly what it put on my disk and
-that it did not overwrite my work, so I can undo it and keep trusting it.
-**Forces:** push — tools that scatter files; pull — an itemized log; anxiety
-— clobbering an existing base; habit — reading the diff afterwards.
-**Status:** confirmed
+### JTBD-02: Know exactly what the install wrote
+- **Statement:** When I install a dev tool, I want to know exactly what it put
+  on my disk and that it did not overwrite my work, so I can undo it and keep
+  trusting it.
+- **Personas:** P-01, P-02
+- **Type:** functional
+- **Forces:** push — tools that scatter files; pull — an itemized log; anxiety
+  — clobbering an existing base; habit — reading the diff afterwards.
+- **Success metric:** the operator can reverse the install from the run's own
+  output alone, and never finds a file of their own replaced by it.
+- **Status:** confirmed
 
-### JTBD-03
-When I run several agents, I want one command that brings every channel to
-the same version, so I never debug a difference that is only a stale copy.
-**Forces:** push — a shadowing plain copy serving a frozen version; pull —
-one launcher; anxiety — half-updated state; habit — updating whichever
-channel broke. **Status:** confirmed
+### JTBD-03: One command brings every channel to one version
+- **Statement:** When I run several agents, I want one command that brings
+  every channel to the same version, so I never debug a difference that is
+  only a stale copy.
+- **Personas:** P-02
+- **Type:** functional
+- **Forces:** push — a shadowing plain copy serving a frozen version; pull —
+  one launcher; anxiety — half-updated state; habit — updating whichever
+  channel broke.
+- **Success metric:** no debugging session ends in "it was a stale copy" —
+  every channel answers with the same version after one command.
+- **Status:** confirmed
 
 ## Customer journeys
 

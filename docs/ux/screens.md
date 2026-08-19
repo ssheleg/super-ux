@@ -12,13 +12,13 @@ the whole surface is a terminal.
 
 | ID | Screen | Used by | Figma | Status | Coverage |
 |----|--------|---------|-------|--------|----------|
-| SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:223-284` |
-| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:286-294` |
-| SCR-03 | Project directory prompt | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:322-326` |
-| SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:51-135` |
-| SCR-05 | Skills CLI handoff | FLW-01 | n/a | built | `bin/super-ux.js:143-147` |
-| SCR-06 | Claude plugin install output | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:149-166` |
-| SCR-07 | Usage / help | FLW-04 | n/a | built | `bin/super-ux.js:27-44` |
+| SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:235-296` |
+| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:298-306` |
+| SCR-03 | Project directory prompt | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:334-338` |
+| SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:54-147` |
+| SCR-05 | Skills CLI handoff | FLW-01 | n/a | built | `bin/super-ux.js:155-159` |
+| SCR-06 | Claude plugin install output | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:161-178` |
+| SCR-07 | Usage / help | FLW-04 | n/a | built | `bin/super-ux.js:27-47` |
 
 ## Design system
 
@@ -46,7 +46,7 @@ five-field `Web surface:` block.
 ### SCR-01: Interactive multi-select list
 **Status:** built
 **Used by:** FLW-01
-**Coverage:** `bin/super-ux.js:223-284`
+**Coverage:** `bin/super-ux.js:235-296`
 
 Three items, nothing preselected. Redraw moves the cursor up by
 `items.length + 1` and clears each line, so the list updates in place.
@@ -68,7 +68,7 @@ CLI can leave behind.
 ### SCR-02: Non-TTY numbered list + prompt
 **Status:** built
 **Used by:** FLW-02
-**Coverage:** `bin/super-ux.js:286-294`
+**Coverage:** `bin/super-ux.js:298-306`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -84,7 +84,7 @@ silently narrowed selection.
 ### SCR-03: Project directory prompt
 **Status:** built
 **Used by:** FLW-01, FLW-02
-**Coverage:** `bin/super-ux.js:322-326`
+**Coverage:** `bin/super-ux.js:334-338`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -99,7 +99,7 @@ external skills-CLI picker's own output.
 ### SCR-04: Install log
 **Status:** built
 **Used by:** FLW-01, FLW-02, FLW-03
-**Coverage:** `bin/super-ux.js:51-135`
+**Coverage:** `bin/super-ux.js:54-147`
 
 One line per file. This screen is the whole answer to JTBD-02.
 
@@ -118,7 +118,7 @@ half-installed project with a stack trace as its only record.
 ### SCR-05: Skills CLI handoff
 **Status:** built
 **Used by:** FLW-01
-**Coverage:** `bin/super-ux.js:143-147`
+**Coverage:** `bin/super-ux.js:155-159`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -130,7 +130,7 @@ half-installed project with a stack trace as its only record.
 ### SCR-06: Claude plugin install output
 **Status:** built
 **Used by:** FLW-01, FLW-02, FLW-03
-**Coverage:** `bin/super-ux.js:149-166`
+**Coverage:** `bin/super-ux.js:161-178`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -146,7 +146,7 @@ marketplace is not an error and says so.
 ### SCR-07: Usage / help
 **Status:** built
 **Used by:** FLW-04
-**Coverage:** `bin/super-ux.js:27-44`
+**Coverage:** `bin/super-ux.js:27-47`
 
 | State | Shown | Frame |
 |---|---|---|
