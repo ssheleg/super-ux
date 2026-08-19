@@ -1,7 +1,8 @@
 {
   "_why": "Ratchet floors, ported from sheleg-design after its retro recorded the class: a gate whose check count can fall silently cannot detect a deleted requirement. Raise freely; lowering one needs a reason in the same commit. Every script listed here reads its own floor -- two of these three were recorded and never read until SU-01.",
-  "_measured_on": "SU-01 (manifesto M-17), 2026-08-19",
-  "validate.py": 3518,
-  "ux_lint_test.py": 76,
+  "_measured_on": "SU-02 (manifesto M-21), 2026-08-19",
+  "_delta": "SU-02 raised validate.py 3518 -> 3539 (+21: five fixture-and-contract pairs in validate_ux_lint_coverage for U066..U070 = 10, eight in validate_status_enums_match_contract, two in validate_audit_leaves_product_alone, one Contents anchor) and ux_lint_test.py 76 -> 106 (+30 fixtures for the product state, the field vocabulary and the three status enums; two of them -- a citation with a line RANGE and two citations separated by a comma -- were added because the first plant against the real chain went clean and named a hole in the check; a third pins the audit report linked with prose around it). brand_lint_test.py unchanged at 77 -- SU-02 touched no brand code.",
+  "validate.py": 3539,
+  "ux_lint_test.py": 106,
   "brand_lint_test.py": 77
 }

@@ -207,9 +207,19 @@ Passes:
 6. **Summarize.** Totals, top issues (worst user damage first), prioritized
    recommended actions. The summary must be readable standalone by someone
    who won't open the batch details.
-7. **Update the base.** `Last audit` column (`YYYY-MM-DD VERDICT`) for every
-   audited scenario; flip `validated` → `implemented` where the audit
-   PASSed; never touch scenario content itself during an audit.
+7. **Update the base — the delivery state, and only that.** `Last audit`
+   column (`YYYY-MM-DD VERDICT`) for every audited scenario; flip
+   `validated` → `implemented` where the audit PASSed; never touch scenario
+   content itself during an audit. **The audit never writes `Product:`.** A
+   PASS says the code does what the scenario said — that is delivery proof,
+   and it is not evidence that shipping the scenario changed anything for
+   anyone. The outcome state moves when a signal arrives from the world, and
+   an audit produces two things that are not one: a `file:line` and its own
+   verdict. `U068` refuses both as an outcome signal, so the shortcut fails
+   the gate as well as this instruction. A scenario that comes out of an
+   audit `implemented` and `unobserved` is a **correct and complete record**,
+   not a gap for this step to close — and a report that says
+   "product-unvalidated" about a PASSing scenario is telling the truth.
 8. **Produce the UX plan.** With the user's go-ahead, turn FAIL/PARTIAL
    findings into `docs/ux/plans/YYYY-MM-DD-<scope>.md` per the contract's
    UX-plan format: target interface per affected screen (elements, states,

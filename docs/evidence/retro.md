@@ -54,6 +54,13 @@ stamps — and log the deletion as one line under *Retired*.
    Both harnesses now read their own floor, watched refusing against a planted
    9999. Kept — the trigger it names is not met while `SU-03` shows a layer
    (`JTBD-NN`) whose ids no rule can even enumerate.
+   **Fired again on 2026-08-19 (SU-02), on a set nobody had counted as a set:**
+   the status enums existed twice — once in `scenario-format.md` and once in
+   `ux_lint.py` — and had already drifted, the contract declaring five screen
+   statuses against a matcher listing four, so a `blocked` screen read as having
+   no status and `U021` stopped applying to it. Nothing could have noticed.
+   `validate_status_enums_match_contract` is the answer, and it reads the linter's
+   side with `ast` rather than restating it, so it does not become the third copy.
 
 5. **(2026-08-14)** **A fixture that asserts a set of codes proves the code
    arrived, not which branch produced it.** Where two branches of one check emit
@@ -68,6 +75,17 @@ stamps — and log the deletion as one line under *Retired*.
    fence for the other, since that defeats the inline pass. *(Retire when the
    harness asserts which branch fired rather than which code arrived, or after
    five stamps with no recurrence.)*
+   **Held on 2026-08-19 (SU-02) by design rather than by recurrence.** `U068` has
+   two branches emitting one code — a code citation offered as an outcome signal,
+   and an audit verdict offered as one — so it was built as three disjoint `if`s
+   rather than an `elif` chain, and each fixture is written where only its own
+   branch can fire: the citation cases leave nothing but paths, so the verdict
+   guard is false there; the verdict case leaves prose, so the citation guard is.
+   Both plants landed on exactly their own cases, four then one. What the plants
+   also caught was the opposite failure — a check narrower than its message: the
+   citation branch went CLEAN against `bin/super-ux.js:235-296`, the range form
+   this pack's own chain writes, and again against two citations separated by a
+   comma. Kept, and the cold clock resets here.
 
 ## Retired
 
@@ -90,6 +108,7 @@ Newest last.
 | 2026-08-12 | Reference sweep for flows in `ux-flows` (Refero, Mobbin, Lazyweb), gated on tools not config; v0.35.0 → v0.35.1 | yes — see below |
 | 2026-08-14 | The rhetorical dash and the full-stopped title become `B062`/`B063`; markers get ids `AT-01..15`; doctrine prose swept; dogfood wired into CI; v0.39.0 | yes — see below |
 | 2026-08-19 | SU-01 (manifesto M-17) — `U060..U065` give the requirement layer the observable it demands; the pack's own 15 scenarios cite their code; both harness floors become readable | no — single-row close; the one plant that missed is recorded in the ledger |
+| 2026-08-19 | SU-02 (manifesto M-21) — `Product: unobserved / observed / contradicted` as a state no audit can promote; `U066..U070`; the field vocabulary settled on the long spelling; the live screens enum drift closed | no — single-row close; two plant misses recorded in the ledger |
 
 **Prune, 2026-08-14.** All four checked against the three retirement triggers.
 **#2 fired hardest and fired on this run's own hands:** the first plant harness

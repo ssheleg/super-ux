@@ -8,6 +8,106 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-19 — delivery proof stops counting as outcome proof, SU-02 (M-21)
+
+Manifesto M-21: *a change can be implementation-verified and product-unvalidated.
+Some outcome evidence cannot exist until after release, so `unobserved` is a
+legitimate product state. Pretending delivery proof is outcome proof is not.* The
+pack had one state per scenario and an audit wrote it: `ux-audit/SKILL.md:211-212`
+flipped `validated` → `implemented` on a PASS, so the chain recorded that the code
+does what the scenario said and had **no way at all** to record whether the
+scenario was the right thing to build. Measured before the change:
+
+```
+git grep -l unobserved fe2189e | wc -l    -> 0
+```
+
+Zero files. The state that M-21 calls legitimate did not exist in the vocabulary.
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-42 | `Product: unobserved \| observed \| contradicted` on a scenario and on a story, a state distinct from `Status`, **with no floor and no target** — absence means `unobserved`, `unobserved` fails nothing, and `contradicted` fails nothing either | `PRODUCT_STATES`/`PRODUCT_LAYERS` in `ux_lint.py`; fixtures "U066 silent when the field is absent — absence IS unobserved, and no floor asks" and "U066 clean on `contradicted`, which is information and not a failing gate"; the contract's own section states both non-gates in prose | **observed** — 15 of this pack's 15 scenarios are `implemented` with resolving coverage and `unobserved` on the product axis, and `npm test` exits 0 over that, which is the whole claim |
+| R-43 | `U066` refuses a product value outside the enum, and a declared-but-empty field with it — an unrecognised value never reads as *no state* | Three fixtures (out-of-enum on a scenario, empty field, out-of-enum on a story) against four clean twins; plant **in the real chain**: `SCN-001` → `**Product:** verified` gave `ERROR: [U066]`, exit 1; branch plant `if state not in PRODUCT_STATES:` → `if False:` | **planted** — exactly the three U066 cases red, every twin green |
+| R-44 | `U067` refuses an outcome claim that names no observation | Two fixtures (`observed`, `contradicted`) against two twins on `unobserved`; plant in the real chain: `**Product:** observed` alone gave `ERROR: [U067]`, exit 1; branch plant `if not stated(signal):` → `if False:` | **planted** — exactly the two U067 cases |
+| R-45 | `U068` refuses **delivery proof handed in as an outcome signal**: a `file:line` — line ranges included — an audit verdict, and a path into `docs/ux/audits/` with any amount of prose around it. That is everything an audit produces, and none of it is a user | Six fixtures (citation, citation with a range, two citations, a story doing it, a verdict, the report linked inside a sentence) against two twins (an observation that cites code beside it; the word "passed" in prose). Plants in the real chain: `**Product:** observed — the 2026-08-10 audit came back PASS` → `ERROR: [U068]`, exit 1; `**Product:** observed — \`bin/super-ux.js:235-296\`` → `ERROR: [U068]`, exit 1. Branch plants: the citation guard → `if False:` (exactly four cases), the audit-evidence guard → `if False:` (exactly two); and **pattern-keyed** plants inside `AUDIT_EVIDENCE` — deleting the verdict regex reds exactly the verdict case, deleting the report-path regex reds exactly the report case | **planted** — and the first attempt at the citation plant went CLEAN, see the note below |
+| R-46 | No audit can promote the product state, in doctrine as well as in code | `ux-audit/SKILL.md` step 7 is now "the delivery state, and only that" and carries **The audit never writes `Product:`.**; the contract's *After a run* carries the same words; `validate_audit_leaves_product_alone` checks both homes. Plant: the sentence replaced with "Flip `unobserved` -> `observed` where the audit PASSed" → `FAIL`, exit 1, naming the file and the missing words | **planted** |
+| R-47 | The long field spelling is canonical, and `U069` says so without touching the question `U060`/`U061` ask | `FIELD_ALIASES` in `ux_lint.py`; two fixtures and two canonical twins; SU-01's four spelling fixtures still pass unchanged. Plant in the real chain: one `**Expected result:**` back to `**Expected:**` → `warn: [U069]`, exit 0 — a warning, deliberately, because an error would fail every project already writing the short form. Branch plant `if alias in body:` → `if False:` | **planted**, and **observed** first — it fired on 22 of 22 live entries the first time it ran (15 scenarios, 7 stories) |
+| R-48 | `U070` refuses a `Status:` outside its layer's enum for all three layers that declare one | Three fixtures (scenario, story, screen) against three twins, one of them `blocked`; plant in the real chain: one story back to `**Status:** implemented` → `ERROR: [U070]`, exit 1; branch plant `if status is None or status in allowed:` → `if True:` | **planted**, and **observed** first — it fired on all 7 stories, which had carried the scenario layer's `implemented` since the chain was written |
+| R-49 | The contract and the linter hold ONE copy of every enum and fail together | `validate_status_enums_match_contract` parses the contract's declaration list and reads `STATUS_ENUMS`/`PRODUCT_STATES`/`PRODUCT_LAYERS` out of the linter with `ast` — nothing restated. Plants from **both** directions: dropping `"blocked"` from the linter → `FAIL: SCR Status: … one side moved alone`, exit 1; adding `inconclusive` to the contract → `FAIL: SCN Product: …`, exit 1 | **planted**, and **observed** — the drift was live and had never been reported: the contract declared five screen statuses and the matcher listed four, so a `blocked` screen read as having **no** status and `U021` stopped applying to it |
+| R-50 | This pack's own chain records the product state honestly | `docs/ux/scenarios.md`: 15 renames to `**Expected result:**`, 15 `**Product:** unobserved`. `docs/ux/foundation.md`: 7 renames to `**Acceptance criteria:**`, 7 statuses `implemented` → `delivered`, 7 `**Product:** unobserved`. `python3 docs/ux/lint.py` → exit 0, and `--strict` → exit 0 as well | **observed** — the answer is `unobserved` for all 15 scenarios and all 7 stories, and that is the correct answer, not a gap |
+
+**Rows at `never`: 0.**
+
+**The citation plant went clean on its first attempt, and that miss is the
+reason `U068` works.** `**Product:** observed — \`bin/super-ux.js:235-296\`` — the
+exact shape this pack's own chain writes — passed. `CITED_PATH` stops at the
+first line number by design (it resolves a path; the range is `B-004`'s open
+work), so subtracting what it matched left `-296` behind, and `stated()` read
+that as prose. A second miss followed the fix: two citations separated by a
+comma left `, ` behind, and `stated()` reads a lone comma as content too. `U068`
+now subtracts `CITED_SPAN`, which carries the range, and strips punctuation
+before judging the residue — with two fixtures pinning both misses. Standing
+instruction #4 from the other side: the plant is what tells you the check is
+narrower than its message.
+
+**Standing instruction #5 was designed in rather than learned again.** `U068` has
+two branches emitting one code, which is exactly the shape that leaves a suite
+green when a branch is deleted. Each fixture is written where only its own branch
+can fire — the citation cases leave nothing but paths, so the verdict guard is
+false there; the verdict case leaves prose, so the citation guard is false — and
+the guards are three disjoint `if`s rather than an `elif` chain for the same
+reason. Both branch plants land on exactly their own cases: four, then one.
+
+**What the honest outcome was on the pack's own chain.** All 15 scenarios are
+`implemented`, all 15 cite code that resolves (SU-01), and all 15 are
+`unobserved`. Nothing about this pack has been measured against a user: there is
+no telemetry in the installer, no funnel behind it, and no signal that could move
+the field. Recording `unobserved` fifteen times is the deliverable — before this
+change the same chain read as fifteen validated bets, because `implemented` was
+the only state it had. The seven stories are `delivered` and `unobserved` on the
+same grounds.
+
+**The commit itself turned a second gate red, and the re-stamp is recorded
+rather than quiet.** `docs/brand/lint.py` was clean before the commit and exited 1
+after it: `B005` compares `Last calibrated` in `voice.md` against the *content
+date* of `foundation.md`, and `content_date` reads git, so the sweep's own commit
+moved the date. The calibration was then actually performed rather than assumed —
+`voice.md` declares `Derived-from: P-01, P-02, JTBD-01..03`, and the diff shows
+every hunk at line 99 or lower against a `## User stories` heading at line 93,
+with **zero** changed lines mentioning `P-0`, `JTBD-` or `JRN-`:
+
+```
+git diff -U0 HEAD~1 -- docs/ux/foundation.md | grep "^@@"          -> all >= 99
+git diff HEAD~1 -- docs/ux/foundation.md | grep -cE "P-0|JTBD-|JRN-" -> 0
+```
+
+Nothing the voice derives from moved, so `Last calibrated` is stamped
+`2026-08-19` on that reading and not on the calendar. The granularity defect it
+exposed is filed as `B-023`: `B004` checks the `Derived-from` **entities** and
+`B005` checks the **file**, so any edit anywhere raises a warning about a trace
+that is intact — and a warning whose only remedy is a re-stamp is one people
+learn to re-stamp past.
+
+**One more instance of the row's own class, filed rather than fixed.** Looking for
+`Status` enums to put in the table turned up a third: `brand-contract.md:117`
+declares `draft | validated` and `docs/brand/voice.md:6` says `approved`.
+`brand_lint.py` only ever compares against `draft` (lines 189, 238), so the value
+behaves like `validated` today and would read as **not** validated the moment a
+check tests for the value instead. Filed as `B-024` and not fixed here, because
+choosing between adding `approved` to the contract and moving the pack to
+`validated` is a decision about the brand pack, not a rename SU-02 gets to make.
+
+**Where the boundary with `SU-03` was drawn.** M-21 asks that the hypothesis, its
+success signal and its evidence state stay explicit. SU-02 owns **the evidence
+state** — the field, its enum, and the refusals that keep an audit out of it —
+and, where a state claims evidence, the signal on that line. It does **not** touch
+the `JTBD-NN` layer: the three jobs still carry no `Success metric` and their
+headers still lack the `: <name>` that would make them visible to `ids()` and
+`entry_blocks()`, which is SU-03 exactly as filed. The line is that SU-02 makes a
+missing outcome *sayable* at the layers the linter can already read, and SU-03
+makes the layer above them readable at all. Doing SU-03's half here would have
+meant changing `ids()` under a row that had not asked for it.
+
 ## 2026-08-19 — the requirement layer gets its observable, SU-01 (M-17)
 
 Manifesto M-17: *a requirement with no observable is unfinished, because you

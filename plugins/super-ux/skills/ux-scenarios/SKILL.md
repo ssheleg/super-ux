@@ -80,7 +80,10 @@ Scenarios are designed here, not reverse-engineered.
    path, empty state, visible loading, destructive-action confirmation,
    returning-user variant) and the per-product checklist (first-run
    onboarding through multi-entity flows) from the format contract.
-3. All entries start as `Status: draft`, `Coverage: none yet`.
+3. All entries start as `Status: draft`, `Coverage: none yet`,
+   `Product: unobserved`. The last one is the outcome state and it stays
+   `unobserved` until a signal from the world arrives — shipping the scenario
+   does not move it, and neither does an audit passing on it.
 4. Present the base to the user section by section for approval. Approved
    scenarios move to `validated`.
 5. Only after validation may UI design/implementation begin — pointed at

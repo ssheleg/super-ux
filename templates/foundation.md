@@ -67,4 +67,5 @@ this section just records the on/off choice and the file location.
 - **Priority:** must | should | could
 - **Kill criteria:** <metric below threshold by date -> drop | iterate, or omit>
 - **Status:** proposed
+- **Product:** unobserved
 -->

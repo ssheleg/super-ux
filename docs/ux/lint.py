@@ -242,6 +242,180 @@ def check_observables(scenarios: str, foundation: str, root: Path) -> None:
                  f"'then' is the only half an audit can check")
 
 
+# --- Delivery proof is not outcome proof -----------------------------------
+#
+# `Status` is the DELIVERY state: does the code do what the scenario said. An
+# audit PASS moves it, and that is the whole of what an audit can know.
+# `Product` is the OUTCOME state: did shipping it change anything for a user.
+# Only a signal from the world moves it.
+#
+# Until this block existed the pack had one state and the word `unobserved`
+# appeared in it nowhere, so a shipped scenario silently counted as a validated
+# one: `implemented` was read as "we were right about this", which is a claim
+# nothing in the chain could support. Manifesto M-21 names the state that was
+# missing rather than the check -- *some outcome evidence cannot exist until
+# after release, so `unobserved` is a legitimate product state; pretending
+# delivery proof is outcome proof is not.*
+#
+# So this field has NO FLOOR AND NO TARGET. Its absence means `unobserved` and
+# is never a finding; a scenario may hold `unobserved` for its whole life and
+# nothing here will fail. `contradicted` is not a failing gate either -- it is
+# the information the field exists to make recordable, and what to do about it is
+# a product decision no linter makes. Two things are refused, and both are
+# claims rather than states: an outcome claim that names no observation (U067),
+# and delivery proof handed in wearing an outcome label (U068). The two artefacts
+# an audit produces are a `file:line` and a verdict, and U068 refuses both AS A
+# SIGNAL -- which is what makes an audit PASS unable to promote this field in
+# code as well as in doctrine.
+PRODUCT_STATES = ("unobserved", "observed", "contradicted")
+# The two layers that carry a hypothesis: a scenario is the unit that ships and
+# a story is the unit that bets. A screen has a delivery state and no bet of its
+# own, so it carries no product state, and this tuple is what
+# `validate_status_enums_match_contract` reads rather than guessing from
+# `STATUS_ENUMS`.
+PRODUCT_LAYERS = ("SCN", "ST")
+PRODUCT_EVIDENCED = ("observed", "contradicted")
+PRODUCT_FIELD = re.compile(r"\*\*Product:\*\*[ \t]*(.*)")
+# What an audit hands back, in the two forms the contract gives it. The verdict
+# tokens are upper case and nothing else in these documents is, so they are safe
+# to key on: `PASS` is a verdict, `passed` is prose, and that sentence is the
+# negative fixture. The second is the audit report's own home, which the contract
+# fixes at `docs/ux/audits/` — a path into it is the audit speaking, whatever
+# prose is wrapped around it, and prose around a citation is how the first form
+# would otherwise be smuggled past. Kept as a tuple so deleting one pattern turns
+# exactly one fixture red.
+AUDIT_EVIDENCE = (
+    re.compile(r"\b(?:PASS|FAIL|PARTIAL)\b"),
+    re.compile(r"\bdocs/ux/audits/[\w.-]+"),
+)
+
+# A code citation as this layer actually writes one, RANGES INCLUDED. `CITED_PATH`
+# stops at the first line number on purpose -- it resolves a path, and the range
+# is B-004's open work -- so subtracting only what it matches left `-296` behind
+# and read it as prose. The plant caught that: `observed — bin/super-ux.js:235-296`
+# went clean on the first attempt, and the range form is exactly what this pack's
+# own chain writes. Used for the residue test below and nothing else.
+CITED_SPAN = re.compile(
+    r"`?\b[\w.-]+(?:/[\w.-]+)+\.[A-Za-z][\w]{0,4}(?::\d+(?:-\d+)?)?`?"
+)
+
+# Every enum this file matches on, in one table, because the drift it closes was
+# exactly a table kept twice. `scenario-format.md` has declared `blocked` for a
+# screen since the value was introduced -- with a paragraph of rules of its own
+# -- and the matcher here listed four of the five values, so a `blocked` screen
+# produced `status = None` and `U021` quietly stopped applying to it. An
+# out-of-enum value must be an error, because the alternative is that it means
+# nothing and nothing says so. `validate_status_enums_match_contract` compares
+# this table against the contract's declaration and fails when either side moves
+# alone.
+STATUS_ENUMS = {
+    "SCN": ("draft", "validated", "implemented", "retired"),
+    "ST": ("proposed", "validated", "delivered", "dropped"),
+    "SCR": ("designed", "blocked", "built", "drifted", "retired"),
+}
+
+# The canonical spelling of a field, and the short form in live use beside it.
+# `U060`/`U061` read both on purpose -- their question is whether an observable
+# EXISTS -- which left the vocabulary itself ungated: a project could spell a
+# required field any way it liked and no code said so. The long spelling is
+# canonical because it is what the contract declares and what both shipped
+# templates seed, so a fresh install already writes it and the migration cost
+# falls on nobody who followed the template. A warning, not an error: the
+# observable is present and unambiguous, and failing a project over a synonym is
+# the false positive that gets a whole family switched off.
+FIELD_ALIASES = (
+    ("SCN", "scenarios.md", "**Expected:**", "**Expected result:**"),
+    ("ST", "foundation.md", "**Acceptance:**", "**Acceptance criteria:**"),
+)
+
+
+def product_state(body: str) -> tuple[str | None, str]:
+    """The `Product:` value read as `(state, signal)`.
+
+    `(None, "")` when the field is absent, and absence is not a finding: it
+    means `unobserved`, the honest default. A field that is PRESENT and says
+    nothing is a different thing and is reported -- the same distinction
+    `field_body` draws between `None` and `""`.
+    """
+    m = PRODUCT_FIELD.search(body)
+    if m is None:
+        return (None, "")
+    m2 = re.match(r"\s*([A-Za-z][\w-]*)\s*[—–:-]?\s*(.*)$", m.group(1).strip(),
+                  re.DOTALL)
+    if m2 is None:
+        return ("", "")
+    return (m2.group(1).lower(), m2.group(2).strip())
+
+
+def check_product_state(scenarios: str, foundation: str) -> None:
+    """The outcome state, which nothing an audit can produce is allowed to move."""
+    layers = {"SCN": (scenarios, "scenarios.md"), "ST": (foundation, "foundation.md")}
+    for prefix in PRODUCT_LAYERS:
+        text, name = layers[prefix]
+        for sid, body in sorted(entry_blocks(text, prefix).items()):
+            state, signal = product_state(body)
+            if state is None:
+                continue  # absent == `unobserved`; no floor asks for the field
+            if state not in PRODUCT_STATES:
+                err(f"[U066] {name}: {sid} declares Product "
+                    f"'{state or '(nothing)'}', which is not one of "
+                    f"{' | '.join(PRODUCT_STATES)} — an unrecognised value reads "
+                    f"as no product state at all, which is how a shipped scenario "
+                    f"silently counts as a validated one")
+                continue
+            if state not in PRODUCT_EVIDENCED:
+                continue
+            # Three disjoint guards rather than an elif chain: each fixture must
+            # be able to fire ONE of them, so that disabling one turns exactly
+            # its own case red (standing instruction #5).
+            if not stated(signal):
+                err(f"[U067] {name}: {sid} claims Product '{state}' and names no "
+                    f"signal — an outcome state is a claim about the world, and it "
+                    f"has to say which observation supports it")
+            # Punctuation is dropped before the residue is judged: `stated()`
+            # reads a lone comma as content, so two citations separated by one
+            # went clean until the plant said otherwise.
+            residue = re.sub(r"[^\w]+", " ", CITED_SPAN.sub(" ", signal))
+            if stated(signal) and not stated(residue):
+                err(f"[U068] {name}: {sid} offers '{signal}' as an outcome signal, "
+                    f"and that is a code citation — delivery proof, which "
+                    f"`Status` and `Coverage` already carry. Pretending delivery "
+                    f"proof is outcome proof is the one thing this field exists "
+                    f"to prevent")
+            if stated(signal) and any(p.search(signal) for p in AUDIT_EVIDENCE):
+                err(f"[U068] {name}: {sid} offers an audit's own output as an "
+                    f"outcome signal — an audit reads code and cannot know whether "
+                    f"shipping this changed anything for a user")
+
+
+def check_field_vocabulary(scenarios: str, foundation: str) -> None:
+    """A required field is spelled the way the contract names it."""
+    layers = {"SCN": scenarios, "ST": foundation}
+    for prefix, name, alias, canonical in FIELD_ALIASES:
+        for sid, body in sorted(entry_blocks(layers[prefix], prefix).items()):
+            if alias in body:
+                warn(f"[U069] {name}: {sid} spells the field '{alias}'; the "
+                     f"contract's name is '{canonical}'. The observable is read "
+                     f"either way — this is the vocabulary, so a required field "
+                     f"cannot be spelled any way a project likes with nothing "
+                     f"saying so")
+
+
+def check_status_enums(scenarios: str, foundation: str, screens: str) -> None:
+    """A status outside its layer's enum is refused, not read as no status."""
+    for text, prefix, name in ((scenarios, "SCN", "scenarios.md"),
+                               (foundation, "ST", "foundation.md"),
+                               (screens, "SCR", "screens.md")):
+        allowed = STATUS_ENUMS[prefix]
+        for sid, body in sorted(entry_blocks(text, prefix).items()):
+            status = declared_status(body)
+            if status is None or status in allowed:
+                continue
+            err(f"[U070] {name}: {sid} declares Status '{status}', which is not "
+                f"one of {' | '.join(allowed)} — an unrecognised status reads as "
+                f"no status, and every rule keyed on one silently stops applying")
+
+
 WEB_SURFACE_FIELDS = ("Route", "Answers", "Indexable", "Without JS", "Entity")
 
 
@@ -485,8 +659,11 @@ def main() -> int:
         fig = figma_enabled(foundation)
         screens_root = project_root
         for sid, body in screen_blocks(screens).items():
-            status_m = re.search(r"\*\*Status:\*\*\s*(designed|built|drifted|retired)", body)
-            status = status_m.group(1) if status_m else None
+            # Read by value, not matched against a copy of the enum: the copy
+            # was one value short of the contract for as long as `blocked`
+            # existed, and an unmatched status silently became no status.
+            # `check_status_enums` owns the enum for all three layers now.
+            status = declared_status(body)
             if status == "retired":
                 continue
             # every state row present in the States table
@@ -519,6 +696,9 @@ def main() -> int:
                     err(f"[U056] screens.md: {sid} cites '{rel}', which does not exist")
 
     check_observables(scenarios, foundation, project_root)
+    check_product_state(scenarios, foundation)
+    check_field_vocabulary(scenarios, foundation)
+    check_status_enums(scenarios, foundation, screens)
     check_vision(ux, vision)
     check_web_surface(screens, flows)
     check_links(ux)

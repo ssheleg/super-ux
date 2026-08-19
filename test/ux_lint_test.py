@@ -485,11 +485,185 @@ silent("U065 clean when the cited file exists",
        {"U065"}, root_files={"src/a.tsx": "x\n"})
 
 
+# --- U066..U070: the outcome state, and the enums that keep it readable ------
+#
+# Manifesto M-21: a change can be implementation-verified and product-
+# unvalidated, and pretending delivery proof is outcome proof is not Proof of
+# Done. Before this block the word `unobserved` appeared nowhere in the pack:
+# `Status: implemented` was the only state a scenario had, and an audit PASS
+# wrote it -- so a shipped scenario silently counted as a validated one and
+# nothing could record whether the scenario was the right thing to build.
+#
+# `Product` has no floor and no target. Its absence is `unobserved`, which is
+# the honest default, and every fixture below that leaves the field out asserts
+# exactly that: silence. What is refused is a claim to hold outcome evidence
+# that names none (U067), and delivery proof handed in wearing an outcome label
+# (U068) -- a `file:line`, or an audit verdict. Those are the two artefacts an
+# audit can produce, and neither of them is a user.
+
+SCN_DONE = ("- **Expected result:** the project appears\n"
+            "- **Status:** implemented\n- **Coverage:** src/a.tsx\n")
+STORY_DONE = ("- **Acceptance criteria:**\n"
+              "  - Given a TTY, when I run it, then a list appears.\n"
+              "- **Status:** delivered\n")
+SRC = {"src/a.tsx": "x\n"}
+
+# --- U066: an out-of-enum product value is an error, never "no state" -------
+
+case("U066 a product state outside its enum",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** verified\n")},
+     errors={"U066"}, root_files=SRC)
+case("U066 a declared-but-empty product field, which names no evidence state",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:**\n")},
+     errors={"U066"}, root_files=SRC)
+case("U066 a story borrowing a word the product enum does not contain",
+     {"foundation.md": story(STORY_DONE + "- **Product:** shipped\n")},
+     errors={"U066"})
+silent("U066 clean on `unobserved`, the honest default",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** unobserved\n")},
+       {"U066", "U067", "U068"}, root_files=SRC)
+silent("U066 clean on `observed` carrying a signal from the world",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — 41% of installs "
+                            "picked more than one channel (telemetry, 2026-09)\n")},
+       {"U066", "U067", "U068"}, root_files=SRC)
+silent("U066 clean on `contradicted`, which is information and not a failing gate",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** contradicted — installs fell "
+                            "9% against the previous release (telemetry, 2026-09)\n")},
+       {"U066", "U067", "U068"}, root_files=SRC)
+silent("U066 silent when the field is absent — absence IS unobserved, and no floor asks",
+       {"scenarios.md": scn(SCN_DONE)},
+       {"U066", "U067", "U068"}, root_files=SRC)
+silent("U066 clean on a story carrying the field",
+       {"foundation.md": story(STORY_DONE + "- **Product:** unobserved\n")},
+       {"U066", "U067", "U068"})
+
+# --- U067: an outcome claim that names no observation -----------------------
+#
+# Standing instruction #5: the fixture is written where only this branch can
+# fire. `observed` with an empty signal cannot reach either U068 branch, because
+# both are guarded on the signal being stated.
+
+case("U067 an `observed` product state naming no signal",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** observed\n")},
+     errors={"U067"}, root_files=SRC)
+case("U067 a `contradicted` product state naming no signal",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** contradicted\n")},
+     errors={"U067"}, root_files=SRC)
+silent("U067 silent on `unobserved`, which claims no observation to name",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** unobserved\n")},
+       {"U067"}, root_files=SRC)
+silent("U067 silent on a note beside `unobserved` — the state may carry prose",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** unobserved — no telemetry "
+                            "exists until the release ships\n")},
+       {"U067"}, root_files=SRC)
+
+# --- U068: delivery proof handed in wearing an outcome label -----------------
+#
+# The row's whole point, and the reason an audit PASS cannot promote this field:
+# the two things an audit produces are a `file:line` and a verdict, and U068
+# refuses both AS A SIGNAL. Each fixture is written so only its own branch can
+# fire -- the citation case leaves nothing but paths, the verdict case leaves
+# prose, so the path branch's guard is false there.
+
+case("U068 a code citation offered as an outcome signal",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — src/a.tsx:12\n")},
+     errors={"U068"}, root_files=SRC)
+case("U068 a code citation with a line RANGE, the form this pack's own chain writes",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — "
+                          "`src/a.tsx:235-296`\n")},
+     errors={"U068"}, root_files=SRC)
+case("U068 two citations and nothing else",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — "
+                          "`src/a.tsx:12`, `src/b.tsx:1-9`\n")},
+     errors={"U068"}, root_files=SRC)
+case("U068 an audit verdict offered as an outcome signal",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — the audit of "
+                          "2026-08-19 came back PASS on every step\n")},
+     errors={"U068"}, root_files=SRC)
+case("U068 a story promoting itself on a code citation",
+     {"foundation.md": story(STORY_DONE + "- **Product:** contradicted — "
+                             "src/a.tsx\n")},
+     errors={"U068"}, root_files=SRC)
+case("U068 the audit report itself, linked with prose around it",
+     {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — every step held, "
+                          "see docs/ux/audits/2026-08-19.md\n")},
+     errors={"U068"}, root_files=SRC)
+silent("U068 clean when the signal is an observation and cites code beside it",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — 41% of installs "
+                            "picked more than one channel, measured off the counter "
+                            "in src/a.tsx\n")},
+       {"U068"}, root_files=SRC)
+silent("U068 silent on prose that merely passed, not a `PASS` verdict",
+       {"scenarios.md": scn(SCN_DONE + "- **Product:** observed — every user in the "
+                            "five-person test passed the step unaided\n")},
+       {"U068"}, root_files=SRC)
+
+# --- U069: the field vocabulary SU-01 left to be decided --------------------
+#
+# The long spelling is canonical: it is what the contract declares and what both
+# shipped templates seed, so a fresh install writes it. The short forms stay
+# READ (U060/U061 ask whether an observable exists, not how it is spelled) and
+# become a warning, because an error here would fail every project already
+# writing them -- the false positive that gets a family switched off.
+
+case("U069 the short `Expected:` spelling, which the contract does not declare",
+     {"scenarios.md": scn("- **Expected:** the project appears\n"
+                          "- **Status:** validated\n")},
+     warns={"U069"})
+case("U069 the short `Acceptance:` spelling on a story",
+     {"foundation.md": story("- **Acceptance:**\n"
+                             "  - Given a TTY, when I run it, then a list appears.\n"
+                             "- **Status:** delivered\n")},
+     warns={"U069"})
+silent("U069 clean on the canonical `Expected result:`",
+       {"scenarios.md": scn("- **Expected result:** the project appears\n"
+                            "- **Status:** validated\n")}, {"U069"})
+silent("U069 clean on the canonical `Acceptance criteria:`",
+       {"foundation.md": story(STORY_DONE)}, {"U069"})
+
+# --- U070: a status outside its layer's enum ---------------------------------
+#
+# The drift was live in this file and had never been reported: the contract has
+# declared five screen statuses since `blocked` was introduced -- with a rules
+# paragraph of its own -- and the matcher listed four, so a `blocked` screen read
+# as having NO status and U021 quietly stopped applying to it.
+
+case("U070 a scenario status outside its enum",
+     {"scenarios.md": scn("- **Expected result:** the project appears\n"
+                          "- **Status:** shipped\n")},
+     errors={"U070"})
+case("U070 a story carrying the scenario layer's `implemented`",
+     {"foundation.md": story("- **Acceptance criteria:**\n"
+                             "  - Given a TTY, when I run it, then a list appears.\n"
+                             "- **Status:** implemented\n")},
+     errors={"U070"})
+case("U070 a screen status outside its enum",
+     {"screens.md": screens("- **Purpose:** p\n- **Status:** shipped\n")},
+     errors={"U070"})
+silent("U070 clean on `blocked`, the fifth screen status the matcher used to drop",
+       {"screens.md": screens("- **Purpose:** p\n- **Status:** blocked — the "
+                              "retention policy decides the copy; owner: founder\n")},
+       {"U070"})
+silent("U070 clean on each scenario status the enum declares",
+       {"scenarios.md": (scn("- **Expected result:** a\n- **Status:** draft\n", "SCN-001")
+                         + "\n### SCN-002: b\n- **Expected result:** b\n"
+                           "- **Status:** validated\n"
+                           "- **Coverage:** src/a.tsx\n"
+                         + "\n### SCN-003: c\n- **Expected result:** c\n"
+                           "- **Status:** implemented\n- **Coverage:** src/a.tsx\n"
+                         + "\n### SCN-004: d\n- **Expected result:** d\n"
+                           "- **Status:** retired\n")},
+       {"U070"}, root_files=SRC)
+silent("U070 silent when a status is not declared at all — a different rule's question",
+       {"scenarios.md": scn("- **Expected result:** the project appears\n")},
+       {"U070"})
+
+
 # --- the shipped template must pass from the first second ------------------
 
 silent("the shipped screens template lints clean",
        {"screens.md": (ROOT / "templates" / "screens.md").read_text(encoding="utf-8")},
-       {f"U{n:03d}" for n in range(1, 70)})
+       {f"U{n:03d}" for n in range(1, 100)})
 
 # Standing instruction #3: a new check runs against the seeded template before
 # it runs against anything else. The requirement layer's two templates are all
@@ -498,10 +672,10 @@ silent("the shipped screens template lints clean",
 # product cannot survive.
 silent("the shipped scenarios template lints clean",
        {"scenarios.md": (ROOT / "templates" / "scenarios.md").read_text(encoding="utf-8")},
-       {f"U{n:03d}" for n in range(1, 70)})
+       {f"U{n:03d}" for n in range(1, 100)})
 silent("the shipped foundation template lints clean",
        {"foundation.md": (ROOT / "templates" / "foundation.md").read_text(encoding="utf-8")},
-       {f"U{n:03d}" for n in range(1, 70)})
+       {f"U{n:03d}" for n in range(1, 100)})
 
 
 if failures:

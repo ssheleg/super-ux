@@ -11,6 +11,7 @@ formats lives in [ux-design-principles.md](ux-design-principles.md).
 - [Files in the target project](#files-in-the-target-project)
 - [`Strings:` (optional)](#strings-optional)
 - [Same-change update rule (all layers)](#same-change-update-rule-all-layers)
+- [Status and product state — the enums, in one home](#status-and-product-state--the-enums-in-one-home)
 - [`docs/ux/vision.md` — the layer above the chain](#docsuxvisionmd--the-layer-above-the-chain)
 - [`docs/ux/foundation.md`](#docsuxfoundationmd)
 - [`docs/ux/flows.md`](#docsuxflowsmd)
@@ -70,6 +71,69 @@ coverage change — and, when Figma is enabled, the Figma frame is updated and
 its link re-verified in the same change**. A screen whose code diverges from
 its `screens.md` record (or a stale/broken Figma link) is a `drifted`
 finding, not an acceptable state.
+
+## Status and product state — the enums, in one home
+
+Two states, and they answer different questions. **`Status` is the delivery
+state**: does the code do what this record said it would. An audit PASS moves it.
+**`Product` is the outcome state**: did shipping it change anything for the
+person it was built for. Only a signal from the world moves that, and an audit
+cannot produce one.
+
+- `SCN-NNN` **Status** — `draft | validated | implemented | retired`
+- `SCN-NNN` **Product** — `unobserved | observed | contradicted`
+- `ST-NNN` **Status** — `proposed | validated | delivered | dropped`
+- `ST-NNN` **Product** — `unobserved | observed | contradicted`
+- `SCR-NN` **Status** — `designed | blocked | built | drifted | retired`
+
+This list is the ONE home of every enum `docs/ux/lint.py` matches on, and
+`validate_status_enums_match_contract` compares it against the linter's own table
+and fails when either side moves alone. It exists because they had already
+drifted: this contract declared five screen statuses — `blocked` among them, with
+a paragraph of rules of its own — while the linter matched four, so a `blocked`
+screen read as having **no** status and every rule keyed on one stopped applying
+to it in silence. A value outside its enum is `U070`, never "no status".
+
+### `Product` — the state a shipped thing is still allowed to be in
+
+`unobserved` is the default and the honest one. **A record may stay `unobserved`
+for its whole life without failing anything**: there is no floor on this field
+and no target for it, because outcome evidence often cannot exist until after
+release. Leaving the field out means `unobserved` too — writing it makes the
+state explicit, which is the only reason to write it.
+
+- **`unobserved`** — shipped, and nothing has come back yet. Not a defect and
+  not a gap.
+- **`observed`** — a signal came back and supported the bet. Name it on the same
+  line: what was measured, how much, when. An `observed` that names no signal is
+  `U067`.
+- **`contradicted`** — a signal came back against the bet. Also not a failing
+  gate: it is the information this field exists to make recordable, and what to
+  do about it is a product decision no linter makes. The story's `Kill criteria`
+  is where that response was agreed in advance.
+
+**A `file:line` is not a signal, and neither is an audit verdict or a link to
+the audit report.** All three are delivery proof — `Status` and `Coverage`
+already carry it — and offered as an outcome signal they are `U068`, prose
+wrapped around them or not. That refusal is the field's whole reason to
+exist: a change can be implementation-verified and product-unvalidated at the
+same time, and pretending the first is the second is how a shipped scenario
+silently counts as a validated one.
+
+**No audit writes it.** `ux-audit` never writes `Product:` — see *After a run*
+below. A scenario that is `implemented` and `unobserved` is a correct and
+complete record; there is nothing there for an audit to close.
+
+### Field vocabulary — the long spelling is canonical
+
+`**Expected result:**` and `**Acceptance criteria:**` are the field names, and
+they are what both shipped templates seed. The short forms in live use —
+`**Expected:**`, `**Acceptance:**` — are still **read** as the long ones, because
+`U060`/`U061` ask whether an observable exists and not how its label is spelled;
+a rule that failed a scenario over a synonym would be the false positive that
+gets a whole family switched off. The vocabulary itself is `U069`, a warning that
+names the canonical spelling. Without it a project could spell a required field
+any way it liked and no code would say so.
 
 ## `docs/ux/vision.md` — the layer above the chain
 
@@ -157,6 +221,7 @@ One journey per persona × job that matters:
 - **Priority:** must | should | could
 - **Kill criteria:** <metric> below <threshold> by <date> -> drop | iterate  — optional
 - **Status:** proposed | validated | delivered | dropped
+- **Product:** unobserved | observed | contradicted — the outcome state; absent means `unobserved`
 ```
 
 Quality bar: INVEST (independent, negotiable, valuable, estimable, small,
@@ -443,6 +508,7 @@ observable response.
 - **Telemetry:** `project_created` (params: `source`, `step_number`) — optional
 - **Status:** draft
 - **Coverage:** none yet
+- **Product:** unobserved
 ```
 
 Field rules:
@@ -478,6 +544,10 @@ Field rules:
   claim; a scenario without the field is not a finding.
 - **Status** — `draft | validated | implemented | retired`.
 - **Coverage** — `file:line` references to implementing code, or `none yet`.
+- **Product** — *optional*: the outcome state, `unobserved | observed |
+  contradicted`. A different question from `Status`, moved by a different kind
+  of evidence, and never written by an audit. Absent means `unobserved`. See
+  *Status and product state* above for what each value claims.
 
 **The observable is checked, not trusted.** `Expected result` is the field a
 requirement is unfinished without: an observable added *after* the
@@ -488,7 +558,8 @@ names the code it was measured against (`U063`), and a `Coverage` value other
 than `none` cites a path that resolves (`U064`, `U065`). The short spellings in
 live use — `**Expected:**` for the field, `**Acceptance:**` in a story — are
 read as the long ones: the question is whether an observable exists, not how its
-label is spelled.
+label is spelled. The spelling has a code of its own, `U069`, so the vocabulary
+is gated without that question being answered twice.
 
 ### ID and lifecycle rules
 
@@ -496,6 +567,9 @@ label is spelled.
   reason.
 - `draft` → `validated` (human approval) → `implemented` (audit PASS) →
   `retired`. Changed scenarios drop back to `draft`.
+- That is the **delivery** lifecycle. `Product` has no lifecycle and no
+  terminal state: it changes when a signal arrives and not otherwise, and
+  `unobserved` is where a correct record sits until one does.
 
 ### Traceability rules (per existing layer)
 
@@ -628,7 +702,11 @@ stories, personas unused. Same report format; findings reference layer IDs.
 ### After a run
 
 - Update `Last audit` in `scenarios.md` (`YYYY-MM-DD VERDICT`).
-- Flip `validated` → `implemented` where the audit confirmed coverage.
+- Flip `validated` → `implemented` where the audit confirmed coverage — **the
+  delivery state only. The audit never writes `Product:`.** A PASS says the code
+  does what the scenario said; it is not evidence that shipping it changed
+  anything for anyone, and `U068` refuses the two artefacts an audit can hand in
+  as an outcome signal — a `file:line` and its own verdict.
 - Offer to turn FAIL/PARTIAL findings into a UX plan (next section).
 
 ## UX plan — `docs/ux/plans/YYYY-MM-DD-<scope>.md`
@@ -752,3 +830,8 @@ here — the meaning of a rule never lives only in its source.
 | U063 | W | a scenario marked `implemented` names no `Coverage` — the status claims an audit passed and nothing says against what |
 | U064 | W | a scenario's `Coverage:` value other than `none` names no file — same claim as U055, one layer up |
 | U065 | E | a path cited in a scenario's `Coverage:` does not exist under the project root |
+| U066 | E | a `Product:` value outside `unobserved \| observed \| contradicted` — an unrecognised value reads as no product state at all, which is how a shipped scenario silently counts as a validated one |
+| U067 | E | a `Product:` of `observed`/`contradicted` naming no signal — an outcome state is a claim about the world and has to say which observation supports it |
+| U068 | E | delivery proof offered as an outcome signal: a `file:line` (line ranges included), an audit verdict, or a path into `docs/ux/audits/`. Everything an audit can produce, and none of it is a user |
+| U069 | W | a required field spelled with a short form the contract does not declare (`Expected:`, `Acceptance:`) — read either way, but the vocabulary is not ungated |
+| U070 | E | a `Status:` value outside its layer's enum — an unrecognised status reads as no status, and every rule keyed on one silently stops applying |

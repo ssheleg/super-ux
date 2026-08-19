@@ -35,4 +35,5 @@ action per step paired with the observable system response:
 - **Telemetry:** <`object_action` event + params, or omit if none>
 - **Status:** draft
 - **Coverage:** none yet
+- **Product:** unobserved
 -->

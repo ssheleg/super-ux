@@ -4,7 +4,7 @@ Locales: en (primary)
 Locale parity threshold: 80%
 Derived-from: P-01, P-02, JTBD-01, JTBD-02, JTBD-03
 Status: approved
-Last calibrated: 2026-08-10
+Last calibrated: 2026-08-19
 
 # Voice
 

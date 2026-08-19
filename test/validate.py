@@ -16,6 +16,7 @@ Exit code 0 with "OK (<n> checks)" when clean; 1 with FAIL: lines otherwise.
 
 from __future__ import annotations
 
+import ast
 import json
 import os
 import subprocess
@@ -917,6 +918,121 @@ def validate_ux_lint_coverage() -> None:
         )
 
 
+# The contract's one home for every enum the linter matches on. Parsed, not
+# restated: a second copy here would be the third copy of a table that had
+# already drifted between the first two.
+ENUM_DECL_RE = re.compile(
+    r"^- `(SCN|ST|SCR)-N+` \*\*(Status|Product)\*\* — `([^`]+)`", re.MULTILINE
+)
+
+
+def _module_literals(source: str) -> dict:
+    """Module-level assignments of literal values, read without importing."""
+    out: dict = {}
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return out
+    for node in tree.body:
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, ast.Name):
+            continue
+        try:
+            out[target.id] = ast.literal_eval(node.value)
+        except (ValueError, TypeError, SyntaxError):
+            continue
+    return out
+
+
+def validate_status_enums_match_contract() -> None:
+    """Every enum the linter matches on is the enum the contract declares.
+
+    The defect this exists for was live in this repository and had never been
+    reported. `scenario-format.md` declared five screen statuses — `blocked`
+    among them, with a rules paragraph of its own — and `ux_lint.py` matched
+    four, so a `blocked` screen produced `status = None` and `U021` quietly
+    stopped applying to it. An out-of-enum value that reads as *no value* is the
+    worst of the three possible outcomes: not refused, not accepted, invisible.
+
+    A contract and a matcher are two copies of one table, and two copies drift.
+    This makes them fail together instead. The linter's side is read out of its
+    own source with `ast`, so nothing is restated here either.
+    """
+    lint = read(ROOT / "plugins/super-ux/scripts/ux_lint.py") or ""
+    contract = read(
+        ROOT / "plugins/super-ux/skills/references/scenario-format.md"
+    ) or ""
+
+    declared: dict[tuple[str, str], set[str]] = {}
+    for prefix, field, values in ENUM_DECL_RE.findall(contract):
+        declared[(prefix, field)] = {v.strip() for v in values.split("|") if v.strip()}
+    check(
+        bool(declared),
+        "scenario-format.md declares no status/product enum in the form "
+        "`- `SCN-NNN` **Status** — `a | b`` — the one home of every enum the "
+        "linter matches on has moved or been renamed",
+    )
+
+    literals = _module_literals(lint)
+    matched: dict[tuple[str, str], set[str]] = {
+        (prefix, "Status"): set(values)
+        for prefix, values in (literals.get("STATUS_ENUMS") or {}).items()
+    }
+    product = set(literals.get("PRODUCT_STATES") or ())
+    check(bool(product), "ux_lint.py: PRODUCT_STATES is not a readable literal")
+    product_layers = literals.get("PRODUCT_LAYERS") or ()
+    check(bool(product_layers), "ux_lint.py: PRODUCT_LAYERS is not a readable literal")
+    for prefix in product_layers:
+        matched[(prefix, "Product")] = product
+
+    for key in sorted(set(matched) | set(declared)):
+        prefix, field = key
+        check(
+            matched.get(key) == declared.get(key),
+            f"{prefix} {field}: ux_lint.py matches "
+            f"{sorted(matched.get(key) or [])} and scenario-format.md declares "
+            f"{sorted(declared.get(key) or [])} — one side moved alone, and a "
+            f"value only the contract knows about reads as no value at all",
+        )
+
+
+# The exact words the two homes of the after-a-run step must carry. An audit
+# reads code; the product state is a claim about the world. `U068` refuses the
+# two artefacts an audit could hand in as an outcome signal, and this is the
+# other half of that guard — the instruction that would produce the attempt.
+AUDIT_PRODUCT_GUARD = "never writes `Product:`"
+
+AUDIT_PRODUCT_GUARD_HOMES = (
+    "plugins/super-ux/skills/ux-audit/SKILL.md",
+    "plugins/super-ux/skills/references/scenario-format.md",
+)
+
+
+def validate_audit_leaves_product_alone() -> None:
+    """No shipped instruction lets an audit PASS promote the outcome state.
+
+    Manifesto M-21: a change can be implementation-verified and
+    product-unvalidated, and pretending delivery proof is outcome proof is not
+    Proof of Done. The audit's after-a-run step used to say only "flip
+    `validated` → `implemented` where the audit PASSed", so the chain could
+    record that the code does what the scenario said and had no way to record
+    whether the scenario was the right thing to build. Both homes of that step
+    carry the prohibition now, and both are checked, because the step had
+    already been copied once.
+    """
+    for rel in AUDIT_PRODUCT_GUARD_HOMES:
+        text = read(ROOT / rel) or ""
+        check(
+            AUDIT_PRODUCT_GUARD in text,
+            f"{rel}: the after-a-run step does not say the audit "
+            f"{AUDIT_PRODUCT_GUARD} — an audit allowed to write the outcome "
+            f"state turns delivery proof into outcome proof, which is the whole "
+            f"defect the field exists to prevent",
+        )
+
+
 # Paths under docs/ belong to the target project, so an instruction naming one
 # is telling a reader to run a file super-ux put there. Repo-internal commands
 # (test/validate.py and friends) are addressed to a contributor and are not.
@@ -1053,6 +1169,8 @@ def main() -> int:
     validate_brand_field_ownership()
     validate_brand_lint_coverage()
     validate_ux_lint_coverage()
+    validate_status_enums_match_contract()
+    validate_audit_leaves_product_alone()
     validate_run_instructions()
     # A release must not publish over a red `validate`.
     #
