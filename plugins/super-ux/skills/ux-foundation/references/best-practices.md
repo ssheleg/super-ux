@@ -1228,6 +1228,70 @@ newer one says so and names it — see BP-229, which is the case that matters.
 - **Source:** [Outrank26]
 - **Checked:** 2026-08-21
 
+### Products with a long time-to-value (BP-235..241)
+
+Measured 2026-08-21 on `babylovegrowth.ai` and its dashboard — the same category
+as BP-216..234's reference and the opposite answer to almost every question. Where
+that product is dense and instrumented, this one is patient: results arrive over
+months, most of a new account's numbers are zero on day one, and the design's whole
+job is to make that read as *early* rather than as *broken*.
+
+#### BP-235: A disconnected source renders at the size its data would
+- **Do:** where an integration is not connected, render the card at full size — an icon, one sentence naming what connecting buys, and the button — rather than hiding the card, collapsing it, or showing a dash.
+- **Why:** measured. The dashboard's shape then does not change when a source is added, so a user who connects one is not relearning the page; and a new account reads as unfinished rather than as empty. The sentence matters more than the button: *"Connect Google Search Console to track your search performance and rankings"* is the only place the product can say what the integration is *for*.
+- **Apply when:** any product whose value depends on integrations the user must authorise.
+- **Tags:** dashboard, onboarding, activation, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
+#### BP-236: Price the vanity metric in the currency the reader already has
+- **Do:** beside a reach, impression or visibility figure, put what it would cost to buy — *"80K potential reach · $641 to buy this visibility via Ads"*.
+- **Why:** measured. A number whose scale a user cannot judge is a number they discount; the same figure denominated in money is one they can compare to what they pay you. It converts a metric the product likes into a metric the buyer already reasons about.
+- **Apply when:** any figure whose magnitude a non-expert cannot size.
+- **Tags:** dashboard, revenue, retention, conversion, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
+#### BP-237: If value takes months, put the months on the dashboard
+- **Do:** ship an expectation block on the product's home screen — named phases with month ranges and what happens in each (*Foundation, months 1–3 · Growth, 3–6 · Scale, 6–12*), collapsed by default.
+- **Why:** measured. On a product with a long time-to-value the first weeks look identical to failure, and the churn that follows is a reading error rather than a product one. The phase block is where the user checks their own expectation against the vendor's — and it belongs beside the empty numbers, not in an onboarding email nobody reopens.
+- **Apply when:** SEO, content, community, credit-building, health — anything where the honest answer is "months".
+- **Tags:** dashboard, retention, onboarding, trust, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
+#### BP-238: A composite score shows its parts in the same glance
+- **Do:** render an overall score as a ring, and put its sub-scores beside it — each with its own value, its own `/100`, and a bar — rather than behind a drill-down.
+- **Why:** measured (*Overall 90 · Page speed 100 · LLM optimization 93 · SEO optimization 76*). A single score tells a user their state and nothing about their next action; the decomposition names the weakest part, which is the action. Hiding the parts behind a click costs the score its usefulness and keeps its authority.
+- **Apply when:** any health, quality or readiness score built from components.
+- **Tags:** dashboard, data-density, activation, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
+#### BP-239: The card that is working says so on itself
+- **Do:** put the in-progress state on the specific card that is computing — a small `Running analysis` chip — and leave every other surface drawn and usable.
+- **Why:** measured, and it is the complement of BP-217: that entry says do not blank a surface with a previous value, this one says where the progress signal goes instead. A page-level spinner stops the whole screen for one slow query, and a global "refreshing" bar tells the user nothing about *what*.
+- **Apply when:** any dashboard where one panel's data is slower than the rest.
+- **Tags:** dashboard, feedback, performance, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
+#### BP-240: A guarantee under the CTA is the other way to remove the risk — BP-229's sibling
+- **Do:** where a hero carries a single action, put the risk-removal in one sentence beneath it — *"if organic traffic doesn't grow within 90 days, we refund you in full"* — with the term stated (90 days, in full) rather than implied.
+- **Why:** measured against BP-229's two-door hero: both remove a reason not to click, and they remove different ones. Two doors remove the *password*; the guarantee removes the *bet*. A page that needs both is usually a page whose promise is not specific enough to guarantee.
+- **Apply when:** any hero with one CTA and a claim you are willing to bound in time.
+- **Tags:** landing-page, conversion, trust, friction-reduction, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
+#### BP-241: Two card levels, and the difference between them is the grouping
+- **Do:** where a dashboard section holds several figures, nest one card level inside another with **different radii and a one-step tint difference** (measured: 16px on a near-white outer, 8px on a grey-50 inner), and flatten to one level below the tablet breakpoint.
+- **Why:** measured. The outer card owns a subject and each inner card owns one figure of it, so a reader's eye gets the grouping before it gets the numbers. Same-radius nesting reads as an accident; three levels reads as a bug. And two borders with two tints inside 375px is noise, which is why the flattening rule is part of the pattern rather than a fallback.
+- **Apply when:** any dashboard section with more than two related figures.
+- **Tags:** dashboard, data-density, responsive, visual-hierarchy, web
+- **Source:** [Baby26]
+- **Checked:** 2026-08-21
+
 ### Web-to-app funnels (web2app)
 
 BP-078 states the economics; this set is the design work. The store gap —

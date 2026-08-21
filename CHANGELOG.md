@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.48.0 — 2026-08-22
+
+**BP-235..241 — products with a long time-to-value.** Measured on
+`babylovegrowth.ai`, the same category as BP-216..234's reference and the opposite answer to
+almost every question: where that product is dense and instrumented, this one is patient.
+Results arrive over months, most of a new account's numbers are zero on day one, and the
+design's whole job is to make that read as *early* rather than as *broken*.
+
+* **A disconnected source renders at the size its data would** (**BP-235**) — full card, one
+  sentence naming what connecting buys, the button. The dashboard's shape then does not change
+  when a source is added, and a new account reads as unfinished rather than empty.
+* **Price the vanity metric in the currency the reader already has** (**BP-236**) — *80K
+  potential reach · $641 to buy this visibility via Ads*. A figure whose scale a user cannot
+  judge is a figure they discount.
+* **If value takes months, put the months on the dashboard** (**BP-237**) — named phases with
+  ranges, beside the empty numbers rather than in an onboarding email. On these products the
+  first weeks look identical to failure, and the churn that follows is a reading error.
+* **A composite score shows its parts in the same glance** (**BP-238**) — the ring tells a user
+  their state, the decomposition names their next action.
+* **The card that is working says so on itself** (**BP-239**) — the complement of BP-217:
+  that one says do not blank a surface with a value, this one says where the progress signal
+  goes instead.
+* **A guarantee under the CTA is the other way to remove the risk** (**BP-240**) — BP-229's
+  sibling. Two doors remove the *password*; a bounded guarantee removes the *bet*.
+* **Two card levels, and the difference between them is the grouping** (**BP-241**) — different
+  radii, one step of tint, and a flattening rule below tablet as part of the pattern rather than
+  a fallback.
+
+`practice-selection.md` gains three artifact rows: integration flow, long-time-to-value product,
+and the dashboard row widened to reach the new set.
+
 ## 0.47.0 — 2026-08-21
 
 **BP-216..227 — product dashboards.** The catalog had `Web apps, forms & performance` and
