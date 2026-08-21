@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.47.0 — 2026-08-21
+
+**BP-216..227 — product dashboards.** The catalog had `Web apps, forms & performance` and
+nothing about the screen a person opens every morning to decide what to do next. A dashboard
+fails in ways neither a landing nor a report does: it goes stale without saying so, it encodes
+state in a colour nobody can separate, and it blanks itself on every reload to prove it is
+fetching. Twelve entries, every one measured on 2026-08-21 against a production surface
+(`outrank.so/dashboard`, whose product half runs Semrush's Intergalactic), with the measurement
+named in each `Why`.
+
+The ones that change how a screen is built: the first block is *what to do next*, not what
+happened (**BP-216**); a data surface **dates itself instead of blanking** (**BP-217**); a
+number is a shape and is led like one — 32px at 32px leading (**BP-219**); a tint encodes the
+**category**, never the state (**BP-220**); one 100% bar with a dot legend costs a text line
+where a pie costs six (**BP-221**); a row **tints, it does not lift** (**BP-224**); an empty
+cell **keeps its border**, because the grid's shape is the information (**BP-226**).
+
+**BP-228..234 — the long SaaS landing, measured end to end.** A 20 806px production page, its
+fourteen sections listed in order with the buyer question each one answers, and the finding that
+the sequence is ordered by *when the question occurs* rather than by feature importance — the
+mechanism precedes the capabilities because a buyer who does not believe the *how* does not read
+the *what*. Section 12 repeats the hero **verbatim**, which is what lets a reader who scrolled
+past it decide without scrolling back.
+
+### Three old entries now say where they stop
+
+This is the half that matters more than the new ids. A newer practice that quietly disagrees
+with an older one leaves an auditor applying whichever they read first.
+
+* **BP-117 — "one primary action per landing page"** is about *intent*, not button count, and it
+  was regularly read as the second. **BP-229** states the difference: two buttons that begin the
+  same job — an SSO door beside a credentialled one — are one action with two doors, and removing
+  the ghost in BP-117's name raises friction in the name of a rule about focus. BP-117 now
+  carries that pointer in its own entry.
+* **BP-058 — "skeletons/progress for longer work"** now says it applies where there is **no
+  previous value**. On a surface that has already drawn data, a skeleton on re-fetch destroys a
+  reading the person could use, to signal a fetch they did not ask for.
+* **BP-059 — "no info by color alone"** points at **BP-218**, which carries the CVD numbers that
+  make it a measurement rather than a principle: two of the reference's own status hues separate
+  by 6.9 under tritanopia.
+
+Taxonomy gains `dashboard` and `data-density`. `practice-selection.md` gains six artifact rows —
+long SaaS landing, dashboard home, KPI card, dense table, in-product upgrade prompt — because an
+entry nothing routes to is an entry no skill can reach.
+
 ## 0.46.0 — 2026-08-20
 
 **The check that decides whether a public number is real accepted any substring of the

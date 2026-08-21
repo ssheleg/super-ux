@@ -64,6 +64,7 @@ drifts.
 - **Domain:** `subscription-app` `mobile` `ios` `android` `web` `freemium`
   `landing-page` `web2app` `email` `push` `widgets` `voice` `ai-chat` `forms`
   `auth` `i18n` `responsive` `figma` `design-system` `handoff` `maintainability`
+  `dashboard` `data-density`
 - **Channel of effect:** `conversion` `engagement` `trust` `revenue`
   `insight` `accessibility` `performance` `page-weight` `legal`
 - **Visual craft:** `typography` `color` `layout` `readability` `dark-mode`
@@ -541,6 +542,7 @@ restates a figure from it, because it states none.
 #### BP-058: Respond within perception budgets
 - **Do:** visible response to any interaction ≤200ms (INP "good"); skeletons/progress for longer work; optimistic UI where safe.
 - **Why:** INP is measured on every interaction — slow feedback reads as "broken", and Core Web Vitals gate search visibility at the 75th percentile.
+- **Narrowed by BP-217:** "skeletons for longer work" applies where there is **no previous value**. On a surface that has already drawn data, a skeleton on re-fetch destroys a reading the person could use, to signal a fetch they did not ask for — keep the value and stamp its freshness instead.
 - **Apply when:** web apps and hybrid views; audits treat >200ms uncued waits as findings. What you ship over the wire to make that budget reachable is BP-133.
 - **Tags:** web, performance, feedback, conversion
 - **Source:** [webdev]
@@ -548,7 +550,7 @@ restates a figure from it, because it states none.
 #### BP-059: WCAG 2.2 AA as the baseline, not the stretch goal
 - **Do:** contrast ≥4.5:1 text, visible focus states, full keyboard paths, labels tied to inputs, target-size floor (BP-050), no info by color alone; test with a screen reader on key flows.
 - **Why:** accessibility failures exclude users, and they are the norm rather than the exception — automated scans of the top million home pages fail ~95% of them, on a small number of repeating defects. The legal side is no longer hypothetical either (BP-138).
-- **Apply when:** every scenario's UI elements; heuristic audits include it. How it fails in practice, and what actually fixes it: BP-136..138.
+- **Apply when:** every scenario's UI elements; heuristic audits include it. How it fails in practice, and what actually fixes it: BP-136..138. For the status-hue case specifically — and the CVD numbers that make it concrete rather than a principle — BP-218.
 - **Tags:** web, mobile, accessibility, trust
 - **Source:** [WCAG]/[WebAIM]
 
@@ -993,6 +995,7 @@ screens.
 #### BP-117: One page, one job — single CTA, proof at the decision point
 - **Do:** one primary action per landing page, repeated down the page; place social proof (logos, numbers, testimonials) beside each CTA rather than only in a section at the bottom; secondary links must not compete with the CTA.
 - **Why:** a large share of visitors never scroll to a bottom testimonial block, so proof placed there never enters the decision; competing CTAs split intent instead of stacking it.
+- **Refined by BP-229:** "one primary action" is about *intent*, not about *button count*. Two buttons that begin the same job — an SSO door beside a credentialled one — are one action with two doors, and removing the ghost in this rule's name raises friction. A second action with a different destination is what this entry forbids.
 - **Apply when:** every marketing or landing page inside a conversion funnel.
 - **Tags:** landing-page, social-proof, visual-hierarchy, conversion, web
 - **Source:** [CRO26]/[NNg]
@@ -1053,6 +1056,177 @@ screens.
 - **Apply when:** any subscription billed self-serve, on any platform — read the branch that matches who holds the billing.
 - **Tags:** cancel, trust, retention, winback, web, mobile
 - **Source:** [CRO26]/[NNg]
+
+### Product dashboards — the home screen of a working tool (BP-216..227)
+
+A dashboard is not a report and not a landing. It is the screen a person opens
+every morning to decide what to do next, and it fails in ways neither of the other
+two does: it goes stale without saying so, it encodes state in a colour nobody can
+separate, and it blanks itself on every reload to prove it is fetching.
+
+Every entry below was measured on 2026-08-21 against a production surface —
+`outrank.so/dashboard`, an SEO/growth tool whose product half runs Semrush's
+Intergalactic design system — and the measurement is named in each `Why`.
+
+#### BP-216: The first block is what to do next, not what happened
+- **Do:** put a *recommended actions* block above every metric — a title, a count of suggestions, one line of purpose, then two or three tiles each with an icon, a title, three lines of body and one text-link action. Metrics go below it.
+- **Why:** a metric answers "what happened"; a person opening a tool every morning needs "what do I do". The measured reference gives this block the top of the page above a domain-rating ring and two headline counters, and every tile carries exactly one action — so the screen is a decision surface first and a report second.
+- **Apply when:** any product whose users return on a cadence and can act on what they see.
+- **Tags:** dashboard, activation, retention, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-217: A data surface dates itself instead of blanking
+- **Do:** keep the last value on screen and stamp it — *"Updated 11 minutes ago"* — rather than replacing the surface with a skeleton on every load. Show a skeleton only where there is no previous value at all.
+- **Why:** a skeleton on a re-fetch destroys a value the person could already read, to communicate a fetch they did not ask about. The measured reference ships **no skeleton and no spinner anywhere in the product**; every data card ends in a freshness stamp instead. Staleness is the real risk on a dashboard and the stamp addresses it; the flicker addresses nothing.
+- **Apply when:** any surface that re-fetches data it has already drawn.
+- **Tags:** dashboard, data-density, feedback, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-218: Status is never carried by colour alone
+- **Do:** pair every state with a word or an icon. Reserve the status hue for the dot, the bar and the fill, and use a darker text-safe variant when the state has to be read as a word.
+- **Why:** measured on the reference's own palette, `--info` and `--success` separate by only **6.9 under tritanopia** and the brand accent and `--info` by **2.9 under deuteranopia** — one state to a reader who cannot separate them. The reference is safe *in practice* because every chip is iconned and every at-risk row is flagged, not because the hues are distinguishable.
+- **Apply when:** every status, badge, chart series and risk indicator.
+- **Tags:** dashboard, accessibility, color, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-219: A number is a shape — lead it like one
+- **Do:** set the primary metric at its own leading (line-height equal to font-size) with negative tracking, one weight up from body. Put the label above or below it, never inline.
+- **Why:** measured — 32px at weight 600, **32px leading and −1.28px tracking**. A metric led like prose floats inside a box that is mostly air, and a person scanning eight cards reads the gaps instead of the figures.
+- **Apply when:** any KPI card, stat strip or summary tile.
+- **Tags:** dashboard, data-density, visual-hierarchy, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-220: A tint encodes the category, never the state
+- **Do:** where a strip of metric tiles is tinted, let the tint say *which subject* the tile belongs to and keep state in an explicit chip or delta. Do not let a green tile mean "good".
+- **Why:** measured — the reference's four keyword tiles carry four different washes and none of them means healthy or unhealthy; the one health signal on the strip is a `↑ +67%` delta chip. A tint that sometimes means category and sometimes means state means neither.
+- **Apply when:** any tinted card group.
+- **Tags:** dashboard, visual-hierarchy, data-density, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-221: One 100% bar with a dot legend, not a pie
+- **Do:** for a composition of three to five sources, draw one horizontal bar split by share, and put colour-dot + label + count on a single line beneath it.
+- **Why:** measured — the reference's *Keyword sources* is a single bar plus three legend items with absolute counts, occupying about one text line of vertical space. A pie of the same data costs six times the height and hides the counts.
+- **Apply when:** any part-of-whole with a small number of parts.
+- **Tags:** dashboard, data-density, visual-hierarchy, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-222: A ranked list carries its bar inline
+- **Do:** for "which of these contributes most", use a row of name + right-aligned count with a full-width progress bar directly beneath it, and flag rows needing attention with an icon on the name.
+- **Why:** measured on two adjacent cards (*Competitor effectiveness*, *Audience effectiveness*). The inline bar makes the ranking readable without a chart axis, and the flag puts the exception on the row rather than in a separate alerts panel nobody opens.
+- **Apply when:** any ranked contribution list under about ten rows.
+- **Tags:** dashboard, data-density, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-223: The table header carries the count of what is below it
+- **Do:** label the table with the count in the header row itself — `ARTICLES (14)` — set as an uppercase letterspaced eyebrow, with sort affordances on numeric columns and the row's identity as a link over a muted slug.
+- **Why:** measured. A reader knows the table's size before scrolling it, which decides whether they scroll at all. A count that lives in a caption above the card gets separated from the table by every responsive reflow.
+- **Apply when:** any table of variable length.
+- **Tags:** dashboard, data-density, navigation, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-224: A row tints; it does not lift
+- **Do:** hover state on a table row, list row or nav item is a background tint. No shadow, no translate, no scale.
+- **Why:** measured — the reference's entire hover vocabulary in the product is a fill change over 0.15s. On a surface with forty hoverable rows, a lift is forty small layout events and a tint is none.
+- **Apply when:** every dense list, table and nav.
+- **Tags:** dashboard, motion, performance, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-225: The rail carries the account, the quota and the property — in that order from the bottom
+- **Do:** a left rail holds, top to bottom: brand, the property switcher (favicon + name + URL), grouped navigation with badges (`New`, `Beta`), then at the foot the quota chips and the account card.
+- **Why:** measured at 321px. The property switcher at the top answers *which site am I looking at* before any number is read — the first question on a multi-tenant tool — and the quota at the foot answers *what can I still do* without occupying the reading path.
+- **Apply when:** any tool where a user holds more than one workspace, site or project.
+- **Tags:** dashboard, navigation, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-226: An empty cell keeps its border
+- **Do:** in a calendar, grid or board, render the empty slot as a bordered box with nothing in it. Do not collapse it.
+- **Why:** measured on the reference's content calendar — past days grey their numerals and empty days keep their cells. The grid's *shape* is the information (which days have work), and collapsing empties destroys it to reclaim space nobody asked for.
+- **Apply when:** any calendar, board or fixed grid.
+- **Tags:** dashboard, data-density, visual-hierarchy, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-227: One hero metric, then the grid of secondaries
+- **Do:** where a card carries several related figures, give one the full width at metric size and put the rest in a two-column grid of tiles beneath it, with deltas as chips on the tiles that have them.
+- **Why:** measured on *Search Performance* — clicks full-width, then impressions / CTR / position / tracked pages as four tiles, one carrying `↑ +67%`. Four equal tiles make the reader choose what matters; one hero makes the product say it.
+- **Apply when:** any card with one primary figure and three to five supporting ones.
+- **Tags:** dashboard, data-density, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+### The long SaaS landing — the section sequence, measured (BP-228..234)
+
+Nothing here contradicts BP-116..BP-121; these are the shapes those rules take on
+a 2026 self-serve SaaS page, measured end to end on a **20 806px** production
+landing (`outrank.so`, read 2026-08-21) whose fourteen sections are listed in
+BP-228. Where an older entry and a newer one could be read as disagreeing, the
+newer one says so and names it — see BP-229, which is the case that matters.
+
+#### BP-228: The fourteen-section sequence, and each section answers one question
+- **Do:** order a self-serve SaaS landing as: **1** hero (promise + two doors + one proof figure) · **2** outcome proof ("the ⟨product⟩ effect") · **3** problem → solution, side by side · **4** mechanism ("how it works") · **5** the primary capability, at length · **6** the second capability · **7** integrations / "one click to anywhere" · **8** the remaining capabilities, compressed · **9** the quality objection answered directly · **10** the newest category objection (in 2026: "will AI recommend me") · **11** social proof · **12** the hero's promise repeated verbatim · **13** FAQ · **14** final CTA.
+- **Why:** measured. Each section answers exactly one buyer question and they are ordered by when the question occurs, not by feature importance — the mechanism precedes the capabilities because a buyer who does not believe the *how* does not read the *what*. Section 12 repeating the hero **word for word** is what lets a reader who scrolled past the hero decide without scrolling back.
+- **Apply when:** self-serve SaaS with a free entry point and a considered purchase.
+- **Tags:** landing-page, conversion, web, navigation
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-229: Two doors to one action is not two competing CTAs — BP-117 refined
+- **Do:** a hero may carry **two buttons when both begin the same job** — typically an SSO button beside an email/"start free" button. Style them as a pair (one filled, one ghost), give them the same verb, and place them side by side. What BP-117 forbids is a second action with a *different destination* — "Book a demo" beside "Start free", "Read the docs" beside "Sign up" — because those split intent.
+- **Why:** BP-117's "one primary action per landing page" is right about intent and is regularly misread as "one button". The measured reference's hero is `Join with Google` beside `Get Started for Free`: two doors, one signup, and the ghost exists to remove a password from the path. An audit that flags this as a BP-117 violation removes the lower-friction door and raises friction in the name of a rule about focus.
+- **Apply when:** any hero where SSO is offered beside a credentialled signup.
+- **Tags:** landing-page, conversion, friction-reduction, auth, web
+- **Source:** [Outrank26], refining [CRO26]
+- **Checked:** 2026-08-21
+
+#### BP-230: One accent word in the headline, and only one
+- **Do:** set the headline in a display face at a real display size (measured: 68px / 1.2 leading / −1.2px tracking) and colour **exactly one phrase** in the brand hue — the phrase that names the differentiator, not the product.
+- **Why:** measured — *"Grow Organic Traffic **on Auto-Pilot**"*. The colour is doing the job a second sentence would otherwise do, and a headline with two coloured phrases has no emphasis at all. Verify the accent clears AA as text before using it this way; most brand hues do not, and this one measures 5.49:1.
+- **Apply when:** any hero headline over about 40px.
+- **Tags:** landing-page, typography, conversion, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-231: One proof figure under the fold-line, before any section
+- **Do:** place a single quantity directly beneath the hero CTAs — *"750m+ Organic Views"* — at caption size, not as a badge row.
+- **Why:** measured. It answers "is this real" in the same glance as the CTA, which is where BP-117 says proof belongs; a logo wall at that position costs the same height and says less, and the same figure two screens down is read by a fraction of visitors.
+- **Apply when:** any landing with a defensible aggregate number.
+- **Tags:** landing-page, social-proof, conversion, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-232: Answer the category's newest objection explicitly, in its own section
+- **Do:** give the objection that is new to the category this year its own section with a plain headline, positioned after the capabilities and before social proof.
+- **Why:** measured — *"Make AI recommend Your Business"* sits between the feature blocks and the testimonials. The objection a buyer arrived with is handled by the hero; the objection they acquired *this quarter* has no home in a standard sequence, and burying it in an FAQ answers it only for readers who already trust you enough to open one.
+- **Apply when:** categories with a live shift buyers are asking about.
+- **Tags:** landing-page, conversion, trust, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-233: The in-product promo is a card in the flow, not an interstitial
+- **Do:** run an upgrade or plan-change promotion as a full-width dismissible card at the top of the working surface — icon, headline, one line with the price contrast inline, one pill CTA, an × — and never as a modal over the work.
+- **Why:** measured on the reference's content planner: *"Save 16% by switching to yearly plan"* renders as a banner above the calendar and the calendar stays usable. A modal converts the same offer by interrupting a task the user chose, which is the mechanism behind most in-product upgrade resentment.
+- **Apply when:** any in-product monetization prompt outside a hard paywall.
+- **Tags:** paywall, pricing, dashboard, retention, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
+
+#### BP-234: The landing's length is a measurement, not a target
+- **Do:** derive page length from the number of buyer questions the category actually has, and cut any section that does not answer one. Do not copy a competitor's height.
+- **Why:** the measured reference is 20 806px over fourteen sections — roughly 1 500px per question — and every section maps to one. Length as a goal produces filler sections that lower the density of the page and the odds of reaching the closing CTA; length as an outcome produces exactly this.
+- **Apply when:** any landing redesign that starts from a competitor teardown.
+- **Tags:** landing-page, conversion, web
+- **Source:** [Outrank26]
+- **Checked:** 2026-08-21
 
 ### Web-to-app funnels (web2app)
 

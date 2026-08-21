@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..215 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..234 — behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -11,7 +11,8 @@ referral BP-147..151, empty states BP-152, authentication and form recovery
 BP-153..156, motion craft BP-157..164, perceived quality BP-165..168,
 generated-default tells BP-169..172, interface state and platform surfaces
 BP-173..179, information architecture BP-180..181, verbal identity BP-182..206,
-developer products BP-207..210, funnel wiring BP-211..215;
+developer products BP-207..210, funnel wiring BP-211..215, product
+dashboards BP-216..227, the long SaaS landing BP-228..234;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -99,7 +100,12 @@ the Step-2 sets:
 | Forms / checkout | BP-050, BP-055..057, BP-119, BP-120, BP-143, BP-156; PRN-05, PRN-09 |
 | Sign-up / sign-in / password | BP-119, BP-153..156; PRN-05, PRN-09 |
 | Growth loop / referral program | BP-147..151, BP-067, BP-073 |
-| Landing / campaign page | BP-116, BP-117, BP-077, BP-132, BP-133, BP-169..172; PRN-08 |
+| Landing / campaign page | BP-116, BP-117, BP-229, BP-230, BP-231, BP-077, BP-132, BP-133, BP-169..172; PRN-08 |
+| Long self-serve SaaS landing | BP-228..234, BP-116..121; PRN-08 |
+| Product dashboard / tool home | BP-216..227, BP-045, BP-152, BP-173, BP-180; PRN-06, PRN-14 |
+| KPI card, metric strip, chart block | BP-217..222, BP-227, BP-045; PRN-06 |
+| Dense table or ranked list | BP-222, BP-223, BP-224, BP-226; PRN-06 |
+| In-product upgrade prompt | BP-233, BP-024..026, BP-073, BP-074 |
 | Developer landing (API, SDK, CLI, MCP) | BP-207, BP-208, BP-117, BP-116; PRN-08 |
 | Capability / per-feature page | BP-210, BP-208, BP-194..197; PRN-23 |
 | First-run or setup checklist | BP-209, BP-004, BP-012, BP-206 |
