@@ -3,9 +3,9 @@
 [![npm](https://img.shields.io/npm/v/super-ux)](https://www.npmjs.com/package/super-ux)
 [![CI](https://github.com/ssheleg/super-ux/actions/workflows/validate.yml/badge.svg)](https://github.com/ssheleg/super-ux/actions/workflows/validate.yml)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![site](https://img.shields.io/badge/docs-ssheleg.github.io-8ab0ff)](https://ssheleg.github.io/sshlg-skills/skills/super-ux/)
+[![site](https://img.shields.io/badge/docs-skills.sshlg.me-8ab0ff)](https://skills.sshlg.me/skills/super-ux/)
 
-**[Docs, and all 8 skills →](https://ssheleg.github.io/sshlg-skills/)** · [this skill's page](https://ssheleg.github.io/sshlg-skills/skills/super-ux/) · [follow @sshlg93 on X](https://x.com/intent/follow?screen_name=sshlg93)
+**[Docs, and all 8 skills →](https://skills.sshlg.me/)** · [this skill's page](https://skills.sshlg.me/skills/super-ux/) · [follow @sshlg93 on X](https://x.com/intent/follow?screen_name=sshlg93)
 
 **Scenario-driven UI development for AI agents.** Claude Code, Cursor, and
 70+ other agents.
