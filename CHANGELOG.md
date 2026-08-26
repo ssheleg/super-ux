@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.48.1 — the UX chain gets an installable public front door
+
+A root skill card now states the boundary between behavior, copy, visuals and
+integrations. Portable trigger and behavioral evals cover the scenario chain,
+audit and brand path without pretending they have been run against a model. The
+README opens with one install and one cancellation-flow request; CI adds the
+pinned house audit, eval plant and social-preview check.
+
 ## 0.48.0 — 2026-08-22
 
 **BP-235..241 — products with a long time-to-value.** Measured on

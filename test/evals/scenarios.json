@@ -1,0 +1,54 @@
+{
+  "note": "Score each expected_behavior line independently. These are authored evaluations, not executed results.",
+  "scenarios": [
+    {
+      "id": "s01",
+      "title": "Scenario-first feature",
+      "skills": [
+        "ux-foundation",
+        "ux-flows",
+        "ux-scenarios"
+      ],
+      "query": "Design a cancellation flow that offers retention but never traps the user.",
+      "files": [],
+      "expected_behavior": [
+        "Grounds the affected persona and job before screens",
+        "Maps success, cancel, failure and return states",
+        "Writes traceable scenarios with observable outcomes",
+        "Keeps integration and visual choices at their own boundaries"
+      ]
+    },
+    {
+      "id": "s02",
+      "title": "As-built UX audit",
+      "skills": [
+        "ux-audit"
+      ],
+      "query": "Check the current onboarding implementation against its scenario set.",
+      "files": [],
+      "expected_behavior": [
+        "Treats scenarios as the source of expected behavior",
+        "Reports file:line evidence for code findings",
+        "Separates absent scenarios from implementation defects",
+        "Produces a fix plan without silently changing the product"
+      ]
+    },
+    {
+      "id": "s03",
+      "title": "Brand and copy",
+      "skills": [
+        "brand-voice",
+        "copywriting"
+      ],
+      "query": "Calibrate a voice for a developer tool, then rewrite its error and empty states.",
+      "files": [],
+      "expected_behavior": [
+        "Reads or creates the brand contract before drafting copy",
+        "Keeps one voice with per-surface register changes",
+        "Names the failure and one recovery action in errors",
+        "Checks terminology and facts instead of inventing claims"
+      ]
+    }
+  ]
+}
+

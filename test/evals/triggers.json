@@ -1,0 +1,125 @@
+{
+  "skill": "super-ux",
+  "note": "Behavioral trigger cases. Run each in a fresh session; the committed data contains no model results.",
+  "split": {
+    "train": [
+      "q01",
+      "q02",
+      "q03",
+      "q04",
+      "q08",
+      "q09",
+      "q10",
+      "q11"
+    ],
+    "validation": [
+      "q05",
+      "q06",
+      "q07",
+      "q12",
+      "q13",
+      "q14"
+    ]
+  },
+  "queries": [
+    {
+      "id": "q01",
+      "lang": "en",
+      "query": "Design the onboarding flow, every state and the scenarios that prove it",
+      "should_trigger": true,
+      "why": "full UX chain"
+    },
+    {
+      "id": "q02",
+      "lang": "ru",
+      "query": "определи персон и JTBD для нового продукта",
+      "should_trigger": true,
+      "why": "foundation"
+    },
+    {
+      "id": "q03",
+      "lang": "en",
+      "query": "Map the screens and transitions for subscription cancellation",
+      "should_trigger": true,
+      "why": "flows and screens"
+    },
+    {
+      "id": "q04",
+      "lang": "ru",
+      "query": "проведи UX-аудит кода по сценариям с file:line",
+      "should_trigger": true,
+      "why": "scenario-backed audit"
+    },
+    {
+      "id": "q05",
+      "lang": "en",
+      "query": "Create a brand voice and terminology pack for this developer tool",
+      "should_trigger": true,
+      "why": "brand-voice"
+    },
+    {
+      "id": "q06",
+      "lang": "ru",
+      "query": "перепиши ошибки и empty states в голосе бренда",
+      "should_trigger": true,
+      "why": "copywriting"
+    },
+    {
+      "id": "q07",
+      "lang": "en",
+      "query": "Define the product vision before we choose features",
+      "should_trigger": true,
+      "why": "vision"
+    },
+    {
+      "id": "q08",
+      "lang": "en",
+      "query": "Choose a color palette and typography for the dashboard",
+      "should_trigger": false,
+      "why": "visual layer belongs to sheleg-design"
+    },
+    {
+      "id": "q09",
+      "lang": "ru",
+      "query": "подключи Stripe webhook",
+      "should_trigger": false,
+      "why": "integration wiring"
+    },
+    {
+      "id": "q10",
+      "lang": "en",
+      "query": "Refactor this database migration",
+      "should_trigger": false,
+      "why": "internal repository work with no user path"
+    },
+    {
+      "id": "q11",
+      "lang": "en",
+      "query": "Write a README for developers",
+      "should_trigger": false,
+      "why": "developer documentation is outside product copy"
+    },
+    {
+      "id": "q12",
+      "lang": "ru",
+      "query": "исправь один CSS margin",
+      "should_trigger": false,
+      "why": "mechanical visual bug, no behavior decision"
+    },
+    {
+      "id": "q13",
+      "lang": "en",
+      "query": "Audit public pages for search indexing",
+      "should_trigger": false,
+      "why": "SEO/AEO audit"
+    },
+    {
+      "id": "q14",
+      "lang": "en",
+      "query": "Create an orchestration loop for an AI agent",
+      "should_trigger": false,
+      "why": "agent system construction"
+    }
+  ]
+}
+
