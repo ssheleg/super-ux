@@ -1,6 +1,6 @@
 {
   "name": "super-ux",
-  "version": "0.48.2",
+  "version": "0.48.3",
   "scripts": {
     "test": "python3 test/validate.py && python3 test/brand_lint_test.py && python3 test/ux_lint_test.py && python3 docs/ux/lint.py && python3 docs/brand/lint.py"
   },
