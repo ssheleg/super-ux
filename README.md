@@ -8,8 +8,8 @@
 **[Docs, and every skill →](https://skills.sshlg.me/)** · [this skill's page](https://skills.sshlg.me/skills/super-ux/) · [follow @sshlg93 on X](https://x.com/intent/follow?screen_name=sshlg93)
 
 Loads in **DeepSeek Harness** (`dsh`) with **no plugin to write**: it reads the
-Agent Skills standard directly, scanning `~/.agents/skills` — where `npx skills
-add` puts this pack — at rank 500.
+Agent Skills standard directly and scans `~/.agents/skills`, which is where
+`npx skills add` puts this pack.
 
 **Scenario-driven UI development for AI agents.** Claude Code, Cursor, and
 70+ other agents.
@@ -24,18 +24,28 @@ chain in `docs/ux/` becomes the source of truth, written and approved
 used as the checklist for evidence-backed audits of the code.
 
 ```mermaid
-flowchart LR
-    V["Vision<br/>essence · principles<br/>anti-vision"] --> F["Foundation<br/>personas · JTBD<br/>journeys · stories"]
-    F --> L["Flows<br/>task analysis<br/>+ branches"]
-    L --> S["Screens<br/>states · elements<br/>Figma frames"]
-    S --> C["Scenarios<br/>action → response<br/>alt + error paths"]
-    C --> B["Build UI<br/>only now"]
-    B --> A["Audit<br/>code vs the chain<br/>file:line evidence"]
-    A --> P["Fix plan<br/>Freq × Severity<br/>× Solvability"]
+%%{init: {'flowchart': {'curve': 'linear', 'useMaxWidth': true}}}%%
+flowchart TD
+    V["Vision · essence, principles, anti-vision"]
+    F["Foundation · personas, JTBD, journeys, stories"]
+    L["Flows · task analysis + branches"]
+    S["Screens · states, elements, Figma frames"]
+    C["Scenarios · action → response, alt + error paths"]
+    B["Build UI — only now"]
+    A["Audit · code vs the chain, file:line evidence"]
+    P["Fix plan · Frequency × Severity × Solvability"]
+
+    V --> F --> L --> S --> C --> B --> A --> P
     P --> B
     B -.->|same change| C
     V -.->|alignment check| B
 ```
+
+**The build sits after the scenarios on purpose.** Everything above it is a
+document the chain owns; everything below is code and what it is judged against.
+The two dotted edges are what keeps the chain honest: a change to user-facing
+behaviour updates the scenarios **in the same change**, and the vision is what the
+interface is checked back against.
 
 Every layer traces to the one above it. New product? Build it forward. Existing
 codebase? The same artifacts get filled in backwards from the code, tagged
