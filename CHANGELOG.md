@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.48.2 — shared guards identify their owner
+
+The eval and social-preview validators now declare their umbrella-owned shared
+mechanisms, so family drift is checked without pretending the copies diverge.
+
 ## 0.48.1 — the UX chain gets an installable public front door
 
 A root skill card now states the boundary between behavior, copy, visuals and
