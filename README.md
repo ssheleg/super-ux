@@ -4,6 +4,7 @@
 [![CI](https://github.com/ssheleg/super-ux/actions/workflows/validate.yml/badge.svg)](https://github.com/ssheleg/super-ux/actions/workflows/validate.yml)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![site](https://img.shields.io/badge/docs-skills.sshlg.me-8ab0ff)](https://skills.sshlg.me/skills/super-ux/)
+[![skills.sh](https://skills.sh/b/ssheleg/super-ux)](https://skills.sh/ssheleg/super-ux)
 
 **Turn product intent into traced flows, screens and scenarios before an agent writes the interface.**
 
