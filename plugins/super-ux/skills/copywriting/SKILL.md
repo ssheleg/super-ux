@@ -77,6 +77,22 @@ Under the guards in `ai-tells.md`, which are not optional:
   quotations untouched; the core claim the same.
 - Text that already reads naturally is left alone. Editing what is fine to
   prove the pass ran is this mode's failure.
+- **A marker count is not a verdict and never gates anything.** Say which markers
+  are present at what density; never say a text was AI-written. The false
+  positives fall hardest on people writing in a second language, and a writer is
+  not a defect to be edited into fluency they did not ask for. `ai-tells.md`
+  carries the measurement and what it binds.
+- **Read `voice.md`'s `Humanization pass:` first.** It names which pass this
+  project chose. Absent means nobody has been asked: ask once, run `own` for this
+  piece, and write the answer back so the question does not return. A value naming
+  a tool that is not installed falls back to `own` and says so — a missing optional
+  tool must not stop copy being written.
+- Other implementations exist and two are worth knowing —
+  `npx sshlg-skills humanizers` lists what this machine has. Reach for one for an
+  audit with no rewrite, for long-form prose, or when the writer has a sample of
+  their own writing to match. Stay here for product copy: the brand pack's
+  registers and canonical facts are the constraint, and a general-purpose
+  humanizer does not read them.
 
 ## Non-negotiables
 
