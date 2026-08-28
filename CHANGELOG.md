@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.49.0 — the humanization pass names what it cannot prove
+
+- **`ai-tells.md` now says these markers are not a verdict, and who they misjudge.** Every
+  marker is more common in model output; none proves a machine wrote anything, and the
+  failure is not symmetric. Independent audits found false-positive rates **above 60% on
+  non-native English writers** (Liang et al., Stanford, *Patterns*, 2023). Three rules bind
+  the rest of the file: never say a text was AI-written, only which markers appear at what
+  density; never gate on a marker count; and a second-language writer is not a defect to be
+  edited into fluency they did not ask for.
+- **Other implementations are named, compared and pointed at** — `blader/humanizer` and
+  `conorbronsdon/avoid-ai-writing`, with a table of what each does that this pack does not
+  and the reverse. Reach outward for an audit that changes nothing (only one has a
+  detect-only mode), for long-form prose, or when the writer has a sample of their own
+  writing to match. Stay here for product copy: the brand pack's registers, terminology and
+  canonical facts are the constraint, and a general-purpose humanizer does not read them.
+  Two guards remain this pack's own — the 50% change-rate refusal and the mandatory
+  semantic-preservation check — and neither external implementation carries an equivalent.
+- **`voice.md` gains an optional `Humanization pass:` field**, and its absence is
+  meaningful: it means nobody has been asked. `brand-voice` Init asks once and records the
+  answer; `copywriting` reads it rather than asking again. A value naming a tool that is not
+  installed falls back to `own` and says so — a missing optional tool must not stop copy
+  being written.
+- `npx sshlg-skills humanizers` lists what is installed on the machine.
+
 ## 0.48.4 — the channel that sends the installs, on npm too
 
 - The `skills.sh` badge and the canonical `homepage` reached GitHub in the previous cycle and stopped

@@ -72,7 +72,12 @@ Announce which one you are running.
    errors, empty states. Every string gets a row with its `file:line` and the
    scenario it serves. Dispatch parallel Explore subagents for a large
    codebase, one area each.
-6. Everything starts `Status: draft`.
+6. **Ask which humanization pass this project wants**, and write the answer to
+   `voice.md`'s `Humanization pass:` field. `own` is the default and the only one
+   that reads this pack's registers and facts; `npx sshlg-skills humanizers` shows
+   what else is installed and how to install what is not. Ask once — the field
+   exists so nobody is asked twice, and it selects a pass, never a verdict.
+7. Everything starts `Status: draft`.
 
 ## Calibrate
 
