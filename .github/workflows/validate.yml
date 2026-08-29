@@ -41,6 +41,14 @@ jobs:
       - name: Dogfood the brand pack
         run: python3 docs/brand/lint.py
 
+      # Fresh HOME is the easy case and the only one this family's CI used to
+      # run; the case that matters is PLUGIN-PRESENT — the skills handoff must
+      # refuse (exit 3, remedy, nothing delegated) while installed_plugins.json
+      # declares the plugin, because the skills CLI recreates the plain
+      # ~/.claude/skills copy that shadows it.
+      - name: Installer functional tests (fake HOMEs, plugin-present refusal)
+        run: node test/installer_test.js
+
       - name: Official Claude Code conformance (plugin + marketplace, strict)
         run: |
           set -eu

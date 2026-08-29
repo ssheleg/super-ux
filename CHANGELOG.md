@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.49.1 — the skills handoff refuses the shadow it used to create
+
+- **The skills-menu item now consults the target home before delegating.** `npx skills add`
+  auto-detects Claude Code and writes a plain `~/.claude/skills/super-ux` copy even when
+  claude-code is never picked, and on a machine where super-ux is installed as a Claude
+  Code plugin that copy shadows the plugin and serves the version it was copied from
+  forever. The handoff now reads `~/.claude/plugins/installed_plugins.json` — the record of
+  what is actually installed, under any marketplace name — and refuses with **exit 3**, the
+  remedy in the refusal (`claude plugin marketplace update super-ux`, `claude plugin update
+  <spec from the JSON>`, and the family launcher), and `npx super-ux --force` as the named
+  override. The `plugins/marketplaces/super-ux` directory is kept only as the fallback
+  signal: it under-reports, because a directory-sourced marketplace has no dir there and
+  plugin names differ from marketplace names. A missing or corrupt JSON reads as "no
+  plugin" — fail open, never crash. Only the Claude Code channel is gated; `--cursor`
+  installs into a project beside the plugin exactly as before. Canon:
+  make-skill v0.25.0, `references/distribution.md` §3; reproduced live 2026-08-29 when a
+  bare `npx @ssheleg/telegram-dev` shipped three shadows past this exact class of hole.
+- **A successful run now ends by saying how the next version arrives** — `npx
+  super-ux@latest` for this member, the family launcher for every channel at once. An
+  installer that never mentions updates has still chosen an update model: never.
+- **`test/installer_test.js`** runs both installers against throwaway HOMEs — the
+  plugin-present refusal (exit 3, remedy, nothing delegated, nothing written), the
+  differently-named marketplace spec in the remedy, `--force`, corrupt-JSON fail-open, a
+  prefix collider (`super-ux-extra@x`), the marketplaces-dir fallback, the fresh HOME, and
+  that `install.sh` never touches `~/.claude` at all. Wired into `npm test` and CI; watched
+  failing against the pre-fix installer (7 of 10 cases red, the plugin-present case
+  delegating with exit 0) before the fix was un-stashed.
+- SCN-016 and SCN-017 record the refusal and the update line in `docs/ux/scenarios.md`;
+  SCR-05 gains the `refused` state; the string registry carries the new copy and the
+  `refused:` prefix joins the state vocabulary.
+
 ## 0.49.0 — the humanization pass names what it cannot prove
 
 - **`ai-tells.md` now says these markers are not a verdict, and who they misjudge.** Every

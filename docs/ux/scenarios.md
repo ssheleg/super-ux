@@ -25,6 +25,8 @@ change.
 | SCN-013 | Install the Claude Code plugin without the CLI | install | P-01 | ST-001, FLW-01, SCR-06 | implemented | 2026-08-10 |
 | SCN-014 | Read the help before running | install | P-02 | ST-007, FLW-04, SCR-07 | implemented | 2026-08-10 |
 | SCN-015 | Reject an unknown flag | install | P-02 | ST-007, FLW-04, SCR-07 | implemented | 2026-08-10 |
+| SCN-016 | Refuse the shadow the skills handoff would create | install | P-01 | ST-001, ST-003, FLW-01, FLW-02, SCR-05 | implemented | 2026-08-29 |
+| SCN-017 | Be told how the next version arrives | install | P-01 | ST-006, FLW-01, FLW-02, FLW-03 | implemented | 2026-08-29 |
 
 ## Personas
 
@@ -49,7 +51,7 @@ multi-agent operator.
 **Expected result:** the run installs exactly the selected channels, in that order,
 and never leaves the terminal in raw mode.
 **Errors & recovery:** an unrecognized key changes nothing and re-renders.
-**Coverage:** `bin/super-ux.js:235-296`
+**Coverage:** `bin/super-ux.js:338-399`
 **Product:** unobserved
 
 ### SCN-002: Quit the list without installing anything
@@ -59,7 +61,7 @@ and never leaves the terminal in raw mode.
 2. User presses `q` (or esc, or ctrl+c).
 **Expected result:** the selection is discarded, `Nothing selected.` prints, no
 file is created or modified, raw mode is restored.
-**Coverage:** `bin/super-ux.js:266-268`, `bin/super-ux.js:323-327`
+**Coverage:** `bin/super-ux.js:369-371`, `bin/super-ux.js:426-430`
 **Product:** unobserved
 
 ### SCN-003: Confirm with nothing selected
@@ -68,7 +70,7 @@ file is created or modified, raw mode is restored.
 1. User presses enter with every row `◯`.
 **Expected result:** `Nothing selected.` and a clean exit. Not an error — choosing
 nothing is a choice.
-**Coverage:** `bin/super-ux.js:283-285`, `bin/super-ux.js:323-327`
+**Coverage:** `bin/super-ux.js:386-388`, `bin/super-ux.js:426-430`
 **Product:** unobserved
 
 ### SCN-004: Select from piped stdin
@@ -82,7 +84,7 @@ nothing is a choice.
 empty line, `q` or `quit` select nothing.
 **Errors & recovery:** a line arriving between two questions is buffered by
 the single persistent prompter rather than lost.
-**Coverage:** `bin/super-ux.js:180-217`, `bin/super-ux.js:298-306`, `bin/super-ux.js:316-321`
+**Coverage:** `bin/super-ux.js:283-320`, `bin/super-ux.js:401-409`, `bin/super-ux.js:419-424`
 **Product:** unobserved
 
 ### SCN-005: Reject an out-of-range selection
@@ -92,7 +94,7 @@ the single persistent prompter rather than lost.
 **Expected result:** `error: invalid selection '9'`, exit 1, nothing written. The
 selection is never silently narrowed to the valid subset — a user who typed
 `1,9` meant both.
-**Coverage:** `bin/super-ux.js:219-233`, `bin/super-ux.js:304`
+**Coverage:** `bin/super-ux.js:322-336`, `bin/super-ux.js:407`
 **Product:** unobserved
 
 ### SCN-006: Install into a project non-interactively
@@ -107,7 +109,7 @@ seeded with `seed:` lines; `docs/ux/{audits,plans}/` created;
 `docs/brand/lint.py` written with `sync:` lines; a closing `done:` line
 counting rules installed, rules skipped and documents seeded.
 `docs/ux/vision.md` is **not** created.
-**Coverage:** `bin/super-ux.js:54-147`, `bin/super-ux.js:390-392`
+**Coverage:** `bin/super-ux.js:105-198`, `bin/super-ux.js:510-512`
 **Product:** unobserved
 
 ### SCN-007: Refuse a target that is not a directory
@@ -116,7 +118,7 @@ counting rules installed, rules skipped and documents seeded.
 1. `npx super-ux --cursor ./README.md`.
 **Expected result:** `error: './README.md' is not a directory`, exit 1, and no file
 created anywhere — the check runs before the first write.
-**Coverage:** `bin/super-ux.js:55-57`
+**Coverage:** `bin/super-ux.js:106-108`
 **Product:** unobserved
 
 ### SCN-008: Never overwrite an existing base
@@ -128,7 +130,7 @@ content and one `.cursor/rules/*.mdc`.
 **Expected result:** `keep:` for every existing document, `skip:` for the existing
 rule with the hint `(use --force to overwrite)`, and both files byte-identical
 afterwards. Content the user wrote is never a casualty of an install.
-**Coverage:** `bin/super-ux.js:70-73`, `bin/super-ux.js:84-92`
+**Coverage:** `bin/super-ux.js:121-124`, `bin/super-ux.js:135-143`
 **Product:** unobserved
 
 ### SCN-009: Refresh rules and linters with --force
@@ -139,7 +141,7 @@ afterwards. Content the user wrote is never a casualty of an install.
 **Expected result:** every rule file replaced (`install:`), all three linters
 re-synced (`sync:`), and every seeded document still reported `keep:`.
 `--force` is about code, never about content.
-**Coverage:** `bin/super-ux.js:390`, `bin/super-ux.js:71-77`, `bin/super-ux.js:124-139`
+**Coverage:** `bin/super-ux.js:510`, `bin/super-ux.js:122-128`, `bin/super-ux.js:175-190`
 **Product:** unobserved
 
 ### SCN-010: Survive a linter missing from the payload
@@ -152,7 +154,7 @@ regression — this has happened in this family).
 reach, and the URL to fetch it; the rest of the install completes and exits
 normally. A half-installed project with a stack trace as its only record is
 worse than a named gap.
-**Coverage:** `bin/super-ux.js:130-138`
+**Coverage:** `bin/super-ux.js:181-189`
 **Product:** unobserved
 
 ### SCN-011: Seeded project passes both linters
@@ -164,7 +166,7 @@ worse than a named gap.
 **Expected result:** both exit 0. A first run that greets the user with errors
 about the templates teaches them to ignore the linter, which is the one
 habit this product cannot survive.
-**Coverage:** `bin/super-ux.js:84-116`, `templates/scenarios.md`, `templates/screens.md`
+**Coverage:** `bin/super-ux.js:135-167`, `templates/scenarios.md`, `templates/screens.md`
 **Product:** unobserved
 
 ### SCN-012: Offer the routing block from either door
@@ -176,7 +178,7 @@ habit this product cannot survive.
 launcher is unavailable, both print the same one-line command, in English,
 matching the rest of the CLI. Two doors into one install must not behave
 differently — they did until 2026-08-10.
-**Coverage:** `bin/super-ux.js:347`, `bin/super-ux.js:359-373`, `bin/super-ux.js:393`
+**Coverage:** `bin/super-ux.js:453`, `bin/super-ux.js:472-486`, `bin/super-ux.js:513`
 **Product:** unobserved
 
 ### SCN-013: Install the Claude Code plugin without the CLI
@@ -190,7 +192,7 @@ failing.
 **Errors & recovery:** an already-added marketplace prints
 `(marketplace may already be added — continuing)`; a failed install prints a
 `warning:` and never aborts the other channels.
-**Coverage:** `bin/super-ux.js:161-178`
+**Coverage:** `bin/super-ux.js:264-281`
 **Product:** unobserved
 
 ### SCN-014: Read the help before running
@@ -201,7 +203,7 @@ failing.
 item, every category it writes — rules, the `docs/ux` skeleton, the
 `docs/brand` pack, all three linters, and that `vision.md` is not seeded.
 Exit 0, nothing written.
-**Coverage:** `bin/super-ux.js:27-47`, `bin/super-ux.js:377-380`
+**Coverage:** `bin/super-ux.js:71-98`, `bin/super-ux.js:490-493`
 **Product:** unobserved
 
 ### SCN-015: Reject an unknown flag
@@ -210,5 +212,43 @@ Exit 0, nothing written.
 1. `npx super-ux --instal`.
 **Expected result:** `error: unknown mode '--instal'`, then the full usage, then
 exit 1. The error names what was typed, and the recovery is on the screen.
-**Coverage:** `bin/super-ux.js:385-389`
+**Coverage:** `bin/super-ux.js:505-509`
+**Product:** unobserved
+
+### SCN-016: Refuse the shadow the skills handoff would create
+**Traces:** ST-001, ST-003, FLW-01, FLW-02, SCR-05 · **Status:** implemented
+**Preconditions:** super-ux is installed as a Claude Code plugin — declared in
+`~/.claude/plugins/installed_plugins.json` under `super-ux@<any marketplace>`,
+or, as the fallback signal only, a `plugins/marketplaces/super-ux` directory.
+**Steps:**
+1. Select the skills item (`echo "1" | npx super-ux`, or item 1 in the menu).
+**Expected result:** `refused:` naming what was found — the plugin spec read from
+the JSON, or the marketplace directory — then why: the skills CLI
+auto-detects Claude Code and would write a plain `~/.claude/skills/super-ux`
+copy that shadows the plugin and serves the version it was copied from
+forever. The remedy is in the refusal: both `claude plugin` update commands
+carrying the real spec from the JSON, the family launcher, and `--force` as
+the named override. Exit 3, the skills CLI never invoked, nothing written.
+The check gates the Claude Code channel alone: `--cursor` still installs
+into a project beside the plugin.
+**Errors & recovery:** a missing or unparsable `installed_plugins.json` reads
+as "no plugin" and the handoff proceeds — the fresh HOME is the common case,
+and an installer that crashes on a parse error refuses the machines that
+need it most. `npx super-ux --force` runs the picker anyway, recording the
+two-channel choice instead of letting it happen by accident.
+**Coverage:** `bin/super-ux.js:44-63`, `bin/super-ux.js:219-251`, `bin/super-ux.js:454-458`
+**Product:** unobserved
+
+### SCN-017: Be told how the next version arrives
+**Traces:** ST-006, FLW-01, FLW-02, FLW-03 · **Status:** implemented
+**Steps:**
+1. Finish an install via the menu (any selection).
+2. Finish an install via `--cursor`.
+**Expected result:** both paths end with the same `Updates:` block naming the two
+ways the next version arrives — `npx super-ux@latest` for this member and
+the family launcher for every channel at once. An installer that never
+mentions updates has still chosen an update model: never. The refused path
+prints no `Updates:` block — its refusal already carries the update
+commands, and repeating them under it would bury the remedy.
+**Coverage:** `bin/super-ux.js:255-262`, `bin/super-ux.js:454-460`, `bin/super-ux.js:514`
 **Product:** unobserved
