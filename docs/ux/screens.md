@@ -12,13 +12,13 @@ the whole surface is a terminal.
 
 | ID | Screen | Used by | Figma | Status | Coverage |
 |----|--------|---------|-------|--------|----------|
-| SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:235-296` |
-| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:298-306` |
-| SCR-03 | Project directory prompt | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:334-338` |
-| SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:54-147` |
-| SCR-05 | Skills CLI handoff | FLW-01 | n/a | built | `bin/super-ux.js:155-159` |
-| SCR-06 | Claude plugin install output | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:161-178` |
-| SCR-07 | Usage / help | FLW-04 | n/a | built | `bin/super-ux.js:27-47` |
+| SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:338-399` |
+| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:401-409` |
+| SCR-03 | Project directory prompt | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:436-440` |
+| SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:105-198` |
+| SCR-05 | Skills CLI handoff | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:219-251` |
+| SCR-06 | Claude plugin install output | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:264-281` |
+| SCR-07 | Usage / help | FLW-04 | n/a | built | `bin/super-ux.js:71-98` |
 
 ## Design system
 
@@ -26,8 +26,8 @@ the whole surface is a terminal.
   text, and inventing a palette for it would be exactly the drift the rule
   in `CLAUDE.md` forbids.
 - **State vocabulary:** every file line begins with one of `install:`,
-  `skip:`, `keep:`, `seed:`, `sync:`, `warning:`, `error:`. The word carries
-  the meaning; colour never does.
+  `skip:`, `keep:`, `seed:`, `sync:`, `warning:`, `error:`, `refused:`. The
+  word carries the meaning; colour never does.
 - **Selection glyphs:** `◉` selected, `◯` not, `❯` cursor.
 
 ## Web surfaces
@@ -46,7 +46,7 @@ five-field `Web surface:` block.
 ### SCR-01: Interactive multi-select list
 **Status:** built
 **Used by:** FLW-01
-**Coverage:** `bin/super-ux.js:235-296`
+**Coverage:** `bin/super-ux.js:338-399`
 
 Three items, nothing preselected. Redraw moves the cursor up by
 `items.length + 1` and clears each line, so the list updates in place.
@@ -68,7 +68,7 @@ CLI can leave behind.
 ### SCR-02: Non-TTY numbered list + prompt
 **Status:** built
 **Used by:** FLW-02
-**Coverage:** `bin/super-ux.js:298-306`
+**Coverage:** `bin/super-ux.js:401-409`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -84,7 +84,7 @@ silently narrowed selection.
 ### SCR-03: Project directory prompt
 **Status:** built
 **Used by:** FLW-01, FLW-02
-**Coverage:** `bin/super-ux.js:334-338`
+**Coverage:** `bin/super-ux.js:436-440`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -99,7 +99,7 @@ external skills-CLI picker's own output.
 ### SCR-04: Install log
 **Status:** built
 **Used by:** FLW-01, FLW-02, FLW-03
-**Coverage:** `bin/super-ux.js:54-147`
+**Coverage:** `bin/super-ux.js:105-198`
 
 One line per file. This screen is the whole answer to JTBD-02.
 
@@ -117,20 +117,28 @@ half-installed project with a stack trace as its only record.
 
 ### SCR-05: Skills CLI handoff
 **Status:** built
-**Used by:** FLW-01
-**Coverage:** `bin/super-ux.js:155-159`
+**Used by:** FLW-01, FLW-02
+**Coverage:** `bin/super-ux.js:219-251`
 
 | State | Shown | Frame |
 |---|---|---|
 | loading | the external picker owns the terminal until it exits | n/a |
 | empty | not applicable | n/a |
 | error | `warning: 'npx skills add …' missing\|failed` — never fatal | n/a |
+| refused | `refused:` naming the installed plugin (spec from `installed_plugins.json`, or the marketplaces dir as fallback), the two `claude plugin` update commands, the family launcher, and `--force` as the override; exit 3, picker never launched, nothing written | n/a |
 | success | a banner line, then the external picker's own output | n/a |
+
+**Refused state, in full (SCN-016):** the handoff consults the target home's
+`~/.claude/plugins/installed_plugins.json` before delegating, because the
+skills CLI auto-detects Claude Code and writes the plain
+`~/.claude/skills/super-ux` copy that shadows the installed plugin. A missing
+or corrupt JSON reads as "no plugin" and the handoff proceeds — fail open,
+never crash. Only this channel is gated: `--cursor` installs are untouched.
 
 ### SCR-06: Claude plugin install output
 **Status:** built
 **Used by:** FLW-01, FLW-02, FLW-03
-**Coverage:** `bin/super-ux.js:161-178`
+**Coverage:** `bin/super-ux.js:264-281`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -146,7 +154,7 @@ marketplace is not an error and says so.
 ### SCR-07: Usage / help
 **Status:** built
 **Used by:** FLW-04
-**Coverage:** `bin/super-ux.js:27-47`
+**Coverage:** `bin/super-ux.js:71-98`
 
 | State | Shown | Frame |
 |---|---|---|

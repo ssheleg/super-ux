@@ -18,7 +18,7 @@ written and a reason given.
 | ID | Flow | Entry | Screens |
 |----|------|-------|---------|
 | FLW-01 | Interactive install | `npx super-ux` on a TTY | SCR-01, SCR-03, SCR-04, SCR-05, SCR-06 |
-| FLW-02 | Piped / non-TTY install | `npx super-ux` with piped stdin | SCR-02, SCR-03, SCR-04, SCR-06 |
+| FLW-02 | Piped / non-TTY install | `npx super-ux` with piped stdin | SCR-02, SCR-03, SCR-04, SCR-05, SCR-06 |
 | FLW-03 | Direct project install | `npx super-ux --cursor <dir>` | SCR-04, SCR-06 |
 | FLW-04 | Read before running | `npx super-ux --help` | SCR-07 |
 
@@ -48,13 +48,21 @@ flowchart TD
     C -- yes --> P[SCR-06 plugin install output]
     C -- no --> S
     P --> S{skills item selected?}
-    S -- yes --> K[SCR-06 skills CLI picker]
+    S -- yes --> G{super-ux plugin in this home?}
     S -- no --> O
+    G -- "no, or --force" --> K[SCR-05 skills CLI picker]
+    G -- "yes, no --force" --> RF["SCR-05 refused: remedy, exit 3"]
     K --> O[SCR-04 routing-block offer]
+    RF --> O
 ```
 
 Every terminal node writes either files plus an itemized log, or nothing
-plus a stated reason. There is no third outcome.
+plus a stated reason. There is no third outcome. The skills handoff is
+gated (SCR-05): while super-ux is installed as a Claude Code plugin, the
+skills CLI would recreate the plain `~/.claude/skills/super-ux` copy that
+shadows it, so the handoff is refused with the remedy printed and exit 3;
+`--force` records the two-channel choice. A successful run ends with the
+`Updates:` block naming how the next version arrives.
 
 ### FLW-02: Piped / non-TTY install
 **Traces:** ST-002, ST-003
@@ -69,11 +77,14 @@ flowchart TD
     ALL --> D
     SEL --> D[SCR-03 directory prompt, if cursor selected]
     D --> R[SCR-04 install log]
+    R --> K["SCR-05 gated skills handoff, if skills selected (as in FLW-01)"]
     E --> X[exit 1, nothing written]
 ```
 
 The prompter buffers lines that arrive between questions; a second prompter
-would drop them. That is why one instance spans the whole flow.
+would drop them. That is why one instance spans the whole flow. The skills
+item runs through the same gated handoff as FLW-01: refused with exit 3
+while the super-ux plugin is installed, unless `--force`.
 
 ### FLW-03: Direct project install
 **Traces:** ST-004, ST-005, ST-006

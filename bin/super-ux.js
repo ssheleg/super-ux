@@ -7,16 +7,60 @@
  * rules into a project, Claude Code plugin user-globally. Non-TTY stdin gets
  * a text fallback ("1,3" / "all"). Flags keep the non-interactive paths:
  * --cursor [dir] [--force].
+ *
+ * The skills handoff is gated: while super-ux is installed as a Claude Code
+ * plugin, delegating to the skills CLI would recreate the plain
+ * ~/.claude/skills/super-ux copy that shadows the plugin, so the handoff is
+ * refused (exit 3) unless --force records the two-channel choice.
  */
 'use strict';
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const readline = require('readline');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const REPO = 'ssheleg/super-ux';
+const NAME = 'super-ux';
+
+// Exit codes are the contract: 0 installed or nothing selected, 1 error,
+// 3 refused — the plugin channel owns this agent (--force overrides).
+const EXIT_PLUGIN_PRESENT = 3;
+
+/**
+ * The plugin spec (`<name>@<marketplace>`) installed for `name` in this home,
+ * or null.
+ *
+ * `installed_plugins.json` is the record of what is actually installed. The
+ * `plugins/marketplaces/<name>` directory under-reports: a marketplace added
+ * from a local `directory` source has no dir there at all, and plugin names
+ * differ from marketplace names, so a check keyed on it stays green while the
+ * shadow lands. Absence and corruption both read as "no plugin": the fresh
+ * HOME is the common case, and an installer that crashes on a parse error
+ * refuses the machines that need it most.
+ */
+function installedPluginSpec(home, name) {
+  try {
+    const raw = fs.readFileSync(
+      path.join(home, '.claude', 'plugins', 'installed_plugins.json'), 'utf8');
+    const parsed = JSON.parse(raw);
+    const plugins =
+      parsed && typeof parsed === 'object' &&
+      parsed.plugins && typeof parsed.plugins === 'object'
+        ? parsed.plugins
+        : parsed;
+    if (!plugins || typeof plugins !== 'object') return null;
+    for (const spec of Object.keys(plugins)) {
+      if (spec === name) return `${name}@${name}`;
+      if (spec.startsWith(name + '@')) return spec;
+    }
+  } catch {
+    // missing or corrupt = no plugin — fail open on absence, never crash
+  }
+  return null;
+}
 
 const MENU_ITEMS = [
   { key: 'skills', label: 'Skills for any AI agent (Claude Code, Codex, Cursor, 70+; opens agent picker)' },
@@ -28,13 +72,20 @@ function usage() {
   console.log(`super-ux installer
 
 Usage:
-  npx super-ux                                  interactive menu (multi-select)
+  npx super-ux [--force]                        interactive menu (multi-select)
   npx super-ux --cursor [project-dir] [--force] Cursor rules, non-interactive
   npx super-ux --help
+
+Exit codes:
+  0 installed or nothing selected   1 error
+  3 refused: the super-ux PLUGIN is installed in this home, and the skills
+    CLI would write the plain ~/.claude/skills copy that shadows it
+    (pass --force to run the picker anyway)
 
 Menu items (select any combination, 'a' = all):
   1. Skills for any AI agent (Claude Code, Codex, Cursor, 70+) — delegates to
      'npx skills add ${REPO}' with its agent/global/project picker.
+     Refused while the super-ux plugin is installed (see exit code 3).
   2. Cursor rules: cursor/rules/*.mdc -> <project>/.cursor/rules/, plus the
      docs/ux skeleton, the docs/brand pack, and all three linters
      (docs/ux/lint.py, docs/ux/doctor.py, docs/brand/lint.py). Existing
@@ -152,10 +203,62 @@ function run(cmd, args) {
   return result.status === 0 ? 'ok' : 'failed';
 }
 
-function installSkillsCli() {
+/**
+ * One channel per agent. The skills CLI auto-detects Claude Code and writes
+ * ~/.claude/skills/super-ux even when claude-code is never picked, and on a
+ * machine where super-ux is installed as a Claude Code plugin that plain copy
+ * shadows the plugin and serves the version it was copied from forever. So
+ * the handoff consults the TARGET home's installed_plugins.json first and
+ * refuses LOUDLY: a refusal that exits 0 reads as success to every script
+ * above it. The marketplaces/<name> dir is only the fallback signal — a
+ * directory-sourced marketplace has no dir there, and plugin names differ
+ * from marketplace names. Reproduced live 2026-08-29: a bare
+ * `npx @ssheleg/telegram-dev` shipped three shadows past exactly this class
+ * of hole while the plugin was enabled.
+ */
+function installSkillsCli(force) {
+  const home = os.homedir();
+  const spec = installedPluginSpec(home, NAME);
+  const marketplace = path.join(home, '.claude', 'plugins', 'marketplaces', NAME);
+  const viaMarketplaceDir = !spec && fs.existsSync(marketplace);
+  if ((spec || viaMarketplaceDir) && !force) {
+    const found = spec
+      ? `installed as the Claude Code plugin ${spec}\n` +
+        '         (declared in ~/.claude/plugins/installed_plugins.json)'
+      : `registered as a Claude Code marketplace\n         (${marketplace})`;
+    console.error(
+      `refused: super-ux is already ${found}.\n` +
+      '         The skills CLI auto-detects Claude Code and would write a plain copy\n' +
+      '         to ~/.claude/skills/super-ux, which shadows the plugin and serves the\n' +
+      '         version it was copied from forever. Update the plugin channel instead:\n' +
+      '           claude plugin marketplace update super-ux\n' +
+      `           claude plugin update ${spec || 'super-ux@super-ux'}\n` +
+      '         Family launcher (updates every member, prunes shadow copies):\n' +
+      '           npx --yes sshlg-skills@latest update\n' +
+      '         Pass --force (npx super-ux --force) to run the picker anyway: a\n' +
+      '         deliberate choice to run two channels, where the stale one wins.'
+    );
+    return 'refused';
+  }
   console.log(`\n--- Skills for any agent: delegating to the skills CLI picker ---`);
   const status = run('npx', ['--yes', 'skills', 'add', REPO]);
   if (status !== 'ok') console.error(`warning: 'npx skills add ${REPO}' ${status}`);
+  return status;
+}
+
+/**
+ * The last line of a successful run says how the next version arrives —
+ * "Installed" is not a complete sentence. Auto-update is off on purpose:
+ * this member composes with its family, and per-marketplace autoUpdate moves
+ * each member on its own clock, into combinations nobody tested together.
+ */
+function printUpdateLine() {
+  console.log(
+    '\nUpdates: rerun npx super-ux@latest (--cursor <dir> --force refreshes a\n' +
+    "project's rules and linters), or refresh the whole family with\n" +
+    'npx --yes sshlg-skills@latest update (every channel, and it prunes plain\n' +
+    'copies that would shadow a plugin).'
+  );
 }
 
 function installClaudePlugin() {
@@ -305,7 +408,7 @@ async function selectFallback(items, prompter) {
   return picked;
 }
 
-async function menu() {
+async function menu(force) {
   console.log('super-ux: scenario-driven UI development. Select what to install:\n');
   const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
 
@@ -340,11 +443,21 @@ async function menu() {
 
   if (keys.includes('cursor')) installCursor(cursorDir, false);
   if (keys.includes('claude')) installClaudePlugin();
-  if (keys.includes('skills')) installSkillsCli();
+  let refused = false;
+  if (keys.includes('skills')) refused = installSkillsCli(force) === 'refused';
 
   // Same offer the --cursor flag path makes. Two doors into one install that
   // behave differently is how a feature comes to exist for half its users.
+  // Offered on the refused path too: the skill IS present on this machine —
+  // as the plugin — so the routing block is exactly as wanted.
   offerRouters();
+  if (refused) {
+    // The refusal already carries the update commands; repeating the update
+    // line under it would bury the remedy. Exit 3 so scripts read the refusal.
+    process.exitCode = EXIT_PLUGIN_PRESENT;
+  } else {
+    printUpdateLine();
+  }
 }
 
 /**
@@ -379,7 +492,14 @@ function main() {
     return;
   }
   if (args.length === 0) {
-    menu();
+    menu(false);
+    return;
+  }
+  // `--force` alone still opens the menu: it is the named override for the
+  // skills-handoff refusal, so it must be reachable from the same door the
+  // refusal names.
+  if (args.length === 1 && args[0] === '--force') {
+    menu(true);
     return;
   }
   if (args[0] !== '--cursor') {
@@ -391,6 +511,7 @@ function main() {
   const dirArg = args[1] && args[1] !== '--force' ? args[1] : '.';
   installCursor(path.resolve(dirArg), force);
   offerRouters();
+  printUpdateLine();
 }
 
 main();

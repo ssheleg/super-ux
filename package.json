@@ -1,8 +1,8 @@
 {
   "name": "super-ux",
-  "version": "0.49.0",
+  "version": "0.49.1",
   "scripts": {
-    "test": "python3 test/validate.py && python3 test/brand_lint_test.py && python3 test/ux_lint_test.py && python3 docs/ux/lint.py && python3 docs/brand/lint.py"
+    "test": "python3 test/validate.py && python3 test/brand_lint_test.py && python3 test/ux_lint_test.py && python3 docs/ux/lint.py && python3 docs/brand/lint.py && node test/installer_test.js"
   },
   "description": "Scenario-driven UI development for AI agents (Claude Code, Cursor, 70+ agents): a versioned design chain in docs/ux/, a scenario-first hard rule, a deterministic drift linter, and evidence-backed UX audits. This package is the installer CLI.",
   "bin": {
