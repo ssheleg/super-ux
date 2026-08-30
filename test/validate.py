@@ -452,6 +452,97 @@ def validate_shipped_references() -> None:
                     )
 
 
+def validate_shipped_templates() -> None:
+    """Every template a shipped text seeds from travels WITH what ships.
+
+    SUX-01, family audit 2026-08-29: six shipped texts said "the plugin's
+    `templates/`" while the marketplace source is `./plugins/super-ux` and
+    `templates/` lived at the repo root — absent from all 13 cached installed
+    versions, so every init workflow dead-ended. Each text looked right alone,
+    because the path resolved in the one place users never run from: this
+    repository's own checkout.
+
+    The repo root stays the source of truth (`HARD_RULES` and the installer
+    CLI read it); `sync_references.py` mirrors the full tree into
+    `plugins/super-ux/templates/` and the named seeds into each skill that
+    names one, and this check refuses drift and strays the same way
+    `validate_shipped_references` does for contracts.
+    """
+    src = ROOT / "templates"
+    dst = ROOT / "plugins/super-ux/templates"
+    src_files = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
+    check(bool(src_files), "templates/: no files to ship")
+    if not check(dst.is_dir(), "plugins/super-ux/templates: missing — the plugin ships no "
+                               "templates and every seeding text dead-ends "
+                               "(re-sync: python3 test/sync_references.py)"):
+        return
+    dst_files = {p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()}
+    for rel in sorted(src_files):
+        if not check(rel in dst_files,
+                     f"plugins/super-ux/templates/{rel}: missing from the shipped plugin "
+                     f"(re-sync: python3 test/sync_references.py)"):
+            continue
+        check((src / rel).read_bytes() == (dst / rel).read_bytes(),
+              f"plugins/super-ux/templates/{rel} has drifted from templates/{rel} "
+              f"(re-sync: python3 test/sync_references.py)")
+    for rel in sorted(dst_files - src_files):
+        check(False, f"plugins/super-ux/templates/{rel}: no source at templates/{rel} — "
+                     f"a copy with no source is a fork "
+                     f"(re-sync: python3 test/sync_references.py)")
+    for skill_dir in sorted(p for p in (ROOT / "plugins/super-ux/skills").iterdir() if p.is_dir()):
+        tdir = skill_dir / "templates"
+        if not tdir.is_dir():
+            continue
+        for f in sorted(p for p in tdir.rglob("*") if p.is_file()):
+            rel = f.relative_to(tdir).as_posix()
+            origin = src / rel
+            if not check(origin.is_file(),
+                         f"{skill_dir.name}/templates/{rel}: no source at templates/{rel} — "
+                         f"a copy with no source is a fork "
+                         f"(re-sync: python3 test/sync_references.py)"):
+                continue
+            check(f.read_bytes() == origin.read_bytes(),
+                  f"{skill_dir.name}/templates/{rel} has drifted from templates/{rel} "
+                  f"(re-sync: python3 test/sync_references.py)")
+
+
+SHIPPED_ASSET_RE = re.compile(r"`((?:templates|scripts)(?:/[A-Za-z0-9._-]+)*/?)`")
+
+
+def validate_shipped_paths() -> None:
+    """Every plugin-asset path a shipped text names resolves inside what ships.
+
+    The CLASS behind SUX-01, not just its instance. A skill installed by the
+    skills CLI is its own directory and nothing else — the rule
+    `validate_shipped_references` already enforces for contracts — and the
+    Claude Code plugin is `plugins/super-ux/` and nothing above it. So a
+    backticked `templates/…` or `scripts/…` token in a command must resolve
+    under the plugin root, and one in a skill file must resolve under that
+    skill's own directory. A token that resolves only at this repository's
+    root is exactly how six texts pointed at a dead path in every installed
+    channel for months while every gate stayed green.
+    """
+    plugin = ROOT / "plugins/super-ux"
+    for path in sorted(plugin.rglob("*.md")):
+        rel = path.relative_to(ROOT)
+        parts = path.relative_to(plugin).parts
+        if parts[0] == "skills":
+            if len(parts) < 3 or parts[1] == "references":
+                # The master contracts are gated as the per-skill copies they
+                # become — every copy below skills/<skill>/ is scanned here.
+                continue
+            base = plugin / "skills" / parts[1]
+            where = f"skill '{parts[1]}' ships its own directory and nothing else"
+        else:
+            base = plugin
+            where = "the plugin ships plugins/super-ux/ and nothing above it"
+        text = read(path) or ""
+        for token in SHIPPED_ASSET_RE.findall(text):
+            check((base / token.rstrip("/")).exists(),
+                  f"{rel}: names `{token}`, which does not resolve inside what ships — "
+                  f"{where} (ship it: python3 test/sync_references.py, or repoint the text)")
+
+
 NUMBER_WORDS = {
     "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
     "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
@@ -1522,6 +1613,8 @@ def main() -> int:
     validate_links()
     validate_reference_contents()
     validate_shipped_references()
+    validate_shipped_templates()
+    validate_shipped_paths()
     validate_catalog()
     validate_stated_numbers()
     validate_skill_parity()

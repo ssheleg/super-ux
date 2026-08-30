@@ -66,8 +66,8 @@ and trace to these IDs — the full chain gives every scenario its context.
 | Understanding of users changed | Update |
 | Consistency questioned; before building on top | Validate |
 
-If `docs/ux/` is missing, create it; seed `foundation.md` from the plugin's
-`templates/foundation.md`.
+If `docs/ux/` is missing, create it; seed `foundation.md` from this skill's
+own `templates/foundation.md`.
 
 ## Init (interview) — greenfield
 

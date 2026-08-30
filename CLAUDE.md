@@ -16,7 +16,7 @@ inside an hour of writing the scenarios it should have had.
 | `docs/brand/` | This project's own verbal identity, and the surfaces it governs |
 | `docs/evidence/` | Pipeline records: briefs, specs, plans, `retro.md`, `backlog.md`, `verification.md` |
 | `plugins/super-ux/skills/references/` | **Source of truth** for every contract. After editing, run `python3 test/sync_references.py` |
-| `templates/` | Seeds seen by target projects — including both hard rules, whose only source these are |
+| `templates/` | Seeds seen by target projects — including both hard rules, whose only source these are. **Source of truth**: shipped copies live in `plugins/super-ux/templates/` and inside each skill that seeds from one; after editing, run `python3 test/sync_references.py` |
 | `docs/AGENT_SYNC.md` | How coordination is wired here, and what it does NOT guarantee. **Generated** from `.claude/agent-sync.json` — read it before editing a guarded file, and regenerate it in the same change that alters the config |
 
 ## Gates
@@ -33,9 +33,10 @@ python3 docs/brand/lint.py        # this project's own copy
 python3 test/release_preflight.py # before any tag
 ```
 
-Editing anything under `plugins/super-ux/skills/references/` requires
-`python3 test/sync_references.py` in the same change — the per-skill copies
-are what non-Claude agents actually receive.
+Editing anything under `plugins/super-ux/skills/references/` — or under
+`templates/` — requires `python3 test/sync_references.py` in the same
+change: the per-skill copies are what non-Claude agents actually receive,
+and the plugin's `templates/` mirror is what installed channels seed from.
 
 **Every link in a skill is a shipping instruction.** `sync_references.py`
 copies the transitive closure of a skill's links into that skill. One link

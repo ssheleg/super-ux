@@ -1,6 +1,6 @@
 ---
 name: ux-scenarios
-description: Use when creating or updating UX scenarios, starting ANY new feature or project, making ANY change to user-facing behavior, or onboarding an existing codebase into scenario-driven development. Maintains docs/ux/scenarios.md as the source of truth for all user-facing behavior. Triggers - "ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича", new feature or project planning, UI changes.
+description: Use when creating or updating UX scenarios, starting ANY new feature or project (an empty project starts a layer up, with vision and ux-foundation), making ANY change to user-facing behavior, or onboarding an existing codebase into scenario-driven development. Maintains docs/ux/scenarios.md as the source of truth for all user-facing behavior. Triggers - "ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича", new feature or project planning, UI changes.
 license: MIT
 ---
 
@@ -66,7 +66,7 @@ rules.
 | Base exists; consistency questioned, or a new feature idea arrives | Validate |
 
 Announce which workflow you are running. If `docs/ux/` is missing, create it
-(seed `scenarios.md` from the plugin's `templates/scenarios.md`).
+(seed `scenarios.md` from this skill's own `templates/scenarios.md`).
 
 ## Init (greenfield)
 

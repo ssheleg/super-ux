@@ -65,7 +65,7 @@ Announce which one you are running.
    chose it.
 3. **Propose one pack with reasoning, plus one alternative.** Name why the
    runner-up loses. Let the user pick.
-4. **Seed `docs/brand/`** from the plugin's `templates/brand/`, and fill the
+4. **Seed `docs/brand/`** from this skill's own `templates/brand/`, and fill the
    `Sources:` block first — nothing else can be checked until the linter
    knows where the project keeps its text.
 5. **Inventory sweep** for `strings.md`: routes, screens, buttons, states,
