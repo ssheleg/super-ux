@@ -96,7 +96,7 @@ and `ux-flows`.
 the library the voice is chosen from (six archetypes, each declaring its own
 failure mode) and `surface-registers.md` is the model the layer runs on (one
 voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
-`channel-playbooks.md`, `store-copy.md`. Guards: `seo-aeo-safety.md`,
+`landing-pages.md`, `channel-playbooks.md`, `store-copy.md`. Guards: `seo-aeo-safety.md`,
 `ai-tells.md`, `localization.md`.
 
 ## Skills & the one entry point

@@ -110,6 +110,25 @@ Newest last.
 | 2026-08-19 | SU-01 (manifesto M-17) — `U060..U065` give the requirement layer the observable it demands; the pack's own 15 scenarios cite their code; both harness floors become readable | no — single-row close; the one plant that missed is recorded in the ledger |
 | 2026-08-19 | SU-02 (manifesto M-21) — `Product: unobserved / observed / contradicted` as a state no audit can promote; `U066..U070`; the field vocabulary settled on the long spelling; the live screens enum drift closed | no — single-row close; two plant misses recorded in the ledger |
 | 2026-08-30 | Wave-2 family-audit close (SUX-01/06/07/08/11) — templates mirrored into the plugin and each seeding skill by `sync_references.py`, `validate_shipped_templates` + `validate_shipped_paths` gate the class, `/ux-audit` scope surface completed, three descriptions stop over-claiming; v0.50.0 | yes — standing instruction #4 fired on the floor itself: `floors.json` held 3667 against a pre-change suite of 4111, un-raised since SU-04; raised to the measured 4174. R-70 is a `never` (three homes of one enum, no comparator) filed as `B-030` rather than left off the ledger |
+| 2026-08-30 | `B062` judges the dash's role rather than its glyph; the table-cell exemption `AT-06` promised gets implemented; `landing-pages.md` gives `copywriting` the assembly layer it lacked (`LP-01..LP-20`, `validate_landing_coverage`, an evidence-citation gate); v0.51.0 | yes — a doctrine exemption had gone sixteen days unimplemented, filed as `B-031` |
+
+**Prune, 2026-08-30 (v0.51.0).** All five checked against the three retirement
+triggers; nothing retired, nothing added, so the list stands at five against a
+cap of ten. **#3 fired and passed:** before the widened dash check was written,
+`templates/brand/*.md` and `docs/brand/*.md` were both measured for the newly
+banned spelling and both returned zero, so a freshly seeded project still lints
+clean from the first second; the seeded `docs/brand/lint.py` was re-copied from
+its source and run, and `validate_seeded_scripts` compared the bytes. **#4 fired
+twice and shaped the work rather than commenting on it:** the twenty playbook
+rules were given ids and `validate_landing_coverage` before the prose was
+accepted as finished, and the citations to `docs/research/landings/` got a gate
+instead of a `never` row in the ledger, which is the trade this instruction
+exists to force. **#5 fired hardest** and decided the shape of every new
+fixture, recorded in this run's entry. **#2 held:** all five gates were run
+alone and their own exit codes read, printed beside each verdict, and no
+pipeline stood between a gate and its status; it is four stamps since it last
+caught anything, one short of its cold trigger, so it is kept and watched.
+**#1 fires at the tag** in this same run.
 
 **Prune, 2026-08-14.** All four checked against the three retirement triggers.
 **#2 fired hardest and fired on this run's own hands:** the first plant harness
@@ -125,6 +144,63 @@ was cut in this run, and it is one stamp old on that count. Nothing retired,
 **one added (#5)**, so the list stands at five against a cap of ten.
 
 ---
+
+## 2026-08-30 — the check knew the character and not the job
+
+**Symptom.** `B062` is the mechanism behind `AT-06`, the rhetorical dash. Its
+whole implementation rested on `DASH = "—"`, one codepoint, so a draft could be
+cleared of every finding by exchanging that character for an en dash or for a
+hyphen with a space each side. The habit the rule exists to catch survives all
+three spellings unchanged. This was not hypothetical when it was found: a live
+page read the same day carried twenty rhetorical dashes and not one em dash
+among them, every one written as a spaced hyphen, and our own linter would have
+called it clean.
+
+**Surfaced at** stage 0, from reading three competitors' landing pages for an
+unrelated reason. **Owned by** stage 5 of the run that introduced the code in
+v0.39.0, which wrote seven planted defects against the branches and none
+against the premise. Every one of those plants exercised *what the check does
+with a dash*; none asked *what the check thinks a dash is*.
+
+**Root cause.** The doctrine and the code agreed, and both were wrong in the
+same place. `ai-tells.md` opened its own rule with "The em dash is banned where
+it is rhetorical", naming a glyph in a paragraph whose next sentence says the
+distinction is about the job the mark is doing. A fixture set derived from that
+sentence inherits its blind spot, and the seven plants of v0.39.0 could not
+have found this one, because a plant proves a branch and the defect was in the
+constant every branch read.
+
+**The second defect, found only because the first opened the file.** The same
+doctrine lists a dash alone in a table cell among the grammatical exemptions,
+"a glyph doing the job of an empty string". Nothing implemented it. In any
+strict locale `| landing | — |` was reported, and had been for sixteen days.
+`B-017` closed the arrow from a named marker to a check; there is no arrow from
+a named **exemption** to a negative fixture, and that is now `B-031`.
+
+**Fix, by grade.** *Mechanism:* `normalise_dash_spelling` reduces every
+spelling to one mark before any branch judges it, so the conjunction rule, the
+paired-dash rule, the locale allowances and the range and speech exemptions
+apply to all three without being restated three times. The substitutions are
+length-preserving by construction, which is what lets the finding quote the
+author's own characters: a report quoting a mark the writer never typed sends
+them grepping for it, and that is the failure mode this file recorded in
+v0.39.0 under a different name. *Mechanism:* `TABLE_CELL_DASH_RE`.
+*Doctrine:* the rule now says role rather than glyph, and says so in the
+opening sentence where the error was. *Class:* `B-031`.
+
+**What made the fixtures honest.** Standing instruction #5 says a fixture must
+be written where only the branch under test can fire, and it decided the shape
+of all four new ones: none carries an em dash, so deleting the normaliser
+leaves no dash for any branch to find and the fixture goes red rather than
+green by another path. The conjunction case is written in Russian, where strict
+is off, so it proves the normalised spelling reaches that branch instead of
+being caught by strict on the way past. Three plants, and each landed on
+exactly its own cases.
+
+**The check that catches it next time.** For the spellings, `B062` itself, now
+watched failing on all three. For the exemption class, `B-031`. For the
+premise-versus-branch distinction that both defects share, nothing yet, and
+saying so is more useful than inventing a gate this run did not build.
 
 ## 2026-08-14 — the doctrine had the habit it was written to name
 

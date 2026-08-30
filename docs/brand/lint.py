@@ -1153,6 +1153,26 @@ EMOJI_RE = re.compile(
 # can actually be established without parsing the sentence.
 DASH = "—"
 
+# Every spelling of the same mark. The tell is the ROLE the dash plays, not
+# the codepoint it is written with: swapping "—" for "–", or for a hyphen
+# with a space each side, leaves the habit exactly where it was, and a check
+# bound to one codepoint cannot see that it happened. Measured on
+# trycomp.ai, 2026-08-30: twenty rhetorical dashes, zero em dashes, every
+# one of them written " - ". See `docs/research/landings/trycomp.md`.
+DASH_ALIASES = "–‒―"
+
+# A dash alone in a table cell stands for "no value": a glyph doing the job
+# of an empty string, not punctuation joining two clauses. AT-06 has said so
+# since it was written, and until the spellings were normalised nothing
+# implemented it, so a bare cell dash was reported in every strict locale.
+TABLE_CELL_DASH_RE = re.compile(rf"(?<=\|)([ \t]*)[{DASH}{DASH_ALIASES}-]([ \t]*)(?=\|)")
+
+# A hyphen with whitespace on both sides, mid-line. The lookbehind is what
+# keeps a markdown bullet out of it: a list item's hyphen opens its line, so
+# nothing non-space precedes the indent in front of it.
+DASH_HYPHEN_RE = re.compile(r"(?<=\S)([ \t]+)-([ \t]+)(?=\S)")
+DASH_ALIAS_RE = re.compile(rf"[{DASH_ALIASES}]")
+
 # Never a finding. A range is arithmetic and direct speech is a convention.
 DASH_RANGE_RE = re.compile(rf"\d\s*{DASH}\s*\d")
 DASH_SPEECH_RE = re.compile(rf"^\s*{DASH}\s")
@@ -1185,6 +1205,19 @@ def prose_only(text: str) -> str:
     return text
 
 
+def normalise_dash_spelling(text: str) -> str:
+    """Reduce every spelling of the rhetorical mark to the canonical dash.
+
+    Length-preserving by construction -- every substitution swaps a single
+    character for a single character -- so a finding can quote the author's
+    own characters while the branches below judge the normalised ones. A
+    quote showing a dash the author never typed sends them grepping for it.
+    """
+    text = TABLE_CELL_DASH_RE.sub(r"\1 \2", text)
+    text = DASH_HYPHEN_RE.sub(rf"\1{DASH}\2", text)
+    return DASH_ALIAS_RE.sub(DASH, text)
+
+
 def sentences(text: str) -> list[str]:
     """Crude split, sufficient to count dashes inside one sentence."""
     return [p for p in re.split(r"(?<=[.!?])\s+|\n\s*\n", text) if p.strip()]
@@ -1203,14 +1236,22 @@ def grammatical_dash_language(text: str, primary: str | None) -> bool:
     return bool(CYRILLIC_RE.search(text))
 
 
-def _around(sentence: str, width: int = 34) -> str:
-    """The dash with enough either side to find it and decide the fix."""
-    flat = " ".join(sentence.split())
-    at = flat.find(DASH)
+def _around(sentence: str, original: str | None = None, width: int = 34) -> str:
+    """The dash with enough either side to find it and decide the fix.
+
+    `sentence` is normalised and `original` is what the author wrote. The
+    position comes from the first and the characters from the second, which
+    is why the substitutions above are length-preserving: a quote is only
+    useful if it can be found in the file it came from.
+    """
+    source = sentence if original is None else original
+    at = sentence.find(DASH)
     if at < 0:
-        return flat[:width * 2]
-    start, end = max(0, at - width), min(len(flat), at + width)
-    return ("…" if start else "") + flat[start:end] + ("…" if end < len(flat) else "")
+        return " ".join(source.split())[:width * 2]
+    start, end = max(0, at - width), min(len(source), at + width)
+    return (("…" if start else "")
+            + " ".join(source[start:end].split())
+            + ("…" if end < len(source) else ""))
 
 
 def dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding]:
@@ -1222,7 +1263,8 @@ def dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding
     off rather than obeyed.
     """
     findings: list[Finding] = []
-    body = prose_only(text)
+    raw = prose_only(text)
+    body = normalise_dash_spelling(raw)
     if DASH not in body:
         return findings
 
@@ -1246,14 +1288,17 @@ def dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding
                 break
         return best
 
-    for sentence in sentences(body):
+    # `raw` and `body` are the same length and split at the same points --
+    # normalisation touches neither terminal punctuation nor newlines -- so
+    # the two sentence lists stay aligned and the quote comes from the raw.
+    for sentence, original in zip(sentences(body), sentences(raw)):
         if DASH not in sentence:
             continue
         if DASH_SPEECH_RE.match(sentence):
             continue
 
         line = line_of(sentence)
-        quoted = _around(sentence)
+        quoted = _around(sentence, original)
 
         conj = DASH_CONJ_RE.search(sentence)
         if conj:

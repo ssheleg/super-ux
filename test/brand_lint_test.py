@@ -819,6 +819,43 @@ def main() -> int:
         set(),
         project=page("The window runs 2020—2024 without a gap."),
     )
+    # The mark has more than one spelling, and the tell is the role rather
+    # than the codepoint. Each of the three below is written where the
+    # branch under test is the ONLY thing that can produce the code:
+    # neither carries an em dash, so deleting the normaliser leaves no dash
+    # for any branch to find and the fixture goes red -- which is the miss
+    # standing instruction #5 was written about. Measured on trycomp.ai,
+    # 2026-08-30: twenty rhetorical dashes, zero em dashes.
+    case(
+        "a hyphen with a space each side is the same mark",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("One thing matters - speed."),
+    )
+    case(
+        "an en dash is the same mark",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("One thing matters \u2013 speed."),
+    )
+    # Russian, so the strict branch is off and only the conjunction rule can
+    # fire: this proves the normalised spelling reaches that branch too,
+    # rather than being caught by strict on its way past.
+    case(
+        "a spaced hyphen introduces a conjunction, where strict is off",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("\u042d\u0442\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 - \u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0431\u044b\u0441\u0442\u0440\u043e."),
+    )
+    # The allowance AT-06 has always promised and nothing implemented. In a
+    # strict locale every bare dash is an error, so the cell dash was one
+    # too; delete the table-cell rule and this fixture goes red.
+    case(
+        "a dash alone in a table cell is an empty string, not punctuation",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        set(),
+        project=page("| Surface | Owner |\n|---|---|\n| landing | - |\n"),
+    )
     # The lone backtick inside the fence is load-bearing. Without it the
     # inline-code stripper happens to pair the fence markers around the dash
     # and removes it anyway, so deleting the fence stripper leaves the suite

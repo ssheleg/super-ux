@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.51.0 — the dash rule stops checking the glyph, and the pack learns to assemble a page
+
+- **`B062` judges the dash's role rather than its codepoint.** `DASH` was the single
+  character `—`, so a find-and-replace swapping it for `–` or for a hyphen with a space
+  each side cleared every finding and left the habit untouched. Measured in the wild on
+  trycomp.ai, 2026-08-30: twenty rhetorical dashes on one page and not one em dash among
+  them. `normalise_dash_spelling` now reduces every spelling to the canonical mark before
+  the three existing branches judge it, so the conjunction rule, the paired-dash rule,
+  the locale allowances and the range and direct-speech exemptions all apply unchanged to
+  all three spellings. The substitutions are length-preserving by construction and the
+  finding quotes the raw text, so a report shows the characters the author actually typed
+  rather than a mark they never used.
+- **A dash alone in a table cell is an empty string, and now the code agrees.** `AT-06`
+  has listed the no-value cell dash among the grammatical exemptions since it was
+  written, and nothing implemented it: in any strict locale `| landing | — |` was
+  reported. `TABLE_CELL_DASH_RE` blanks it before judgement. The doctrine is corrected in
+  the same change, because it opened "The em dash is banned where it is rhetorical" while
+  the rule it states is about the mark's role.
+- **`landing-pages.md`, a new reference in `copywriting`: how a landing page is
+  assembled, not how its sentences are edited.** Twenty rules with ids `LP-01..LP-20`
+  across five layers — the offer, awareness and the shape it demands, the proof ladder,
+  the action and the risk beside it, and the page as a machine — each carrying a verbatim
+  example from a page that shipped. It closes six gaps the pack had: no offer
+  architecture, no awareness-to-structure map, no proof ladder, no CTA or risk mechanics,
+  no answer for a category nobody searches for yet, and no readiness criterion. The file
+  ends in a runnable readiness check and says which of its rules no command can decide.
+- **`validate_landing_coverage` is the answer to "what would notice if this fell
+  behind?"** Table rows against sections in both directions, duplicate ids, a gap in the
+  sequence, an id the readiness check names that no section defines, and the
+  `copywriting/SKILL.md` link without which the reference ships to nobody. Four defects
+  planted, each caught by its own message and reverted. The validator grows 4174 → 4197
+  checks, `brand_lint_test.py` 89 → 93, and `test/floors.json` ratchets with both.
+- **The evidence is in the repository, not in a summary of it.** `docs/research/landings/`
+  carries the three teardowns the rules were extracted from — crowdreply.io, trycomp.ai
+  and zerorank.ai, read 2026-08-30 as raw markup, rendered text and in a browser. Three
+  independent pages committed the same four defects, and those four are the ones stated
+  as classes: answers absent from the markup, one action under several labels, numbers
+  that disagree with themselves, and the strongest proof filed one click behind the claim
+  it proves.
+
 ## 0.50.0 — the templates ship where the texts say they are
 
 - **`templates/` now travels with everything that names it** (SUX-01, family audit

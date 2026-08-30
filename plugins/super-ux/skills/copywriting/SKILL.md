@@ -27,6 +27,7 @@ invented to finish the sentence. Adding it is `brand-voice`'s decision.
 |---|---|
 | [ui-copy.md](references/ui-copy.md) | any string inside the product |
 | [marketing-copy.md](references/marketing-copy.md) | pages, long form, the seven sweeps, grounding |
+| [landing-pages.md](references/landing-pages.md) | assembling a landing page: the offer, awareness, proof, the action |
 | [channel-playbooks.md](references/channel-playbooks.md) | a social, blog, changelog, ads or email surface |
 | [store-copy.md](references/store-copy.md) | App Store or Google Play |
 | [seo-aeo-safety.md](references/seo-aeo-safety.md) | anything a crawler or answer engine reads |
