@@ -825,6 +825,23 @@ def validate_catalog() -> None:
         + " are in the catalog but not routed -- no skill can reach them",
     )
 
+    # `B-021` asked for the arrow above and it was already here, closed and
+    # never struck off the board. The arrow that was genuinely missing runs the
+    # other way: a row routing at a practice the catalog no longer defines
+    # sends a profile at nothing, and it survives every check in this function
+    # because each of them starts from the catalog. Found by planting `BP-999`
+    # into a routing row and watching nothing say so.
+    ghosts = sorted(routed - set(numbers))
+    check(
+        not ghosts,
+        "practice-selection.md routes to "
+        + ", ".join(f"BP-{n:03d}" for n in ghosts[:8])
+        + (" and more" if len(ghosts) > 8 else "")
+        + ", which the catalog does not define -- the row sends a profile at "
+          "nothing, and every other check here starts from the catalog so none "
+          "of them can see it",
+    )
+
 
 def validate_brand_contract() -> None:
     """`docs/brand/` has one contract, and it lives in exactly one file.
@@ -1268,6 +1285,30 @@ def validate_ai_tell_coverage() -> None:
         f"01, and a gap means a retired marker was deleted rather than kept",
     )
 
+    # `B-031`: an exemption is a promise the code has to keep, and until
+    # v0.52.0 one of them had gone unkept for thirteen days while this file
+    # said otherwise. `B-017` closed the arrow from a named marker to a check;
+    # this closes the arrow from a named exemption to a fixture asserting
+    # silence. A positive fixture proves a rule fires; only a negative one
+    # proves the exemption survives the next person widening the rule.
+    fixtures = read(ROOT / "test/brand_lint_test.py") or ""
+    exemptions = sorted(set(re.findall(r"\bAT-\d+-E\d+\b", text)))
+    check(bool(exemptions),
+          "ai-tells.md declares no `AT-NN-EN` exemption ids -- the grammatical "
+          "exemptions are unnumbered again, so nothing can compute coverage "
+          "over them")
+    for ex in exemptions:
+        check(ex in fixtures,
+              f"ai-tells.md declares the exemption {ex} and "
+              f"test/brand_lint_test.py has no fixture naming it -- an "
+              f"exemption with no negative fixture is a promise the next "
+              f"widening of the rule will break in silence")
+    for ex in sorted(set(re.findall(r"\bAT-\d+-E\d+\b", fixtures)) - set(exemptions)):
+        check(False,
+              f"test/brand_lint_test.py has a fixture for {ex} and ai-tells.md "
+              f"declares no such exemption -- the fixture is asserting silence "
+              f"nobody promised")
+
 
 def check_id_set_coverage(rel: str, prefix: str, noun: str) -> tuple[set[str], str]:
     """A numbered doctrine set proves its own completeness, or it is a promise.
@@ -1329,6 +1370,213 @@ def check_reference_is_linked(rel: str, skill: str) -> None:
         f"{skill}/SKILL.md does not link references/{name} -- an unlinked "
         f"reference is not shipped into the skill and reaches nobody",
     )
+
+
+def validate_graph_claims() -> None:
+    """The code graph may not assert a number the repository contradicts.
+
+    `B-022` was about the graph being stale. Refreshing it surfaced the sharper
+    problem: a node label is an LLM summary, and two of them assert
+    "82 tags, 206 practices" about a catalog that has 241 and an index that
+    states no counts at all. Nobody computed that number and nothing checked it.
+
+    A wrong document gets argued with; a wrong graph gets believed, because it
+    arrives with the authority of a machine and a reader has no way to tell a
+    measured node from an invented one. So the counts it asserts are compared
+    against the files they are about. Skipped entirely where no graph exists:
+    the graph is recommended and never required.
+    """
+    graph = ROOT / "graphify-out/graph.json"
+    if not graph.is_file():
+        return
+    text = read(graph) or ""
+    catalog = read(ROOT / "plugins/super-ux/skills/references/best-practices.md") or ""
+    actual = len(re.findall(r"^#### BP-\d+:", catalog, re.M))
+    if not check(actual > 0, "best-practices.md: no practices to count"):
+        return
+    # Only the label fields, and the narrowing is load-bearing. A node
+    # summarising a past defect legitimately quotes an old number -- one of
+    # them says "the README advertised 181 practices against a catalog of 206",
+    # which is history and true. A label is where the graph speaks in its own
+    # voice about what is there now, and that is the only voice this can judge.
+    import json as _json
+
+    try:
+        data = _json.loads(text)
+    except ValueError as exc:
+        check(False, f"graphify-out/graph.json does not parse: {exc}")
+        return
+
+    claimed: set[int] = set()
+
+    def walk(node: object) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key in ("label", "norm_label") and isinstance(value, str):
+                    claimed.update(
+                        int(n) for n in re.findall(r"(\d+)\s+practices\b", value)
+                    )
+                else:
+                    walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(data)
+    for n in sorted(claimed - {actual}):
+        check(False, f"graphify-out/graph.json labels a node \"{n} practices\" "
+                     f"and the catalog has {actual} -- a label is a summary a "
+                     f"model wrote, and a wrong graph gets believed where a "
+                     f"wrong document gets argued with")
+
+
+def validate_eval_cases() -> None:
+    """The behaviour evals exist, and every case still points at its instruction.
+
+    `B-032`. What an agent does with an instruction cannot be checked here: it
+    costs money and it is not deterministic, so `test/evals/run.py` is run by a
+    person and its verdict is read by one. What IS deterministic is the shape of
+    the case file, and the failure that would otherwise happen quietly: an
+    instruction reworded in the skill while its eval keeps quoting the old
+    words, so the case still runs, still passes, and measures nothing.
+
+    So the anchor is the load-bearing field. A case whose anchor no longer
+    appears verbatim in the file it names is refused here, which forces the
+    person rewording the instruction to look at what was measuring it.
+    """
+    import json as _json
+
+    path = ROOT / "test/evals/cases.json"
+    raw = read(path)
+    if not check(raw is not None, "test/evals/cases.json: missing -- `B-032` is "
+                                  "closed by a mechanism, and this is it"):
+        return
+    try:
+        data = _json.loads(raw or "")
+    except ValueError as exc:
+        check(False, f"test/evals/cases.json does not parse: {exc}")
+        return
+    runner = ROOT / "test/evals/run.py"
+    check(runner.is_file(), "test/evals/run.py: missing -- the cases have no runner")
+
+    cases = data.get("cases") or []
+    check(bool(cases), "test/evals/cases.json declares no cases")
+    ids = [c.get("id", "") for c in cases]
+    check(len(ids) == len(set(ids)), f"test/evals/cases.json: duplicate ids in {ids}")
+    nums = sorted(int(i.split("-")[1]) for i in ids if re.fullmatch(r"EV-\d+", i))
+    check(
+        len(nums) == len(ids) and nums == list(range(1, len(nums) + 1)),
+        f"test/evals/cases.json: ids are {ids} -- `EV-` ids are sequential from "
+        f"01, and a gap means a case was deleted rather than replaced",
+    )
+    for case in cases:
+        cid = case.get("id", "?")
+        check(bool(case.get("brief")), f"{cid}: no brief, so there is nothing to run")
+        check(bool(case.get("expect")),
+              f"{cid}: no `expect`, so the case cannot fail and measures nothing")
+        check(bool(case.get("measures")),
+              f"{cid}: no `measures` line saying what behaviour it is about")
+        inst = case.get("instruction") or {}
+        rel, anchor_text = inst.get("file"), inst.get("anchor")
+        if not check(bool(rel) and bool(anchor_text),
+                     f"{cid}: names no instruction -- an eval that cites nothing "
+                     f"cannot go stale visibly, which is the whole point"):
+            continue
+        body = read(ROOT / rel)
+        if not check(body is not None, f"{cid} cites {rel}, which does not exist"):
+            continue
+        check(anchor_text in (body or ""),
+              f"{cid}: the anchor {anchor_text!r} no longer appears in {rel} -- "
+              f"the instruction was reworded and its eval still quotes the old "
+              f"words, so the case runs, passes, and measures nothing")
+
+
+def validate_vision_rule_embed() -> None:
+    """The linter's copy of the vision rule is the template, byte for byte.
+
+    `B-001` closed by giving the seeded linter the canonical text, which makes
+    it a THIRD copy -- and a third copy with no comparator is the drift this
+    plugin exists to prevent. So it is compared here, the same way
+    `validate_hard_rule_copies` compares the other two.
+    """
+    template = (read(ROOT / "templates/vision-rule.md") or "").strip()
+    lint = read(ROOT / "plugins/super-ux/scripts/ux_lint.py") or ""
+    if not check(bool(template), "templates/vision-rule.md: missing or empty"):
+        return
+    embedded = _module_literals(lint).get("VISION_RULE_TEXT")
+    if not check(isinstance(embedded, str) and bool(embedded),
+                 "ux_lint.py: VISION_RULE_TEXT is not a readable string literal "
+                 "-- U077 compares a project's installed rule against it, so an "
+                 "unreadable constant means the check silently stops checking"):
+        return
+    check(
+        embedded.strip() == template,
+        "ux_lint.py's VISION_RULE_TEXT differs from templates/vision-rule.md -- "
+        "one rule, one text, and this copy is the one every target project "
+        "measures itself against",
+    )
+
+
+def validate_audit_scope_enum() -> None:
+    """The `/ux-audit` scope enum lives in four homes, and they must agree.
+
+    `B-030`. `SUX-06` found `copy` and `benchmark:<competitor>` legal in the
+    skill's body and absent from both places an agent reads first, so the two
+    scopes existed and were unreachable. That instance was fixed by hand in
+    v0.50.0 and the class was not: a scope added tomorrow goes invisible the
+    same way. Same shape as `validate_status_enums_match_contract`, applied to
+    the other enum this pack ships in more than one file.
+
+    Two homes are the enum and must be equal: the command's `argument-hint`,
+    which is what a user sees, and the skill's step-1 parenthetical, which is
+    what the agent reads. Two are subsets and must not stray: the `## <Name>
+    scope (`token`)` sections, and the single-pass list. A subset may be
+    smaller -- not every scope needs a section -- but a token in one of them
+    that no home declares is a scope the body treats as legal and nothing
+    offers.
+    """
+    cmd = read(ROOT / "plugins/super-ux/commands/ux-audit.md") or ""
+    skl = read(ROOT / "plugins/super-ux/skills/ux-audit/SKILL.md") or ""
+    if not check(bool(cmd) and bool(skl), "ux-audit command or skill is missing"):
+        return
+
+    hint = re.search(r'^argument-hint:\s*"\[([^\]]+)\]', cmd, re.M)
+    step = re.search(r"Scope is\s*\n?\s*`\$ARGUMENTS` if given \(([^)]+)\)", skl)
+    if not check(hint is not None,
+                 "ux-audit.md: no `argument-hint: \"[a | b | ...]\"` to read -- the "
+                 "enum's user-facing home has moved and this check cannot compare it"):
+        return
+    if not check(step is not None,
+                 "ux-audit/SKILL.md: step 1 no longer says ``$ARGUMENTS` if given "
+                 "(...)` -- the enum's agent-facing home has moved"):
+        return
+
+    declared = {t.strip() for t in hint.group(1).split("|") if t.strip()}
+    stepwise = set(re.findall(r"`([^`]+)`", step.group(1)))
+    check(bool(declared), "ux-audit.md: the argument-hint declares no scopes")
+    for tok in sorted(declared - stepwise):
+        check(False, f"ux-audit: `{tok}` is offered in the command's "
+                     f"argument-hint and absent from the skill's step 1 -- the "
+                     f"user is offered a scope the agent does not enumerate")
+    for tok in sorted(stepwise - declared):
+        check(False, f"ux-audit: `{tok}` is enumerated in the skill's step 1 "
+                     f"and absent from the command's argument-hint -- the scope "
+                     f"is legal and nothing offers it, which is SUX-06 exactly")
+
+    sections = set(re.findall(r"^## .*? scope \(`([^`]+)`\)", skl, re.M))
+    for tok in sorted(sections - declared):
+        check(False, f"ux-audit/SKILL.md has a `## … scope (`{tok}`)` section "
+                     f"for a scope no home declares -- the body treats it as "
+                     f"legal and no caller can reach it")
+    single = re.search(r"Single-pass\s*\n?\s*scopes \(([^)]+)\)", skl)
+    if check(single is not None,
+             "ux-audit/SKILL.md no longer names its single-pass scopes -- the "
+             "list decides which scopes skip the scenario loop"):
+        passes = {t for part in re.findall(r"`([^`]+)`", single.group(1))
+                  for t in part.split("/")}
+        for tok in sorted(passes - declared):
+            check(False, f"ux-audit/SKILL.md lists `{tok}` as a single-pass "
+                         f"scope and no home declares it as a scope at all")
 
 
 def validate_doctrine_set_coverage() -> None:
@@ -1566,6 +1814,15 @@ def validate_status_enums_match_contract() -> None:
     # from the day it was written rather than after it drifted. `Humanization`
     # is read by every mode that produces text, so a value only one side knows
     # about is a pass that silently does not run.
+    kinds = set(_module_literals(brand_lint).get("STRING_KINDS") or ())
+    check(bool(kinds), "brand_lint.py: STRING_KINDS is not a readable literal")
+    check(
+        brand_declared.get(("strings.md", "Kind")) == kinds,
+        f"strings.md Kind: brand_lint.py matches {sorted(kinds)} and "
+        f"brand-contract.md declares "
+        f"{sorted(brand_declared.get(('strings.md', 'Kind')) or [])}",
+    )
+
     modes = set(_module_literals(brand_lint).get("HUMANIZATION_MODES") or ())
     check(bool(modes), "brand_lint.py: HUMANIZATION_MODES is not a readable literal")
     check(
@@ -1753,6 +2010,10 @@ def main() -> int:
     validate_audit_leaves_product_alone()
     validate_run_instructions()
     validate_ai_tell_coverage()
+    validate_graph_claims()
+    validate_eval_cases()
+    validate_vision_rule_embed()
+    validate_audit_scope_enum()
     validate_doctrine_set_coverage()
     validate_board_ids()
     validate_hard_rule_anchors()
@@ -1783,9 +2044,20 @@ def main() -> int:
     check_routed_triggers_still_advertised()
 
     if failures:
+        # `B-019`: a reader counts the lines and the summary reports a number,
+        # and when one defect is emitted twice those disagree. Print each
+        # distinct message once and say plainly when a message arrived more
+        # than once, so a double emission is a visible fact rather than an
+        # inflated count nobody can reconcile against the output.
+        seen: list[str] = []
         for failure in failures:
-            print(f"FAIL: {failure}")
-        print(f"{len(failures)} failure(s) out of {checks} checks")
+            if failure not in seen:
+                seen.append(failure)
+                print(f"FAIL: {failure}")
+        if len(seen) != len(failures):
+            print(f"note: {len(failures) - len(seen)} duplicate emission(s); "
+                  f"a check is firing twice for one defect")
+        print(f"{len(seen)} failure(s) out of {checks} checks")
         return 1
     rc = check_floor("validate.py", checks)
     if rc:

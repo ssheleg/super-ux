@@ -265,12 +265,31 @@ linter and the audit both address surfaces by these names.
 ```markdown
 Contract: brand-contract v1
 
-| Key | Text (primary) | Location | Scenario | Status |
-|---|---|---|---|---|
-| action.project.publish | Publish | src/ui/ProjectBar.tsx:47 | SCN-014 | agreed |
+| Key | Text (primary) | Location | Scenario | Status | Kind |
+|---|---|---|---|---|---|
+| action.project.publish | Publish | src/ui/ProjectBar.tsx:47 | SCN-014 | agreed | copy |
+| help.usage.table | `  --cursor <dir>   Cursor rules` | bin/cli.js:12 | SCN-002 | agreed | layout |
 ```
 
 Statuses: `agreed` · `proposed` · `drifted` · `orphan`.
+
+**`Kind` decides which rules may judge the row**, and it is the sixth column so
+that a five-column registry written before it existed keeps every index it had.
+Absent means `copy`, because the safe default is to check.
+
+- `copy` is language. Every language rule applies: banned words, product terms,
+  entity spelling, casing, the dash, a full stop after a label.
+- `layout` is a string whose shape carries the meaning: a column-aligned option
+  table, an ASCII frame, a banner. Those rules would be judging typesetting, so
+  they do not run. `B022` still does, which is the point of registering it
+  rather than exempting it from registration: the string is a decision somebody
+  made, and calling it furniture must not be a way to hide a real one.
+
+A row is `layout` because its **shape** is load-bearing, never because a rule
+was inconvenient. Two strings inside one aligned block can differ: the block's
+title is `copy`, and the aligned rows under it are `layout`.
+
+- `strings.md` **Kind** — `copy | layout`
 
 **This is a decision registry, not a message catalog.** It does not replace
 i18n keys and holds no translations. It records which strings have been
@@ -407,6 +426,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B061 | E | humor where the user is losing something |
 | B062 | E | AT-06, a rhetorical dash standing in for a full stop, comma or colon |
 | B063 | W | AT-07, a document title or heading ends in a full stop |
+| B065 | E | a registry row carries a `Kind` the contract does not declare |
 | B064 | W/E | the humanization pass: absent field warns that the default `on` applies unrecorded; an out-of-enum value errors; `off` with no `Humanization declined:` reason errors |
 | B070 | E | a declared locale has no locale file |
 | B071 | W | locale parity below the declared threshold |

@@ -63,6 +63,18 @@ VISION_OK = "\n".join(
     f"## {s}\n\nwritten\n" for s in ux_lint.VISION_SECTIONS
 )
 
+# The shipped seed's exact shape: eight sections with nothing under them, and
+# the ninth carrying the three `<question>` placeholders `templates/vision.md`
+# actually ships. Anything that counts a placeholder as content goes silent
+# here, which is how `U076` first failed to fire on the document it exists for.
+VISION_SEEDED = "\n".join(
+    f"## {s}\n\n" for s in ux_lint.VISION_SECTIONS[:-1]
+) + f"## {ux_lint.VISION_SECTIONS[-1]}\n\n1. <question>\n2. <question>\n"
+
+VISION_ALL_PLACEHOLDER = "\n".join(
+    f"## {s}\n\n<to be written>\n" for s in ux_lint.VISION_SECTIONS
+)
+
 
 def screens(*entries: str, declaration: str | None = "no", index: bool = True) -> str:
     out = ["# UI Screen Registry", ""]
@@ -318,6 +330,55 @@ case("U030 a vision missing one of the nine sections",
      errors={"U030"}, root_files={"CLAUDE.md": RULE + "\n"})
 silent("U030 clean on all nine sections",
        {"vision.md": VISION_OK}, {"U030"}, root_files={"CLAUDE.md": RULE + "\n"})
+
+# `B-005`: a seeded vision is nine headings over comments, and `read()` strips
+# comments, so it passed every check until somebody self-declared `approved`.
+# The placeholder pass matters as much as the emptiness one: section 9 ships
+# three `<question>` lines, and counting those as content kept this check
+# silent on the exact document it was written for.
+# `B-028`: a range proves its bounds and nothing else. Both fixtures cite the
+# same file with the same span; only the named subject differs, so the pair
+# isolates the subject resolver from the bounds check that was already there.
+case("U078 a citation naming a subject that is not in the span",
+     {"screens.md": screens("- **Purpose:** p\n"
+                            "- **Coverage:** `src/a.js:1-2 target`\n"
+                            "- **Status:** built\n")},
+     warns={"U078"}, root_files={"src/a.js": "const a = 1;\nconst b = 2;\nfunction target() {\n  return 3;\n}\n"})
+silent("U078 silent when the subject is inside the span",
+       {"screens.md": screens("- **Purpose:** p\n"
+                              "- **Coverage:** `src/a.js:1-4 target`\n"
+                              "- **Status:** built\n")},
+       {"U078"}, root_files={"src/a.js": "const a = 1;\nconst b = 2;\nfunction target() {\n  return 3;\n}\n"})
+silent("U078 silent when no subject is named, which is the old form",
+       {"screens.md": screens("- **Purpose:** p\n"
+                              "- **Coverage:** `src/a.js:1-2`\n"
+                              "- **Status:** built\n")},
+       {"U078"}, root_files={"src/a.js": "const a = 1;\nconst b = 2;\nfunction target() {\n  return 3;\n}\n"})
+
+# `B-001`: the rule lives in a third place -- a target project's instruction
+# file -- and until `U077` nothing there compared it to anything. The pair is
+# the isolation: the same tree, the same rule, one word changed.
+case("U077 an installed vision rule softened by hand",
+     {"vision.md": VISION_OK},
+     warns={"U077"},
+     root_files={"CLAUDE.md": ux_lint.VISION_RULE_TEXT.replace(
+         "Do not pick one silently.", "Use your judgement.") + "\n"})
+silent("U077 silent on a faithful copy",
+       {"vision.md": VISION_OK}, {"U077"},
+       root_files={"CLAUDE.md": ux_lint.VISION_RULE_TEXT + "\n"})
+
+case("U076 a vision that is still the seeded template",
+     {"vision.md": VISION_SEEDED},
+     warns={"U076"}, root_files={"CLAUDE.md": RULE + "\n"})
+case("U076 a vision where every section is a placeholder",
+     {"vision.md": VISION_ALL_PLACEHOLDER},
+     warns={"U076"}, root_files={"CLAUDE.md": RULE + "\n"})
+silent("U076 silent once one section is written",
+       {"vision.md": VISION_SEEDED.replace(
+           "## 1. Essence\n", "## 1. Essence\n\nA design chain.\n", 1)},
+       {"U076"}, root_files={"CLAUDE.md": RULE + "\n"})
+silent("U076 silent on a fully written vision",
+       {"vision.md": VISION_OK}, {"U076"}, root_files={"CLAUDE.md": RULE + "\n"})
 
 case("U031 an approved vision with an empty anti-vision",
      {"vision.md": VISION_OK.replace("## 6. Anti-vision\n\nwritten\n", "## 6. Anti-vision\n\n")

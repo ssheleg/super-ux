@@ -12,10 +12,10 @@ the whole surface is a terminal.
 
 | ID | Screen | Used by | Figma | Status | Coverage |
 |----|--------|---------|-------|--------|----------|
-| SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:338-399` |
-| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:401-409` |
+| SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:338-399 selectInteractive` |
+| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:401-409 selectFallback` |
 | SCR-03 | Project directory prompt | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:436-440` |
-| SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:105-198` |
+| SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:105-198 installCursor` |
 | SCR-05 | Skills CLI handoff | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:219-251` |
 | SCR-06 | Claude plugin install output | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:264-281` |
 | SCR-07 | Usage / help | FLW-04 | n/a | built | `bin/super-ux.js:71-98` |
@@ -46,7 +46,7 @@ five-field `Web surface:` block.
 ### SCR-01: Interactive multi-select list
 **Status:** built
 **Used by:** FLW-01
-**Coverage:** `bin/super-ux.js:338-399`
+**Coverage:** `bin/super-ux.js:338-399 selectInteractive`
 
 Three items, nothing preselected. Redraw moves the cursor up by
 `items.length + 1` and clears each line, so the list updates in place.
@@ -68,7 +68,7 @@ CLI can leave behind.
 ### SCR-02: Non-TTY numbered list + prompt
 **Status:** built
 **Used by:** FLW-02
-**Coverage:** `bin/super-ux.js:401-409`
+**Coverage:** `bin/super-ux.js:401-409 selectFallback`
 
 | State | Shown | Frame |
 |---|---|---|
@@ -99,7 +99,7 @@ external skills-CLI picker's own output.
 ### SCR-04: Install log
 **Status:** built
 **Used by:** FLW-01, FLW-02, FLW-03
-**Coverage:** `bin/super-ux.js:105-198`
+**Coverage:** `bin/super-ux.js:105-198 installCursor`
 
 One line per file. This screen is the whole answer to JTBD-02.
 

@@ -1,0 +1,50 @@
+{
+  "_why": "B-032. The linters verify artifacts, and artifacts are downstream of behaviour nobody measures. `B064` checks that voice.md RECORDS a humanization state; nothing checks that the sweep ran or that the status line was printed. These cases are the mechanism that can answer that, and they are deliberately not in CI: they cost money, they are not deterministic, and a flaky required check is one people learn to re-run until it passes.",
+  "_how": "python3 test/evals/run.py [--case EV-NN]. Needs the `claude` CLI on PATH. Every case names the instruction it measures, and `validate_eval_cases` refuses a case whose anchor no longer resolves, so an instruction reworded here cannot leave its eval pointing at nothing.",
+  "cases": [
+    {
+      "id": "EV-01",
+      "measures": "The humanization pass runs in Write, without being asked for",
+      "instruction": {
+        "file": "plugins/super-ux/skills/copywriting/SKILL.md",
+        "anchor": "**The humanization pass runs by default, in every mode that produces text.**"
+      },
+      "brief": "Using the copywriting skill, write a landing hero headline and subhead for a tool that turns meeting recordings into follow-up emails. Deliver the copy.",
+      "expect": ["Humanization:"],
+      "forbid": []
+    },
+    {
+      "id": "EV-02",
+      "measures": "The status line reports the state rather than assuming it is on",
+      "instruction": {
+        "file": "plugins/super-ux/skills/copywriting/SKILL.md",
+        "anchor": "**Every delivery of copy states what happened**"
+      },
+      "brief": "Using the copywriting skill, write three empty-state strings for a project list. The brand pack records `Humanization: off` with a recorded reason. Deliver the strings.",
+      "expect": ["Humanization: off"],
+      "forbid": ["Humanization: on"]
+    },
+    {
+      "id": "EV-03",
+      "measures": "Edit runs the pass after the seven sweeps, not before",
+      "instruction": {
+        "file": "plugins/super-ux/skills/copywriting/SKILL.md",
+        "anchor": "**The humanization pass runs last**, after the seven"
+      },
+      "brief": "Using the copywriting skill in Edit mode, improve this paragraph and say in what order you worked: \"Our platform leverages cutting-edge AI to seamlessly streamline your workflow and unlock unprecedented productivity gains for teams of every size.\"",
+      "expect": ["Humanization:"],
+      "forbid": ["unlock", "seamlessly", "leverage"]
+    },
+    {
+      "id": "EV-04",
+      "measures": "Adapt reports one status line per surface, not one for the batch",
+      "instruction": {
+        "file": "plugins/super-ux/skills/copywriting/SKILL.md",
+        "anchor": "**The pass runs per surface, not once on the source.**"
+      },
+      "brief": "Using the copywriting skill in Adapt mode, take this claim to a landing hero and to an X post: \"Meeting notes become follow-up emails before the call ends.\" Deliver both.",
+      "expect": ["Humanization:"],
+      "forbid": []
+    }
+  ]
+}

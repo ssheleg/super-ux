@@ -220,13 +220,25 @@ a mark for:
 **Grammatical, and kept.** The language requires the mark, and removing it is
 an error rather than a style choice:
 
-- The Russian and Ukrainian copula, where the verb is absent by rule:
-  «Москва — столица». English has no equivalent, which is why a global ban
-  reads as reasonable in English and breaks Russian on the first line.
-- Numeric and page ranges: «2020—2024», «с. 15—20».
-- Direct speech in the Russian convention: «— Привет, — сказал он».
-- A dash alone in a table cell, standing for "no value". It is a glyph doing
-  the job of an empty string, not punctuation joining two clauses.
+Each carries an id, because an exemption is a promise the code has to keep and
+an unnumbered promise cannot have coverage computed over it. `AT-06-E1` was
+implemented from the start; `AT-06-E4` was written here in v0.39.0 and
+implemented in v0.52.0, thirteen days in which this file and the linter
+disagreed and only this file said so.
+
+- **`AT-06-E1`** The Russian and Ukrainian copula, where the verb is absent by
+  rule: «Москва — столица». English has no equivalent, which is why a global
+  ban reads as reasonable in English and breaks Russian on the first line.
+- **`AT-06-E2`** Numeric and page ranges: «2020—2024», «с. 15—20».
+- **`AT-06-E3`** Direct speech in the Russian convention: «— Привет, — сказал
+  он».
+- **`AT-06-E4`** A dash alone in a table cell, standing for "no value". It is a
+  glyph doing the job of an empty string, not punctuation joining two clauses.
+
+Every one of them has a fixture asserting **silence**, named after its id, and
+`validate_ai_tell_coverage` refuses an exemption without one. A positive
+fixture proves a rule fires; only a negative one proves an exemption survives
+the next person widening the rule.
 
 **Choosing the replacement is the work, and it is not mechanical.** The full
 stop, the comma and the colon carry three different relationships between the

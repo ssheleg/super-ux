@@ -860,3 +860,6 @@ here — the meaning of a rule never lives only in its source.
 | U073 | E | an entry header carries no `: <name>` — the id alone is what made the whole job layer invisible to every rule in the linter |
 | U074 | E | a job is missing one of `Statement`, `Personas`, `Type`, `Forces`, `Success metric` — the metric is the observable a job is unfinished without, one layer above a story's acceptance criteria |
 | U075 | E | a `Status:` on `FLW-NN` or `JRN-NN`, layers the contract deliberately gives none — silence about a state is not permission to invent a vocabulary for it |
+| U078 | W | a `Coverage:` citation names a subject that is not inside the lines it cites — a range proves its bounds, never what it is about |
+| U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
+| U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |
