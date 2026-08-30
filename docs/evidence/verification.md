@@ -8,6 +8,30 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-31 — the board goes to zero, v0.52.0
+
+Eleven rows, each closed with a mechanism and at least one watched plant. The
+plant transcripts live on the board rows themselves rather than being copied
+here; this section records what shipped and what could not be watched.
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-84 | `strings.md` gains `Kind: copy \| layout`; `layout` is registered and exempt from the language rules; `B065` refuses an out-of-enum kind (`B-029`) | The isolation pair: one row, one banned word, differing only in `Kind` — `layout` silent, `copy` emits `B010`. Plants: the skip removed → the layout fixture red; `STRING_KINDS` widened → the fixture **and** the contract-parity gate. `docs/brand/lint.py` moved from a permanent warning to `brand pack is clean` | **planted** |
+| R-85 | A `Coverage:` citation may name its subject; `U078` resolves it (`B-028`) | Plant on the drift the row describes: `338-399` → `223-284` gave `U078 … as covering \`selectInteractive (found at line 338)\``, while `U071` stayed silent on the same edit. Three fixtures: outside the span, inside it, and the old form with no subject | **planted**, and **observed** — the drift was live for a release |
+| R-86 | `B005` dates the cited entries, not the file (`B-023`) | Measured on this repository: whole file 2026-08-20, `P-01,P-02` 2026-08-10, `JTBD-01..03` 2026-08-20, an unknown id falling back with `exact=False`. The message names which question it answered | **observed** — the false positive it removes was recorded on SU-02 |
+| R-87 | `U076` names a vision that is still the seeded template (`B-005`) | Three states walked: the pristine seed warns, one written section silences it, this pack's own written vision is silent. The placeholder pass was found by watching the check **not** fire on the document it was written for | **planted** |
+| R-88 | `VISION_RULE_TEXT` in the seeded linter, `U077` in target projects, `validate_vision_rule_embed` over the third copy (`B-001`) | Plants on both: a rule softened by hand in a target `CLAUDE.md` → `U077`; the embed edited → `ux_lint.py's VISION_RULE_TEXT differs from templates/vision-rule.md` | **planted** |
+| R-89 | `validate_audit_scope_enum` over four homes (`B-030`) | Plants in both directions, each with its own message: the scope dropped from step 1, and dropped from the `argument-hint` | **planted** |
+| R-90 | `AT-06-E1..E4`, and the arrow from a named exemption to a negative fixture (`B-031`) | Plants both ways: a fixture losing its id, and an exemption renumbered | **planted** |
+| R-91 | `test/evals/` — four cases, a runner, and `validate_eval_cases` over their shape (`B-032`) | Plant: `**The humanization pass runs last**` reworded in the skill → `EV-03: the anchor … no longer appears`. The runner refuses to report a pass when the `claude` CLI is absent, verified by running it | **planted** for the shape. **never** for the behaviour, which is the whole point of the row: what an agent does with an instruction is read by a person, not by CI |
+| R-92 | The reverse routing arrow in `validate_bp_index` (`B-021`) | Plant: `BP-999` in a routing row → `the row sends a profile at nothing`. The forward arrow this row asked for was already present, proved by planting a well-formed `BP-242`, and the duplicate written here was deleted rather than shipped | **planted** |
+| R-93 | The report prints each distinct failure once and names duplicate emissions (`B-019`) | Four probes found no duplicate: both hard rules, each from both sides. Plant: `HARD_RULES` doubled → `note: 1 duplicate emission(s); a check is firing twice for one defect` | **planted** |
+| R-94 | The code graph refreshed, and `validate_graph_claims` over what its labels assert (`B-022`) | The refresh ran unattended and is recorded on the board row. Plant: a node relabelled `99 practices` → refused. The gate is narrowed to `label`/`norm_label`, and that narrowing was forced by a false positive it produced first — a node quoting `181 practices against a catalog of 206`, which is history and true | **planted**, and the false positive is why the narrowing is there |
+
+**Rows at `never`: 1 in this section** (R-91, the behaviour half), and it is the
+row's own subject rather than an omission: an eval that runs an agent cannot be
+a required check without making the gate paid and flaky.
+
 ## 2026-08-30 — humanization stops being a mode, and the assembly layer arrives, v0.52.0
 
 Same release as the block below; both shipped in one tag. This half answers the

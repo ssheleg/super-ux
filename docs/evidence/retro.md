@@ -100,6 +100,17 @@ stamps — and log the deletion as one line under *Retired*.
    *(Retire when a gate enumerates template and contract fields and requires a
    reader for each, or after five stamps with no recurrence.)*
 
+7. **(2026-08-31)** **Reproduce a board row before fixing it.** Plant the
+   defect it describes and read what comes back. Two of the eleven rows closed
+   on 2026-08-31 were false: `B-021` asked for a check that already existed and
+   nearly shipped a duplicate, and `B-019` described a defect four probes could
+   not reproduce. Both were caught by planting first and neither would have been
+   caught by reading the row. A row is a claim about the repository at the
+   moment it was written, and it ages like any other claim; priority makes a
+   stale one actively expensive, because it is picked first. *(Retire when a
+   gate can decide whether an open row is still true — which needs the row's
+   own text to be executable — or after five stamps with no recurrence.)*
+
 ## Retired
 
 *(nothing yet)*
@@ -124,8 +135,9 @@ Newest last.
 | 2026-08-19 | SU-02 (manifesto M-21) — `Product: unobserved / observed / contradicted` as a state no audit can promote; `U066..U070`; the field vocabulary settled on the long spelling; the live screens enum drift closed | no — single-row close; two plant misses recorded in the ledger |
 | 2026-08-30 | Wave-2 family-audit close (SUX-01/06/07/08/11) — templates mirrored into the plugin and each seeding skill by `sync_references.py`, `validate_shipped_templates` + `validate_shipped_paths` gate the class, `/ux-audit` scope surface completed, three descriptions stop over-claiming; v0.50.0 | yes — standing instruction #4 fired on the floor itself: `floors.json` held 3667 against a pre-change suite of 4111, un-raised since SU-04; raised to the measured 4174. R-70 is a `never` (three homes of one enum, no comparator) filed as `B-030` rather than left off the ledger |
 | 2026-08-30 | `B062` judges the dash's role rather than its glyph; the table-cell exemption `AT-06` promised gets implemented; `landing-pages.md` gives `copywriting` the assembly layer it lacked (`LP-01..LP-20`); humanization becomes a default with `B064` and a status in four places; `onboarding.md`, `internal-screens.md` and `product-frameworks.md` add `ON-`, `IS-` and `PF-`; one coverage gate over four id sets; v0.52.0 | yes — two divergences: a doctrine exemption sixteen days unimplemented (`B-031`), and the bytecode cache defeating a planted defect |
+| 2026-08-31 | Board close-out — all eleven open rows closed with a mechanism and a watched plant each: `Kind: copy \| layout` in the string registry, `U076`/`U077`/`U078`, `B065`, `cited_entries_date`, three contract-parity gates, `test/evals/`, and a refreshed code graph with `validate_graph_claims` over what its labels assert; v0.52.0 | yes — two rows were not what the board said, and the refreshed graph asserted a number nobody computed |
 
-**Prune, 2026-08-30 (v0.52.0).** All five checked against the three retirement
+**Prune, 2026-08-31 (v0.52.0, board close-out).** All five checked against the three retirement
 triggers; nothing retired, nothing added, so the list stands at five against a
 cap of ten. **#3 fired and passed:** before the widened dash check was written,
 `templates/brand/*.md` and `docs/brand/*.md` were both measured for the newly
@@ -146,7 +158,12 @@ occurrence of a declared-but-unread field, so the list stands at six against a
 cap of ten. The bytecode finding is deliberately **not** added: it became a
 mechanical check in the same change, which is retirement trigger one, and a
 standing instruction that is already a gate is the list filling with things
-nobody needs to remember.
+nobody needs to remember. **Re-checked at the close-out:** #1 fires at the tag,
+#2 held across roughly forty gate runs with every exit code read alone, #3 fired
+again on `U076` — which went silent on the very template it was written for until
+placeholders stopped counting as content — #4 shaped four of the eleven closures,
+and #5 decided the isolation pair for `Kind`. **One added (#7)**, so the list
+stands at seven against a cap of ten.
 
 **Prune, 2026-08-14.** All four checked against the three retirement triggers.
 **#2 fired hardest and fired on this run's own hands:** the first plant harness
@@ -162,6 +179,65 @@ was cut in this run, and it is one stamp old on that count. Nothing retired,
 **one added (#5)**, so the list stands at five against a cap of ten.
 
 ---
+
+## 2026-08-31 — the board was not a description of the code
+
+**Symptom.** Closing eleven rows meant reading eleven claims about this
+repository, and two of them were false. `B-021` asked for a check that every
+practice in the catalog is reachable from the selection protocol; that check
+had existed inside `validate_bp_index` since before the row was written, and
+the row had sat open at priority 18 — the joint highest on the board — for
+seventeen days. `B-019` described a duplicate `FAIL:` line that four probes
+could not reproduce: both hard rules, each from both sides of its pair, one
+line per defect and a count that matched. It had been fixed by a refactor
+nobody credited.
+
+**Surfaced at** stage 5, and only because the work started by planting a defect
+rather than by reading the code. `BP-242` went into the catalog and **two**
+messages came back, one of them from a check this run was in the middle of
+writing. **Owned by** stage 10 of the runs that fixed both: a fix that closes a
+board row and does not strike it off leaves the board describing a repository
+that no longer exists.
+
+**Root cause.** The board is written by hand and read by hand. Every other set
+in this repository has a gate asking whether it still matches the thing it is
+about -- `AT-` ids against fixtures, `BP-` ids against the index and the
+protocol, contract enums against the matchers, cited teardowns against the
+files. The board has `validate_board_ids`, which asks whether the ids referenced
+from the ledger exist. Nothing asks whether an open row is still true, and
+nothing could: "is this defect still present" is the row's own text, in prose,
+and only a person can read it.
+
+**What that cost, beyond the duplicate.** A false open row is worse than a
+missing one, because it is priced. `B-021` sat at `3×2×3 = 18` and would have
+been picked first by anyone deriving priorities from the board, sending them at
+work already done. The board's own header says a row with no evidence column is
+a wish; the sharper rule this run found is that a row with evidence can still
+be stale, because evidence ages.
+
+**Fix, by grade.** *Practice, not mechanism, and said plainly:* both rows were
+closed by **reproducing them first** — planting the defect each described and
+reading what came back — rather than by writing the fix they asked for. That
+found the duplicate before it shipped. *Mechanism where one was possible:* the
+reverse arrow neither row had noticed, which is a routing row pointing at a
+practice the catalog does not define, and a report that can no longer disagree
+with its own count. *Class:* standing instruction #7.
+
+**The second finding, from the same discipline.** `B-022`'s graph refresh
+worked, and the refreshed graph then asserted `82 tags, 206 practices` in 58
+label fields, about a catalog of 241 and an index that states no counts at all.
+A model wrote that number and the cache preserved it across three refreshes. It
+is exactly what this file has recorded before in the abstract — a wrong document
+gets argued with, a wrong graph gets believed — and this is the first time it
+was measured. `validate_graph_claims` now compares what the labels assert
+against the files they are about, and its first run produced a false positive
+that improved it: a node quoting `181 practices against a catalog of 206`, which
+is a true sentence about a past defect. The gate is narrowed to `label` and
+`norm_label`, where the graph speaks in its own voice.
+
+**The check that catches it next time.** For the graph, `validate_graph_claims`.
+For a stale board row, nothing mechanical, and standing instruction #7 says so
+rather than pretending otherwise.
 
 ## 2026-08-30 — the evidence could be cached
 

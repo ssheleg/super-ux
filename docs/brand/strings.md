@@ -16,41 +16,43 @@ that is what makes `B021` (registry says one thing, code says another) a
 check rather than a guess. A literal pipe is written `\|`, as markdown
 requires.
 
-| Key | Text (primary) | Location | Scenario | Status |
-|---|---|---|---|---|
-| help.title | super-ux installer | bin/super-ux.js:72 | SCN-014 | agreed |
-| menu.item.skills | Skills for any AI agent (Claude Code, Codex, Cursor, 70+; opens agent picker) | bin/super-ux.js:66 | SCN-001 | agreed |
-| menu.item.cursor | Cursor rules + docs/ux skeleton + docs/brand pack + linters, into a project | bin/super-ux.js:67 | SCN-001 | agreed |
-| menu.item.claude | Claude Code plugin (skills + /ux commands, user-global) | bin/super-ux.js:68 | SCN-001 | agreed |
-| help.usage.claude.install | claude plugin install | bin/super-ux.js:96 | SCN-014 | agreed |
-| handoff.skills | \n--- Skills for any agent: delegating to the skills CLI picker --- | bin/super-ux.js:247 | SCN-001 | agreed |
-| handoff.claude | \n--- Claude Code plugin --- | bin/super-ux.js:265 | SCN-013 | agreed |
-| claude.marketplace.exists | (marketplace may already be added, continuing) | bin/super-ux.js:274 | SCN-013 | agreed |
-| claude.installed | Claude Code plugin installed (scope: user). Restart sessions to pick it up; then run /ux in any project. | bin/super-ux.js:277 | SCN-013 | agreed |
-| warning.plugin.install | warning: claude plugin install failed, see output above | bin/super-ux.js:279 | SCN-013 | agreed |
-| menu.hint.keys | \x1b[2K  ↑/↓ move · space/number toggle · a all · enter confirm · q quit\n | bin/super-ux.js:355 | SCN-001 | agreed |
-| menu.select.prompt | Select [e.g. 1,3 \| all \| q]:  | bin/super-ux.js:405 | SCN-004 | agreed |
-| menu.intro | super-ux: scenario-driven UI development. Select what to install:\n | bin/super-ux.js:412 | SCN-001 | agreed |
-| menu.nothing | Nothing selected | bin/super-ux.js:428 | SCN-003 | agreed |
-| prompt.cursor.dir | Cursor rules, project directory [.]:  | bin/super-ux.js:439 | SCN-006 | agreed |
-| routers.offer.1 | \nTo have these skills apply by default in every project, add the\n | bin/super-ux.js:481 | SCN-012 | agreed |
-| routers.offer.2 | family's routing block to your agent's global instructions:\n\n | bin/super-ux.js:482 | SCN-012 | agreed |
-| routers.offer.command |   npx --yes sshlg-skills routers --member super-ux\n | bin/super-ux.js:483 | SCN-012 | agreed |
-| help.exit.refused |   3 refused: the super-ux PLUGIN is installed in this home, and the skills | bin/super-ux.js:81 | SCN-014 | agreed |
-| refuse.shadow | refused: super-ux is already ${found}.\n | bin/super-ux.js:230 | SCN-016 | agreed |
-| refuse.shadow.found.json |          (declared in ~/.claude/plugins/installed_plugins.json) | bin/super-ux.js:227 | SCN-016 | agreed |
-| refuse.shadow.reason |          The skills CLI auto-detects Claude Code and would write a plain copy\n | bin/super-ux.js:231 | SCN-016 | agreed |
-| refuse.shadow.reason.2 |          to ~/.claude/skills/super-ux, which shadows the plugin and serves the\n | bin/super-ux.js:232 | SCN-016 | agreed |
-| refuse.shadow.reason.3 |          version it was copied from forever. Update the plugin channel instead:\n | bin/super-ux.js:233 | SCN-016 | agreed |
-| refuse.shadow.remedy.marketplace |            claude plugin marketplace update super-ux\n | bin/super-ux.js:234 | SCN-016 | agreed |
-| refuse.shadow.remedy.launcher.label |          Family launcher (updates every member, prunes shadow copies):\n | bin/super-ux.js:236 | SCN-016 | agreed |
-| refuse.shadow.remedy.launcher |            npx --yes sshlg-skills@latest update\n | bin/super-ux.js:237 | SCN-016 | agreed |
-| refuse.shadow.override |          Pass --force (npx super-ux --force) to run the picker anyway: a\n | bin/super-ux.js:238 | SCN-016 | agreed |
-| refuse.shadow.override.2 |          deliberate choice to run two channels, where the stale one wins. | bin/super-ux.js:239 | SCN-016 | agreed |
-| updates.how | \nUpdates: rerun npx super-ux@latest (--cursor <dir> --force refreshes a\n | bin/super-ux.js:257 | SCN-017 | agreed |
-| updates.how.2 | project's rules and linters), or refresh the whole family with\n | bin/super-ux.js:258 | SCN-017 | agreed |
-| updates.launcher | npx --yes sshlg-skills@latest update (every channel, and it prunes plain\n | bin/super-ux.js:259 | SCN-017 | agreed |
-| updates.launcher.2 | copies that would shadow a plugin). | bin/super-ux.js:260 | SCN-017 | agreed |
+| Key | Text (primary) | Location | Scenario | Status | Kind |
+|---|---|---|---|---|---|
+| help.title | super-ux installer | bin/super-ux.js:72 | SCN-014 | agreed | copy |
+| menu.item.skills | Skills for any AI agent (Claude Code, Codex, Cursor, 70+; opens agent picker) | bin/super-ux.js:66 | SCN-001 | agreed | copy |
+| menu.item.cursor | Cursor rules + docs/ux skeleton + docs/brand pack + linters, into a project | bin/super-ux.js:67 | SCN-001 | agreed | copy |
+| menu.item.claude | Claude Code plugin (skills + /ux commands, user-global) | bin/super-ux.js:68 | SCN-001 | agreed | copy |
+| help.usage.claude.install | claude plugin install | bin/super-ux.js:96 | SCN-014 | agreed | copy |
+| handoff.skills | \n--- Skills for any agent: delegating to the skills CLI picker --- | bin/super-ux.js:247 | SCN-001 | agreed | copy |
+| handoff.claude | \n--- Claude Code plugin --- | bin/super-ux.js:265 | SCN-013 | agreed | copy |
+| claude.marketplace.exists | (marketplace may already be added, continuing) | bin/super-ux.js:274 | SCN-013 | agreed | copy |
+| claude.installed | Claude Code plugin installed (scope: user). Restart sessions to pick it up; then run /ux in any project. | bin/super-ux.js:277 | SCN-013 | agreed | copy |
+| warning.plugin.install | warning: claude plugin install failed, see output above | bin/super-ux.js:279 | SCN-013 | agreed | copy |
+| menu.hint.keys | \x1b[2K  ↑/↓ move · space/number toggle · a all · enter confirm · q quit\n | bin/super-ux.js:355 | SCN-001 | agreed | copy |
+| menu.select.prompt | Select [e.g. 1,3 \| all \| q]:  | bin/super-ux.js:405 | SCN-004 | agreed | copy |
+| menu.intro | super-ux: scenario-driven UI development. Select what to install:\n | bin/super-ux.js:412 | SCN-001 | agreed | copy |
+| menu.nothing | Nothing selected | bin/super-ux.js:428 | SCN-003 | agreed | copy |
+| prompt.cursor.dir | Cursor rules, project directory [.]:  | bin/super-ux.js:439 | SCN-006 | agreed | copy |
+| routers.offer.1 | \nTo have these skills apply by default in every project, add the\n | bin/super-ux.js:481 | SCN-012 | agreed | copy |
+| routers.offer.2 | family's routing block to your agent's global instructions:\n\n | bin/super-ux.js:482 | SCN-012 | agreed | copy |
+| routers.offer.command |   npx --yes sshlg-skills routers --member super-ux\n | bin/super-ux.js:483 | SCN-012 | agreed | copy |
+| help.exit.refused |   3 refused: the super-ux PLUGIN is installed in this home, and the skills | bin/super-ux.js:81 | SCN-014 | agreed | copy |
+| refuse.shadow | refused: super-ux is already ${found}.\n | bin/super-ux.js:230 | SCN-016 | agreed | copy |
+| refuse.shadow.found.json |          (declared in ~/.claude/plugins/installed_plugins.json) | bin/super-ux.js:227 | SCN-016 | agreed | copy |
+| refuse.shadow.reason |          The skills CLI auto-detects Claude Code and would write a plain copy\n | bin/super-ux.js:231 | SCN-016 | agreed | copy |
+| refuse.shadow.reason.2 |          to ~/.claude/skills/super-ux, which shadows the plugin and serves the\n | bin/super-ux.js:232 | SCN-016 | agreed | copy |
+| refuse.shadow.reason.3 |          version it was copied from forever. Update the plugin channel instead:\n | bin/super-ux.js:233 | SCN-016 | agreed | copy |
+| refuse.shadow.remedy.marketplace |            claude plugin marketplace update super-ux\n | bin/super-ux.js:234 | SCN-016 | agreed | copy |
+| refuse.shadow.remedy.launcher.label |          Family launcher (updates every member, prunes shadow copies):\n | bin/super-ux.js:236 | SCN-016 | agreed | copy |
+| refuse.shadow.remedy.launcher |            npx --yes sshlg-skills@latest update\n | bin/super-ux.js:237 | SCN-016 | agreed | copy |
+| refuse.shadow.override |          Pass --force (npx super-ux --force) to run the picker anyway: a\n | bin/super-ux.js:238 | SCN-016 | agreed | copy |
+| refuse.shadow.override.2 |          deliberate choice to run two channels, where the stale one wins. | bin/super-ux.js:239 | SCN-016 | agreed | copy |
+| updates.how | \nUpdates: rerun npx super-ux@latest (--cursor <dir> --force refreshes a\n | bin/super-ux.js:257 | SCN-017 | agreed | copy |
+| updates.how.2 | project's rules and linters), or refresh the whole family with\n | bin/super-ux.js:258 | SCN-017 | agreed | copy |
+| updates.launcher | npx --yes sshlg-skills@latest update (every channel, and it prunes plain\n | bin/super-ux.js:259 | SCN-017 | agreed | copy |
+| updates.launcher.2 | copies that would shadow a plugin). | bin/super-ux.js:260 | SCN-017 | agreed | copy |
+| help.usage.block | Usage: npx super-ux [--force]                        interactive menu (multi-select) npx super-ux --cursor [project-dir] [--force] Cursor rules, non-interactive npx super-ux --help | bin/super-ux.js:74 | SCN-014 | agreed | layout |
+| help.exit.block | Exit codes: 0 installed or nothing selected   1 error 3 refused: the super-ux PLUGIN is installed in this home, and the skills CLI would write the plain ~/.claude/skills copy that shadows it (pass --force to run the picker anyway) | bin/super-ux.js:79 | SCN-014 | agreed | layout |
 
 ## Columns
 

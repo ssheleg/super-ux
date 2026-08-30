@@ -141,6 +141,55 @@ def screen_blocks(text: str) -> dict[str, str]:
     return entry_blocks(text, "SCR")
 
 
+def coverage_subjects(cov: str, root: Path) -> list[tuple[str, str]]:
+    """Citations that name a subject, and whether the subject is still there.
+
+    `B-028`: a range proves its bounds and nothing else. `U071` resolves whether
+    the cited lines exist, which caught `bin/super-ux.js:99000-99999` in a
+    396-line file, and cannot catch `223-284` once `selectInteractive` has moved
+    to `235-296` -- the exact drift that was live in this pack's own
+    `screens.md` for a release. Bounds are all a range can prove about itself.
+
+    So a citation may name what it is about: `path:start-end symbolName`, the
+    symbol separated by a space inside the same backticks. When it does, this
+    resolves the symbol in the file and answers whether it is inside the span.
+
+    It proves the subject is WITHIN the range, not that the range is exactly the
+    subject, and that is the honest limit: matching a definition's full extent
+    needs a parser per language, and a check that claimed to do it would be
+    asserting what it has not measured. Returns `(citation, symbol)` pairs that
+    failed.
+    """
+    bad: list[tuple[str, str]] = []
+    for token in re.findall(r"`([^`]+)`", cov):
+        parts = token.split()
+        if len(parts) != 2:
+            continue
+        citation, symbol = parts
+        if not re.fullmatch(r"[A-Za-z_$][\w$]*", symbol):
+            continue
+        path, _, span = citation.partition(":")
+        match = re.fullmatch(r"(\d+)(?:-(\d+))?", span)
+        target = root / path
+        if not match or not target.exists():
+            continue
+        try:
+            lines = target.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError):
+            continue
+        start = int(match.group(1))
+        stop = int(match.group(2)) if match.group(2) else start
+        word = re.compile(rf"\b{re.escape(symbol)}\b")
+        here = [i for i, l in enumerate(lines, 1)
+                if start <= i <= stop and word.search(l)]
+        if here:
+            continue
+        elsewhere = [i for i, l in enumerate(lines, 1) if word.search(l)]
+        bad.append((citation, symbol if not elsewhere
+                    else f"{symbol} (found at line {elsewhere[0]})"))
+    return bad
+
+
 def coverage_claim(cov: str, root: Path) -> tuple[bool, list[str], list[str]]:
     """A `Coverage:` value read as the claim about code that it is.
 
@@ -650,6 +699,33 @@ VISION_SECTIONS = [
 ]
 
 VISION_RULE_HEADING = "## Vision alignment — hard rule (super-ux)"
+
+# `B-001`: `validate_hard_rule_copies` compares the template against the copy
+# embedded in the `vision` skill, and both live in THIS repository. A target
+# project's `CLAUDE.md` carries a third copy, installed once and never compared
+# to anything again, so a rule softened by hand or left behind by an upgrade
+# reads exactly like a rule being obeyed. This linter is seeded into that
+# project, so it is the only thing there that can hold the canonical text.
+# `validate.py` gates this constant against `templates/vision-rule.md`, which
+# keeps the number of sources at one.
+VISION_RULE_TEXT = """\
+## Vision alignment — hard rule (super-ux)
+
+Before planning any new feature, capability or significant change, check it
+against `docs/ux/vision.md` — specifically the **anti-vision** and the
+**alignment test**.
+
+**Aligned** → proceed, and say in one line which part of the vision it serves.
+
+**Misaligned** → stop and say so before writing code:
+1. Name the conflict — which layer it contradicts, quoting that layer.
+2. Offer two paths: (a) reshape the feature to fit, with the specific change;
+   (b) amend the vision, saying which layer changes and what that costs.
+3. Wait for the decision. Do not pick one silently.
+
+**Do NOT trigger for:** bug fixes, refactors, dependency work, tests,
+documentation, or anything with no user-facing surface. A vision check on a
+typo fix is how a team learns to skip the check that matters."""
 INSTRUCTION_FILES = ("CLAUDE.md", "AGENTS.md", "GEMINI.md")
 
 
@@ -679,16 +755,59 @@ def check_vision(ux: Path, vision: str) -> None:
                     err(f"[U031] vision.md: approved but '## {section}' is empty — "
                         f"the section that settles arguments cannot be blank")
 
+    # `B-005`: the seeded template is nine headings above HTML comments, and
+    # `read()` strips comments, so a project that seeds it and writes nothing
+    # passes every check here until somebody self-declares `approved`. Silence
+    # then reads as a vision, and the alignment rule the `vision` skill
+    # installs starts arbitrating against a blank document. A warning rather
+    # than an error, because a new project legitimately starts here: the defect
+    # is not that it is empty, it is that nothing said so.
+    def _authored(section: str) -> bool:
+        parts = re.split(rf"^##\s+{re.escape(section)}\s*$", vision, maxsplit=1,
+                         flags=re.MULTILINE)
+        if len(parts) != 2:
+            return False
+        tail = re.split(r"^##\s", parts[1], maxsplit=1, flags=re.MULTILINE)[0]
+        # A `<placeholder>` is the template asking a question, not an answer,
+        # and `read()` strips only HTML comments. Section 9 ships three of them
+        # as a numbered list, which is why "is anything written here" cannot be
+        # answered by `.strip()` alone -- found by watching this check stay
+        # silent on the pristine seed it was written for.
+        tail = re.sub(r"<[^<>\n]{0,120}>", "", tail)
+        tail = re.sub(r"^\s*(?:[-*+]|\d+\.)\s*$", "", tail, flags=re.MULTILINE)
+        return bool(tail.strip())
+
+    written = [s for s in VISION_SECTIONS if _authored(s)]
+    if not approved and not written:
+        warn(f"[U076] vision.md is still the seeded template — all "
+             f"{len(VISION_SECTIONS)} sections are headings with nothing under "
+             f"them, so the alignment rule is arbitrating against a blank "
+             f"document. Write it, or delete the file until you do")
+
     root = ux.parent.parent if ux.name == "ux" else ux.parent
     present = [root / n for n in INSTRUCTION_FILES if (root / n).is_file()]
     if not present:
         warn("[U032] vision.md exists but the project has no CLAUDE.md / AGENTS.md / "
              "GEMINI.md — the alignment rule has nowhere to live")
         return
-    if not any(VISION_RULE_HEADING in read(p) for p in present):
+    carrying = [p for p in present if VISION_RULE_HEADING in read(p)]
+    if not carrying:
         warn(f"[U033] vision.md exists but no '{VISION_RULE_HEADING}' block in "
              f"{', '.join(p.name for p in present)} — nothing ever reads the vision "
              f"(run the `vision` skill's step 4)")
+        return
+    for path in carrying:
+        text = read(path)
+        start = text.index(VISION_RULE_HEADING)
+        tail = text[start + len(VISION_RULE_HEADING):]
+        stop = re.search(r"^##\s", tail, re.MULTILINE)
+        installed = (VISION_RULE_HEADING
+                     + (tail[:stop.start()] if stop else tail)).strip()
+        if installed != VISION_RULE_TEXT.strip():
+            warn(f"[U077] {path.name}: the installed vision rule differs from the "
+                 f"one this version ships — a rule edited by hand or left behind "
+                 f"by an upgrade reads exactly like a rule being obeyed. Re-run "
+                 f"the `vision` skill's step 4, or keep the edit deliberately")
 
 
 def check_links(ux: Path) -> None:
@@ -849,6 +968,10 @@ def main() -> int:
                     warn(f"[U055] screens.md: {sid} claims Coverage '{cov}' and names no file")
                 for rel in missing:
                     err(f"[U056] screens.md: {sid} cites '{rel}', which does not exist")
+                for citation, symbol in coverage_subjects(cov, screens_root):
+                    warn(f"[U078] screens.md: {sid} cites '{citation}' as covering "
+                         f"`{symbol}`, which is not inside those lines — the range "
+                         f"proves its bounds and the subject is what it is about")
                 for rel in beyond:
                     err(f"[U071] screens.md: {sid} cites '{rel}' — the file resolves "
                         f"and those lines do not, so the citation points at code "

@@ -65,6 +65,15 @@ VOICE_STATUSES = ("draft", "validated")
 # identically to never having been asked.
 HUMANIZATION_MODES = ("on", "off")
 
+# What a registry row IS, which decides which rules may judge it. `copy` is
+# language and every language rule applies. `layout` is a column-aligned table,
+# an ASCII frame, a banner: a string whose shape carries the meaning, where a
+# capitalisation or dash rule would be judging typesetting. It is registered
+# rather than exempted from registration, so `B022` still knows it exists and
+# nobody can hide a real string by calling it furniture. Absent, a row is
+# `copy`, because the safe default is to check.
+STRING_KINDS = ("copy", "layout")
+
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
 
@@ -137,6 +146,60 @@ def content_date(path: Path) -> str | None:
 # would read as no reason at all. Found by standing instruction #3 on the first
 # enum field the templates seeded with a literal value beside a comment.
 HEADER_COMMENT_RE = re.compile(r"[ \t]{2,}#.*$")
+
+
+def entry_line_span(text: str, ident: str) -> tuple[int, int] | None:
+    """The 1-based line span of `### <ident>:` up to the next entry or section."""
+    lines = text.split("\n")
+    start = next((i for i, l in enumerate(lines, 1)
+                  if l.startswith(f"### {ident}:")), None)
+    if start is None:
+        return None
+    for j in range(start, len(lines)):
+        if lines[j].startswith("### ") or lines[j].startswith("## "):
+            return start, j
+    return start, len(lines)
+
+
+def cited_entries_date(path: Path, idents: list[str]) -> tuple[str | None, bool]:
+    """When the CITED entries last changed, not when the file did.
+
+    `B-023`: `B005` asked whether `foundation.md` had moved since the voice was
+    calibrated, and every entry in it shares one file date, so editing the
+    monetization section raised a warning about personas nobody had touched.
+    Measured on SU-02: seven story entries changed, zero changed lines
+    mentioned any cited id, and the gate went red with a re-stamp as the only
+    way out. A warning that fires when nothing it protects moved is one people
+    learn to re-stamp past.
+
+    Returns `(date, exact)`. `exact` is False when the per-entry question could
+    not be answered -- no git, an untracked file, a renamed entry -- and the
+    whole-file date was used instead, which is the old behaviour. The caller
+    says which it got, because a narrowed check that silently widens is worse
+    than one that never narrowed.
+    """
+    text = read(path) or ""
+    spans = [entry_line_span(text, i) for i in idents]
+    if not spans or any(sp is None for sp in spans):
+        return content_date(path), False
+    import subprocess
+
+    dates: list[str] = []
+    for span in spans:
+        assert span is not None
+        try:
+            out = subprocess.run(
+                ["git", "log", "-L", f"{span[0]},{span[1]}:{path.name}",
+                 "--format=%cs", "-s", "-1"],
+                cwd=path.parent, capture_output=True, text=True, timeout=15,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return content_date(path), False
+        stamp = out.stdout.strip().split("\n")[0].strip()
+        if out.returncode != 0 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", stamp):
+            return content_date(path), False
+        dates.append(stamp)
+    return (max(dates) if dates else None), True
 
 
 def header_field(text: str, key: str) -> str | None:
@@ -269,7 +332,7 @@ def check_contract(brand_dir: Path) -> list[Finding]:
             ))
 
     strings = read(brand_dir / "strings.md") or ""
-    agreed = [r for r in table_rows(strings) if r and r[-1] == "agreed"]
+    agreed = [r for r in registry(brand_dir) if r["status"] == "agreed"]
     if status == "draft" and agreed:
         findings.append(Finding(
             "B003", SEVERITY_WARN, "voice.md", 1,
@@ -293,12 +356,19 @@ def check_contract(brand_dir: Path) -> list[Finding]:
         calibrated = header_field(voice, "Last calibrated")
         if foundation is not None and calibrated:
             try:
-                changed = content_date(brand_dir.parent / "ux" / "foundation.md")
+                changed, exact = cited_entries_date(
+                    brand_dir.parent / "ux" / "foundation.md", ids
+                )
                 if changed and changed > calibrated:
+                    what = (f"the entries this voice cites ({', '.join(ids)}) "
+                            f"changed" if exact else
+                            "foundation.md changed, and the per-entry question "
+                            "could not be answered here so the whole file was "
+                            "used")
                     findings.append(Finding(
                         "B005", SEVERITY_WARN, "voice.md", 1,
-                        f"foundation.md changed on {changed}, after the voice "
-                        f"was last calibrated on {calibrated}",
+                        f"{what} on {changed}, after the voice was last "
+                        f"calibrated on {calibrated}",
                     ))
             except OSError:
                 pass
@@ -353,6 +423,10 @@ def registry(brand_dir: Path) -> list[dict]:
         rows.append({
             "key": cells[0], "text": cells[1], "location": cells[2],
             "scenario": cells[3], "status": cells[4],
+            # Sixth column, appended so a five-column registry written before
+            # this existed keeps every index it had. Absent means `copy`.
+            "kind": (cells[5].strip() if len(cells) > 5 and cells[5].strip()
+                     else "copy"),
         })
     return rows
 
@@ -408,6 +482,16 @@ def check_terminology(brand_dir: Path) -> list[Finding]:
     findings: list[Finding] = []
     banned, terms, entities = dictionary(brand_dir)
     for row in registry(brand_dir):
+        if row["kind"] not in STRING_KINDS:
+            findings.append(Finding(
+                "B065", SEVERITY_ERROR, "strings.md", 0,
+                f"`{row['key']}` has `Kind: {row['kind']}`, which is not one of "
+                f"{' | '.join(STRING_KINDS)} -- an unrecognised kind is treated "
+                f"as `copy` and judged by every language rule, so the row is "
+                f"neither exempt nor knowingly checked",
+            ))
+        if row["kind"] == "layout":
+            continue
         text = row["text"]
         for word in banned:
             if _mentions(word, text):
@@ -625,6 +709,8 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
     for row in rows:
         if not LABEL_KEY_RE.match(row["key"]):
             continue
+        if row["kind"] == "layout":
+            continue        # a terminal full stop inside a frame is not a title
         text = row["text"].rstrip()
         if not text.endswith(".") or text.endswith("..") or text.endswith("…"):
             continue
@@ -699,6 +785,8 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
     for name in entity_words:
         proper.update(name.split())
     for row in rows:
+        if row["kind"] == "layout":
+            continue        # casing in a column-aligned table is typesetting
         # Escape sequences are not words: "\\n--- Skills for ..." begins with a
         # token whose only letter is the n of \\n.
         readable = re.sub(r"\\[nrt]|\\x[0-9a-fA-F]{2}\[[0-9;]*[A-Za-z]", " ",
@@ -1524,6 +1612,8 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
             findings.extend(dash_findings("B062", path, body, strict))
 
     for row in registry(brand_dir):
+        if row["kind"] == "layout":
+            continue
         strict = not grammatical_dash_language(row["text"], primary)
         findings.extend(dash_findings("B062", row["location"], row["text"], strict))
 

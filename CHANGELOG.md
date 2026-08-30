@@ -114,6 +114,33 @@
   an id the readiness check names that no section defines, and the `SKILL.md` link without
   which a reference ships to nobody. A fourth hand-written copy of one comparison is the
   drift the gate exists to refuse.
+- **The board went to zero.** All eleven open rows closed with a mechanism and a watched
+  plant each, not with a status change. `B-029` got the decision it asked for rather than a
+  filter: `strings.md` gains `Kind: copy | layout`, so an aligned option table is registered
+  and exempt from the rules that would be judging typesetting, and `docs/brand/lint.py` now
+  prints `brand pack is clean` where it printed a permanent warning. `B-028`: a `Coverage:`
+  citation may name its subject (`path:start-end symbolName`) and `U078` resolves it, catching
+  the drift a range cannot report about itself. `B-023`: `B005` asks `git log -L` about the
+  cited entries rather than the whole file, so a jobs edit stops warning about personas.
+  `B-005`: `U076` says a vision is still the seeded template instead of passing until someone
+  self-declares `approved`. `B-001`: the seeded linter carries `VISION_RULE_TEXT`, `U077` warns
+  when a target project's installed rule differs, and `validate_vision_rule_embed` keeps that
+  third copy honest. `B-030` and `B-031` get contract-parity gates; `B-032` gets `test/evals/`
+  with four cases whose anchors must still resolve.
+- **Two of the eleven turned out not to be what the board said.** `B-021` asked for a
+  reachability arrow that had existed inside `validate_bp_index` since before the row was
+  filed; a duplicate check was written, caught by planting `BP-242`, and deleted rather than
+  shipped. What was genuinely missing ran the other way: a routing row pointing at a `BP-NNN`
+  the catalog does not define, invisible because every check in that function starts from the
+  catalog. `B-019` did not reproduce in four probes; it had been fixed by an uncredited
+  refactor, and the class is now mechanical — the report prints each distinct message once and
+  names any duplicate emission.
+- **The refreshed code graph asserted a number nobody computed.** `B-022`'s refresh ran
+  unattended (1149 nodes, 1801 edges, built from `6348b641`), and 58 label fields said
+  `82 tags, 206 practices` about a catalog of 241 and an index that states no counts at all —
+  cached across refreshes, and read with the authority of a machine. Corrected, and gated by
+  `validate_graph_claims`, narrowed to `label`/`norm_label` because a node summarising a past
+  defect legitimately quotes an old number, and one of them does.
 - **The bytecode cache could defeat a planted defect, which is this project's unit of
   evidence.** CPython invalidates on `(mtime, size)`, so swapping `"B064"` for `"B999"` --
   identical length -- and reverting inside the same second left a `.pyc` the interpreter

@@ -337,6 +337,32 @@ def main() -> int:
         )
         return head + "".join(rows)
 
+    # `B-029`. `Kind: layout` registers a string whose shape carries the
+    # meaning and stops the language rules judging typesetting. The pair below
+    # is the isolation: the same row, the same banned word, differing only in
+    # the column under test, so a fixture cannot pass because some other guard
+    # happened to hold.
+    case(
+        "a layout row is registered and not judged as language",
+        {**MINIMAL, "terminology.md": banned,
+         "strings.md": registry(
+             "| a.b | Leverage this | src/a.ts:1 | SCN-001 | agreed | layout |\n")},
+        set(), project={"src/a.ts": "x\n"},
+    )
+    case(
+        "the same row as copy is judged, which is what makes the pair a control",
+        {**MINIMAL, "terminology.md": banned,
+         "strings.md": registry(
+             "| a.b | Leverage this | src/a.ts:1 | SCN-001 | agreed | copy |\n")},
+        {"B010"}, project={"src/a.ts": "x\n"},
+    )
+    case(
+        "a Kind the contract does not declare",
+        {**MINIMAL, "terminology.md": banned,
+         "strings.md": registry(
+             "| a.b | Publish | src/a.ts:1 | SCN-001 | agreed | furniture |\n")},
+        {"B065"}, project={"src/a.ts": "x\n"},
+    )
     case(
         "banned word in an interface string",
         {**MINIMAL, "terminology.md": banned,
@@ -827,19 +853,19 @@ def main() -> int:
         project=page("One thing matters — speed."),
     )
     case(
-        "the Russian copula is grammar, not a tell",
+        "AT-06-E1: the Russian copula is grammar, not a tell",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
         set(),
         project=page("Москва — столица России."),
     )
     case(
-        "Russian direct speech is a convention, not a tell",
+        "AT-06-E3: Russian direct speech is a convention, not a tell",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
         set(),
         project=page("— Привет, — сказал он."),
     )
     case(
-        "a numeric range is arithmetic, not a tell",
+        "AT-06-E2: a numeric range is arithmetic, not a tell",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
         set(),
         project=page("The window runs 2020—2024 without a gap."),
@@ -914,7 +940,7 @@ def main() -> int:
     # strict locale every bare dash is an error, so the cell dash was one
     # too; delete the table-cell rule and this fixture goes red.
     case(
-        "a dash alone in a table cell is an empty string, not punctuation",
+        "AT-06-E4: a dash alone in a table cell is an empty string, not punctuation",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
         set(),
         project=page("| Surface | Owner |\n|---|---|\n| landing | - |\n"),
