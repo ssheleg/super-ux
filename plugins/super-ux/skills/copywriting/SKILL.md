@@ -31,11 +31,37 @@ invented to finish the sentence. Adding it is `brand-voice`'s decision.
 | [channel-playbooks.md](references/channel-playbooks.md) | a social, blog, changelog, ads or email surface |
 | [store-copy.md](references/store-copy.md) | App Store or Google Play |
 | [seo-aeo-safety.md](references/seo-aeo-safety.md) | anything a crawler or answer engine reads |
-| [ai-tells.md](references/ai-tells.md) | Humanize mode, or a draft that reads machine-made |
+| [ai-tells.md](references/ai-tells.md) | every mode that produces text: the pass runs by default |
 | [localization.md](references/localization.md) | any locale that is not primary |
 | [surface-registers.md](references/surface-registers.md) | the register for a surface |
 
 ## Modes
+
+**The humanization pass runs by default, in every mode that produces text.**
+It is not a mode you enter, it is the last step of Write, Edit and Adapt, under
+the guards in [ai-tells.md](references/ai-tells.md) which are not optional. The
+reason it is a default rather than an option: a draft nobody swept carries the
+markers that file grades, and a reader registers them before they can name why.
+
+`voice.md` records the state in two fields that answer different questions.
+**`Humanization: on | off`** is whether the pass runs, and it defaults to `on`
+when the field is absent. **`Humanization pass:`** names which implementation
+runs, and absent it is `own`, the only one that reads this pack's registers and
+canonical facts. Turning it off is a legitimate decision that outlives whoever
+made it, so `off` carries a `Humanization declined:` line with the reason and
+the date. `B064` checks all three states.
+
+**Every delivery of copy states what happened**, in one line, before the copy
+or immediately after it:
+
+```
+Humanization: on — own pass, 7 markers at 2 densities, 4 addressed, 11% changed
+Humanization: off — declined 2026-08-30, wording fixed by counsel
+```
+
+The line is not decoration. A pass that runs invisibly is indistinguishable
+from one that did not run, and the reader of the copy is usually not the person
+who chose the setting.
 
 ### Write
 
@@ -49,12 +75,22 @@ invented to finish the sentence. Adding it is `brand-voice`'s decision.
    two or three options with what each trades away.
 5. For interface strings, add or update the `strings.md` row — key,
    `file:line`, scenario, `Status: proposed`.
+6. **Run the humanization pass** under the Humanize guards below, then print
+   the status line. On new text the change rate is measured against the draft
+   you just wrote, so the 50% ceiling does not apply the way it does to an
+   edit; report the rate regardless.
 
 ### Edit
 
 The seven sweeps from `marketing-copy.md`, in order, looping back after each:
 clarity, voice and tone, so-what, prove-it, specificity, emotion, zero risk.
 Deliver sweep by sweep, prioritised by impact, not by reading order.
+
+**The humanization pass runs last**, after the seven, and then the status line.
+Last because the sweeps rewrite whole sentences and a humanization pass run
+before them is measured against text that no longer exists; and because the
+semantic-preservation checklist is cheapest to apply to a version nobody is
+about to rewrite again.
 
 ### Adapt
 
@@ -65,9 +101,15 @@ what changes is length, structure, CTA policy and register.
 State plainly what each version drops. A thread is not a page with line
 breaks.
 
+**The pass runs per surface, not once on the source.** Each version is
+different text in a different register, and a marker density that is fine in a
+blog post is not fine in a landing hero. One status line per surface.
+
 ### Humanize
 
-Under the guards in `ai-tells.md`, which are not optional:
+The standalone mode, for auditing text that already exists without writing any:
+an inherited page, a competitor's copy, a draft somebody else wrote. The same
+guards govern the pass wherever it runs, and they are not optional:
 
 - Above ~10 markers per 500 words, say so and rewrite from the argument — a
   patch produces the same patterns with better words.
@@ -83,9 +125,10 @@ Under the guards in `ai-tells.md`, which are not optional:
   positives fall hardest on people writing in a second language, and a writer is
   not a defect to be edited into fluency they did not ask for. `ai-tells.md`
   carries the measurement and what it binds.
-- **Read `voice.md`'s `Humanization pass:` first.** It names which pass this
-  project chose. Absent means nobody has been asked: ask once, run `own` for this
-  piece, and write the answer back so the question does not return. A value naming
+- **Read `voice.md`'s two fields first.** `Humanization:` is whether the pass
+  runs and defaults to `on`; `Humanization pass:` names which implementation,
+  and absent it is `own`. Neither absence stops work: run the default, print the
+  status line saying it was a default, and offer to record it once. A value naming
   a tool that is not installed falls back to `own` and says so — a missing optional
   tool must not stop copy being written.
 - Other implementations exist and two are worth knowing —
@@ -109,6 +152,7 @@ Under the guards in `ai-tells.md`, which are not optional:
 ## Definition of done
 
 - Every string or section traces to a surface record and a voice.
+- The humanization status line is printed, whichever state it reports.
 - New interface strings are in `strings.md` with location and scenario.
 - `python3 docs/brand/lint.py` exits 0 for the touched surfaces.
 - Anything reported as missing — a term, a fact, a surface — is named

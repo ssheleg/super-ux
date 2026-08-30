@@ -1269,71 +1269,100 @@ def validate_ai_tell_coverage() -> None:
     )
 
 
-def validate_landing_coverage() -> None:
-    """Every `LP-` id in the table has a section, and every section a row.
+def check_id_set_coverage(rel: str, prefix: str, noun: str) -> tuple[set[str], str]:
+    """A numbered doctrine set proves its own completeness, or it is a promise.
 
-    The same question `validate_ai_tell_coverage` asks of `AT-`, asked of the
-    landing playbook, because standing instruction #4 is explicit: an artifact
+    Standing instruction #4 in `docs/evidence/retro.md` is explicit: an artifact
     added to stop drift needs its own answer to "what would notice if this fell
     behind?", and where the artifact is a set, the members get ids first so
-    coverage can be computed at all.
+    coverage can be computed at all. `validate_ai_tell_coverage` asked this of
+    `AT-`; this asks it of every id set the reference shelf ships, from one
+    place, because a fourth hand-written copy of the same comparison is the
+    drift it exists to refuse.
 
-    Three directions, because they fail differently. A row with no section is a
+    Both directions, because they fail differently. A row with no section is a
     rule an agent is told exists and can read nothing about. A section with no
-    row is a rule unreachable from the index the file is consulted through. And
-    an id cited by the readiness check that no section defines is a check
-    pointing at nothing, which is the drift renumbering produces.
+    row is a rule unreachable from the index the file is consulted through.
+
+    Returns the ids found and the file text, so a caller can add the checks that
+    are specific to its own file.
     """
-    path = ROOT / "plugins/super-ux/skills/references/landing-pages.md"
-    text = read(path) or ""
-    if not check(bool(text), "references/landing-pages.md: missing or empty"):
-        return
-    rows = re.findall(r"^\|\s*(LP-\d+)\s*\|", text, re.M)
-    sections = re.findall(r"^###\s+(LP-\d+)\.", text, re.M)
-    check(bool(rows), "landing-pages.md: no `| LP-NN |` table rows to count")
-    check(bool(sections), "landing-pages.md: no `### LP-NN.` sections to count")
+    text = read(ROOT / rel) or ""
+    name = rel.rsplit("/", 1)[-1]
+    if not check(bool(text), f"{rel}: missing or empty"):
+        return set(), ""
+    rows = re.findall(rf"^\|\s*({prefix}-\d+)\s*\|", text, re.M)
+    sections = re.findall(rf"^###\s+({prefix}-\d+)\.", text, re.M)
+    check(bool(rows), f"{name}: no `| {prefix}-NN |` table rows to count")
+    check(bool(sections), f"{name}: no `### {prefix}-NN.` sections to count")
     for dup, label in ((rows, "table row"), (sections, "section")):
         seen = {i for i in dup if dup.count(i) > 1}
-        check(not seen, f"landing-pages.md: duplicate {label}(s) for {sorted(seen)}")
-    for lp in sorted(set(rows) - set(sections)):
-        check(False, f"landing-pages.md: {lp} has a table row and no `### {lp}.` "
-                     f"section -- a rule an agent is told exists and can read "
-                     f"nothing about")
-    for lp in sorted(set(sections) - set(rows)):
-        check(False, f"landing-pages.md: {lp} has a section and no table row -- "
-                     f"the index is how this file is consulted, so the rule is "
+        check(not seen, f"{name}: duplicate {label}(s) for {sorted(seen)}")
+    for i in sorted(set(rows) - set(sections)):
+        check(False, f"{name}: {i} has a table row and no `### {i}.` section "
+                     f"-- a {noun} an agent is told exists and can read nothing "
+                     f"about")
+    for i in sorted(set(sections) - set(rows)):
+        check(False, f"{name}: {i} has a section and no table row -- the index "
+                     f"is how this file is consulted, so the {noun} is "
                      f"documented and unreachable")
     nums = sorted(int(i.split("-")[1]) for i in set(rows))
     check(
         nums == list(range(1, len(nums) + 1)),
-        f"landing-pages.md: the rule set is {nums} -- `LP-` ids are sequential "
-        f"from 01, and a gap means a rule was deleted rather than retired",
+        f"{name}: the set is {nums} -- `{prefix}-` ids are sequential from 01, "
+        f"and a gap means a {noun} was deleted rather than retired",
     )
+    return set(sections), text
 
-    # The readiness check is the only part of the file that runs, so an id it
-    # names must resolve. Renumbering the set and not the checks is the exact
-    # drift the ids were introduced to make visible.
-    readiness = text.split("## The readiness check", 1)[-1]
-    cited = set(re.findall(r"\b(LP-\d+)\b", readiness))
-    for lp in sorted(cited - set(sections)):
-        check(False, f"landing-pages.md: the readiness check names {lp} and no "
-                     f"section defines it -- a check pointing at nothing")
 
-    # A reference nothing links to does not ship: `sync_references.py` copies
-    # the transitive closure of a skill's links, so an unlinked file reaches no
-    # agent at all. This is the drift vector the id gate cannot see.
-    skill = read(ROOT / "plugins/super-ux/skills/copywriting/SKILL.md") or ""
+def check_reference_is_linked(rel: str, skill: str) -> None:
+    """An unlinked reference is not shipped, so it reaches nobody.
+
+    `sync_references.py` copies the transitive closure of a skill's links into
+    that skill. A file nobody links sits in `skills/references/` and travels no
+    further, which looks identical to a file that shipped.
+    """
+    name = rel.rsplit("/", 1)[-1]
+    text = read(ROOT / f"plugins/super-ux/skills/{skill}/SKILL.md") or ""
     check(
-        "references/landing-pages.md" in skill,
-        "copywriting/SKILL.md does not link references/landing-pages.md -- an "
-        "unlinked reference is not shipped into the skill and reaches nobody",
+        f"references/{name}" in text,
+        f"{skill}/SKILL.md does not link references/{name} -- an unlinked "
+        f"reference is not shipped into the skill and reaches nobody",
     )
+
+
+def validate_doctrine_set_coverage() -> None:
+    """Every numbered set on the reference shelf, and the skill it ships into."""
+    sets = (
+        ("plugins/super-ux/skills/references/landing-pages.md", "LP", "rule",
+         "copywriting"),
+        ("plugins/super-ux/skills/references/onboarding.md", "ON", "rule",
+         "ux-flows"),
+        ("plugins/super-ux/skills/references/internal-screens.md", "IS", "rule",
+         "ux-flows"),
+        ("plugins/super-ux/skills/references/product-frameworks.md", "PF",
+         "framework", "ux-foundation"),
+    )
+    for rel, prefix, noun, skill in sets:
+        sections, text = check_id_set_coverage(rel, prefix, noun)
+        check_reference_is_linked(rel, skill)
+        if not text:
+            continue
+        # The runnable part of a file is the only part that can point at
+        # nothing. Renumbering the set and not the checks is the exact drift
+        # the ids were introduced to make visible.
+        tail = text.split("## The readiness check", 1)
+        if len(tail) == 2:
+            for i in sorted(set(re.findall(rf"\b({prefix}-\d+)\b", tail[1]))
+                            - sections):
+                check(False, f"{rel.rsplit('/', 1)[-1]}: the readiness check "
+                             f"names {i} and no section defines it -- a check "
+                             f"pointing at nothing")
 
     # The rules were extracted from teardowns that live in this repository, and
     # both the playbook and the linter's own comments cite them. A citation
     # that stops resolving is the shape `evidence-docs` exists to refuse: a
-    # claim that reads as sourced and is not. Nothing else watches these, so
-    # this does.
+    # claim that reads as sourced and is not. Nothing else watches these.
     cited: set[str] = set()
     for src in ("plugins/super-ux/scripts/brand_lint.py",
                 "plugins/super-ux/skills/references/landing-pages.md",
@@ -1394,7 +1423,7 @@ ENUM_DECL_RE = re.compile(
 # A layer whose state lives on the document, not on an entry: `vision.md` in the
 # scenario contract, `voice.md` in the brand contract. Same shape, no id.
 DOC_ENUM_DECL_RE = re.compile(
-    r"^- `([\w.-]+\.md)` \*\*Status\*\* — `([^`]+)`", re.MULTILINE
+    r"^- `([\w.-]+\.md)` \*\*(\w+)\*\* — `([^`]+)`", re.MULTILINE
 )
 
 # The layers the contract declares to have NO status. Read from the contract's
@@ -1477,7 +1506,8 @@ def validate_status_enums_match_contract() -> None:
     # --- The document-level layers, and the two declared to have none ---------
     doc_declared = {
         name: {v.strip() for v in values.split("|") if v.strip()}
-        for name, values in DOC_ENUM_DECL_RE.findall(contract)
+        for name, field, values in DOC_ENUM_DECL_RE.findall(contract)
+        if field == "Status"
     }
     doc_matched = {
         name: set(values)
@@ -1516,8 +1546,8 @@ def validate_status_enums_match_contract() -> None:
         ROOT / "plugins/super-ux/skills/references/brand-contract.md"
     ) or ""
     brand_declared = {
-        name: {v.strip() for v in values.split("|") if v.strip()}
-        for name, values in DOC_ENUM_DECL_RE.findall(brand_contract)
+        (name, field): {v.strip() for v in values.split("|") if v.strip()}
+        for name, field, values in DOC_ENUM_DECL_RE.findall(brand_contract)
     }
     brand_matched = set(_module_literals(brand_lint).get("VOICE_STATUSES") or ())
     check(
@@ -1525,10 +1555,24 @@ def validate_status_enums_match_contract() -> None:
         "brand_lint.py: VOICE_STATUSES is not a readable literal",
     )
     check(
-        brand_declared.get("voice.md") == brand_matched,
+        brand_declared.get(("voice.md", "Status")) == brand_matched,
         f"voice.md Status: brand_lint.py matches {sorted(brand_matched)} and "
-        f"brand-contract.md declares {sorted(brand_declared.get('voice.md') or [])} "
+        f"brand-contract.md declares "
+        f"{sorted(brand_declared.get(('voice.md', 'Status')) or [])} "
         f"— the layer whose out-of-enum value shipped for two releases",
+    )
+
+    # The second document-level enum on the same file, inside the mechanism
+    # from the day it was written rather than after it drifted. `Humanization`
+    # is read by every mode that produces text, so a value only one side knows
+    # about is a pass that silently does not run.
+    modes = set(_module_literals(brand_lint).get("HUMANIZATION_MODES") or ())
+    check(bool(modes), "brand_lint.py: HUMANIZATION_MODES is not a readable literal")
+    check(
+        brand_declared.get(("voice.md", "Humanization")) == modes,
+        f"voice.md Humanization: brand_lint.py matches {sorted(modes)} and "
+        f"brand-contract.md declares "
+        f"{sorted(brand_declared.get(('voice.md', 'Humanization')) or [])}",
     )
 
 
@@ -1709,7 +1753,7 @@ def main() -> int:
     validate_audit_leaves_product_alone()
     validate_run_instructions()
     validate_ai_tell_coverage()
-    validate_landing_coverage()
+    validate_doctrine_set_coverage()
     validate_board_ids()
     validate_hard_rule_anchors()
     validate_facts_recompute()

@@ -20,6 +20,14 @@ import sys
 import tempfile
 from pathlib import Path
 
+# A planted defect is this project's unit of evidence, and CPython's bytecode
+# cache can defeat it. Invalidation compares (mtime, size), so a plant that
+# swaps bytes without changing length -- `"B064"` for `"B999"` -- and is
+# reverted inside the same second leaves a `.pyc` the interpreter considers
+# current. The revert then runs the plant, and the transcript reports a defect
+# that is no longer in the file. Measured on 2026-08-30, on exactly that pair.
+sys.dont_write_bytecode = True
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "plugins/super-ux/scripts"))
 

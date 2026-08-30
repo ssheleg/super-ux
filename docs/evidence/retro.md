@@ -87,6 +87,19 @@ stamps — and log the deletion as one line under *Retired*.
    this pack's own chain writes, and again against two citations separated by a
    comma. Kept, and the cold clock resets here.
 
+6. **(2026-08-30)** **A field, option or exemption added to a template or a
+   contract is read by code in the same change, or it is not added.** Three
+   occurrences now, and the third was found only because the second opened the
+   file. `AT-06` listed a table-cell exemption `B062` never implemented.
+   `Humanization pass:` lived in `templates/brand/voice.md` and nowhere else:
+   not in `brand-contract.md`, not in this pack's own `voice.md`, read by no
+   code, for releases. Both looked exactly like a working feature to anyone
+   reading the artifact that declared them. `validate_brand_contract_fields`
+   closes one direction only — a field the linter reads must be one the
+   contract defines — and there is no arrow from a declared field to a reader.
+   *(Retire when a gate enumerates template and contract fields and requires a
+   reader for each, or after five stamps with no recurrence.)*
+
 ## Retired
 
 *(nothing yet)*
@@ -110,9 +123,9 @@ Newest last.
 | 2026-08-19 | SU-01 (manifesto M-17) — `U060..U065` give the requirement layer the observable it demands; the pack's own 15 scenarios cite their code; both harness floors become readable | no — single-row close; the one plant that missed is recorded in the ledger |
 | 2026-08-19 | SU-02 (manifesto M-21) — `Product: unobserved / observed / contradicted` as a state no audit can promote; `U066..U070`; the field vocabulary settled on the long spelling; the live screens enum drift closed | no — single-row close; two plant misses recorded in the ledger |
 | 2026-08-30 | Wave-2 family-audit close (SUX-01/06/07/08/11) — templates mirrored into the plugin and each seeding skill by `sync_references.py`, `validate_shipped_templates` + `validate_shipped_paths` gate the class, `/ux-audit` scope surface completed, three descriptions stop over-claiming; v0.50.0 | yes — standing instruction #4 fired on the floor itself: `floors.json` held 3667 against a pre-change suite of 4111, un-raised since SU-04; raised to the measured 4174. R-70 is a `never` (three homes of one enum, no comparator) filed as `B-030` rather than left off the ledger |
-| 2026-08-30 | `B062` judges the dash's role rather than its glyph; the table-cell exemption `AT-06` promised gets implemented; `landing-pages.md` gives `copywriting` the assembly layer it lacked (`LP-01..LP-20`, `validate_landing_coverage`, an evidence-citation gate); v0.51.0 | yes — a doctrine exemption had gone sixteen days unimplemented, filed as `B-031` |
+| 2026-08-30 | `B062` judges the dash's role rather than its glyph; the table-cell exemption `AT-06` promised gets implemented; `landing-pages.md` gives `copywriting` the assembly layer it lacked (`LP-01..LP-20`); humanization becomes a default with `B064` and a status in four places; `onboarding.md`, `internal-screens.md` and `product-frameworks.md` add `ON-`, `IS-` and `PF-`; one coverage gate over four id sets; v0.52.0 | yes — two divergences: a doctrine exemption sixteen days unimplemented (`B-031`), and the bytecode cache defeating a planted defect |
 
-**Prune, 2026-08-30 (v0.51.0).** All five checked against the three retirement
+**Prune, 2026-08-30 (v0.52.0).** All five checked against the three retirement
 triggers; nothing retired, nothing added, so the list stands at five against a
 cap of ten. **#3 fired and passed:** before the widened dash check was written,
 `templates/brand/*.md` and `docs/brand/*.md` were both measured for the newly
@@ -128,7 +141,12 @@ fixture, recorded in this run's entry. **#2 held:** all five gates were run
 alone and their own exit codes read, printed beside each verdict, and no
 pipeline stood between a gate and its status; it is four stamps since it last
 caught anything, one short of its cold trigger, so it is kept and watched.
-**#1 fires at the tag** in this same run.
+**#1 fires at the tag** in this same run. **One added (#6)**, from the third
+occurrence of a declared-but-unread field, so the list stands at six against a
+cap of ten. The bytecode finding is deliberately **not** added: it became a
+mechanical check in the same change, which is retirement trigger one, and a
+standing instruction that is already a gate is the list filling with things
+nobody needs to remember.
 
 **Prune, 2026-08-14.** All four checked against the three retirement triggers.
 **#2 fired hardest and fired on this run's own hands:** the first plant harness
@@ -144,6 +162,49 @@ was cut in this run, and it is one stamp old on that count. Nothing retired,
 **one added (#5)**, so the list stands at five against a cap of ten.
 
 ---
+
+## 2026-08-30 — the evidence could be cached
+
+**Symptom.** A planted defect is this project's unit of evidence: the ledger's
+`planted` rows all mean "a defect was introduced and the check caught it", and
+the transcript is the proof. During this run's `B064` plants, the revert did not
+take. The source had zero occurrences of `B999`, `cmp` against the backup said
+the file was identical, and `python3 test/brand_lint_test.py` still reported
+`expected ['B064'], got ['B999']`.
+
+**Surfaced at** stage 5, from a restored gate that stayed red for no reason the
+file could explain. **Owned by** every run that has ever planted a defect in a
+Python module, which is most of them.
+
+**Root cause.** CPython invalidates cached bytecode on `(source mtime, source
+size)`. The plant replaced `"B064"` with `"B999"`, which is byte-identical in
+length, and the revert happened inside the same second. Both components of the
+key matched, so the interpreter loaded the planted `.pyc` for a file that no
+longer contained the plant. The failure is silent by construction: nothing in
+the output distinguishes a stale cache from a live defect, and the natural next
+move is to go looking for the defect in the source, where it is not.
+
+**Why it matters more here than elsewhere.** The direction it failed in this
+time was harmless: a revert that kept reporting a defect is loud and gets
+investigated. The opposite direction is the dangerous one, and it is equally
+reachable. Plant a defect, watch the *cached* clean build pass, and record
+"the check did not catch it" — or worse, plant, get a real red, revert, and
+have the cache serve the clean version so a genuinely broken revert looks
+green. Either way the ledger fills with sentences that are false and look
+exactly like the true ones.
+
+**Fix, by grade.** *Mechanism:* both fixture harnesses set
+`sys.dont_write_bytecode` before importing anything from the plugin's scripts,
+with the measurement in a comment beside it. Verified by repeating the exact
+sequence that failed: plant, red; revert in the same second, green, with no
+cache cleared. *Scope, stated because it bounds the fix:* `test/validate.py`
+needs no guard, because it never imports the modules it inspects — it reads
+them as text and parses literals with `ast`, so there is no bytecode to stale.
+
+**The check that catches it next time.** The guard itself, and it is a real
+retirement trigger rather than a promise: standing instruction #6 covers the
+class this belongs to only partially, so what protects this specific failure is
+two lines of code that cannot be forgotten because they are not a habit.
 
 ## 2026-08-30 — the check knew the character and not the job
 

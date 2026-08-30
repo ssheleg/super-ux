@@ -5,7 +5,8 @@ Locale parity threshold: 80%
 Derived-from: <P-NN, JTBD-NN from docs/ux/foundation.md — or `inferred`>
 Status: draft
 Last calibrated: <YYYY-MM-DD>
-Humanization pass: <own | humanizer | avoid-ai-writing | none>   # optional; absent = ask once
+Humanization: on                    # on | off; on is the default, off needs a reason below
+Humanization pass: <own | humanizer | avoid-ai-writing>   # optional; absent = own
 
 # Voice
 

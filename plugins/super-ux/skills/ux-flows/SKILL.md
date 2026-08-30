@@ -28,7 +28,13 @@ once in `screens.md`.
 principles doc before designing; it is the thinking playbook (task-analysis
 method, flow rules, PRN-01..24 heuristics, improvement procedure).
 Proven tactics: [best-practices.md](references/best-practices.md) by
-stage tags. Visual identity (which style pack the frames and the built UI
+stage tags. **The catalog holds tactics; two files hold the order they go
+in.** [onboarding.md](references/onboarding.md) (`ON-01..ON-18`) assembles
+the path to the first value, and it rests on that value being defined
+first. [internal-screens.md](references/internal-screens.md)
+(`IS-01..IS-18`) covers everything after it: the screens someone uses
+because they already decided, where the four states are one design and a
+list is a working surface rather than a directory. Visual identity (which style pack the frames and the built UI
 obey, via the **sheleg-design** companion):
 [visual-identity.md](references/visual-identity.md).
 
