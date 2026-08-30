@@ -160,10 +160,11 @@ Passes:
 
 1. **Scope.** Read the base (and foundation/flows, if present). Scope is
    `$ARGUMENTS` if given (`all`, `feature:<name>`, `SCN-010..SCN-020`,
-   `coverage`, `practices`, `heuristics`, `benchmark:<competitor>`),
+   `coverage`, `practices`, `heuristics`, `copy`, `benchmark:<competitor>`),
    default `all`; depth keyword
    (`quick`/`deep`) selects the depth, default `standard`. Single-pass
-   scopes (`coverage`/`practices`/`heuristics`/`copy`) run just that pass. Note
+   scopes (`coverage`/`practices`/`heuristics`/`copy`/`benchmark:<competitor>`)
+   run just that pass. Note
    the git SHA of `docs/ux` — it goes into the report header. Skip
    `retired` scenarios.
 2. **Batch.** Group scoped scenarios by feature, ~5–8 per batch. List the
