@@ -13,7 +13,8 @@ Order matters:
    README, store listing, recent posts.
 3. Propose **one** pack with reasoning plus one alternative, and say why the
    runner-up loses.
-4. Seed `docs/brand/` from `templates/brand/` **and copy the linter** —
+4. Seed `docs/brand/` from the plugin's `templates/brand/` **and copy the
+   linter** —
    `scripts/brand_lint.py` → `docs/brand/lint.py`, refreshed even if present
    (it is code, not user content). Fill the `Sources:` block first: nothing
    can be checked until the linter knows where the text is, and nothing can
