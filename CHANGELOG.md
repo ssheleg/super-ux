@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.51.0 — the dash rule stops checking the glyph, and the pack learns to assemble a page
+## 0.52.0 — the dash rule stops checking the glyph, humanization stops being a mode, and the pack learns to assemble a product
 
 - **`B062` judges the dash's role rather than its codepoint.** `DASH` was the single
   character `—`, so a find-and-replace swapping it for `–` or for a hyphen with a space
@@ -74,6 +74,53 @@
   umbrella routes on remains a literal substring of its description — verified with the
   umbrella's own `advertised_check.js` (43/43, and watched failing against a dropped
   «мокап»).
+- **Humanization runs by default, in every mode that produces text.** It was a mode you
+  had to know to ask for, so the common path produced unswept drafts, and the one field
+  that touched the question -- `Humanization pass:` -- existed **only in the template**:
+  absent from `brand-contract.md`, absent from this pack's own `voice.md`, and read by no
+  code anywhere. Two fields now answer the two different questions the old one conflated.
+  `Humanization: on | off` is whether the pass runs, defaulting to `on` when absent;
+  `Humanization pass:` names which implementation, defaulting to `own`. Write, Edit and
+  Adapt each end in the sweep, positioned where it cannot be wasted: after the seven
+  sweeps in Edit, per surface in Adapt. `Humanize` survives as the standalone mode for
+  auditing text nobody is writing.
+- **The state is visible in four places, because a pass that runs invisibly is
+  indistinguishable from one that did not.** `voice.md` records it, every delivery of copy
+  prints a status line naming the pass and what it changed, `/ux` and `/brand` report it
+  in their status blocks, and `B064` refuses the three states that are defects: an absent
+  field warns that the default applies unrecorded, an out-of-enum value errors, and `off`
+  with no `Humanization declined:` reason errors. The enum joins
+  `validate_status_enums_match_contract` from the day it was written rather than after it
+  drifted, which required generalising `DOC_ENUM_DECL_RE` past the hardcoded `**Status**`
+  so the next document-level enum is compared too.
+- **`header_field` stops swallowing an aligned comment.** Standing instruction #3 fired on
+  the first enum field the templates seed with a literal value beside a comment: the
+  freshly seeded pack errored because the whole line, `# on | off; on is the default`
+  included, was the value. Two spaces or more before a `#` now ends the value; one space
+  does not, so a `Humanization declined: per ticket #431` keeps its reason.
+- **Three references give the pack the assembly layer above its 241 tactics.**
+  `onboarding.md` (`ON-01..ON-18`, in `ux-flows`) orders the path to the first value and
+  rests on that value being defined first. `internal-screens.md` (`IS-01..IS-18`, in
+  `ux-flows`) covers the screens nobody A/B tests, where the four states are one design
+  and a list is a working surface rather than a directory of links.
+  `product-frameworks.md` (`PF-01..PF-12`, in `ux-foundation`) carries the named decision
+  models the pack had **none** of -- measured: Hook, Fogg, Kano, opportunity solution
+  tree, AARRR, north star, time to value, value proposition canvas, forces of progress,
+  switch interview, service blueprint and double diamond all returned zero occurrences --
+  each with the failure mode that makes it worth knowing rather than worth quoting.
+- **One coverage gate over four id sets, not four copies of one.**
+  `validate_landing_coverage` became `validate_doctrine_set_coverage`, parameterised over
+  `LP`, `ON`, `IS` and `PF`: rows against sections both ways, duplicates, sequence gaps,
+  an id the readiness check names that no section defines, and the `SKILL.md` link without
+  which a reference ships to nobody. A fourth hand-written copy of one comparison is the
+  drift the gate exists to refuse.
+- **The bytecode cache could defeat a planted defect, which is this project's unit of
+  evidence.** CPython invalidates on `(mtime, size)`, so swapping `"B064"` for `"B999"` --
+  identical length -- and reverting inside the same second left a `.pyc` the interpreter
+  considered current: the revert ran the plant and the transcript reported a defect no
+  longer in the file. Observed live during this run's own plants. Both harnesses now set
+  `sys.dont_write_bytecode`, verified by plant-then-revert-in-second going red then green
+  with no cache clear.
 
 ## 0.49.1 — the skills handoff refuses the shadow it used to create
 

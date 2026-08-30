@@ -79,6 +79,8 @@ Locales: en (primary), ru, de
 Locale parity threshold: 80%
 Derived-from: P-01, P-03, JTBD-02
 Status: validated
+Humanization: on
+Humanization pass: own
 Last calibrated: 2026-08-05
 
 ## Axes
@@ -116,9 +118,32 @@ marking exactly one `(primary)`. `Locale parity threshold` is the percentage
 below which `B071` warns. `Derived-from` lists `P-` / `JTBD-` ids from
 `foundation.md`, or the single word `inferred`. `Last calibrated` is an ISO date.
 
+**A header value ends where an aligned comment begins.** Two spaces or more
+before a `#` starts a comment and the value stops there, which is how the
+seeded templates annotate a field. One space does not, because a reason may
+legitimately read `per ticket #431` and truncating it would leave no reason
+at all.
+
+**`Humanization` and `Humanization pass` answer two different questions**, and
+conflating them is why the second one existed for releases while nothing read
+it. `Humanization` is **whether the pass runs at all**; `Humanization pass`
+names **which implementation** runs, and absent it is `own`, the only one that
+reads this pack's registers and canonical facts.
+
+`Humanization` defaults to `on`, and it is a default rather than a preference:
+every mode that produces text runs the sweep, because a draft nobody swept
+carries the markers `ai-tells.md` grades and a reader registers them before
+they can say why. An absent field is `B064` at warning level, since the default
+is the safe state. `off` is legitimate and it is a decision that outlives the
+person who made it, so it requires a `Humanization declined:` line carrying the
+reason and the date; without one it is `B064` at error level. The value is
+what every status this pack prints reports, so a project can always see which
+state it is in without reading a file.
+
 **The `Status` enum, in one home:**
 
 - `voice.md` **Status** — `draft | validated`
+- `voice.md` **Humanization** — `on | off`
 
 `validate_status_enums_match_contract` reads that line and compares it against
 `VOICE_STATUSES` in `brand_lint.py`, so neither side can move alone. It is here
@@ -382,6 +407,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B061 | E | humor where the user is losing something |
 | B062 | E | AT-06, a rhetorical dash standing in for a full stop, comma or colon |
 | B063 | W | AT-07, a document title or heading ends in a full stop |
+| B064 | W/E | the humanization pass: absent field warns that the default `on` applies unrecorded; an out-of-enum value errors; `off` with no `Humanization declined:` reason errors |
 | B070 | E | a declared locale has no locale file |
 | B071 | W | locale parity below the declared threshold |
 | B072 | W | a locale row left identical to the primary |

@@ -87,7 +87,9 @@ become), **brand-voice** and **copywriting** (how it speaks). A user who says
 - `docs/ux/vision.md`? If yes: `Status`, `Last reviewed`, whether all nine
   sections are filled, and whether the alignment rule is installed. A vision
   with no rule is a document nothing reads — say so.
-- `docs/brand/voice.md`? If yes: the recorded pack, its `Status`, facts
+- `docs/brand/voice.md`? If yes: the recorded pack, its `Status`, its
+  `Humanization` state (absent means the default `on` applies and nobody
+  recorded it, which is `B064`), facts
   carrying `⚠ TBD` or no source, locale parity, and the brand linter's error
   and warning counts (`python3 docs/brand/lint.py`). If `docs/brand/` is
   absent and the product has user-facing text, that is a gap, not a
@@ -134,7 +136,8 @@ installed?), foundation (present? entry counts, assumptions unvalidated),
 flows (count, `inferred` vs confirmed), screens (by status, missing
 frames/coverage, web surfaces answered/`yes`+blocks/`no`), scenarios (total/by status, traced %, features), audits
 (last run, PASS/PARTIAL/FAIL/BLOCKED totals, open findings), brand (pack,
-status, unsourced facts, locale parity), plus both linters' error/warning
+status, humanization on/off/defaulted, unsourced facts, locale parity),
+plus both linters' error/warning
 counts.
 
 A layer that is absent gets a row saying so. An omitted row reads as a

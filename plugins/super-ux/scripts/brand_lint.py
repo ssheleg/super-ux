@@ -56,6 +56,15 @@ CONTRACT_VERSION = "v1"
 # out-of-enum value that is neither refused nor accepted, and invisible.
 VOICE_STATUSES = ("draft", "validated")
 
+# Whether the humanization pass runs at all, which is a different question from
+# `Humanization pass:`, which names WHICH implementation runs. `on` is the
+# pack's default and it is a default rather than a preference: an unswept draft
+# carries the markers `ai-tells.md` grades, and a reader registers them before
+# they can name why. Turning it off is a legitimate decision and it IS a
+# decision, so it leaves its reason in the file instead of a silence that reads
+# identically to never having been asked.
+HUMANIZATION_MODES = ("on", "off")
+
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
 
@@ -122,10 +131,20 @@ def content_date(path: Path) -> str | None:
         return None
 
 
+# A trailing comment, aligned away from the value the way the seeded templates
+# write one. Two spaces or more, because one space is prose: a `Humanization
+# declined:` reason may legitimately say "per ticket #431", and truncating it
+# would read as no reason at all. Found by standing instruction #3 on the first
+# enum field the templates seeded with a literal value beside a comment.
+HEADER_COMMENT_RE = re.compile(r"[ \t]{2,}#.*$")
+
+
 def header_field(text: str, key: str) -> str | None:
-    """A `Key: value` line from a file's header block."""
+    """A `Key: value` line from a file's header block, comment stripped."""
     match = re.search(rf"^{re.escape(key)}:\s*(.+?)\s*$", text, re.M)
-    return match.group(1) if match else None
+    if not match:
+        return None
+    return HEADER_COMMENT_RE.sub("", match.group(1)).strip() or None
 
 
 def table_rows(text: str) -> list[list[str]]:
@@ -217,6 +236,37 @@ def check_contract(brand_dir: Path) -> list[Finding]:
             f"like `validated` today and reads as not-validated the moment a "
             f"check tests for the value instead of against `draft`",
         ))
+
+    # B064 -- the humanization pass: does it run, and was that decided.
+    # Three branches, one code, and each is reachable only in the state the
+    # others are not: absent, present-and-illegal, present-legal-and-off. A
+    # fixture for one therefore cannot be satisfied by another firing.
+    humanization = header_field(voice, "Humanization")
+    if humanization is None:
+        findings.append(Finding(
+            "B064", SEVERITY_WARN, "voice.md", 1,
+            f"no `Humanization:` field, so the pack default `on` applies and "
+            f"nobody has recorded whether that was chosen -- write "
+            f"`Humanization: on` to make the state readable, here and in every "
+            f"status this pack prints",
+        ))
+    elif not unfilled(humanization):
+        if humanization not in HUMANIZATION_MODES:
+            findings.append(Finding(
+                "B064", SEVERITY_ERROR, "voice.md", 1,
+                f"`Humanization: {humanization}` is not one of "
+                f"{' | '.join(HUMANIZATION_MODES)} -- an unrecognised value "
+                f"leaves the pass in neither state, and the copy modes read "
+                f"this field to decide whether to run",
+            ))
+        elif humanization == "off" and not header_field(voice, "Humanization declined"):
+            findings.append(Finding(
+                "B064", SEVERITY_ERROR, "voice.md", 1,
+                f"`Humanization: off` with no `Humanization declined:` line -- "
+                f"switching the pass off is a decision and it outlives whoever "
+                f"made it, so it carries the reason and the date rather than "
+                f"reading, later, as an oversight nobody can safely reverse",
+            ))
 
     strings = read(brand_dir / "strings.md") or ""
     agreed = [r for r in table_rows(strings) if r and r[-1] == "agreed"]

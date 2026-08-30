@@ -28,7 +28,11 @@ Never ask the user to choose between skills or files.
 ## 1. Inspect state
 
 - `docs/brand/` present? Which of the seven files exist.
-- `voice.md`: pack, `Status`, `Last calibrated`, declared locales.
+- `voice.md`: pack, `Status`, `Last calibrated`, declared locales, and the
+  `Humanization` state. An absent field is not silence: it means the pack
+  default `on` applies and nobody chose it, which `B064` warns about. When
+  the state is `off`, report the `Humanization declined:` reason beside it,
+  because an opt-out nobody can see is one nobody can safely reverse.
 - `facts.md`: rows, how many with no source or past `Review by`.
 - `channels.md`: how many surfaces recorded, which of the product's surfaces
   are missing.
@@ -48,7 +52,7 @@ Never ask the user to choose between skills or files.
 
 ## 3. Status report
 
-One compact table: voice (pack, status, last calibrated), terminology
+One compact table: voice (pack, status, last calibrated, humanization), terminology
 (terms, banned, entities), facts (rows, unsourced, overdue), channels
 (surfaces recorded / surfaces the product has), strings (by status), locales
 (declared, present, parity), linter (errors, warnings).

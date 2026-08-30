@@ -18,6 +18,14 @@ import sys
 import tempfile
 from pathlib import Path
 
+# A planted defect is this project's unit of evidence, and CPython's bytecode
+# cache can defeat it. Invalidation compares (mtime, size), so a plant that
+# swaps bytes without changing length -- `"B064"` for `"B999"` -- and is
+# reverted inside the same second leaves a `.pyc` the interpreter considers
+# current. The revert then runs the plant, and the transcript reports a defect
+# that is no longer in the file. Measured on 2026-08-30, on exactly that pair.
+sys.dont_write_bytecode = True
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "plugins/super-ux/scripts"))
 
@@ -39,6 +47,7 @@ MINIMAL = {
         "Locale parity threshold: 80%\n"
         "Derived-from: inferred\n"
         "Status: validated\n"
+        "Humanization: on\n"
         # B005 compares foundation.md's MTIME against this date, and a
         # fixture's files are always written now. A hardcoded date here is a
         # time bomb: this suite was green on 2026-08-05 and red on 2026-08-06
@@ -53,6 +62,21 @@ MINIMAL = {
     "channels.md": MARKER + "\n",
     "strings.md": MARKER + "\n",
 }
+
+
+# The four states of the humanization field, each derived from the well-formed
+# pack above so that nothing but the field itself differs. A fixture that built
+# its own voice.md would drift from MINIMAL and start proving something else.
+_VOICE = MINIMAL["voice.md"]
+voice_no_humanization = _VOICE.replace("Humanization: on\n", "")
+voice_humanization_bad = _VOICE.replace("Humanization: on", "Humanization: sometimes")
+voice_humanization_off = _VOICE.replace("Humanization: on", "Humanization: off")
+voice_humanization_declined = _VOICE.replace(
+    "Humanization: on",
+    "Humanization: off\n"
+    "Humanization declined: 2026-08-30, every string on this surface is fixed "
+    "by counsel and may not be reworded",
+)
 
 
 def case(name: str, files: dict, expect: set, project: dict | None = None) -> None:
@@ -192,9 +216,10 @@ def main() -> int:
     )
     case(
         "missing contract marker",
-        # The references section stays, or this fixture would test two codes
-        # at once and pass for the wrong reason.
+        # The references section stays, and so does `Humanization`, or this
+        # fixture would test two codes at once and pass for the wrong reason.
         {**MINIMAL, "voice.md": "Voice pack: operator-brief\n"
+         "Humanization: on\n"
          "\n## Voice references\n- **Admired:** Stripe docs\n"
          "- **Refused:** a cheerful outage page\n"},
         {"B001"},
@@ -818,6 +843,44 @@ def main() -> int:
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
         set(),
         project=page("The window runs 2020—2024 without a gap."),
+    )
+    # B064 -- three branches, one code, and each fixture is written in the
+    # only state where its own branch can fire: absent, present-and-illegal,
+    # present-legal-and-off. Standing instruction #5: a fixture that asserts a
+    # set of codes proves the code arrived, not which branch produced it.
+    case(
+        "no Humanization field, so the default applies unrecorded",
+        {**MINIMAL, "voice.md": voice_no_humanization},
+        {"B064"},
+    )
+    case(
+        "an out-of-enum Humanization value leaves the pass in neither state",
+        {**MINIMAL, "voice.md": voice_humanization_bad},
+        {"B064"},
+    )
+    case(
+        "Humanization off with no recorded reason",
+        {**MINIMAL, "voice.md": voice_humanization_off},
+        {"B064"},
+    )
+    case(
+        "an aligned trailing comment is not part of the value",
+        {**MINIMAL, "voice.md": _VOICE.replace(
+            "Humanization: on",
+            "Humanization: on          # on | off; on is the default")},
+        set(),
+    )
+    case(
+        "a reason citing a ticket number keeps the hash",
+        {**MINIMAL, "voice.md": _VOICE.replace(
+            "Humanization: on",
+            "Humanization: off\nHumanization declined: per ticket #431")},
+        set(),
+    )
+    case(
+        "Humanization off with a recorded reason is a decision, not a defect",
+        {**MINIMAL, "voice.md": voice_humanization_declined},
+        set(),
     )
     # The mark has more than one spelling, and the tell is the role rather
     # than the codepoint. Each of the three below is written where the

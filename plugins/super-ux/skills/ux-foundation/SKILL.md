@@ -34,6 +34,14 @@ and trace to these IDs — the full chain gives every scenario its context.
   filling opportunities, consult
   [best-practices.md](references/best-practices.md) by stage tags for
   proven mechanisms.
+- **Which model is being applied, and where it lies.**
+  [product-frameworks.md](references/product-frameworks.md)
+  (`PF-01..PF-12`) carries the named models this layer draws on, each with
+  the failure mode that makes it worth knowing: the forces that explain why
+  people do **not** switch, the interview that produces them, the tree that
+  makes two solutions comparable, and the activation definition every
+  onboarding design depends on. Two are ordering constraints rather than
+  inputs: `PF-07` before any onboarding work, and `PF-02` before `PF-01`.
 - **On a paid-acquisition product, the market read comes before the personas
   are written,** because the buyer arrives through somebody's ad and the
   category has already paid to learn who answers it.
