@@ -8,6 +8,26 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-30 — the dash rule stops checking the glyph, v0.51.0
+
+Two blocks: a verified defect in `B062` found by reading a live page, and the
+landing-page layer the pack did not have. Evidence base: three teardowns in
+`docs/research/landings/`, read 2026-08-30.
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-72 | **`B062` judges the dash's role, not its codepoint.** `normalise_dash_spelling` reduces the em dash, the en dash and a hyphen with a space each side to one mark before the three existing branches judge it; the substitutions are length-preserving so the finding quotes the author's own characters | Watched failing first: the battery of 17 cases ran against the unmodified source at 12/17, the four glyph-escape cases silent. Plants against the fixed source, each reverted: the hyphen substitution deleted → `FAIL: a hyphen with a space each side is the same mark: expected ['B062'], got []` **and** `FAIL: a spaced hyphen introduces a conjunction, where strict is off`, exit 1; the alias substitution neutered → `FAIL: an en dash is the same mark`, exit 1. Fixtures written per standing instruction #5, in conditions where only the branch under test can fire: none carries an em dash, so deleting the normaliser leaves no dash for any branch to find. Origin measured in the wild: trycomp.ai, 20 rhetorical dashes, 0 em dashes | **planted**, and **observed** in the wild before it was written |
+| R-73 | **A dash alone in a table cell is an empty string.** `TABLE_CELL_DASH_RE` blanks it before judgement, which is the allowance `AT-06` has listed among the grammatical exemptions since it was written and nothing implemented | Observed against the unmodified source: `\| landing \| — \|` in a strict locale returned a `B062` finding, so the doctrine and the code disagreed and only the doctrine said so. Plant against the fix, reverted: the table-cell substitution deleted → `FAIL: a dash alone in a table cell is an empty string, not punctuation: expected [], got ['B062']`, exit 1 | **planted**, and **observed** — the gap was live |
+| R-74 | **`landing-pages.md` ships into `copywriting` and nowhere else, and its 20 ids are covered.** `validate_landing_coverage` checks rows against sections in both directions, duplicates, sequence gaps, an id the readiness check names that no section defines, and the `SKILL.md` link | Shipping footprint enumerated after sync: `find . -name landing-pages.md` returns the source and the `copywriting` copy only — `system-map.md` names the file in backticks and links it nowhere, which is why it did not travel into the four UX skills. Four plants, each reverted: `### LP-12.` deleted → `FAIL: LP-12 has a table row and no ### LP-12. section`, exit 1; `LP-07` renumbered to `LP-27` → `FAIL: the rule set is [1..20, 27] … a gap means a rule was deleted rather than retired`, exit 1; the readiness check repointed at `LP-44` → `FAIL: the readiness check names LP-44 and no section defines it`, exit 1; the `SKILL.md` row removed → `FAIL: copywriting/SKILL.md does not link references/landing-pages.md`, exit 1 | **planted** |
+| R-75 | **A cited teardown resolves or the gate refuses.** The linter's own comment and the playbook cite `docs/research/landings/*.md`; nothing else watches those paths | Plant, reverted: `docs/research/landings/trycomp.md` moved aside → `FAIL: docs/research/landings/trycomp.md is cited and does not exist -- a claim that reads as sourced and is not`, exit 1. The gate also refuses when nothing cites the folder at all, so deleting the citations rather than the files does not satisfy it | **planted** |
+
+**Rows at `never`: 0 in this section.**
+
+The playbook itself makes a claim no gate can check, and it is stated in the
+file rather than left implied: three pages is enough to notice a repeated
+defect and not enough to generalise, so the repeats are named as repeats and
+the single-page observations stay attributed to their one page.
+
 ## 2026-08-30 — the templates ship where the texts say they are, v0.50.0
 
 Wave-2 close of the 2026-08-29 family audit's SUX-01/06/07/08/11 (SUX-03 was

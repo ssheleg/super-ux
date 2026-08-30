@@ -1269,6 +1269,85 @@ def validate_ai_tell_coverage() -> None:
     )
 
 
+def validate_landing_coverage() -> None:
+    """Every `LP-` id in the table has a section, and every section a row.
+
+    The same question `validate_ai_tell_coverage` asks of `AT-`, asked of the
+    landing playbook, because standing instruction #4 is explicit: an artifact
+    added to stop drift needs its own answer to "what would notice if this fell
+    behind?", and where the artifact is a set, the members get ids first so
+    coverage can be computed at all.
+
+    Three directions, because they fail differently. A row with no section is a
+    rule an agent is told exists and can read nothing about. A section with no
+    row is a rule unreachable from the index the file is consulted through. And
+    an id cited by the readiness check that no section defines is a check
+    pointing at nothing, which is the drift renumbering produces.
+    """
+    path = ROOT / "plugins/super-ux/skills/references/landing-pages.md"
+    text = read(path) or ""
+    if not check(bool(text), "references/landing-pages.md: missing or empty"):
+        return
+    rows = re.findall(r"^\|\s*(LP-\d+)\s*\|", text, re.M)
+    sections = re.findall(r"^###\s+(LP-\d+)\.", text, re.M)
+    check(bool(rows), "landing-pages.md: no `| LP-NN |` table rows to count")
+    check(bool(sections), "landing-pages.md: no `### LP-NN.` sections to count")
+    for dup, label in ((rows, "table row"), (sections, "section")):
+        seen = {i for i in dup if dup.count(i) > 1}
+        check(not seen, f"landing-pages.md: duplicate {label}(s) for {sorted(seen)}")
+    for lp in sorted(set(rows) - set(sections)):
+        check(False, f"landing-pages.md: {lp} has a table row and no `### {lp}.` "
+                     f"section -- a rule an agent is told exists and can read "
+                     f"nothing about")
+    for lp in sorted(set(sections) - set(rows)):
+        check(False, f"landing-pages.md: {lp} has a section and no table row -- "
+                     f"the index is how this file is consulted, so the rule is "
+                     f"documented and unreachable")
+    nums = sorted(int(i.split("-")[1]) for i in set(rows))
+    check(
+        nums == list(range(1, len(nums) + 1)),
+        f"landing-pages.md: the rule set is {nums} -- `LP-` ids are sequential "
+        f"from 01, and a gap means a rule was deleted rather than retired",
+    )
+
+    # The readiness check is the only part of the file that runs, so an id it
+    # names must resolve. Renumbering the set and not the checks is the exact
+    # drift the ids were introduced to make visible.
+    readiness = text.split("## The readiness check", 1)[-1]
+    cited = set(re.findall(r"\b(LP-\d+)\b", readiness))
+    for lp in sorted(cited - set(sections)):
+        check(False, f"landing-pages.md: the readiness check names {lp} and no "
+                     f"section defines it -- a check pointing at nothing")
+
+    # A reference nothing links to does not ship: `sync_references.py` copies
+    # the transitive closure of a skill's links, so an unlinked file reaches no
+    # agent at all. This is the drift vector the id gate cannot see.
+    skill = read(ROOT / "plugins/super-ux/skills/copywriting/SKILL.md") or ""
+    check(
+        "references/landing-pages.md" in skill,
+        "copywriting/SKILL.md does not link references/landing-pages.md -- an "
+        "unlinked reference is not shipped into the skill and reaches nobody",
+    )
+
+    # The rules were extracted from teardowns that live in this repository, and
+    # both the playbook and the linter's own comments cite them. A citation
+    # that stops resolving is the shape `evidence-docs` exists to refuse: a
+    # claim that reads as sourced and is not. Nothing else watches these, so
+    # this does.
+    cited: set[str] = set()
+    for src in ("plugins/super-ux/scripts/brand_lint.py",
+                "plugins/super-ux/skills/references/landing-pages.md",
+                "docs/brand/lint.py"):
+        cited |= set(re.findall(r"docs/research/landings/[\w.-]+\.md",
+                                read(ROOT / src) or ""))
+    check(bool(cited), "nothing cites docs/research/landings/ -- the playbook's "
+                       "evidence base is unreferenced, so it is not evidence")
+    for ref in sorted(cited):
+        check((ROOT / ref).exists(),
+              f"{ref} is cited and does not exist -- a claim that reads as "
+              f"sourced and is not")
+
+
 def validate_ux_lint_coverage() -> None:
     """Every code the UX linter can emit has a fixture, and the contract names it.
 
@@ -1630,6 +1709,7 @@ def main() -> int:
     validate_audit_leaves_product_alone()
     validate_run_instructions()
     validate_ai_tell_coverage()
+    validate_landing_coverage()
     validate_board_ids()
     validate_hard_rule_anchors()
     validate_facts_recompute()

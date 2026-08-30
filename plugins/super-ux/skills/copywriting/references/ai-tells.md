@@ -111,7 +111,8 @@ have one. Honest absence beats confident vagueness, and it is also the
 
 ### AT-06. The rhetorical dash, S1
 
-A dash standing in for a full stop, a comma or a colon. See
+A dash standing in for a full stop, a comma or a colon, in any of its
+spellings -- em dash, en dash, or a hyphen with a space each side. See
 [the dash rule in full](#the-dash-rule-in-full), because the distinction
 between the rhetorical dash and the grammatical one is the whole rule, and
 deleting dashes without it produces worse text than leaving them alone.
@@ -192,10 +193,19 @@ Structure the reader can see does not need narrating.
 
 ## The dash rule in full
 
-The em dash is banned where it is **rhetorical** and kept where it is
+The dash is banned where it is **rhetorical** and kept where it is
 **grammatical**. That distinction is the rule. A pass that strips every dash
 produces ungrammatical Russian, and a pass that keeps them all produces the
 tone this file exists to remove.
+
+**The rule is about the mark's role, not its spelling.** An em dash, an en
+dash and a hyphen with a space each side are the same mark doing the same
+job, so exchanging one for another changes nothing the rule cares about.
+This is the likeliest way a draft appears to be fixed and is not: a
+find-and-replace can reach the glyph and cannot reach the habit. Measured on
+trycomp.ai, 2026-08-30 -- twenty rhetorical dashes on one page and not one em
+dash among them, every one written as a spaced hyphen
+(`docs/research/landings/trycomp.md`).
 
 **Rhetorical, and out.** The dash is doing a job that punctuation already has
 a mark for:
@@ -229,10 +239,13 @@ Where the two halves genuinely need no relationship stated, the strongest fix
 is usually the full stop, because a dash is most often reached for to avoid
 committing to one.
 
-**What the linter proves and what it cannot.** `B062` errors on the patterns
-that can be established without parsing grammar: a dash followed by a
-coordinating conjunction, which is always a comma's job, and paired dashes
-bracketing an aside inside one sentence. In a locale with no grammatical
+**What the linter proves and what it cannot.** `B062` reduces every spelling
+of the mark to one before it judges anything, so swapping the glyph does not
+clear a finding, and a dash alone in a table cell is blanked first because it
+is standing for an empty string rather than joining two clauses. It then
+errors on the patterns that can be established without parsing grammar: a
+dash followed by a coordinating conjunction, which is always a comma's job,
+and paired dashes bracketing an aside inside one sentence. In a locale with no grammatical
 dash, it errors on every dash that is not a range or direct speech, which is
 the rule stated above. In a locale that has one, it cannot separate the
 copula from the rhetorical remainder without a parser, so it reports the

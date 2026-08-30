@@ -56,7 +56,7 @@ worth more than a row a loop skips while claiming to check everything.
 | practices in the catalog | 241 | `grep -c '^#### BP-' plugins/super-ux/skills/references/best-practices.md` | 2026-08-22 | 2026-11-20 | yes |
 | design heuristics | 24 | `grep -c '^\| PRN-' plugins/super-ux/skills/references/ux-design-principles.md` | 2026-08-20 | 2026-11-20 | yes |
 | brand-lint checks | 39 | `grep -o '"B[0-9]\{3\}"' plugins/super-ux/scripts/brand_lint.py \| sort -u \| wc -l \| tr -d ' '` | 2026-08-20 | 2026-11-20 | yes |
-| repo validator checks | 4175 | `python3 test/validate.py \| sed -n 's/^OK (\([0-9]*\) checks)$/\1/p'` | 2026-08-30 | 2026-11-28 | no |
+| repo validator checks | 4199 | `python3 test/validate.py \| sed -n 's/^OK (\([0-9]*\) checks)$/\1/p'` | 2026-08-30 | 2026-11-28 | no |
 | agents reachable via the skills CLI | 70+ | not recomputable here: the vercel-labs/skills agent registry is an external list, and no command in this repository returns it | 2026-08-20 | 2026-11-20 | yes |
 
 `Public: no` marks figures that exist and must never be quoted — internal
