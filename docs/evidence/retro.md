@@ -109,6 +109,7 @@ Newest last.
 | 2026-08-14 | The rhetorical dash and the full-stopped title become `B062`/`B063`; markers get ids `AT-01..15`; doctrine prose swept; dogfood wired into CI; v0.39.0 | yes — see below |
 | 2026-08-19 | SU-01 (manifesto M-17) — `U060..U065` give the requirement layer the observable it demands; the pack's own 15 scenarios cite their code; both harness floors become readable | no — single-row close; the one plant that missed is recorded in the ledger |
 | 2026-08-19 | SU-02 (manifesto M-21) — `Product: unobserved / observed / contradicted` as a state no audit can promote; `U066..U070`; the field vocabulary settled on the long spelling; the live screens enum drift closed | no — single-row close; two plant misses recorded in the ledger |
+| 2026-08-30 | Wave-2 family-audit close (SUX-01/06/07/08/11) — templates mirrored into the plugin and each seeding skill by `sync_references.py`, `validate_shipped_templates` + `validate_shipped_paths` gate the class, `/ux-audit` scope surface completed, three descriptions stop over-claiming; v0.50.0 | yes — standing instruction #4 fired on the floor itself: `floors.json` held 3667 against a pre-change suite of 4111, un-raised since SU-04; raised to the measured 4174. R-70 is a `never` (three homes of one enum, no comparator) filed as `B-030` rather than left off the ledger |
 
 **Prune, 2026-08-14.** All four checked against the three retirement triggers.
 **#2 fired hardest and fired on this run's own hands:** the first plant harness

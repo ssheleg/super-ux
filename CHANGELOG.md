@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.50.0 — the templates ship where the texts say they are
+
+- **`templates/` now travels with everything that names it** (SUX-01, family audit
+  2026-08-29). Six shipped texts pointed at "the plugin's `templates/`" while the
+  marketplace ships `./plugins/super-ux` and the directory lived at the repo root only —
+  verified absent from all 13 cached installed versions, so `/brand-init`, `/brand`,
+  `/ux-rule` step 2 and the three seeding skills dead-ended at a path that resolves in
+  the one place users never run from: this repository's own checkout. The repo root stays
+  the single source (the hard rules and the installer CLI read it);
+  `test/sync_references.py` now mirrors the full tree into `plugins/super-ux/templates/`
+  and the named seeds into each seeding skill's own directory — a skill installed by the
+  skills CLI has no plugin root to reach up to — and the three skill texts say "this
+  skill's own `templates/…`" while the three command texts keep "the plugin's
+  `templates/…`", which is now true.
+- **The class is gated, not just the instance.** `validate_shipped_templates` refuses a
+  copy that drifts from its source and a copy with no source, in both homes;
+  `validate_shipped_paths` requires every backticked `templates/…` or `scripts/…` token
+  in a shipped text to resolve inside what actually ships — the plugin root for commands,
+  the skill's own directory for skill files. Six defects planted, each caught by its own
+  branch with its own message, each reverted; the sync verified idempotent across three
+  runs. The validator grows 4111 → 4174 checks and `test/floors.json` ratchets with it.
+- **`/ux-audit` admits its whole scope surface** (SUX-06). `copy` and
+  `benchmark:<competitor>` join the `argument-hint` and the step-1 enumeration — the body
+  has treated both as legal scopes since they shipped, while the two places an agent
+  reads first omitted them.
+- **Trigger hygiene in three descriptions** (SUX-07, SUX-08, SUX-11). `ux-scenarios`
+  defers the empty-project start up the chain — vision and ux-foundation own it — instead
+  of claiming "ANY new feature or project" unqualified; `copywriting` narrows "build a
+  landing page / сделай лендинг" to the copy for it, naming sheleg-design as the visual
+  half; `ux-flows` drops the bare "figma"/"фигма" claim and delegates the visual system
+  and Figma variables to sheleg-design, mirroring its own body. Every phrase the family
+  umbrella routes on remains a literal substring of its description — verified with the
+  umbrella's own `advertised_check.js` (43/43, and watched failing against a dropped
+  «мокап»).
+
 ## 0.49.1 — the skills handoff refuses the shadow it used to create
 
 - **The skills-menu item now consults the target home before delegating.** `npx skills add`

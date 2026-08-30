@@ -8,6 +8,21 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-30 — the templates ship where the texts say they are, v0.50.0
+
+Wave-2 close of the 2026-08-29 family audit's SUX-01/06/07/08/11 (SUX-03 was
+cancelled by operator decision — no renames anywhere; SUX-02/05 are wave 3,
+SUX-04 is evals day, SUX-09/10 closed in wave 0).
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-68 | **Every template a shipped text seeds from travels with what ships.** `sync_references.py` mirrors `templates/` (source of truth, unchanged) into `plugins/super-ux/templates/` and the named seeds into each seeding skill's own directory — brand-voice gets `templates/brand/` (7 files), ux-scenarios and ux-foundation their single seed; `validate_shipped_templates` refuses drift and strays in both homes | Observed at v0.49.1: all six seeding texts pointed at a path absent from every installed channel — `find` over the 13 cached plugin versions returned no `templates/` (family audit SUX-01) — while `validate.py` printed `OK (4111 checks)`, because every gate resolved paths against the repo root. Plants against the new gate, each reverted: plugin copy drifted → `FAIL: … has drifted from templates/scenarios.md`, exit 1; stray `extra.md` → `FAIL: … a copy with no source is a fork`, exit 1; plugin copy deleted → `FAIL: … missing from the shipped plugin`, exit 1; skill copy drifted → `FAIL: brand-voice/templates/brand/voice.md has drifted`, exit 1. Sync verified idempotent: three consecutive runs, `0 file(s) written/removed` on the second and third | **planted**, and **observed** — the dead path was live in every shipped channel |
+| R-69 | **The class is gated, not the instance:** `validate_shipped_paths` requires every backticked `templates/…`/`scripts/…` token in a shipped text to resolve inside what ships — plugin root for commands, the skill's own directory for skill files, the same rule `validate_shipped_references` enforces for contracts | Plants, each reverted: the ux-scenarios seed deleted from the skill dir → `FAIL: … names \`templates/scenarios.md\`, which does not resolve inside what ships — skill 'ux-scenarios' ships its own directory and nothing else`, exit 1; a command repointed at `templates/missing-dir/` → `FAIL: … the plugin ships plugins/super-ux/ and nothing above it`, exit 1. All 11 live tokens enumerated and resolving; the `plugins/super-ux/scripts/bp_index.py` developer notes inside contracts are outside the pattern by anchor, verified by the same enumeration | **planted** |
+| R-70 | **`/ux-audit` names its whole scope surface**: `copy` and `benchmark:<competitor>` in the `argument-hint` and in the step-1 enumeration, and the single-pass list carries both | Read against the body's own scope sections (`## Copy scope (\`copy\`)`, `## Benchmark scope (\`benchmark:<competitor>\`)`), which treated both as legal since they shipped. No gate compares the three homes of this enum; that class is filed as `B-030` rather than claimed covered | **never** — a text alignment with no gate, said out loud; the gate is board row `B-030` |
+| R-71 | **Three descriptions stop over-claiming and every routed trigger survives**: ux-scenarios defers the empty-project start to vision/ux-foundation in the trigger itself; copywriting narrows the landing-page phrase to the copy, naming sheleg-design; ux-flows drops bare "figma"/"фигма" and delegates the visual system and Figma variables to sheleg-design | Budgets measured after the edits: 486 / 634 / 983 of 1024, `check_description_canon` green. The umbrella's own checker run directly (`node ../sshlg-skills/test/advertised_check.js --member super-ux --root .`): `ok: super-ux advertises all 43 routed trigger(s) across 3 skill(s)`, exit 0 — and watched failing against a planted drop of «мокап»: exit 1, `the family's routing hook fires on 1 word(s) super-ux no longer advertises`, reverted | **planted**, and the B-54 class checker did the watching |
+
+**Rows at `never`: 1 in this section** (R-70), filed as `B-030`.
+
 ## 2026-08-20 — the checks that were measuring the wrong thing, SU-04
 
 Thirteen defects, all measured in this tree at `cc4c3eb` (the v0.45.0 tree) and
