@@ -8,6 +8,23 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-31 — the frontmatter says what it needs, and the evals stop being a promise, v0.52.1 → v0.52.2
+
+Family-audit rows SUX-02, SUX-04, SUX-05 (2026-08-29). The SUX-02 and SUX-05
+artifacts shipped inside v0.52.1: that release was cut by a concurrent session
+from this working tree while this run's edits sat uncommitted in it, so they
+rode along with no CHANGELOG line — the 0.52.2 entry is that line, and this
+section is their evidence.
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-95 | `compatibility:` front matter in all seven skills, per-skill accurate (SUX-02): python3 3.9+ stdlib-only for the seeded linters, `ux-flows`'s optional Figma/Refero/Mobbin/Lazyweb MCPs with the absent branch stated, `ux-audit`'s with/without-Figma split | `yaml.safe_load` over all seven blocks (each a one-line plain scalar, no colon-space; budgets measured 153–358 of 500); the pinned house auditor (`make-skill` @ `991cbb4`, the ref CI pins) returns `0 GAP, 14 PASS` on each of the seven | **planted** — a colon-space introduced into `vision`'s value was refused by `mapping values are not allowed here`, the same message the class shipped under twice this week in sheleg-design. The plant was manual because the repo has no YAML front-matter gate; that gap is `B-033`, open |
+| R-96 | `$schema` in `plugin.json` (`claude-code-plugin-manifest.json`) and `marketplace.json` (`claude-code-marketplace.json`) (SUX-05) | `claude plugin validate --strict` green on both manifests; both URLs return HTTP 200 following redirects | **observed** — the family's third spelling, `claude-code-plugin.json`, returns 404, which the resolution check caught before it could be copied here |
+| R-97 | Dated eval rows in `test/evals/RESULTS.md` (SUX-04): 28 blind trigger probes 14/14 on `haiku` and 14/14 on `sonnet` (train 8/8, validation 6/6 each), 12/12 scenario lines, per-query answers and Method with stated limits | the probes themselves, receipts in `RESULTS.md`; scenario outputs re-linted by the scorer (`ux_lint.py` 0 errors on s01, `brand pack is clean` on s03, the s02 report on disk at `519d612`) | **planted** at the scoring layer — one doctored answer (`q05` → `sheleg-design`) turned the sonnet row 13/14 with `q05 MISS` printed, then was restored. The probe layer has no plant: a live routing regression has not been watched, and the per-query receipts are what would make one visible |
+
+**Rows at `never`: 0 in this section** (R-97's probe-layer limit is stated in
+its own cell rather than hidden behind a green).
+
 ## 2026-08-31 — the board goes to zero, v0.52.0
 
 Eleven rows, each closed with a mechanism and at least one watched plant. The

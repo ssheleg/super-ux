@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.52.2 — the evals stop being a promise, and 0.52.1's stowaways get their record
+
+- **The eval suite has dated rows instead of a vacant table** (SUX-04, family audit
+  2026-08-29). 28 blind trigger probes — one fresh subagent per query per model
+  (`haiku`, `sonnet`), each shown only the query and the 28 installed family skill
+  descriptions — scored 14/14 on both models (train 8/8, validation 6/6), with every
+  raw answer recorded. Three scenario runs in fresh scratch workspaces scored 12/12
+  expected-behavior lines, each re-verified by running the pack's own linters over
+  the agents' outputs (s01 design chain: `ux_lint.py` 0 errors; s03 rewritten copy:
+  `brand pack is clean`). `test/evals/RESULTS.md` carries the per-query receipts,
+  the scenario evidence, and a Method section that states the limits — single
+  repetition per query against a README that asks for three, model aliases rather
+  than snapshot ids, and the one non-hermetic call the s02 audit itself disclosed.
+- **Two changes shipped inside v0.52.1 without a line of record, and this is that
+  line.** The 0.52.1 commit was cut by a concurrent session from this working tree
+  while this run's edits sat uncommitted in it, so they rode along:
+  **`compatibility:` front matter in all seven skills** (SUX-02) — per-skill rather
+  than one blanket string: the five UX skills name python3 3.9+ (stdlib only) for
+  the linter this pack seeds, `ux-flows` names its optional MCPs (Figma for
+  mockups, Refero/Mobbin/Lazyweb for reference screens) and what happens when they
+  are absent, `ux-audit` states which half of the Figma check survives without the
+  MCP, and the two brand skills name `docs/brand/lint.py` — and **`$schema` in both
+  manifests** (SUX-05), the two schemastore spellings that resolve (the family also
+  carries a `claude-code-plugin.json` variant, which 404s and was not copied);
+  `claude plugin validate --strict` passes on both. Every `compatibility` value is
+  a one-line YAML plain scalar with no colon-space sequence, parsed with
+  `yaml.safe_load` before it ever reached a commit — the family shipped that exact
+  defect twice this week (sheleg-design 1.37.4 and 1.58.0), and a planted
+  colon-space here was caught by the same `mapping values are not allowed here`.
+  Budgets measured: 153–358 chars against the standard's 500; the pinned house
+  auditor returns 0 GAP on all seven. The class — a repo gate that parses shipped
+  front matter as YAML — is filed as `B-033` rather than claimed, because this
+  run's check was manual.
+
 ## 0.52.1 — a ledger row that machine-read as something else
 
 - **`B-029`'s board row carried an unescaped `|` inside a backticked span**
