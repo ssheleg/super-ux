@@ -1,6 +1,7 @@
 ---
 name: vision
 description: Use when a project needs the layer ABOVE personas and jobs - what the product IS, why it exists, and what it refuses to become. Writes docs/ux/vision.md in nine layers (essence, core idea, system behaviour, user role, principles, anti-vision, horizon, the one sentence, and the alignment test) and installs a vision-alignment rule into the project's own instruction file so later features get checked against it. Triggers - "vision" / "видение", "product vision" / "продуктовое видение", "what is this product about", "define product direction", "write a vision", new project with no direction, a feature that feels off-strategy.
+compatibility: Any agent with file read/write - the skill writes markdown and edits the project's own instruction file. The closing lint step (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install; without python3, skip the lint and say so.
 license: MIT
 ---
 

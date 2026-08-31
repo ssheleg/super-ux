@@ -1,6 +1,7 @@
 ---
 name: copywriting
 description: Use when writing, rewriting or editing any text a user will read — interface strings, buttons, errors, empty states, landing and pricing pages, blog posts, changelogs, social posts, app store listings, ads, lifecycle email. Triggers - "write copy" / "напиши текст", "rewrite this" / "перепиши", "headline" / "заголовок", "CTA" / "кнопка", "post for X" / "пост для твиттера", "store listing" / "описание в сторе", "this sounds like AI" / "звучит как нейросеть", "microcopy" / "микрокопия", "build a landing page" / "сделай лендинг" (the copy for it; the visual layer is sheleg-design's). For defining the voice itself, see brand-voice.
+compatibility: Any agent with file read/write. The closing lint (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
 

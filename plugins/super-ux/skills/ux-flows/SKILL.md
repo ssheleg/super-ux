@@ -1,6 +1,7 @@
 ---
 name: ux-flows
 description: Use when designing or improving HOW users move through the product - task analysis, user flows (screens, branches, error paths), screen states, low-fi wireframes, Figma mockups, heuristic UX evaluation and redesign proposals. A paid-acquisition funnel is one of these flows - its step chain and branches, onboarding, the paywall step and the activation funnel, read against reference screens from the same category. Maintains docs/ux/flows.md between foundation (stories) and scenarios. Triggers - "user flow" / "юзер флоу", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "wireframe" / "вайрфрейм", "design a screen" / "нарисуй дизайн", "mockup" / "мокап", "task analysis", "redesign flow", "reference screens" / "референсы", "funnel" / "воронка", "onboarding" / "онбординг", "paywall" / "пейволл", "activation funnel" / "активация". Visual system and Figma variables belong to sheleg-design.
+compatibility: Any agent with file read/write - flow diagrams are mermaid text and need no renderer. Optional MCPs are used only when present in the session - Figma for mockups, Refero/Mobbin/Lazyweb for reference screens; absent, the skill proceeds without them and says so. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only.
 license: MIT
 ---
 
