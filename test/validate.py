@@ -1372,6 +1372,59 @@ def check_reference_is_linked(rel: str, skill: str) -> None:
     )
 
 
+def validate_ledger_table_shape() -> None:
+    """A ledger row has the cells its own header declares.
+
+    Found by the family umbrella's validator on this repository's own v0.52.0
+    tag, not by this one: `B-029`'s row carried an unescaped `|` inside a
+    backticked span -- `` `Kind: copy | layout` `` -- and markdown splits a row
+    on the pipe before any inline parsing happens, so the code fence does not
+    protect it. Every column after the break shifts by one, and `Status` then
+    reads as whatever landed in its place: a `resolved` row that machine-reads
+    as something else, in the two files this pipeline treats as its record.
+
+    The escape-awareness is the whole check. A first pass counted `\|` as a
+    separator and reported fourteen broken rows in files with one, which is a
+    detector that would have been switched off inside a week.
+
+    What the `seen` guard does NOT cover, measured rather than assumed:
+    `backlog.md` carries the header twice, so renaming one of them leaves the
+    other, rows after it keep being checked, and `seen` stays true while
+    thirteen rows silently stop being read. That partial loss is the ratchet's
+    job -- the count fell 4488 to 4475 -- and this guard only catches a header
+    that vanished entirely. Two mechanisms, one for each shape of the failure.
+    """
+    ledgers = (
+        ("docs/evidence/backlog.md", r"^\| (?:B|SU)-\d+ \|", r"^\| id \| Row \|"),
+        ("docs/evidence/verification.md", r"^\| R-\d+ \|", r"^\| REQ \| What ships \|"),
+    )
+    sep = re.compile(r"(?<!\\)\|")
+    for rel, row_pat, hdr_pat in ledgers:
+        text = read(ROOT / rel)
+        if not check(text is not None, f"{rel}: missing"):
+            continue
+        row_re, hdr_re = re.compile(row_pat), re.compile(hdr_pat)
+        width = None
+        seen = False
+        for number, line in enumerate((text or "").split("\n"), start=1):
+            if hdr_re.match(line):
+                width = len(sep.findall(line)) - 1
+                continue
+            if width is None or not row_re.match(line):
+                continue
+            seen = True
+            cells = len(sep.findall(line)) - 1
+            check(
+                cells == width,
+                f"{rel}:{number}: {line.split('|')[1].strip()} has {cells} cells "
+                f"against the {width} its header declares -- an unescaped `|` "
+                f"inside a cell splits the row before the backticks are read, "
+                f"and every column after it shifts",
+            )
+        check(seen, f"{rel}: no data rows matched -- the ledger's shape changed "
+                    f"and this check passed by looking at nothing")
+
+
 def validate_graph_claims() -> None:
     """The code graph may not assert a number the repository contradicts.
 
@@ -2010,6 +2063,7 @@ def main() -> int:
     validate_audit_leaves_product_alone()
     validate_run_instructions()
     validate_ai_tell_coverage()
+    validate_ledger_table_shape()
     validate_graph_claims()
     validate_eval_cases()
     validate_vision_rule_embed()

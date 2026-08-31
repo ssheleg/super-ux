@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.52.1 — a ledger row that machine-read as something else
+
+- **`B-029`'s board row carried an unescaped `|` inside a backticked span**
+  (`` `Kind: copy \| layout` ``), and markdown splits a table row on the pipe before any
+  inline parsing happens, so the code fence does not protect it. Every column after the
+  break shifted by one and `Status` read as whatever landed in its place: a `resolved` row
+  that a machine reads as something else, in one of the two files this pipeline treats as
+  its record. Escaped.
+- **Found by the family umbrella's validator on this repository's own v0.52.0 tag**, while
+  bumping the pin — not by anything here. `validate_ledger_table_shape` now asks the same
+  question of both ledgers, and it is escape-aware because the first version was not: it
+  counted `\|` as a separator and reported fourteen broken rows in files that had one,
+  which is a detector nobody would have kept. Watched on the exact defect, and its limit
+  measured and written down — `backlog.md` carries its header twice, so the guard catches
+  a header that vanished entirely while a partial loss falls to the ratchet, which moved
+  4488 to 4475 on that plant.
+
 ## 0.52.0 — the dash rule stops checking the glyph, humanization stops being a mode, and the pack learns to assemble a product
 
 - **`B062` judges the dash's role rather than its codepoint.** `DASH` was the single

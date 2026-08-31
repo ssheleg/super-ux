@@ -1,6 +1,7 @@
 ---
 name: ux-audit
 description: Use when verifying the codebase against the UX scenario base - runs a batched, evidence-backed scenario audit and writes a versioned report to docs/ux/audits/. Triggers - "ux audit" / "UX-аудит", "run the scenarios" / "прогони по сценариям", "check all buttons/states/errors", pre-release UX verification, scenario compliance check.
+compatibility: Any agent that can search the codebase and cite file:line evidence. The linters it reads (python3 docs/ux/lint.py and python3 docs/brand/lint.py, seeded by this pack) need python3 3.9+, stdlib only. With the Figma MCP connected the frames themselves are confirmed; without it only the recorded frame links are checked, and that limit is stated in the report.
 license: MIT
 ---
 
