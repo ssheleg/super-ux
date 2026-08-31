@@ -8,6 +8,15 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-08-31 — the front matter gets read by a parser, v0.52.3
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-95 | **`validate_front_matter_is_yaml` parses all 30 shipped front-matter blocks with PyYAML** (`B-033`), ported from `sheleg-design` rather than reinvented, with the fail-closed and empty-walk guards its history says carry the weight | Four plants, each reverted: `description: Use when a style pack: dashboards…` → `mapping values are not allowed here`; a `description` nested into a mapping → `parses to dict, not a string`, which produces **no** parse error at all and is the case a try/except alone would miss; the three globs renamed → `the walk is empty, which is a moved directory rather than a pass`; `yaml` blocked at import → `fails closed without it`. PyYAML added to both workflows, because `setup-python` puts a different interpreter on PATH than the one carrying it | **planted**, and **observed** twice in the family before this repository had the guard |
+| R-96 | **`YAML_SELF_TEST` is a permanent plant.** The gate claims to see what `front_matter()` cannot, so the shape it exists for is re-checked against the live parser on every run | Read directly: the constant is parsed first and the run refuses if it does **not** raise. A one-off plant proves the gate worked once; this proves the parser still refuses the shape today | **planted** |
+
+**Rows at `never`: 0 in this section.**
+
 ## 2026-08-31 — the frontmatter says what it needs, and the evals stop being a promise, v0.52.1 → v0.52.2
 
 Family-audit rows SUX-02, SUX-04, SUX-05 (2026-08-29). The SUX-02 and SUX-05

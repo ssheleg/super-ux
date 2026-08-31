@@ -79,6 +79,20 @@ def check_description_canon(rel, path, name: str, desc: str) -> None:
     )
 
 
+def raw_front_matter(path: Path) -> str:
+    """The front-matter block verbatim -- the bytes an agent host actually loads.
+
+    `front_matter()` below is a line-by-line reader and that is the point of
+    having both: it answers what THIS repository believes, and this answers
+    what a YAML parser sees. `B-033` is the gap between them.
+    """
+    text = read(path) or ""
+    if not text.startswith("---"):
+        return ""
+    end = text.find("\n---", 3)
+    return "" if end == -1 else text[4:end]
+
+
 def front_matter(path: Path) -> dict | None:
     """Parse a leading ----delimited front-matter block into a flat dict."""
     text = read(path)
@@ -1372,6 +1386,94 @@ def check_reference_is_linked(rel: str, skill: str) -> None:
     )
 
 
+# A front-matter block that a regex reader accepts and a YAML parser refuses.
+# Kept as a permanent self-test rather than as a one-off plant: this gate's whole
+# claim is that it sees what `front_matter()` cannot, and a gate that has stopped
+# being able to see it would otherwise go green on a clean tree forever.
+YAML_SELF_TEST = 'name: x\ndescription: Use when a style pack: dashboards is picked\n'
+
+
+def validate_front_matter_is_yaml() -> None:
+    """Every shipped front-matter block parses with a REAL YAML parser.
+
+    `B-033`. `front_matter()` reads the block line by line and never asks what a
+    YAML parser would, so a `: ` inside an unquoted scalar turns the whole block
+    into an invalid mapping and ships anyway: every reader here stays green
+    while any installer that parses YAML refuses the file outright and the hub
+    copy freezes on the previous version. The family shipped exactly that twice
+    in twelve days -- `sheleg-design` 1.37.4 and 1.58.0, both
+    `mapping values are not allowed here` -- and the remedy is ported from the
+    sibling that paid for it rather than reinvented.
+
+    Two guards carry the weight, and both are failures the first version of this
+    check would have had. It **fails closed** without PyYAML, because a guard
+    that discloses and passes when its tool is absent is not a guard. And it
+    refuses an **empty walk**, because four globs that all match nothing is a
+    moved directory rather than a clean tree.
+    """
+    try:
+        import yaml
+    except ImportError:
+        check(False, (
+            "PyYAML is not importable, and this guard fails closed without it -- "
+            "an unparseable SKILL.md installs from every regex reader here and is "
+            "refused by every YAML-parsing one. Remedy: python3 -m pip install pyyaml"
+        ))
+        return
+
+    # The self-test first: if the parser no longer refuses the shape this gate
+    # exists for, nothing below it means anything.
+    try:
+        yaml.safe_load(YAML_SELF_TEST)
+        refused = False
+    except yaml.YAMLError:
+        refused = True
+    check(refused, "the front-matter self-test parsed as valid YAML -- this gate "
+                   "claims to see what front_matter() cannot, and on this parser "
+                   "it no longer can")
+
+    shipped = sorted({
+        *ROOT.glob("plugins/*/skills/*/SKILL.md"),
+        *ROOT.glob("plugins/*/commands/*.md"),
+        *ROOT.glob("cursor/rules/*.mdc"),
+    })
+    if not check(bool(shipped),
+                 "front-matter YAML guard: no shipped front-matter files found -- "
+                 "the walk is empty, which is a moved directory rather than a pass"):
+        return
+
+    for path in shipped:
+        rel = path.relative_to(ROOT)
+        raw = raw_front_matter(path)
+        if not check(bool(raw), f"{rel}: no front-matter block to parse"):
+            continue
+        err, data = None, None
+        try:
+            data = yaml.safe_load(raw)
+        except yaml.YAMLError as exc:
+            err = exc
+        check(
+            err is None,
+            f"{rel}: front-matter is not valid YAML "
+            f"({str(err).splitlines()[0] if err else ''}). The shipped shape of "
+            f"this defect is a `: ` inside an unquoted scalar -- quote the "
+            f"scalar, or write the separator as ` - ` the way the siblings do",
+        )
+        check(
+            err is not None or isinstance(data, dict),
+            f"{rel}: front-matter parses to "
+            f"{type(data).__name__ if err is None else 'nothing'}, not a mapping",
+        )
+        desc = data.get("description") if isinstance(data, dict) else None
+        check(
+            not isinstance(data, dict) or "description" not in data
+            or isinstance(desc, str),
+            f"{rel}: `description` parses to {type(desc).__name__}, not a string "
+            f"-- an inner `key: value` nests it into a mapping with no parse "
+            f"error at all, and an agent host then loads an empty description",
+        )
+
+
 def validate_ledger_table_shape() -> None:
     """A ledger row has the cells its own header declares.
 
@@ -2063,6 +2165,7 @@ def main() -> int:
     validate_audit_leaves_product_alone()
     validate_run_instructions()
     validate_ai_tell_coverage()
+    validate_front_matter_is_yaml()
     validate_ledger_table_shape()
     validate_graph_claims()
     validate_eval_cases()

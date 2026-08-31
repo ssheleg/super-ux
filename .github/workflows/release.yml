@@ -77,6 +77,7 @@ jobs:
       - name: Structural validator (gate the release on a valid repo)
         run: |
           set -eu
+          python3 -m pip install --quiet pyyaml
           python3 test/validate.py
 
       - name: Tag must match the manifests (version sync)

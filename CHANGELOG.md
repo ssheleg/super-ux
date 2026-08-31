@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.52.3 — the front matter gets read by a parser, not by a regex
+
+- **`validate_front_matter_is_yaml` parses all 30 shipped front-matter blocks with PyYAML**
+  (`B-033`): 7 `SKILL.md`, 15 commands, 8 `.mdc` mirrors. `front_matter()` reads a block line
+  by line and never asks what a YAML parser would, so a `: ` inside an unquoted scalar turns
+  the whole block into an invalid mapping and ships anyway — green here, refused by every
+  installer that parses YAML, and the hub copy freezes on the previous version. The family
+  shipped exactly that twice in twelve days (`sheleg-design` 1.37.4 and 1.58.0, both
+  `mapping values are not allowed here`), so the remedy is **ported from the sibling that
+  paid for it** rather than reinvented.
+- **The two guards are the ones that history says matter.** It fails **closed** when PyYAML
+  is missing, because a guard that discloses and passes when its tool is absent is the hole
+  the first fix left open; and it refuses an **empty walk**, because globs that all match
+  nothing is a moved directory rather than a clean tree. Both watched: `yaml` blocked at
+  import, and the three globs renamed.
+- **`YAML_SELF_TEST` is a permanent plant, not a one-off.** This gate's whole claim is that
+  it sees what `front_matter()` cannot; a parser that stopped refusing that shape would leave
+  it green on a clean tree forever, so the shape is re-checked on every run.
+- PyYAML installed in both workflows: `setup-python` puts a different interpreter on PATH
+  than the runner's system one, which is where PyYAML is preinstalled.
+
 ## 0.52.2 — the evals stop being a promise, and 0.52.1's stowaways get their record
 
 - **The eval suite has dated rows instead of a vacant table** (SUX-04, family audit
