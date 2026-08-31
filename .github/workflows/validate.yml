@@ -23,6 +23,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+      - name: PyYAML for the front-matter guard
+        # `validate_front_matter_is_yaml` fails closed without it, on purpose:
+        # a guard that discloses and passes when its tool is absent is the hole
+        # `B-033` was filed for. PyYAML is preinstalled only for the runner's
+        # SYSTEM python, and `setup-python` puts a different one on PATH.
+        run: python3 -m pip install --quiet pyyaml
       - name: Validate repo consistency
         run: python3 test/validate.py
       - name: Brand linter unit tests (fixture per check code)
