@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.52.4 — the registry card stopped being four releases stale
+
+`SKILL-CARD.md` carries the fields Anthropic's Skills-for-enterprise guidance asks every
+organisation to keep — *"written so somebody who did not build this can decide"*. It said
+`0.48.3` while this package shipped `0.52.3`.
+
+**Nothing read it, so it could only drift.** The version moves in `package.json`,
+`plugin.json` and `marketplace.json` on every release; the card was in no list. Measured
+2026-09-01 across the family: **four of nine cards were behind** — this one by four minor
+releases, `agent-stack` by ten.
+
+The check refuses a card whose `Version` row disagrees with `package.json`, and refuses a
+card that states no version at all: one a reader cannot see go stale is worse than one
+that lags visibly. Watched failing before it shipped. `repo validator checks`
+4617 → **4619**, recomputed by the command the fact itself cites rather than by hand.
+
+**And the same defect as the sibling, in the same kind of place.** `test/validate.py`
+carried an invalid escape sequence — a lone backslash-pipe in a non-raw docstring — which
+Python already warns about and future versions will reject. It sat in a paragraph
+explaining that *"the escape-awareness is the whole check"*. Now raw, zero escape
+warnings — as `agent-stack`'s was an hour earlier, from a paragraph explaining how to
+escape a pipe.
+
 ## 0.52.3 — the front matter gets read by a parser, not by a regex
 
 - **`validate_front_matter_is_yaml` parses all 30 shipped front-matter blocks with PyYAML**

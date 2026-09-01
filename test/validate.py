@@ -1475,7 +1475,7 @@ def validate_front_matter_is_yaml() -> None:
 
 
 def validate_ledger_table_shape() -> None:
-    """A ledger row has the cells its own header declares.
+    r"""A ledger row has the cells its own header declares.
 
     Found by the family umbrella's validator on this repository's own v0.52.0
     tag, not by this one: `B-029`'s row carried an unescaped `|` inside a
@@ -2197,6 +2197,33 @@ def main() -> int:
               ".github/workflows/release.yml: no job declares `needs: validate` — calling the "
               "suite without depending on it lets the release run beside it rather than "
               "after it, which looks gated and is not")
+
+    # `SKILL-CARD.md` is the entry a stranger decides from, and nothing read it.
+    #
+    # It carries the fields Anthropic's Skills-for-enterprise guidance asks every
+    # organisation to keep — "written so somebody who did not build this can decide" —
+    # and the version moves in `package.json`, `plugin.json` and `marketplace.json` on
+    # every release while the card was in no list. So it could only drift. Measured
+    # 2026-09-01 across the family: FOUR of nine cards were behind, this one by four
+    # minor releases (0.48.3 against 0.52.3) and `agent-stack` by ten.
+    #
+    # A card that states no version at all is refused too: one a reader cannot see go
+    # stale is worse than one that lags visibly.
+    _card = ROOT / "SKILL-CARD.md"
+    if _card.is_file():
+        _ships = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))["version"]
+        _row = r"\|\s*\*{0,2}Version\*{0,2}\s*\|\s*`?([0-9]+\.[0-9]+\.[0-9]+)`?\s*\|"
+        _m = re.search(_row, _card.read_text(encoding="utf-8"))
+        check(bool(_m),
+              "SKILL-CARD.md: no `Version` row this check can read — the card is the entry "
+              "a stranger decides from, and a version it does not state is one that cannot "
+              "go stale visibly. Write it as a table row.")
+        if _m:
+            check(_m.group(1) == _ships,
+                  f"SKILL-CARD.md: the registry card says {_m.group(1)} and package.json "
+                  f"ships {_ships} — the card is what somebody who did not build this "
+                  "decides from, so the one field that dates it may not lag. Bump it in "
+                  "the same change as the manifests.")
 
     check_routed_triggers_still_advertised()
 
