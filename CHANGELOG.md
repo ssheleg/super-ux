@@ -1,3 +1,23 @@
+## 0.52.5 — the card the umbrella renders, and the half of the role that was copywriting's
+
+The committed social preview is now the umbrella's own render, byte for byte
+(`node test/site_test.js` → `PASS: site — 42 checks`). Nothing about this pack changed;
+the string it is rendered from did.
+
+**`super-ux`'s role cell said *"what the interface must do and how it sounds"*** in the
+routing map — the block's first content and its highest-salience surface — while the
+precedence table 362 lines below gave *"how it sounds"* to `copywriting`, and this pack's
+own router text says the same split. A reader who stopped at the first table routed copy
+work to `/ux`, on the one router pair the block works hardest elsewhere to separate. The
+cell is now *"what the interface must do"*, which is exactly what the precedence table
+already said.
+
+The umbrella carries the fixture that keeps it: no member's role may contain another
+router's answer, with one declared exemption. Watched refusing the old string —
+`super-ux's role answers copywriting's question: "how it sounds"`.
+
+Board: `B-131`.
+
 # Changelog
 
 ## 0.52.4 — the registry card stopped being four releases stale
