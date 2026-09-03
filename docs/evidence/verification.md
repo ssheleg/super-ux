@@ -8,6 +8,15 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-03 — the role cell stops answering copywriting's question, v0.52.5
+
+| REQ | What ships | Verified by | Watched |
+|---|---|---|---|
+| R-97 | **The routing map and the precedence table agree about who owns copy.** The map cell read *"what the interface must do and how it sounds"* while the precedence table gave *"how it sounds"* to `copywriting`; a reader stopping at the first table routed copy work to `/ux`. The cell is now *"what the interface must do"* | the umbrella's `test/routers_test.js` fixture — no member role may contain another router's answer, one declared exemption — watched refusing the old string: `super-ux's role answers copywriting's question: "how it sounds"` | **planted** |
+| R-98 | **The committed card is the umbrella's own render, byte for byte.** The role feeds `scripts/site.js`, so the string could not move until this repository recommitted the pixels | `node test/site_test.js` in the umbrella → `PASS: site — 42 checks (13 pages, 9 members, 12 routers)`; this pack's own `npm test` → rc=0 with the new card in place | **observed** |
+
+**Rows at `never`: 0 in this section.**
+
 ## 2026-08-31 — the front matter gets read by a parser, v0.52.3
 
 | REQ | What ships | Verified by | Watched |
