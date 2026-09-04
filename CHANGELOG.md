@@ -1,3 +1,36 @@
+## 0.53.0 — a coverage metric is a check, and its matching rule is where the assumptions hide
+
+Closes `ssheleg/sshlg-skills#96`.
+
+A metric is built to end an argument about coverage. Then **the rule that decides what a
+document is ABOUT** turns out to be one line of string handling, and the number reports work
+that exists as work that is missing — and the number now generates work that is fictional.
+
+Measured: a screen inventory decided a screen was documented when a scenario named its path
+as the primary entry point, taking the first backticked path from `Entry point:` **whole**.
+Two scenarios name their subject with a query string — `/reset-password?token=…` and
+`/account/billing/return?invoice=&status=` — so both matched no route, and **two screens
+that had always been documented were published as having no scenario at all.** The board row
+that followed named nine screens needing scenarios: two needed nothing, and a third was one
+component at two addresses, which the rule can only ever name one of. **Three of nine rows
+were fiction, in a number whose whole purpose was to stop people arguing about coverage from
+memory.**
+
+`ux-audit` now carries three rules for any metric over these documents:
+
+- **the aboutness rule is a named, exported function with a table of synthetic inputs,
+  including the negative cases** — query strings, fragments, several paths in one field,
+  prose with no backticks. It was untestable while it was an inline regex, which is exactly
+  why it was never tested;
+- **a metric that cannot express a real state says so beside the number** rather than
+  counting that state as a failure. One screen at two addresses is one screen, and the
+  matrix carries a derived *alias routes* line instead of silently ranking the second
+  address undocumented;
+- **a deliberate, hard-won rule is a reason to test it, not to trust it.** This one had
+  already replaced a looser rule twice, each time after a screen was reported covered on a
+  mention rather than on a subject — and a rule with that history is the last one anybody
+  re-reads.
+
 ## 0.52.5 — the card the umbrella renders, and the half of the role that was copywriting's
 
 The committed social preview is now the umbrella's own render, byte for byte

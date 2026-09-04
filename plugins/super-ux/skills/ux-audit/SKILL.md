@@ -97,6 +97,38 @@ Every verdict must cite `file:line` evidence. Could not find or verify
 something? The verdict is **BLOCKED** with the exact reason — never a guess,
 never a courtesy PASS. An audit that flatters the codebase is worthless.
 
+## A coverage metric is a check, and its matching rule is where the assumptions hide
+
+A metric is built to end an argument about coverage: it reads the documents, matches them
+against the code, and publishes a number. Then **the rule that decides what a document is
+ABOUT** turns out to be one line of string handling, and the number reports work that
+exists as work that is missing. The number now generates work, and the work is fictional.
+
+Measured: a screen inventory decided a screen was documented when a scenario named its path
+as the **primary entry point** — the first backticked path in `Entry point:`. The extraction
+took that path *whole*, so two scenarios naming their subject with a query string —
+`` `/reset-password?token=…` `` and `` `/account/billing/return?invoice=&status=` `` —
+matched no route, and **two screens that had always been documented were published as having
+no scenario at all.** A board row then named nine screens needing scenarios. Two of the nine
+needed nothing; a third was one component at two addresses, which the rule can name only one
+of. **Three of nine rows were fiction, in a number whose whole purpose was to stop people
+arguing about coverage from memory.**
+
+So, for any metric over these documents:
+
+- **The rule that decides aboutness is a named, exported function with a table of synthetic
+  inputs — including the negative cases.** Query strings, fragments, several paths in one
+  field, prose with no backticks at all. It was untestable while it was an inline regex,
+  which is exactly why it was never tested.
+- **A metric that cannot express a real state says so beside the number**, rather than
+  counting that state as a failure. One screen at two addresses is one screen; the matrix
+  carries a derived *alias routes* line instead of silently ranking the second address as
+  undocumented.
+- **The rule is deliberate and hard-won, and that is a reason to test it, not to trust it.**
+  This one replaced a looser rule twice, each time after a screen was reported covered on a
+  mention rather than on a subject. A rule with that history is the last one anybody
+  re-reads.
+
 ## Depth levels
 
 | Depth | Passes run |

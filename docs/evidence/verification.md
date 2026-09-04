@@ -8,6 +8,15 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-05 — a coverage metric's matching rule, v0.53.0
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| CM-1 | `ux-audit` states that a coverage metric's aboutness rule is a named exported function with synthetic inputs, negative cases included | new section in `plugins/super-ux/skills/ux-audit/SKILL.md`, carrying the measurement it came from: two documented screens published as undocumented because the extraction took a backticked path whole and two scenarios name their subject with a query string | yes |
+| CM-2 | A metric that cannot express a real state says so beside the number | the alias case is named — one component at two addresses is one screen, and the matrix carries a derived line rather than ranking the second address undocumented | yes |
+| CM-3 | The rule's own history is stated as a reason to test it | it had replaced a looser rule twice, each time after a screen was reported covered on a mention; a rule with that history is the last one anybody re-reads | yes |
+| CM-4 | The gate is green | `python3 test/validate.py` → `OK (4621 checks)`; `npm test` rc=0, 0 `FAIL` lines, `PASS: installer — 10 case(s)` | yes |
+
 ## 2026-09-03 — the role cell stops answering copywriting's question, v0.52.5
 
 | REQ | What ships | Verified by | Watched |
