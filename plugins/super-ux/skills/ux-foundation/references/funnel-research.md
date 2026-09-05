@@ -42,6 +42,34 @@ solved by whoever is required to publish the ads.
 **Output:** a list of live funnel URLs with the ad that led to each. Keep the ad,
 because BP-116 is checked against it and cannot be checked without it.
 
+**Who does the clicking, and where that stops.** The walk is mechanical until it
+is not, so the method names the split rather than leaving it to whoever reads it.
+A browser tool — `chrome-devtools` or `claude-in-chrome`, whichever the session
+has — does the part that is mechanical: open the ad's destination, follow the
+redirect chain, and capture four things per funnel, because they are the ones a
+screenshot loses.
+
+| Capture | Why it, and not a screenshot |
+|---|---|
+| the **final URL after redirects** | the ad points at a tracker; the funnel is what it lands on, and the two are rarely the same domain |
+| **every step's URL**, in order | FR-03 records step counts, and a step you did not see is a step you cannot count |
+| the **network requests on the paywall step** | which processor and which price ids — this is the one place the funnel states its own price without a human reading it |
+| the **ad that led there** | the output line above; a capture without it fails BP-116's check |
+
+**A human takes over at three points, and they are not incidental.** Consent
+walls and cookie banners vary by geography and are the first thing an automated
+walk gets stuck in. **Sign-in and paywall steps** are where the funnel gets
+interesting and where a tool cannot proceed without real credentials or a real
+card — do not automate past them, and do not create accounts to see further;
+FR-06 is the rule that ends this method before it becomes competitor copying.
+And **ad libraries rate-limit and detect automation**: Meta's in particular will
+serve a challenge to a driven browser, so the library browsing itself is a human
+step and only the click-through is automated.
+
+So the split is: **the library is read by a person, the funnel is walked by a
+tool, and the walk stops at the first wall that asks who you are.** Silence here
+used to read as *nobody thought about it*, which is worse than either answer.
+
 ## FR-02 — Read the four signals that survive without revenue
 
 None of these measures return. All four measure **investment**, which is a

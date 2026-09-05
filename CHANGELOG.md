@@ -1,3 +1,40 @@
+## 0.54.0 — FR-01 says who does the clicking, and where the tool has to stop
+
+Closes `ssheleg/sshlg-skills#B-87` (board row), and widens two advertised triggers.
+
+**A method told the agent to click through a competitor funnel by hand, in sessions
+where two browser tools are connected.** FR-01 read *"open a competitor's ad, click
+through, and you are in it at step one"* and named no tool for the click — while the
+same repository's neighbours already name `chrome-devtools` for their own crawling and
+`claude-in-chrome` is connected beside it. FR-01's whole output is *a list of live
+funnel URLs with the ad that led to each*: a walk a browser tool performs and a person
+performs slowly.
+
+**The answer is both, and the split is the useful part.** The walk is mechanical until
+it is not:
+
+- a **browser tool** opens the ad's destination, follows the redirect chain and captures
+  four things a screenshot loses — the final URL after redirects, every step's URL in
+  order, the network requests on the paywall step (which processor, which price ids —
+  the one place a funnel states its own price without a human reading it), and the ad
+  that led there;
+- a **human** takes over at three points that are not incidental: consent walls, which
+  vary by geography and are the first thing an automated walk gets stuck in; **sign-in
+  and paywall steps**, where a tool cannot proceed without real credentials or a real
+  card — and where FR-06 already forbids going further; and **ad libraries themselves**,
+  which rate-limit and serve challenges to a driven browser.
+
+So: the library is read by a person, the funnel is walked by a tool, and the walk stops
+at the first wall that asks who you are. **Silence here read as *nobody thought about
+it*, which is worse than either answer** — and the method is otherwise the most
+operationally precise document in the pack.
+
+**Two advertised triggers corrected rather than added.** `copywriting` advertised
+`"пост для твиттера"`, which demands a literal «для» an operator does not type; it now
+reads `"пост в твиттер"`. And `"error text" / "текст ошибки"` is named, closing a route
+the umbrella measured reaching nothing. The description moves 634 → 662 of 1024, leaving
+308 characters — well clear of the 60-character reserve the family's ratchet counts.
+
 ## 0.53.0 — a coverage metric is a check, and its matching rule is where the assumptions hide
 
 Closes `ssheleg/sshlg-skills#96`.
