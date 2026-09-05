@@ -2136,8 +2136,39 @@ def check_routed_triggers_still_advertised():
         _disclose_routing(f"routed triggers — {(proc.stderr or 'the checker could not look').strip()}")
 
 
+def validate_ledger_names_its_version() -> None:
+    """The ledger has to name the version it was measured on.
+
+    v0.54.0 shipped with its newest section naming **v0.53.0**, and this gate said
+    nothing — the umbrella's cross-member ratchet caught it one layer up, which is the
+    right backstop and the wrong first line. A ledger whose newest section names an older
+    artifact is a release nobody re-confirmed against anything.
+
+    Reported through `check()`, not a bare raise: the first draft called a `fail()` this
+    module does not have, so the plant CRASHED the validator instead of being refused by
+    it. A guard that crashes has not refused anything — it has stopped the run before the
+    rest of the suite could speak, and its exit code says the same thing a refusal would.
+    """
+    ver = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))["version"]
+    led = ROOT / "docs/evidence/verification.md"
+    if not led.is_file():
+        return
+    first = re.search(r"^## .*?v(\d+\.\d+\.\d+)", led.read_text(encoding="utf-8"), re.M)
+    check(first is not None,
+          "docs/evidence/verification.md: no section names a version — the ledger cannot "
+          "say which artifact it was measured on")
+    if first is None:
+        return
+    check(first.group(1) == ver,
+          f"docs/evidence/verification.md: the newest section names v{first.group(1)} "
+          f"while package.json ships {ver}. Every section here names the artifact it was "
+          "measured on, so the newest one naming an older artifact means the release was "
+          "never re-confirmed against anything")
+
+
 def main() -> int:
     validate_manifests()
+    validate_ledger_names_its_version()
     validate_npm_payload()
     validate_skills()
     validate_commands()

@@ -8,6 +8,16 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-05 — the ledger names its own version, v0.55.0
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| FT-1 | FR-01 names which tool does the click | `chrome-devtools` or `claude-in-chrome`, and the four captures a screenshot loses: final URL after redirects, every step's URL in order, the network requests on the paywall step, and the ad that led there | **observed** |
+| FT-2 | It names the three points where a human takes over, with reasons | consent walls (vary by geography), sign-in and paywall steps (FR-06 already forbids going further; do not create accounts), and ad libraries themselves (rate-limit and challenge a driven browser) | **observed** |
+| FT-3 | The mirrored copies stay identical | `python3 test/sync_references.py` rewrote `ux-flows/` and `ux-foundation/`; the drift check that refused before the sync is what proves the mirror is enforced | **planted** |
+| FT-4 | `copywriting` advertises what the selector can reach | `"пост для твиттера"` demanded a literal «для» an operator does not type and now reads `"пост в твиттер"`; `"error text" / "текст ошибки"` is named. Description 634 → 662 of 1024, leaving 308 — clear of the 60-character reserve the family's ratchet counts | **observed** |
+| FT-5 | This ledger names the version it was measured on | added in v0.55.0 after the umbrella's cross-member ratchet caught v0.54.0 shipping with a header naming v0.53.0 — this repository's own gate never asked | **planted** |
+
 ## 2026-09-05 — a coverage metric's matching rule, v0.53.0
 
 | REQ | What ships | How it was confirmed | Confirmed |

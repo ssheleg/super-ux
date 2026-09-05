@@ -1,3 +1,26 @@
+## 0.55.0 — the ledger names the version it was measured on, because 0.54.0's did not
+
+**A repair for what the previous release shipped, and the gate that would have caught
+it.** `0.54.0` went out with its verification ledger's newest section naming **v0.53.0**.
+This repository's own gate said nothing; the umbrella's cross-member ratchet caught it one
+layer up — *3 member ledgers describe a version older than they ship, and the ratchet
+stands at 2* — which is the right backstop and the wrong first line.
+
+`validate_ledger_names_its_version` reads the newest `## …` section, resolves the version
+it names and compares it with `package.json`. A ledger whose newest section names an older
+artifact is a release nobody re-confirmed against anything.
+
+**The first draft crashed instead of refusing.** It called a `fail()` this module does not
+have — the name belongs to a sibling repository's validator — so the plant raised
+`NameError` and the run stopped. `rc=1` either way, which is exactly why the plant looked
+like it had worked. **A guard that crashes has not refused anything**: it stops the suite
+before the rest of it can speak, and it reports a defect in itself as a defect in the
+tree. Rewritten through `check()`, watched refusing its plant with no traceback.
+
+Ledger section added for `0.54.0`'s own content, so the release it repairs is recorded
+rather than skipped. `repo validator checks` recomputed 4621 → 4623 by running the command
+`docs/brand/facts.md` names, not by adding two.
+
 ## 0.54.0 — FR-01 says who does the clicking, and where the tool has to stop
 
 Closes `ssheleg/sshlg-skills#B-87` (board row), and widens two advertised triggers.
