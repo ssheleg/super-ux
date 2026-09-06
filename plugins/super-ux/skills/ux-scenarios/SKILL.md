@@ -49,6 +49,10 @@ results and Errors & recovery.
    in the SAME change. New behavior with no scenario is a blocker, not a
    warning.
 
+**The opt-out is spoken, never assumed:** the operator declines this route by
+saying **"no scenarios"** / **«без сценариев»** — proceed without the base and
+say so in the delivery, rather than skipping it silently.
+
 **Best practices:** when drafting or reviewing scenarios, consult
 [best-practices.md](references/best-practices.md) — filter by tags
 matching the feature/journey stage (onboarding, paywall, retention, …) and

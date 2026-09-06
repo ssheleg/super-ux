@@ -66,7 +66,9 @@ those two are the ones that get built and never recorded.
 **Position in the chain:** foundation (WHY) → **flows (HOW) + screens (UI
 map)** → scenarios (WHAT). Stories in, flows and screens out; `ux-scenarios`
 then covers every node and edge with scenarios. If foundation is missing on
-a non-trivial product, recommend `ux-foundation` first.
+a non-trivial product, recommend `ux-foundation` first. The chain's opt-out
+is spoken: **"no scenarios"** / **«без сценариев»** from the operator
+declines it — design without the chain and say so.
 
 **Money moments are first-class flows:** when the foundation declares a
 Monetization section, design dedicated flows for each money moment —

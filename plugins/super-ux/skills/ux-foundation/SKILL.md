@@ -21,6 +21,10 @@ and trace to these IDs — the full chain gives every scenario its context.
 **Format contract:** [scenario-format.md](references/scenario-format.md)
 (ux-contract v4). Never deviate from ID schemes or field names.
 
+**The chain's opt-out is spoken:** an operator saying **"no scenarios"** /
+**«без сценариев»** declines the scenario-first route — proceed without the
+chain and say so, never drop it silently.
+
 ## Quality bars (non-negotiable)
 
 - **Personas** are grounded in data or observation, recognizable by a real

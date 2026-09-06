@@ -8,6 +8,20 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-06 — the refusal the router promises is written where a standalone install can read it, v0.55.1
+
+Family audit 2026-09-06, wave AUDIT-WAVE-0906.
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| AW-1 | Each of the seven skill bodies carries its chain's spoken opt-out — "no scenarios" / «без сценариев» in the five ux-* bodies, "no brand" / «без бренда» in brand-voice and copywriting, copywriting also naming "draft it" / «черновиком» | `git grep -l` over `plugins/super-ux/skills/*/SKILL.md`: 0 files matched at HEAD (the wave's finding, reproduced in this run), 7 match after the edit | **observed** — the grep refused the pre-edit tree, which is the real defect the wave named |
+| AW-2 | Every body stays inside its working limit with the line in place | house auditor before/after on all seven: ux-flows ~4493 → ~4529 and ux-audit ~4580 → ~4626 of 4750, the other five ≤ ~2185. A filler block planted into ux-audit was refused — `GAP BODY_TOKENS … ~5755 tokens … the budget is < 5000` — then reverted | **planted** |
+| AW-3 | No `description:` moved — descriptions pair with the umbrella's trigger table, and a dropped advertised phrase refuses the family pin | `git diff -U0` over the skills: 0 changed lines match `^[+-]description:`; ux-flows's description measured 965/1024 (965 of the 970 working limit) and recorded untouched | **never** — this is a measurement, and the guard that would refuse a dropped phrase is the umbrella's pin, which has no umbrella above this checkout to run in |
+| AW-4 | This ledger names v0.55.1, the version it was measured on | the bump landed before this section on purpose, and `validate_ledger_names_its_version` refused the tree — *the newest section names v0.55.0 while package.json ships 0.55.1* — with the changelog-version check refusing beside it; this section is what turned them green | **planted** |
+
+**Rows at `never`: 1 in this section** — AW-3's limit is stated in its own
+cell rather than hidden behind a green.
+
 ## 2026-09-05 — the ledger names its own version, v0.55.0
 
 | REQ | What ships | How it was confirmed | Confirmed |
