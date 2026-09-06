@@ -23,7 +23,10 @@ state handled, every error honest. Output: a versioned report in
 BLOCKED), severities.
 
 **Precondition:** `docs/ux/scenarios.md` exists. If it doesn't, stop and run
-the `ux-scenarios` skill first — there is nothing to audit against.
+the `ux-scenarios` skill first — there is nothing to audit against. The
+opt-out is spoken: an operator saying **"no scenarios"** / **«без сценариев»**
+declines the scenario route — review what exists without the base and state
+that in the report.
 
 **Full context:** when `docs/ux/foundation.md` exists, audit each scenario
 WITH its chain — load the traced story's acceptance criteria (Given/When/

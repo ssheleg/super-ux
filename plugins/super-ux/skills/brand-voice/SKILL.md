@@ -45,6 +45,10 @@ appealing. With no foundation, work in degraded mode: stamp
 `Derived-from: inferred`, say plainly that the WHY layer should be built, and
 continue rather than blocking.
 
+**The route itself has a spoken opt-out:** an operator saying **"no brand"** /
+**«без бренда»** declines it — proceed without the pack and say so, rather
+than dropping it silently.
+
 ## Choosing a workflow
 
 | Situation | Workflow |

@@ -18,6 +18,10 @@ Guessing it and being wrong costs more than the pause, and a product whose
 copy was invented surface by surface is exactly the drift this layer exists
 to remove.
 
+**The opt-out is spoken, never assumed:** **"no brand"** / **«без бренда»** —
+or **"draft it"** / **«черновиком»** — is the operator declining this route:
+write directly and say the pack was skipped on request, never skip it silently.
+
 **This skill never writes to `docs/brand/`.** A term that is missing from the
 dictionary, or a number with no row in `facts.md`, is **reported** — never
 invented to finish the sentence. Adding it is `brand-voice`'s decision.

@@ -28,7 +28,10 @@ be perfectly scenario'd and still violate the anti-vision.
 > A vision nothing reads is a document, not a constraint.
 
 Fits the chain: **vision → foundation (personas, JTBD, journeys, stories) →
-flows → scenarios → audit.** Each layer traces up to the one above it.
+flows → scenarios → audit.** Each layer traces up to the one above it. The
+chain has a spoken opt-out: the operator declines it by saying
+**"no scenarios"** / **«без сценариев»** — proceed without those layers and
+say so.
 
 ## Step 0 — read the project, not its README
 

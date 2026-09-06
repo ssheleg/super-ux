@@ -1,3 +1,29 @@
+## 0.55.1 — the opt-out the router promises now lives in the bodies that honor it
+
+Family audit 2026-09-06, wave AUDIT-WAVE-0906. **The operator's routing block
+promises a spoken refusal for each chain — "no scenarios" / «без сценариев» for
+the UX chain, "no brand" / «без бренда» (plus "draft it" / «черновиком» for
+copywriting) for the copy chain — and no skill text in this pack carried any of
+them.** With the routing block installed the promise held one layer up; a
+standalone install advertised no opt-out at all, so an operator who wanted the
+route skipped had no phrase the skill had agreed to hear.
+
+One sentence in each of the seven bodies now states it: the operator declines
+the route by saying the phrase, and the skill proceeds without the chain while
+saying so — never silently. Measured before and after with the house auditor:
+every body stays inside its working limit, the tightest being `ux-audit`
+~4626/4750 and `ux-flows` ~4529/4750 tokens.
+
+**No `description:` changed, by decision rather than accident.** Descriptions
+pair with the umbrella's trigger table, and a dropped advertised phrase refuses
+the family pin. `ux-flows`'s description stands at 965/1024 — 965 of the 970
+working limit — and is recorded here untouched for exactly that reason:
+`git diff -U0` over the skills shows zero changed `description:` lines.
+
+`repo validator checks` re-measured at 4623 by running the command
+`docs/brand/facts.md` names — the count did not move with this change, and
+that is a measurement, not a restatement.
+
 ## 0.55.0 — the ledger names the version it was measured on, because 0.54.0's did not
 
 **A repair for what the previous release shipped, and the gate that would have caught
