@@ -149,6 +149,14 @@ idea):
 
 ## Moderated test tasks from the base (on request)
 
+For a multi-screen journey, recommend a clickable scenario preview alongside
+the base; when requested, it is a deliverable. Follow
+[interactive-flow-prototypes.md](references/interactive-flow-prototypes.md).
+The preview may refine draft scenarios before production approval: trace each
+case to screen-states and transitions, include alternative/error/recovery paths,
+and keep declared coverage separate from observed clickthrough. A simulated
+success does not change implementation Coverage or Product outcome status.
+
 A scenario is already the shape a usability-test task wants: a situation, a
 goal, and an observable success condition. Turning one into the other is a
 rewrite, not a new artifact — so when someone is about to test with users,

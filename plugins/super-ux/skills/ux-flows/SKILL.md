@@ -253,31 +253,23 @@ Follow the improvement procedure in the principles doc, strictly:
    `/plugin install task-pipeline@task-pipeline`; or superpowers
    writing-plans / by hand. Same-change rule holds; re-audit after.
 
-## Prototype when the answer is not on paper (optional step)
+## Clickable journey preview (recommended for multi-screen flows)
 
-Between a designed flow and production code sits a question the documents
-cannot settle: does this actually feel right? When it comes up — a state
-model nobody can reason about, a layout where two options both look
-defensible — build a throwaway prototype that answers exactly that question
-and nothing else.
+For a new or substantially changed journey, recommend an interactive preview
+with a screen map, scenario selector, working transitions and explicit simulated
+error/recovery states. When requested, deliver it. Draft scenario coverage with
+the flow and let the preview inform approval; a review prototype may be built
+before the production build gate. A copy-only change need not grow a prototype.
 
-- **Logic question** → the smallest runnable thing that drives the state
-  machine through the cases that are hard to hold in the head.
-- **Look-and-feel question** → the shortlisted variants on one throwaway
-  route, switchable, so they are compared side by side rather than in memory.
-
-Rules: it is throwaway from the first line and named so a reader can tell;
-no persistence, no tests, no abstractions; one command to run. When it has
-answered its question, fold the decision into the chain and keep the
-prototype as a primary source — a throwaway branch with a pointer from the
-issue. The main branch keeps the decision, not the sketch.
-
-Skip it when the answer is already obvious; the step exists so that "we
-weren't sure and shipped anyway" stops being the default.
+Follow [interactive-flow-prototypes.md](references/interactive-flow-prototypes.md)
+for bounded variation coverage, screen-state links, browser/tool fallbacks and
+the handoff receipt. Keep logic review separate from visual-direction approval.
+Record what was actually clicked and what remains unwalked; mock behavior is
+not production Coverage or a measured Product outcome.
 
 ## The build gate (state this to the user plainly)
 
-Interface code does not get written until this workflow is done: the chain
+Production interface code does not get written until this workflow is done: the chain
 (foundation → flows → screens → scenarios) is designed and approved, the
 style pack is recorded, and — when Figma is enabled (default) — the UI is
 mocked up with every screen linked to its frame. When a user jumps straight
@@ -291,6 +283,8 @@ the whole point of super-ux.
 - Every screen the flows touch exists in `screens.md` with states,
   elements, coverage, scenarios, resources; no orphan screens either way.
 - Scenarios cover every node and edge (checked with `ux-scenarios`).
+- When a clickable preview is requested or selected: it is linked, resettable,
+  traced to screen-states/scenarios, and reports walked and unwalked branches.
 - When Figma enabled: every screen state has a frame link in `screens.md`;
   visual-craft practices applied on the frames; Design system block filled
   (including `Style pack` — a named pack or an explicit "none — platform
