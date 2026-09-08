@@ -56,6 +56,13 @@ chain and say so, never drop it silently.
   Its `FR-07` lands each finding here rather than in a document of its own.
   It informs the personas; it never decides them — a foundation built from a
   corpus alone is aimed at a competitor's audience.
+- **Every finding lands with its provenance.** Read
+  [research-evidence.md](references/research-evidence.md) when synthesizing
+  research or writing any number into a foundation document: observation,
+  citation, inference and hypothesis are separate classes; contradictory
+  participants stay linked; a number travels with unit, entity, population
+  and date; and what has no data stays a hypothesis — there is no quota of
+  evidence.
 - **Stories** pass INVEST; acceptance criteria are Given/When/Then and
   observable. A story that can't be verified is not done being written.
 - Evidence beats opinion: repeated pain across users, observable
