@@ -63,6 +63,19 @@ chain and say so, never drop it silently.
   participants stay linked; a number travels with unit, entity, population
   and date; and what has no data stays a hypothesis — there is no quota of
   evidence.
+- **The ledger is local, and it is not a new route.** It lives at
+  `docs/ux/research-ledger.md`, beside the foundation it feeds — research
+  synthesis is a step INSIDE foundation work, never a separate pipeline. A
+  transcript already on disk is a complete input: no Notion, no Dovetail, no
+  browser and no API key is needed to turn local material into ledger rows,
+  and a synthesis that stalls waiting for a tool it does not need has
+  invented a dependency.
+- **Evidence ids and unknowns travel into the scenarios.** A persona trait or
+  journey stage cites the `RE-` ids that support it, and the scenarios built
+  on top RETAIN those ids — the trace chain carries provenance, not just
+  structure. A hypothesis that shaped a scenario rides along as an explicit
+  unknown in that scenario; dropping it on the way is how a guess arrives in
+  the interface wearing a fact's clothes.
 - **Stories** pass INVEST; acceptance criteria are Given/When/Then and
   observable. A story that can't be verified is not done being written.
 - Evidence beats opinion: repeated pain across users, observable
