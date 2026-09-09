@@ -1362,6 +1362,38 @@ S1_MARKERS = (
     "crucial to", "navigate the complexities",
 )
 
+# B051 keyword-stuffing is ADVISORY and about UNNATURAL REPETITION (FIX-UX-02.01):
+# a token must repeat many times on a page long enough to read, not merely clear
+# a percentage. These bars make a zero-repeat page (45/80/100 unique words)
+# always clean, and leave a genuinely stuffed block to warn.
+B051_MIN_WORDS = 40      # enough words to talk about; repetition COUNT guards the rest
+B051_MIN_REPEAT = 5      # a word must actually recur, not appear once
+B051_SHARE = 0.04        # and take an unnatural share on top of that
+
+
+def _domain_terms(brand_dir) -> set:
+    """Registered terms that are SUPPOSED to recur — exempt from B051. Drawn
+    from terminology.md (product terms, entity names) and facts.md fact names,
+    so a brand's own vocabulary is never read as stuffing."""
+    terms = set()
+    try:
+        _banned, products, entities = dictionary(brand_dir)
+        for pair in products:
+            terms.add(pair[0].lower())
+        for pair in entities:
+            terms.add(pair[0].lower())
+    except Exception:
+        pass
+    try:
+        for row in facts(brand_dir):
+            for tok in normalise(row["fact"]).lower().split():
+                if len(tok) > 3:
+                    terms.add(tok)
+    except Exception:
+        pass
+    return terms
+
+
 STOPWORDS = {
     "the", "and", "for", "with", "that", "this", "from", "your", "you",
     "are", "was", "were", "have", "has", "had", "not", "but", "all",
@@ -1617,22 +1649,39 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
                  if len(pooled) > 1 else pooled[0][0])
         per_file.append((label, {}, "\n\n".join(d[2] for d in pooled)))
 
+    # Keyword stuffing is UNNATURAL REPETITION, not a frequency threshold. The
+    # old rule fired B051 (an ERROR) on any token above 1% of the words once a
+    # page passed 40 significant words -- but with 45 unique words and NO repeat
+    # each token is 1/45 = 2.2%, so a page that repeats nothing was flagged, and
+    # for a short page the 1% bar is mathematically unmeetable. Google's policy
+    # describes unnatural repetition / manipulative intent, not a 1% line
+    # (https://developers.google.com/search/docs/essentials/spam-policies#keyword-stuffing),
+    # so this is now ADVISORY: a word must actually REPEAT many times on a page
+    # long enough to judge, and a registered domain term (which is SUPPOSED to
+    # recur) is exempt. Each page is judged on its own rendered body.
+    domain_terms = _domain_terms(brand_dir)
     for path, fields, body in per_file:
         words = [w.lower().strip(".,:;!?()\"'") for w in body.split()]
         real = [w for w in words if len(w) > 3 and w not in STOPWORDS]
-        if len(real) >= 40:
-            counts: dict[str, int] = {}
-            for word in real:
-                counts[word] = counts.get(word, 0) + 1
-            for word, count in sorted(counts.items()):
-                if count / len(words) > 0.01:
-                    findings.append(Finding(
-                        "B051", SEVERITY_ERROR, path, 0,
-                        f"`{word}` is {count / len(words):.1%} of the "
-                        f"document -- above 1% reads as stuffing, which "
-                        f"lowers citation likelihood rather than raising it",
-                    ))
-                    break
+        if len(words) < B051_MIN_WORDS:
+            continue                                  # too short to read repetition at all
+        counts: dict[str, int] = {}
+        for word in real:
+            counts[word] = counts.get(word, 0) + 1
+        for word, count in sorted(counts.items()):
+            if word in domain_terms:
+                continue                              # a registered term is meant to recur
+            share = count / len(words)
+            if count >= B051_MIN_REPEAT and share > B051_SHARE:
+                findings.append(Finding(
+                    "B051", SEVERITY_WARN, path, 0,
+                    f"`{word}` repeats {count}x ({share:.1%}) on this page -- "
+                    f"advisory: unnatural repetition reads as keyword stuffing "
+                    f"(Google's spam policy is about manipulative repetition, "
+                    f"not a fixed percentage). If it is a registered term, add "
+                    f"it to terminology.md; otherwise vary the wording",
+                ))
+                break
 
     for path, fields, body in marketing:
 

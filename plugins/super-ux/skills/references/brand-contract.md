@@ -448,7 +448,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B042 | E | a link in a body where the surface's physics forbid it |
 | B043 | W | more hashtags than the surface tolerates |
 | B050 | E | AI search declared a target while a crawler is blocked |
-| B051 | E | a token exceeds 1% of a marketing document |
+| B051 | W | a token REPEATS unnaturally on one rendered page (advisory: ≥5x and >4%, min 40 words, registered terms exempt) — Google's spam policy is manipulative repetition, not a fixed percentage; no claim about citation likelihood |
 | B052 | E | a filler opener |
 | B053 | W | no named author where the surface needs one |
 | B054 | W | the title promises more than the body delivers |
