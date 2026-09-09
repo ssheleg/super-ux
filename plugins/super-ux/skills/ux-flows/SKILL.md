@@ -207,8 +207,11 @@ Per story (or tight cluster):
    constraints, and write the frame deep-link into every screen row's
    `Figma` column. If Figma is chosen but the MCP isn't connected, recommend
    connecting it and continue text-only (flows/wireframes stay the source of
-   truth, sync later). Ask the Figma yes/no question once at the start and
-   record it in the foundation.
+   truth) — that is the `tooling-degraded` state below: an APPROVED text spec
+   builds now, with `Deferred: frame sync` in the screen row, and when Figma
+   returns the frames are synced and the rows updated WITHOUT re-running the
+   chain. Ask the Figma yes/no question once at the start and record it in
+   the foundation.
 7. **Practice pass** (mandatory, per
    [practice-selection.md](references/practice-selection.md)): build the
    product profile from the foundation, pull the mandatory sets + this
@@ -242,6 +245,30 @@ Figma is enabled — the Figma frame(s) plus their links in `screens.md`
 note. Cascade to `ux-scenarios` (which scenarios now miss coverage?). Leaving
 `screens.md` or a Figma frame behind is exactly the drift this system
 prevents.
+
+## The build state — one machine, four states
+
+Whether a screen may be BUILT is one state, read from **effective capabilities
+and accepted decisions** — never re-derived differently per layer, which is how
+a degradation path ends somewhere no rule permits building:
+
+- **full** — spec approved; where Figma is enabled AND connected, frames
+  linked. Build proceeds.
+- **provisional** — the spec stands on a provisional profile / unbacked
+  traces. Build proceeds for screens no OPEN decision touches; a screen
+  depending on an open decision is `blocked` — **a serious unknown blocks only
+  its dependent decisions, never the whole product**, and a destructive
+  unknown keeps its dependents blocked until decided.
+- **tooling-degraded** — the spec is APPROVED and an optional tool (the Figma
+  MCP) is absent. **A missing optional tool never blocks an approved text
+  spec**: build proceeds on it with an explicit `Deferred: frame sync` note;
+  when the tool returns, the record is updated in place — recorded approvals
+  stand in every layer, nothing re-runs.
+- **declined** — the operator declined a layer; the gate reads the recorded
+  decision instead of re-asking.
+
+Every gate — flows, scenarios, build — reads THIS state and the saved
+approvals, so an approval earned in one layer is never invisible to another.
 
 ## Improve (heuristic evaluation → redesign)
 

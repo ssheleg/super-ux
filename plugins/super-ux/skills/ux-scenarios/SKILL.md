@@ -91,8 +91,13 @@ Scenarios are designed here, not reverse-engineered.
    does not move it, and neither does an audit passing on it.
 4. Present the base to the user section by section for approval. Approved
    scenarios move to `validated`.
-5. Only after validation may UI design/implementation begin — pointed at
-   these scenarios.
+5. Only after validation of the scenarios a screen DEPENDS ON may its UI
+   design/implementation begin — pointed at those scenarios. The build state
+   is ux-flows' four-state machine (full / provisional / tooling-degraded /
+   declined): an approved text spec builds even with optional Figma absent
+   (deferred frame sync), a serious unknown blocks only its dependent
+   screens, and approvals recorded here count in every layer without
+   re-running the chain.
 
 ## Init (existing code)
 
