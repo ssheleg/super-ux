@@ -65,7 +65,13 @@ the product well enough to write its vision — go back to step 0.
 
 ## Step 2 — write `docs/ux/vision.md` in nine layers
 
-Every layer is mandatory. Write in the project's documentation language.
+Every layer is mandatory. Write in the project's documentation language — and
+the vision's nine sections are identified by their NUMBER, not their English
+title: write `## 6. <title in your language>`, never translate the number
+away. The section contract is `ux-scenarios/references/scenario-format.md` →
+*docs/ux/vision.md* — read it before writing the vision, because the linter
+keys on the number and a missing section (e.g. anti-vision) FAILs regardless of
+language.
 
 **1. Essence.** One sentence. `[Product] is [type of system] that changes how
 [user] [does X]`. No feature names, no UI, no technology. The test: *if the

@@ -187,7 +187,11 @@ Optional, and owned by the `vision` skill. Present or absent, never partial:
 a vision missing its anti-vision is the one shape that reliably settles no
 argument.
 
-**Nine sections, these headings, in this order.** The linter keys off them.
+**Nine sections, numbered, in this order — the NUMBER is the section's machine
+identity, the title after it is a localizable display name.** The linter keys
+off the number (`## 6.`), so a vision written in any language keeps all nine
+ids; the English titles below are the seed default, not a requirement. Do not
+demand English prose for the parser's sake.
 
 ```markdown
 # <Product> — Vision
@@ -205,6 +209,10 @@ argument.
 ## 8. The one sentence
 ## 9. The alignment test
 ```
+
+A Russian vision writes `## 6. Анти-видение` and passes; a vision that OMITS
+section 6 fails (`U030`), whatever language the others are in — the id is the
+number, the language is free.
 
 **It is a gate, not a document.** Writing `vision.md` without installing the
 `## Vision alignment — hard rule (super-ux)` block into the project's own

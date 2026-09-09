@@ -686,17 +686,18 @@ def check_web_surface(screens: str, flows: str) -> None:
                 )
 
 
-VISION_SECTIONS = [
-    "1. Essence",
-    "2. Core idea",
-    "3. What the system does",
-    "4. The user's role",
-    "5. Principles",
-    "6. Anti-vision",
-    "7. Horizon",
-    "8. The one sentence",
-    "9. The alignment test",
-]
+# The machine IDENTITY of a vision section is its NUMBER (FIX-UX-07.01); the
+# title after it is DISPLAY prose and may be localized. The linter matches on
+# `## N.` so a Russian vision keeps all nine section ids without English titles.
+# The English titles here are the seed default, not the parser's key.
+VISION_SECTION_TITLES = {
+    1: "Essence", 2: "Core idea", 3: "What the system does", 4: "The user's role",
+    5: "Principles", 6: "Anti-vision", 7: "Horizon", 8: "The one sentence",
+    9: "The alignment test",
+}
+VISION_SECTION_IDS = list(VISION_SECTION_TITLES)      # [1..9]
+# The number is the id: `## 6.` or `## 6. Anti-vision` or `## 6. Анти-видение`.
+_VSEC = lambda n: rf"^##\s+{n}\.[^\n]*$"   # whole heading line: title (any language) is part of the heading, not the body
 
 VISION_RULE_HEADING = "## Vision alignment — hard rule (super-ux)"
 
@@ -752,21 +753,23 @@ def check_vision(ux: Path, vision: str) -> None:
     """
     if not vision.strip():
         return
-    for section in VISION_SECTIONS:
-        if not re.search(rf"^##\s+{re.escape(section)}\s*$", vision, re.MULTILINE):
-            err(f"[U030] vision.md: missing section '## {section}'")
+    for n in VISION_SECTION_IDS:
+        if not re.search(_VSEC(n), vision, re.MULTILINE):
+            err(f"[U030] vision.md: missing section '## {n}.' "
+                f"(e.g. '{n}. {VISION_SECTION_TITLES[n]}' — the number is the id, "
+                f"the title may be in the document's language)")
     # Emptiness is a defect only once the document claims to be finished.
     # A freshly seeded template is all headings and no content by design, and
     # a linter that fails on its own seed teaches people to skip the linter.
     approved = bool(re.search(r"\*\*Status:\*\*\s*approved", vision, re.IGNORECASE))
     if approved:
-        for section in ("6. Anti-vision", "9. The alignment test"):
-            body = re.split(rf"^##\s+{re.escape(section)}\s*$", vision, maxsplit=1,
-                            flags=re.MULTILINE)
+        for n in (6, 9):
+            body = re.split(_VSEC(n), vision, maxsplit=1, flags=re.MULTILINE)
             if len(body) == 2:
                 tail = re.split(r"^##\s", body[1], maxsplit=1, flags=re.MULTILINE)[0]
                 if not tail.strip():
-                    err(f"[U031] vision.md: approved but '## {section}' is empty — "
+                    err(f"[U031] vision.md: approved but section {n} "
+                        f"({VISION_SECTION_TITLES[n]}) is empty — "
                         f"the section that settles arguments cannot be blank")
 
     # `B-005`: the seeded template is nine headings above HTML comments, and
@@ -776,9 +779,8 @@ def check_vision(ux: Path, vision: str) -> None:
     # installs starts arbitrating against a blank document. A warning rather
     # than an error, because a new project legitimately starts here: the defect
     # is not that it is empty, it is that nothing said so.
-    def _authored(section: str) -> bool:
-        parts = re.split(rf"^##\s+{re.escape(section)}\s*$", vision, maxsplit=1,
-                         flags=re.MULTILINE)
+    def _authored(n: int) -> bool:
+        parts = re.split(_VSEC(n), vision, maxsplit=1, flags=re.MULTILINE)
         if len(parts) != 2:
             return False
         tail = re.split(r"^##\s", parts[1], maxsplit=1, flags=re.MULTILINE)[0]
@@ -791,10 +793,10 @@ def check_vision(ux: Path, vision: str) -> None:
         tail = re.sub(r"^\s*(?:[-*+]|\d+\.)\s*$", "", tail, flags=re.MULTILINE)
         return bool(tail.strip())
 
-    written = [s for s in VISION_SECTIONS if _authored(s)]
+    written = [n for n in VISION_SECTION_IDS if _authored(n)]
     if not approved and not written:
         warn(f"[U076] vision.md is still the seeded template — all "
-             f"{len(VISION_SECTIONS)} sections are headings with nothing under "
+             f"{len(VISION_SECTION_IDS)} sections are headings with nothing under "
              f"them, so the alignment rule is arbitrating against a blank "
              f"document. Write it, or delete the file until you do")
 

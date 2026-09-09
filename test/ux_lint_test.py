@@ -59,8 +59,12 @@ FULL_BLOCK = (
     "  - **Entity:** schema.org/Product with Offer per tier\n"
 )
 
+# FIX-UX-07.01 — a section heading is `## <n>. <title>`; the id is the number.
+def _vh(n):
+    return f"{n}. {ux_lint.VISION_SECTION_TITLES[n]}"
+
 VISION_OK = "\n".join(
-    f"## {s}\n\nwritten\n" for s in ux_lint.VISION_SECTIONS
+    f"## {_vh(n)}\n\nwritten\n" for n in ux_lint.VISION_SECTION_IDS
 )
 
 # The shipped seed's exact shape: eight sections with nothing under them, and
@@ -68,11 +72,11 @@ VISION_OK = "\n".join(
 # actually ships. Anything that counts a placeholder as content goes silent
 # here, which is how `U076` first failed to fire on the document it exists for.
 VISION_SEEDED = "\n".join(
-    f"## {s}\n\n" for s in ux_lint.VISION_SECTIONS[:-1]
-) + f"## {ux_lint.VISION_SECTIONS[-1]}\n\n1. <question>\n2. <question>\n"
+    f"## {_vh(n)}\n\n" for n in ux_lint.VISION_SECTION_IDS[:-1]
+) + f"## {_vh(ux_lint.VISION_SECTION_IDS[-1])}\n\n1. <question>\n2. <question>\n"
 
 VISION_ALL_PLACEHOLDER = "\n".join(
-    f"## {s}\n\n<to be written>\n" for s in ux_lint.VISION_SECTIONS
+    f"## {_vh(n)}\n\n<to be written>\n" for n in ux_lint.VISION_SECTION_IDS
 )
 
 
@@ -326,8 +330,13 @@ silent("U056 tolerates a line suffix on the citation",
 # --- U030..U033: the vision layer -----------------------------------------
 
 case("U030 a vision missing one of the nine sections",
-     {"vision.md": VISION_OK.replace("## 6. Anti-vision", "## 6. Antivision")},
+     # FIX-UX-07.01: renaming a title no longer removes a section (the NUMBER is
+     # the id), so a truly missing section deletes `## 6.` and its body.
+     {"vision.md": VISION_OK.replace("## 6. Anti-vision\n\nwritten\n", "")},
      errors={"U030"}, root_files={"CLAUDE.md": RULE + "\n"})
+silent("U030 a section keeps its id when the title is localized",
+       {"vision.md": VISION_OK.replace("## 6. Anti-vision", "## 6. Анти-видение")},
+       {"U030"}, root_files={"CLAUDE.md": RULE + "\n"})
 silent("U030 clean on all nine sections",
        {"vision.md": VISION_OK}, {"U030"}, root_files={"CLAUDE.md": RULE + "\n"})
 
