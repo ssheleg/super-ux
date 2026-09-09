@@ -22,9 +22,17 @@ to remove.
 or **"draft it"** / **«черновиком»** — is the operator declining this route:
 write directly and say the pack was skipped on request, never skip it silently.
 
-**This skill never writes to `docs/brand/`.** A term that is missing from the
-dictionary, or a number with no row in `facts.md`, is **reported** — never
-invented to finish the sentence. Adding it is `brand-voice`'s decision.
+**Ownership is by FILE, not by directory.** `brand-voice` owns the pack's
+sources of truth — `voice.md`, the terminology dictionary, `facts.md`, the
+channel playbooks and the locale policy — and this skill **never writes those**:
+a term missing from the dictionary, or a number with no row in `facts.md`, is
+**reported**, never invented to finish the sentence — adding it is
+`brand-voice`'s decision. This skill DOES own **`strings.md`** (the interface-
+string registry, written with `Status: proposed`) and the product text itself.
+Both live under `docs/brand/`, but the directory is not the owner — the file
+is. Writing a `strings.md` row is this skill's job and needs no extra approval
+for its LOCATION; a coordinated run claims the file before editing, and voice
+and facts stay untouched in the same pass.
 
 ## References
 
