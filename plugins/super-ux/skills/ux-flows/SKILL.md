@@ -65,8 +65,9 @@ stop before copying. Its last section names the step chain the corpus keeps
 producing (ad → landing → quiz → loading → offer → paywall → checkout →
 success) and the practice that specifies each step, which is the diagram this
 skill draws. Every step there is a screen in `screens.md` and a scenario in
-`scenarios.md`, **the loading screen and the missing-answer branch included** —
-those two are the ones that get built and never recorded.
+`scenarios.md`, **the loading screen (where a real wait exists — never a
+manufactured one) and the missing-answer branch included** — those two are the
+ones that get built and never recorded.
 
 **Position in the chain:** foundation (WHY) → **flows (HOW) + screens (UI
 map)** → scenarios (WHAT). Stories in, flows and screens out; `ux-scenarios`

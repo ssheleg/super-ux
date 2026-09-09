@@ -160,8 +160,9 @@ restates a figure from it, because it states none.
 
 #### BP-005: Loading screens that sell, not spin
 - **Do:** replace generic loaders before the paywall with value messaging, social proof, or personalized copy.
-- **Why:** primes intent in dead time; excited users convert better.
-- **Apply when:** any loading/preparation moment exists before a conversion point.
+- **Don't:** manufacture the wait. This practice fills a delay that ALREADY exists — it never adds one, never holds a ready result back, and its copy never claims analysis that is not happening ("analyzing your answers…" over a lookup table is a false claim, not priming).
+- **Why:** primes intent in dead time; excited users convert better. Dead time only — staged time is a dark pattern with a measurement bill.
+- **Apply when:** a real loading/preparation moment exists before a conversion point. Instant local results render without a timer; a deliberate narrative pause, if the product chooses one, is named honestly and its cost/comprehension measured.
 - **Tags:** onboarding, paywall, social-proof, conversion
 - **Source:** [48Laws] L5
 

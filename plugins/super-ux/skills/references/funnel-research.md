@@ -189,16 +189,18 @@ starting point rather than a rule.
 |---|---|---|
 | Landing | Pick up the ad's exact promise and move the visitor into the quiz | BP-116, BP-117 |
 | Quiz | Build commitment, and collect the few answers the offer repeats | BP-002, BP-143, BP-211 |
-| Loading | A calculated pause that makes the result feel computed for this person | BP-005 |
+| Loading | Only where REAL asynchronous work exists: show the actual operation, never delay a ready result. A product that wants a narrative pause names it honestly — no claim of personal analysis that is not happening — and measures its cost | BP-005 |
 | Offer | The answers come back as a plan, wording branched, price not | BP-010, BP-211 |
 | Paywall | Tiers, what is included, the trial, the anchor unit | BP-118, BP-022, BP-070 |
 | Checkout | The smallest identity that unblocks the purchase, total visible before the last step | BP-119, BP-120 |
 | Success | Confirmation, and the handoff into the product | BP-125, BP-215 |
 
 Every one of those steps is a screen in `screens.md` and a scenario in
-`scenarios.md`, including the loading screen and including the branch where the
-quiz answer is missing. A step that exists in the build and not in the record is
-the drift the chain exists to prevent.
+`scenarios.md`, including the loading screen — where one legitimately exists —
+and including the branch where the quiz answer is missing; that branch shows
+its honest empty state, never a staged personalization over answers nobody
+gave. An instant local result renders without a timer. A step that exists in
+the build and not in the record is the drift the chain exists to prevent.
 
 ## What this method cannot do
 
