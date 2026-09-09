@@ -2016,9 +2016,26 @@ corpus of them can and cannot tell you — is `funnel-research.md`.
 - **Source:** [FFox26]/[48Laws]
 - **Checked:** 2026-08-14
 
-#### BP-212: Publicly addressable before it takes money, instrumented before it takes traffic
-- **Do:** order the build so the funnel has a real public address before a payment provider is wired to it, and so product analytics and the ad-platform pixel are live before the first paid click. Treat each as a gate on the next step, not as a task to catch up on.
-- **Why:** both orderings are forced rather than tidy. A provider confirms a charge by calling an address on the public internet, so the whole post-payment path — entitlement written, success screen shown, access delivered — is untestable while the funnel exists only on a laptop, and the usual way to find that out is the first real card. Traffic bought before instrumentation cannot be read afterwards either: the sessions are spent, the step that was losing people was never recorded, and the campaign gets judged on a total that names nothing. BP-039 orders lifecycle after the funnel for the same reason one level up.
+#### BP-212: Local sandbox tests the payment path; production delivery needs a public HTTPS endpoint
+- **Do:** separate the THREE environments. Wire and TEST the payment path
+  locally with the provider's webhook forwarding or official emulator (Stripe:
+  `stripe listen --forward-to localhost:4242/webhook`, no registered URL
+  needed); PRODUCTION delivery needs a real public HTTPS endpoint with
+  signature verification. And keep product analytics and the ad-platform pixel
+  live before the first paid click. Treat production HTTPS availability as a
+  gate on going live, not as a gate on writing the wiring.
+- **Why:** a provider confirms a charge by calling an address, but that address
+  is a **local forwarded one in the sandbox** — the whole post-payment path
+  (entitlement written, success screen shown, access delivered) IS testable on
+  a laptop with the provider's CLI, and "untestable until it has a public
+  address" is false, it just needs the right tool. What genuinely requires a
+  public HTTPS endpoint is PRODUCTION delivery, and readiness for that is a
+  separate check (endpoint reachable, TLS valid, signature verified) — a
+  provider-capability question, not a universal UX gate that blocks local work.
+  Traffic bought before instrumentation cannot be read afterwards either: the
+  sessions are spent, the losing step was never recorded, and the campaign is
+  judged on a total that names nothing. BP-039 orders lifecycle after the
+  funnel for the same reason one level up.
 - **Apply when:** standing up any web funnel, or adding a payment step to one that had none.
 - **Tags:** checkout, analytics, web2app, conversion, testing, web
 - **Source:** [FFox26]/[CRO26]
