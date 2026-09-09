@@ -22,11 +22,22 @@ state handled, every error honest. Output: a versioned report in
 (ux-contract v4) — report structure, verdicts (PASS / PARTIAL / FAIL /
 BLOCKED), severities.
 
-**Precondition:** `docs/ux/scenarios.md` exists. If it doesn't, stop and run
-the `ux-scenarios` skill first — there is nothing to audit against. The
-opt-out is spoken: an operator saying **"no scenarios"** / **«без сценариев»**
-declines the scenario route — review what exists without the base and state
-that in the report.
+**Preconditions are computed AFTER the scope, one per pass — never a blanket
+stop.** Each scope needs its OWN input, and a project that has one but not the
+others runs the passes it can:
+
+- **scenario scope** needs `docs/ux/scenarios.md`; absent, THIS pass has
+  nothing to audit against — run the `ux-scenarios` skill first, or with
+  **"no scenarios"** / **«без сценариев»** review what exists and say so.
+- **copy scope** needs only the brand pack (`docs/brand/voice.md`); a
+  standalone blog with a brand and NO scenarios runs the copy audit and
+  nothing else — it is not routed into creating scenarios it has no use for.
+- **benchmark scope** needs the observed competitor URLs and their capture
+  receipts, not the scenario base.
+
+So `/ux-audit copy` on a brand-only project audits copy; `/ux-audit all`
+without `docs/ux/scenarios.md` runs the passes whose inputs exist and STATES
+the scenario limitation in the report rather than stopping the whole run.
 
 **Full context:** when `docs/ux/foundation.md` exists, audit each scenario
 WITH its chain — load the traced story's acceptance criteria (Given/When/
@@ -96,9 +107,15 @@ scenario — it becomes a story in the foundation, not a fix in this report.
 
 ## Evidence discipline (non-negotiable)
 
-Every verdict must cite `file:line` evidence. Could not find or verify
-something? The verdict is **BLOCKED** with the exact reason — never a guess,
-never a courtesy PASS. An audit that flatters the codebase is worthless.
+Every verdict cites evidence of the RIGHT KIND for its claim. A claim about
+THIS codebase cites **`file:line`**. A claim about EXTERNAL data — a benchmark
+competitor, a live third-party page — cites a **URL + timestamp + capture**
+(the screenshot or saved response), because a competitor's flow has no
+`file:line` in your repo and inventing one is a fabricated citation. Could not
+find or verify something? The verdict is **BLOCKED** with the exact reason —
+never a guess, never a courtesy PASS, and a benchmark never invents a local
+`file:line` for an outside observation. An audit that flatters the codebase is
+worthless.
 
 ## A coverage metric is a check, and its matching rule is where the assumptions hide
 
