@@ -1063,40 +1063,115 @@ def _today() -> str:
     return datetime.date.today().isoformat()
 
 
-def _fact_figures(value: str) -> set[str]:
-    """Every figure ONE fact's `Value` sources, normalised the way copy is read.
+# A figure's provenance is more than its digits (FIX-UX-01.02 / UX-01). "500
+# supported integrations" does NOT source "500 million paying customers": the
+# digits coincide, the SCALE and the SUBJECT differ. So B030 resolves a claim
+# against a SIGNATURE -- (digits, unit, scale, precision) -- not against a bag
+# of numbers. Subject/population match is a reader's judgement, kept to the
+# separate semantic review; this token-level check verifies the provenance
+# LINK, the UNIT, the PRECISION and the date TYPE, and says so in its own name.
+SCALE_WORDS = {
+    "k": "k", "thousand": "k", "thousands": "k",
+    "m": "m", "mn": "m", "million": "m", "millions": "m",
+    "b": "b", "bn": "b", "billion": "b", "billions": "b",
+}
+# Words that follow a year but do not make it a COUNT ("2025 and Material").
+_NOT_A_COUNT_NOUN = {
+    "and", "or", "but", "to", "the", "of", "a", "an", "rev", "edition",
+    "version", "release", "guidelines", "guidance",
+}
+# Cues that a nearby four-digit token is a DATE, not a figure.
+_DATE_CUE = re.compile(
+    r"(?:©|\bin\b|\bsince\b|\bcirca\b|\bas of\b|\best\.?\b|\brev\b"
+    r"|\bedition\b|\bversion\b|\bv\b|\bHIG\b|\bSP\b|\bISO\b|\bRFC\b"
+    r"|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\b)",
+    re.IGNORECASE,
+)
 
-    B030 compares a figure in public copy against this set exactly. Until
-    2026-08-20 it compared against every value joined into a single string and
-    asked `compact not in known.replace(" ", "")` -- so the corpus was one
-    character sequence and every SUBSTRING of it counted as sourced. With this
-    pack's own seven public rows the corpus was `7158215243770+`, which sourced
-    the invented `1582` in "super-ux ... ships 1582 checks": the linter printed
-    `brand pack is clean` and exited 0. An invented public number passing the
-    check whose entire purpose is to refuse one is the worst failure this file
-    can have, because it is indistinguishable from working.
 
-    Three forms are accepted, and each is the same claim written differently:
-    the value with its whitespace removed; the same with a bound marker stripped,
-    so a row of `500+` sources the `500` a sentence writes; and whatever the
-    figure regex reads INSIDE the value, so `$3.10` and a thousands separator are
-    matched in the form copy uses. Nothing else -- a figure not written in the
-    table is not in the table.
+def _signature(token: str, scale_word: str = "") -> tuple:
+    """(digits, unit, scale, precision) for one numeric token.
+
+    Digits keep their decimal places so precision is part of identity: a row of
+    `$3.10` does not source a copy `$3.1`. Unit is % or a currency mark; scale
+    is a magnitude word beside the number, so a bare `500` never sources
+    `500 million`.
     """
-    compact = re.sub(r"\s+", "", value)
-    figures = {compact, compact.strip("+~><≈").strip()}
-    figures.update(m.replace(" ", "") for m in NUMBER_RE.findall(value))
-    return {f for f in figures if f}
+    s = token.strip()
+    unit = ""
+    if s.endswith("%"):
+        unit, s = "%", s[:-1].strip()
+    m = re.match(r"^([$€£])\s?(.*)$", s)
+    if m:
+        unit, s = m.group(1), m.group(2)
+    s = s.replace(",", "").strip("+~><≈").strip()
+    if "." in s:
+        intp, _dot, frac = s.partition(".")
+        digits, precision = intp + "." + frac, len(frac)
+    else:
+        digits, precision = s, 0
+    scale = SCALE_WORDS.get((scale_word or "").lower(), "")
+    return (digits, unit, scale, precision)
+
+
+def _row_signatures(value: str) -> set:
+    """Every SIGNATURE one fact's `Value` sources (replaces the old digit set).
+
+    Same anti-substring guarantee as before -- a figure not written in the
+    table is not in the table -- now carrying unit, scale and precision so a
+    coincidence of digits can no longer launder a different claim.
+    """
+    sigs = set()
+    for m in NUMBER_RE.finditer(value):
+        tail = value[m.end():].lstrip()
+        sw = re.match(r"([A-Za-z]+)", tail)
+        scale_word = sw.group(1) if sw and sw.group(1).lower() in SCALE_WORDS else ""
+        sigs.add(_signature(m.group(0), scale_word))
+    compact = re.sub(r"\s+", "", value).strip("+~><≈").strip()
+    if compact and re.search(r"\d", compact):
+        sigs.add(_signature(compact))
+    return sigs
+
+
+def _reads_as_date(body: str, start: int, end: int) -> bool:
+    """A four-digit year-form token is a DATE (not a checkable figure) by
+    default; it is a FIGURE -- and needs a row -- only when a plural count noun
+    follows it with no date cue before and no range dash beside it. So
+    "2026 integrations" and "2026 customers" are checked, while "Apple HIG
+    2025", "in 2026", "2020—2024" and "2024 without a gap" stay dates.
+
+    A plural count noun is approximated as a lowercase word of four or more
+    letters ending in "s" and not in the small stoplist -- deliberately narrow,
+    because a false FIGURE here is a B030 nobody can clear (the range fixture
+    that caught exactly this)."""
+    before = body[max(0, start - 24):start]
+    if _DATE_CUE.search(before) or before.rstrip().endswith(("-", "\u2013", "\u2014")):
+        return True
+    after = body[end:]
+    if after.lstrip().startswith(("-", "\u2013", "\u2014")):
+        return True                                   # a range: 2020—2024
+    # A year preceded by a proper noun or an acronym is an edition/benchmark
+    # year ("Apple HIG 2025", "PLG 2025 benchmarks"), not a count. Only a year
+    # after a lowercase word (or nothing) — "spanning 2026 integrations" — reads
+    # as the count itself.
+    prev = re.search(r"([A-Za-z][A-Za-z-]*)[\s/]*$", before)
+    prev_is_name = bool(prev and (prev.group(1)[:1].isupper() or prev.group(1).isupper()))
+    nxt = re.match(r"\s*([A-Za-z][A-Za-z-]*)", after)
+    if nxt and not prev_is_name:
+        w = nxt.group(1).lower()
+        if len(w) >= 4 and w.endswith("s") and w not in _NOT_A_COUNT_NOUN:
+            return False                              # a count noun follows: check it
+    return True
 
 
 def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
     """B030-B033 -- every figure traces to a row, every row to a source."""
     findings: list[Finding] = []
     rows = facts(brand_dir)
-    known: set[str] = set()
+    known: set = set()
     for row in rows:
         if row["public"].lower() != "no":
-            known |= _fact_figures(row["value"])
+            known |= _row_signatures(row["value"])
 
     # B033 -- `Fact` is the key a figure is cited by, and a table with two rows
     # under one key has no answer to "what is that number". Watched: a second
@@ -1132,16 +1207,31 @@ def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
             ))
 
     for path, _fields, body in documents(brand_dir, sources, "marketing"):
-        for number in NUMBER_RE.findall(body):
-            compact = number.replace(" ", "")
-            if YEAR_RE.match(compact):
+        for m in NUMBER_RE.finditer(body):
+            number = m.group(0)
+            digits = re.sub(r"\s+", "", number)
+            # A year-form token: excluded ONLY when it reads as a date, never
+            # automatically (UX-01). "2026 integrations" is a figure that needs
+            # a row; "Apple HIG 2025" is a date.
+            if YEAR_RE.match(digits.strip("+~><≈")) and _reads_as_date(body, m.start(), m.end()):
                 continue
-            if compact not in known:
+            tail = body[m.end():].lstrip()
+            sw = re.match(r"([A-Za-z]+)", tail)
+            scale_word = sw.group(1) if sw and sw.group(1).lower() in SCALE_WORDS else ""
+            sig = _signature(number, scale_word)
+            if sig not in known:
+                # Name WHICH axis failed, so a writer can act: a bare digit that
+                # a row DOES carry under a different unit/scale/precision is a
+                # provenance mismatch, not a missing fact.
+                bare_matches = any(s[0] == sig[0] for s in known)
+                why = ("its unit, scale or precision does not match any facts.md row"
+                       if bare_matches else "no row in facts.md")
                 findings.append(Finding(
                     "B030", SEVERITY_ERROR, path, 0,
-                    f"`{number}` appears in public copy with no row in "
-                    f"facts.md -- a number nobody can check is a claim "
-                    f"nobody should make",
+                    f"`{number}` in public copy: {why} -- a number nobody can "
+                    f"check against a sourced claim is a claim nobody should make. "
+                    f"(Whether it means what the sentence says is the semantic "
+                    f"review's question, not this check's.)",
                 ))
         for paragraph in re.split(r"\n\s*\n", body):
             lowered = paragraph.lower()
