@@ -219,7 +219,8 @@ Passes:
    - every listed UI element exists (STATIC) and is wired to a handler that
      actually FIRES on the user's click (RUNTIME);
    - every listed state (loading / empty / error / success) has a rendering
-     branch (STATIC);
+     branch (STATIC) — the full state taxonomy and its pressure rows:
+     [state-stress-matrix.md](references/state-stress-matrix.md);
    - every listed error is surfaced to the user honestly (RUNTIME — a branch
      in code is not proof the user saw it);
    - the expected result observably occurs (RUNTIME).
