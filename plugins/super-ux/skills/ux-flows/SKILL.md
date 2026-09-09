@@ -23,7 +23,10 @@ evaluation of existing flows and traced redesign proposals.
 UI, Figma, and code together). A screen used by several flows is described
 once in `screens.md`.
 
-**Contracts:** [scenario-format.md](references/scenario-format.md)
+**Contracts:** [scenario-format.md](references/scenario-format.md);
+for an interactive flow preview, the bounded scenario graph in
+[interactive-flow-prototypes.md](references/interactive-flow-prototypes.md)
+— declared first, walked second, and the preview raises no status
 (ux-contract v4, `flows.md` section) and
 [ux-design-principles.md](references/ux-design-principles.md) — read the
 principles doc before designing; it is the thinking playbook (task-analysis
