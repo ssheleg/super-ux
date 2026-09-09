@@ -207,15 +207,26 @@ Passes:
    batches before starting so progress is visible.
 3. **Audit each batch.** For large scopes dispatch parallel subagents — one
    batch per subagent, each returning per-scenario verdicts with evidence.
-   Per scenario check, against the code:
-   - entry point exists and is reachable;
-   - every numbered step has a corresponding implementation path;
-   - every listed UI element exists and is wired to a handler;
+   **Three evidence tiers, and a verdict names which it stands on** — because
+   a `file:line` proves the TEXT of an implementation, not that a user reaches
+   it. Static conformance (file:line — the code says so), executable
+   verification (a test or a browser receipt — the runtime does so), and
+   production observation (a signal from the world — step 7's `Product:`, never
+   the audit's). A criterion is tagged STATIC or RUNTIME:
+   - entry point exists (STATIC) and is reachable BY A USER (RUNTIME — CSS
+     overlay, auth, a network gate can hide a present route);
+   - every numbered step has an implementation path (STATIC);
+   - every listed UI element exists (STATIC) and is wired to a handler that
+     actually FIRES on the user's click (RUNTIME);
    - every listed state (loading / empty / error / success) has a rendering
-     branch;
-   - every listed error is surfaced to the user honestly (no silent catch,
-     no fake success) with the described recovery;
-   - the expected result observably occurs.
+     branch (STATIC);
+   - every listed error is surfaced to the user honestly (RUNTIME — a branch
+     in code is not proof the user saw it);
+   - the expected result observably occurs (RUNTIME).
+   A RUNTIME criterion **PASSes only with a test, a browser check, or a
+   verified runtime receipt** — absent one it is **BLOCKED (unverified)**, never
+   a PASS off a `file:line`, and never invented when no browser is available. A
+   STATIC criterion PASSes on its `file:line` with the proof type named.
    Any gap → PARTIAL (or FAIL if the flow is missing/broken) with a finding
    `[AUD-YYYY-MM-DD-NN] (severity) description -> suggested fix`.
 4. **Check the batches against each other, before the report reads as one answer.**
@@ -246,8 +257,13 @@ Passes:
    who won't open the batch details.
 7. **Update the base — the delivery state, and only that.** `Last audit`
    column (`YYYY-MM-DD VERDICT`) for every audited scenario; flip
-   `validated` → `implemented` where the audit PASSed; never touch scenario
-   content itself during an audit. **The audit never writes `Product:`.** A
+   `validated` → `implemented` ONLY where every RUNTIME criterion the scenario
+   depends on has executable or runtime-receipt proof — a scenario carrying an
+   unverified RUNTIME criterion stays `validated` with those criteria BLOCKED,
+   because a static PASS is delivery of the code's TEXT, not of the user's
+   outcome. A scenario whose criteria are all STATIC may reach `implemented`
+   with the proof type recorded. Never touch scenario content itself during an
+   audit. **The audit never writes `Product:`.** A
    PASS says the code does what the scenario said — that is delivery proof,
    and it is not evidence that shipping the scenario changed anything for
    anyone. The outcome state moves when a signal arrives from the world, and
