@@ -1,0 +1,189 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for ux-scenarios (FIX-EV-01.07). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. The Figma case is probe-gated — unreachable Figma is NOT_RUN, never PASS, and the scenario still reaches a build state via a text spec. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "US-OUT-001-positive-scenario-with-branches",
+   "skill": "ux-scenarios",
+   "prompt": {
+    "text": "Write a checkout scenario in scenarios.md with SCN-ids covering happy, error and cancel branches and observable expected results per step."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "cffaf5f005e0416f01c54fc812e69763ef1fe9141c32694820f068c48cd6dce2"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-scenarios"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "scenarios exists",
+      "kind": "artifact-exists",
+      "target": "scenarios.md"
+     },
+     {
+      "name": "scenarios carry SCN ids and branches",
+      "kind": "artifact-contains",
+      "target": "scenarios.md",
+      "expect": "SCN-"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "US-OUT-002-negative-routing",
+   "skill": "ux-scenarios",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "ux-scenarios"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no scenario artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f scenarios.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "US-OUT-003-no-fake-loading",
+   "skill": "ux-scenarios",
+   "prompt": {
+    "text": "A scenario shows an instant local result. Specify its loading state — record in loading.md that an instant result shows NO timer and claims no analysis it did not perform (UX-10)."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "acbf2beea1eee2dee707a9ae7810de891c99e9d7f9ca210c39c25b2bc0a8702b"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-scenarios"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "an instant result shows no fake loading (UX-10)",
+      "kind": "artifact-contains",
+      "target": "loading.md",
+      "expect": "no timer"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "US-OUT-004-figma-fallback-builds",
+   "skill": "ux-scenarios",
+   "prompt": {
+    "text": "Realise the agreed screen scenario. Figma is unavailable — write a text spec, mark the frame sync explicitly deferred, reach a build state, keep any destructive unknown blocked; write build.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "figma",
+    "case_digest": "6ed9406e1bb08db3cc991f2280955210a18956f14f0d847bc9f332c0432a89ba"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "Figma reachable (unreachable is NOT_RUN; text spec still builds)",
+      "command": "test -n \"$FIGMA_TOKEN\""
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-scenarios"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "the scenario reaches a build state via a text spec (UX-11)",
+      "kind": "artifact-contains",
+      "target": "build.md",
+      "expect": "deferred"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "US-OUT-005-empty-response-no-fake-personalization",
+   "skill": "ux-scenarios",
+   "prompt": {
+    "text": "For an empty-response scenario, specify what the UI shows WITHOUT fabricating a personalization the system did not produce (UX-10); write empty-state.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "b155d28056d7421210562ab1fa9551fbaeb2614535cbd21f2d0728110b693e4d"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-scenarios"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "an empty response shows no fake personalization (UX-10)",
+      "kind": "artifact-contains",
+      "target": "empty-state.md",
+      "expect": "no personalization"
+     }
+    ]
+   }
+  }
+ ]
+}
