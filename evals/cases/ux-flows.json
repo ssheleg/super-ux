@@ -1,0 +1,189 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for ux-flows (FIX-EV-01.05). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. The Figma case is probe-gated — an unreachable Figma is NOT_RUN, never PASS, and the flow still reaches a build state via a text spec. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UF-OUT-001-positive-funnel-is-pattern-not-proof",
+   "skill": "ux-flows",
+   "prompt": {
+    "text": "Given 10 similar competitor funnels from a reference sweep, summarise the frequent pattern into funnel-report.md WITHOUT claiming a proven conversion lift, noting that two funnels from one owner are not independent."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "f4624a3deab26f18305c84e1e6bd37bf81bce6b0a5e38a244e88ffa74d5972e8"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-flows"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "report exists",
+      "kind": "artifact-exists",
+      "target": "funnel-report.md"
+     },
+     {
+      "name": "a frequent pattern, not proven lift (UX-09)",
+      "kind": "artifact-contains",
+      "target": "funnel-report.md",
+      "expect": "frequent pattern"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UF-OUT-002-negative-routing",
+   "skill": "ux-flows",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "ux-flows"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no flow artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f funnel-report.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UF-OUT-003-no-fake-loading-theatre",
+   "skill": "ux-flows",
+   "prompt": {
+    "text": "An instant local result is returned. Specify the flow's loading state — record in loading-spec.md that an instant result shows NO timer and claims no analysis it did not perform."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "336f01604c63116ecde3fa8e08b5dbc6a9e3d8d2cce29e361af51d25d1a6bf61"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-flows"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "an instant result shows no fake loading (UX-10)",
+      "kind": "artifact-contains",
+      "target": "loading-spec.md",
+      "expect": "no timer"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UF-OUT-004-figma-fallback-reaches-build",
+   "skill": "ux-flows",
+   "prompt": {
+    "text": "Implement the agreed screen. Figma is unavailable — produce a text spec, mark the frame sync as explicitly deferred, and reach a build state; keep any destructive unknown blocked; write build-note.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "figma",
+    "case_digest": "c80bd6a7dc3ad5db2d0938ef2884e3dfd11bac8af285b34e0edcb11b9e9077e4"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "Figma reachable (unreachable is NOT_RUN; the text-spec path still builds)",
+      "command": "test -n \"$FIGMA_TOKEN\""
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-flows"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "the flow reaches a build state via a text spec (UX-11)",
+      "kind": "artifact-contains",
+      "target": "build-note.md",
+      "expect": "deferred"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UF-OUT-005-local-payment-is-testable",
+   "skill": "ux-flows",
+   "prompt": {
+    "text": "Prove the payment→webhook→entitlement→success flow is testable LOCALLY with the Stripe CLI and no public domain; state production readiness (HTTPS, signature verification) separately; write payment-flow.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "71700122e1ae90d88587a900c416e10f022e696a9237879a0eab13aaa2a3c2e5"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-flows"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "local payment testing is possible (UX-14)",
+      "kind": "artifact-contains",
+      "target": "payment-flow.md",
+      "expect": "Stripe CLI"
+     }
+    ]
+   }
+  }
+ ]
+}
