@@ -63,8 +63,15 @@ after frames exist:
      server → `manpage` (see BP-207..210 for what goes where on it);
    - a cinematic scroll-driven landing or hero → the pack **plus** the
      motion methodology (that is what the skill is built for);
-   - nothing fits → author a new pack against the skill's pack contract
-     rather than free-styling one screen at a time.
+   - nothing fits → sketch on **provisional semantic tokens** first: declare
+     only the semantic roles (background, surface, text, accent, …) with
+     working values and explore directions freely — two candidate identities
+     are two provisional token sets, not a contract violation. The **full
+     reusable pack contract** (the thirteen headings + `tokens/<pack>.css`)
+     applies when a direction is CHOSEN and consolidates into a pack for reuse
+     or publication — a first sketch is never blocked by thirteen headings,
+     and a reusable pack still passes every one of them. Free-styling one
+     screen at a time remains the thing neither path allows.
 3. **Not installed?** Recommend it once, plainly, and continue either way —
    text-only/platform-default design stays valid:
    ```
