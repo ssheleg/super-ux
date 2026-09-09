@@ -1,0 +1,189 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for vision (FIX-EV-01.08). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "VS-OUT-001-positive-nine-sections-by-id",
+   "skill": "vision",
+   "prompt": {
+    "text": "Write docs/ux/vision.md with all nine canonical sections keyed by their IDs (essence, core idea, principles, anti-vision, alignment test among them); the anti-vision must be present. Deliver vision.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "9f4665ea686df70d0be0d2c9efc2a12c2af39e18e7b7e0078beb43252bf5fa89"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "vision"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "vision exists",
+      "kind": "artifact-exists",
+      "target": "vision.md"
+     },
+     {
+      "name": "the anti-vision section is present (UX-07)",
+      "kind": "artifact-contains",
+      "target": "vision.md",
+      "expect": "anti-vision"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "VS-OUT-002-negative-routing",
+   "skill": "vision",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "vision"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no vision artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f vision.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "VS-OUT-003-russian-titles-keep-identity",
+   "skill": "vision",
+   "prompt": {
+    "text": "Write vision.md with RUSSIAN section titles but the canonical section IDs; a change of title language must NOT change the section identity. Note the ID→title mapping in id-map.md (UX-07)."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "570b47bcefb5c412d36fbbfe2a8b83bb2a18675fe71893db84745e875e7f21fc"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "vision"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "section identity is by ID, not title language (UX-07)",
+      "kind": "artifact-contains",
+      "target": "id-map.md",
+      "expect": "essence"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "VS-OUT-004-host-file-per-agent",
+   "skill": "vision",
+   "prompt": {
+    "text": "In a Codex-host project, write the vision/routing instruction to AGENTS.md (not CLAUDE.md); a repeat run is idempotent. Record the target file in host-note.md (UX-06)."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "82b03bccddfe1e3510e8e8f70966f31363a7c75410918eb44a1fa8e7c7167daa"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "vision"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "the host's own instruction file is chosen (UX-06)",
+      "kind": "artifact-contains",
+      "target": "host-note.md",
+      "expect": "AGENTS.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "VS-OUT-005-missing-anti-vision-fails",
+   "skill": "vision",
+   "prompt": {
+    "text": "Audit a vision.md that is MISSING its anti-vision section; report it as a failure, do not pass it; write audit-note.md (UX-07)."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "d3af680fe9e183fb35837f4fbf68ecdaf00068fd9b368426b5e4ee86a5cb9be0"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "vision"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "a genuinely missing anti-vision fails (UX-07)",
+      "kind": "artifact-contains",
+      "target": "audit-note.md",
+      "expect": "missing"
+     }
+    ]
+   }
+  }
+ ]
+}
