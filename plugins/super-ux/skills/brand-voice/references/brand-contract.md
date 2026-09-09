@@ -222,6 +222,36 @@ its `Review by`, is `B031` and warns.
 
 A missing fact is reported, never invented to close a gap.
 
+### A claim binds to a row, not to digits
+
+**A numeric coincidence is not proof.** One row `supported integrations = 500`
+must not license "We serve 500 million paying customers" — the digits match and
+the subject, unit and population all differ. So a public claim resolves against
+a fact ROW, never against the bag of known figures:
+
+| Axis | In the claim | Against the row |
+|---|---|---|
+| claim-id | a stable id where the copy registers its claims | — |
+| fact-id | the `Fact` name the claim cites | the row must exist |
+| subject | what is being counted | must match the row's subject |
+| unit | integrations, customers, ms, % | must match |
+| population | whose: all users, paying, one region | must match |
+| date | as-of when the claim speaks | inside the row's `Checked`→`Review by` window |
+| transformation | rounding or aggregation applied | only those the row declares |
+
+A transformation the row does not declare (`round down`, `sum with <fact>`)
+makes a NEW fact that needs its own row. A claim that resolves no row is
+**unresolved and prints as UNVERIFIED** — it never passes because its digits
+happened to appear in the sourced set.
+
+**What the linter checks, and what it cannot.** `B030`'s promise is
+token-level: a KNOWN numeric token traced to a row, unit and precision beside
+it. Whether the sentence's SUBJECT matches the row is the semantic audit's
+question — a reader's, not a regex's. The extractor's blind spots are stated,
+not papered over: bare numbers under 100 and year-like tokens need context —
+"2026 integrations" is a figure, not a year, so a token is read as a year only
+when nothing is counting it.
+
 ---
 
 ## `channels.md`
@@ -408,7 +438,7 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B024 | E | declared casing violated |
 | B025 | W | a button label names no outcome |
 | B026 | W | a label, button, menu item or title ends in a full stop |
-| B030 | E | a figure in public copy has no row in `facts.md` |
+| B030 | E | a KNOWN numeric token in public copy has no row in `facts.md` — token-level only: subject/population match is the semantic audit's job, and a claim resolving no row prints UNVERIFIED, never a silent pass |
 | B031 | W | a fact has no source, or is past its `Review by` |
 | B032 | E | a superlative with no fact beside it |
 | B033 | E | two rows in `facts.md` under one `Fact` name — a figure cited by that name is ambiguous, and the duplicate also widened the sourced set |
