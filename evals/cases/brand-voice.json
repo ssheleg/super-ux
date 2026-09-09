@@ -1,0 +1,189 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for brand-voice (FIX-EV-01.02). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "BV-OUT-001-positive-claim-provenance",
+   "skill": "brand-voice",
+   "prompt": {
+    "text": "Check the brand claims in this copy against the facts pack — '500 integrations' (true), '500 million customers' (unsupported) — and mark each supported or unresolved with its source in claims-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "3301f6d5a5713840a78a5dbfe775ce8b197075296ac5e13349324f6cf552d542"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "brand-voice"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "report exists",
+      "kind": "artifact-exists",
+      "target": "claims-report.md"
+     },
+     {
+      "name": "the unsupported claim is flagged unresolved (UX-01/B030)",
+      "kind": "artifact-contains",
+      "target": "claims-report.md",
+      "expect": "unresolved"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "BV-OUT-002-negative-routing",
+   "skill": "brand-voice",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "brand-voice"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no brand artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f claims-report.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "BV-OUT-003-noop-no-repetition-no-spam",
+   "skill": "brand-voice",
+   "prompt": {
+    "text": "Review this 80-word paragraph of all-unique words for repetition spam and record the finding count in spam-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "b4dc42fc92c25e8944842ab67484b0c6472a31bc589cd0784aeecfb63d13cbb1"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "brand-voice"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "unique text raises no spam finding (UX-02/B051)",
+      "kind": "artifact-contains",
+      "target": "spam-report.md",
+      "expect": "findings: 0"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "BV-OUT-004-humanization-preserves-meaning",
+   "skill": "brand-voice",
+   "prompt": {
+    "text": "Humanize this sentence without changing its meaning: 'The service will never share your data with third parties.' Record before/after and the preserved negation in humanize-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "9c9d7dea88b7227fb1cf7151fee7f894842193d5918a842edfd64d08246065bd"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "brand-voice"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "the negation is preserved (UX-03/B060 semantic preservation)",
+      "kind": "artifact-contains",
+      "target": "humanize-report.md",
+      "expect": "never"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "BV-OUT-005-humanization-off-blocks-nothing",
+   "skill": "brand-voice",
+   "prompt": {
+    "text": "With humanization turned off, deliver this quoted testimonial verbatim and note in delivery-report.md that no rewrite was applied."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "b3e43ca40bd4248bdadd398532b43173dda4ada7e4c5c92c692f31cdf310f88a"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "brand-voice"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "off runs no hidden mandatory rewrite (UX-03)",
+      "kind": "artifact-contains",
+      "target": "delivery-report.md",
+      "expect": "no rewrite"
+     }
+    ]
+   }
+  }
+ ]
+}
