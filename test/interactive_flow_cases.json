@@ -1,0 +1,64 @@
+{
+ "contract": "prototype-walkthrough (references/prototype-walkthrough.md) over the bounded scenario graph",
+ "note": "Walkthrough cases for the interactive flow fixture. Goals are stated WITHOUT UI hints — no control labels, no transition ids; declared and walked states stay separate (no second flow store); a screenshot-only run is NOT_RUN, never a functional PASS; the external payment step passes only as its declared explicit mock.",
+ "cases": [
+  {
+   "id": "WALK-001-happy",
+   "goal": "pay for what is in the cart",
+   "expect_kind": "happy",
+   "probes": [
+    "reset",
+    "keyboard"
+   ],
+   "oracle": {
+    "scenario": "SCN-001",
+    "coverage": "walked"
+   }
+  },
+  {
+   "id": "WALK-002-error-recovery",
+   "goal": "recover after the card is refused and still pay",
+   "expect_kind": "error",
+   "probes": [
+    "error",
+    "back"
+   ],
+   "oracle": {
+    "scenario": "SCN-002",
+    "coverage": "walked"
+   }
+  },
+  {
+   "id": "WALK-003-cancel",
+   "goal": "leave without buying anything",
+   "expect_kind": "cancel",
+   "probes": [
+    "reset"
+   ],
+   "oracle": {
+    "scenario": "SCN-003",
+    "coverage": "walked"
+   }
+  },
+  {
+   "id": "WALK-004-screenshot-only",
+   "goal": "judge the flow from the screenshot set alone",
+   "expect_kind": null,
+   "probes": [],
+   "oracle": {
+    "functional": "NOT_RUN — screenshots alone are not a functional pass"
+   }
+  },
+  {
+   "id": "WALK-005-external-mock",
+   "goal": "complete payment through the simulated provider",
+   "expect_kind": "external",
+   "probes": [
+    "async"
+   ],
+   "oracle": {
+    "external_mock": "explicit"
+   }
+  }
+ ]
+}

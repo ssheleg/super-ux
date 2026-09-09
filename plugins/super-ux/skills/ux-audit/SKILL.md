@@ -22,11 +22,22 @@ state handled, every error honest. Output: a versioned report in
 (ux-contract v4) — report structure, verdicts (PASS / PARTIAL / FAIL /
 BLOCKED), severities.
 
-**Precondition:** `docs/ux/scenarios.md` exists. If it doesn't, stop and run
-the `ux-scenarios` skill first — there is nothing to audit against. The
-opt-out is spoken: an operator saying **"no scenarios"** / **«без сценариев»**
-declines the scenario route — review what exists without the base and state
-that in the report.
+**Preconditions are computed AFTER the scope, one per pass — never a blanket
+stop.** Each scope needs its OWN input, and a project that has one but not the
+others runs the passes it can:
+
+- **scenario scope** needs `docs/ux/scenarios.md`; absent, THIS pass has
+  nothing to audit against — run the `ux-scenarios` skill first, or with
+  **"no scenarios"** / **«без сценариев»** review what exists and say so.
+- **copy scope** needs only the brand pack (`docs/brand/voice.md`); a
+  standalone blog with a brand and NO scenarios runs the copy audit and
+  nothing else — it is not routed into creating scenarios it has no use for.
+- **benchmark scope** needs the observed competitor URLs and their capture
+  receipts, not the scenario base.
+
+So `/ux-audit copy` on a brand-only project audits copy; `/ux-audit all`
+without `docs/ux/scenarios.md` runs the passes whose inputs exist and STATES
+the scenario limitation in the report rather than stopping the whole run.
 
 **Full context:** when `docs/ux/foundation.md` exists, audit each scenario
 WITH its chain — load the traced story's acceptance criteria (Given/When/
@@ -96,9 +107,15 @@ scenario — it becomes a story in the foundation, not a fix in this report.
 
 ## Evidence discipline (non-negotiable)
 
-Every verdict must cite `file:line` evidence. Could not find or verify
-something? The verdict is **BLOCKED** with the exact reason — never a guess,
-never a courtesy PASS. An audit that flatters the codebase is worthless.
+Every verdict cites evidence of the RIGHT KIND for its claim. A claim about
+THIS codebase cites **`file:line`**. A claim about EXTERNAL data — a benchmark
+competitor, a live third-party page — cites a **URL + timestamp + capture**
+(the screenshot or saved response), because a competitor's flow has no
+`file:line` in your repo and inventing one is a fabricated citation. Could not
+find or verify something? The verdict is **BLOCKED** with the exact reason —
+never a guess, never a courtesy PASS, and a benchmark never invents a local
+`file:line` for an outside observation. An audit that flatters the codebase is
+worthless.
 
 ## A coverage metric is a check, and its matching rule is where the assumptions hide
 
@@ -134,63 +151,9 @@ So, for any metric over these documents:
 
 ## Depth levels
 
-| Depth | Passes run |
-|---|---|
-| `quick` | 1. Scenario pass only |
-| `standard` (default) | 1. Scenario pass + 2. Flow conformance |
-| `deep` | 1–2 + 3. Heuristic pass (PRN-01..24) + 4. Practice pass (selection protocol) + 5. Coverage pass |
+How far each pass goes, what it reads at each level, and which references it pulls:
+[`references/audit-depth.md`](references/audit-depth.md).
 
-Passes:
-
-1. **Scenario pass** — the loop below: code vs every scoped scenario.
-2. **Flow & screen conformance** — code vs flow diagrams (every node
-   reachable, every edge incl. error edges wired) AND code vs `screens.md`
-   (every registered screen's states rendered, elements present, `Coverage`
-   accurate). A screen whose code diverges from its record → `drifted`
-   finding; flip its Status to `drifted`. When Figma is enabled, check each
-   state has a frame link and flag empty/obviously-stale links (a link the
-   registry marks but the design lost); with the Figma MCP connected,
-   `get_metadata` confirms the frame still exists under its expected
-   `SCR-NN/<Screen>/<state>` name without pulling full design context.
-   **A screen carrying a `Web surface:` block is checked against it too:**
-   the route the code actually serves vs `Route`, whether the answer survives
-   with JS disabled vs `Without JS`, whether the emitted structured data
-   matches `Entity` and the visible content, and whether the indexation
-   directives agree with `Indexable`. Divergence is `drifted` like any other.
-   Where `screens.md` declares `Web surfaces: no` while the code serves a
-   public route, that is a finding against the declaration, not the screen.
-   The live-page audit — rendering, crawl reach, competitors, the SERP — is
-   the **seo-aeo-audit** companion's job; this pass checks the record against
-   the code, and hands the rest over rather than guessing at it.
-3. **Heuristic pass** — implemented flows vs PRN-01..24
-   ([ux-design-principles.md](references/ux-design-principles.md));
-   findings `[PRN-NN] (severity) node — issue -> fix`.
-4. **Practice pass** — per
-   [practice-selection.md](references/practice-selection.md): profile →
-   mandatory sets + per-artifact checklists (money flows get their rows);
-   output a compliance table (applied / adapted / rejected / deferred /
-   **missing** — applicable but absent, as suggestion findings `[BP-NNN]`).
-   Respect recorded user-owned rejections — don't re-litigate them.
-   Four dimensions this pass verifies in code rather than by discussion,
-   because they fail silently: the reduced-motion branch exists for every
-   animated surface and content survives without scroll effects (BP-131,
-   BP-132); the page-weight budget is stated somewhere and the heavy pages
-   meet it (BP-133); the narrow viewport and 200% zoom reflow hold, with no
-   hover-only affordance (BP-134, BP-135); roles sit only where no native
-   element says it, with every `aria-*` reference resolving (BP-136). An
-   accessibility claim backed only by a scanner is BLOCKED, not PASS — the
-   evidence is a keyboard and screen-reader walk of the top flows (BP-137).
-   When `screens.md` → Design system records a `Style pack`
-   ([visual-identity.md](references/visual-identity.md)), check the built UI
-   honors it: tokens referenced instead of raw values, the pack's bans
-   respected, dark mode from its twin — a screen ignoring the recorded pack
-   is `drifted`, not a taste debate. No pack recorded and the visual layer
-   looks improvised → suggest the **sheleg-design** companion once, as an
-   opportunity finding.
-5. **Coverage pass** — the chain itself: orphan stories/flows/screens/
-   scenarios, journey stages without scenarios, jobs without stories, unused
-   personas, screens not used by any flow, flows referencing missing
-   `SCR-IDs`, screen states without Figma frames (when Figma enabled).
 
 ## The loop
 
@@ -207,15 +170,27 @@ Passes:
    batches before starting so progress is visible.
 3. **Audit each batch.** For large scopes dispatch parallel subagents — one
    batch per subagent, each returning per-scenario verdicts with evidence.
-   Per scenario check, against the code:
-   - entry point exists and is reachable;
-   - every numbered step has a corresponding implementation path;
-   - every listed UI element exists and is wired to a handler;
+   **Three evidence tiers, and a verdict names which it stands on** — because
+   a `file:line` proves the TEXT of an implementation, not that a user reaches
+   it. Static conformance (file:line — the code says so), executable
+   verification (a test or a browser receipt — the runtime does so), and
+   production observation (a signal from the world — step 7's `Product:`, never
+   the audit's). A criterion is tagged STATIC or RUNTIME:
+   - entry point exists (STATIC) and is reachable BY A USER (RUNTIME — CSS
+     overlay, auth, a network gate can hide a present route);
+   - every numbered step has an implementation path (STATIC);
+   - every listed UI element exists (STATIC) and is wired to a handler that
+     actually FIRES on the user's click (RUNTIME);
    - every listed state (loading / empty / error / success) has a rendering
-     branch;
-   - every listed error is surfaced to the user honestly (no silent catch,
-     no fake success) with the described recovery;
-   - the expected result observably occurs.
+     branch (STATIC) — the full state taxonomy and its pressure rows:
+     [state-stress-matrix.md](references/state-stress-matrix.md);
+   - every listed error is surfaced to the user honestly (RUNTIME — a branch
+     in code is not proof the user saw it);
+   - the expected result observably occurs (RUNTIME).
+   A RUNTIME criterion **PASSes only with a test, a browser check, or a
+   verified runtime receipt** — absent one it is **BLOCKED (unverified)**, never
+   a PASS off a `file:line`, and never invented when no browser is available. A
+   STATIC criterion PASSes on its `file:line` with the proof type named.
    Any gap → PARTIAL (or FAIL if the flow is missing/broken) with a finding
    `[AUD-YYYY-MM-DD-NN] (severity) description -> suggested fix`.
 4. **Check the batches against each other, before the report reads as one answer.**
@@ -246,8 +221,13 @@ Passes:
    who won't open the batch details.
 7. **Update the base — the delivery state, and only that.** `Last audit`
    column (`YYYY-MM-DD VERDICT`) for every audited scenario; flip
-   `validated` → `implemented` where the audit PASSed; never touch scenario
-   content itself during an audit. **The audit never writes `Product:`.** A
+   `validated` → `implemented` ONLY where every RUNTIME criterion the scenario
+   depends on has executable or runtime-receipt proof — a scenario carrying an
+   unverified RUNTIME criterion stays `validated` with those criteria BLOCKED,
+   because a static PASS is delivery of the code's TEXT, not of the user's
+   outcome. A scenario whose criteria are all STATIC may reach `implemented`
+   with the proof type recorded. Never touch scenario content itself during an
+   audit. **The audit never writes `Product:`.** A
    PASS says the code does what the scenario said — that is delivery proof,
    and it is not evidence that shipping the scenario changed anything for
    anyone. The outcome state moves when a signal arrives from the world, and

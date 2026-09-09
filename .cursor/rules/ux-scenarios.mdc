@@ -1,0 +1,61 @@
+---
+description: "Maintain docs/ux/scenarios.md (the UX scenario base): apply when creating or updating UX scenarios, starting any new feature or project, changing user-facing behavior, or onboarding a codebase into scenario-driven development"
+alwaysApply: false
+---
+
+# ux-scenarios — Maintain the Scenario Base
+
+`docs/ux/scenarios.md` describes everything the user can do, see, and hit —
+every feature, button, state, error, result. Keep it true.
+
+## File structure (ux-contract v4)
+
+Title, then header comment, then: **Index** table
+(`| ID | Title | Feature | Persona | Traces | Status | Last audit |`),
+**Personas** (pointer to foundation.md when it exists, else defined here),
+**Scenarios** grouped by feature.
+
+When `docs/ux/foundation.md` exists, scenarios derive from it: draft per
+user story / journey stage, fill `Traces:` (e.g. `ST-001 (JTBD-01,
+JRN-01/#2)`), enforce traceability — every must/should story covered by ≥1
+scenario, every scenario serves ≥1 story or job.
+
+Scenario entry fields (exact names): `Persona`, `Feature`, `Traces`, `Entry point`,
+`Preconditions`, `Steps` (numbered, one user action each, paired with the
+observable system response), `Expected result` (observable), `Alt paths`
+(meaningful non-error deviations — skip/dismiss/alternate route — omit only
+when none exist), `UI elements` (every button/field/link/dialog/toast involved —
+this is what audits check), `States covered` (loading|empty|error|success),
+`Errors & recovery` (each failure: what the user sees, how they recover),
+`Status` (draft|validated|implemented|retired), `Coverage` (file:line or
+`none yet`).
+
+Rules: IDs `SCN-NNN`, sequential, never reused; retired entries are kept,
+never deleted. Lifecycle: draft → validated (human approval) → implemented
+(audit-confirmed); changed scenarios drop back to draft.
+
+Per-feature completeness: happy path, every error path, empty state, visible
+loading, destructive-action confirmation, returning-user variant.
+Per-product: first-run onboarding, every core flow, settings, multi-entity
+flows (e.g. second project), account/data lifecycle, and — when the product
+earns money — the monetization flows: paywall (first-session placement),
+trial start/end, upgrade-at-limit, cancel + winback, rating prompt after
+success moments, plus the web funnel (landing, pricing, signup, checkout,
+abandonment, failed payment) and the paid handoff with its failure branches
+when money is taken on the web.
+
+## Workflows
+
+- **Init (greenfield):** no code yet — interview the user (personas, jobs,
+  features), draft the full base, get approval. UI only after validation.
+- **Init (existing code):** inventory sweep (routes/screens, interactive
+  elements, state branches, error paths, onboarding, settings) → scenarios
+  covering everything found, `Coverage` filled with evidence; report both
+  gap directions (code without scenario, checklist item without code).
+- **Update:** for any behavior change — adjust affected scenarios in the
+  SAME change; add scenarios for new behavior; retire untrue ones; keep the
+  Index in sync. Behavior fitting no scenario → stop and escalate.
+- **Validate:** integrity (IDs, index sync, personas, statuses), coverage
+  vs checklists, conflicts between scenarios; for a new feature idea —
+  which existing scenarios it touches/contradicts/duplicates, reconcile
+  before any UI work.

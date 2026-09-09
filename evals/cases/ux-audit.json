@@ -1,0 +1,195 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for ux-audit (FIX-EV-01.04). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. The live-browser case is probe-gated — an unreachable browser is NOT_RUN, never PASS, and a result is never invented for it. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UA-OUT-001-positive-file-line-evidence",
+   "skill": "ux-audit",
+   "prompt": {
+    "text": "Audit docs/ux/scenarios.md against the code and report each finding with file:line evidence and its scenario id into ux-audit-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "0e9445f17cfe7dda9d259b80546e8361017d2d487d572a66e59c401aa7d4026d"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-audit"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "report exists",
+      "kind": "artifact-exists",
+      "target": "ux-audit-report.md"
+     },
+     {
+      "name": "findings carry file:line evidence",
+      "kind": "artifact-contains",
+      "target": "ux-audit-report.md",
+      "expect": ".md:"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UA-OUT-002-negative-routing",
+   "skill": "ux-audit",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "ux-audit"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no audit artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f ux-audit-report.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UA-OUT-003-static-pass-does-not-imply-implemented",
+   "skill": "ux-audit",
+   "prompt": {
+    "text": "A button and its handler are present in the source but an overlay intercepts the click. Report the static and live results separately and do NOT mark the scenario implemented; write verdict.md naming the proof type."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "63f0eb893562e8ee3725a15df6fba7ed0aa999277690a55417eb55fc5c3b0120"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-audit"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "static PASS does not promote to implemented (UX-12)",
+      "kind": "artifact-contains",
+      "target": "verdict.md",
+      "expect": "proof type"
+     },
+     {
+      "name": "the live failure is stated, not hidden",
+      "kind": "artifact-contains",
+      "target": "verdict.md",
+      "expect": "live FAIL"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UA-OUT-004-copy-scope-needs-no-scenarios",
+   "skill": "ux-audit",
+   "prompt": {
+    "text": "Run /ux-audit copy on the blog with a brand pack but no scenarios file; perform only the copy audit and explain the scope limit in copy-audit.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "9c1541ccf9ff8784f5e91a691b17624ba9be5e9d59d73a237749bc070cd80aee"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-audit"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "copy scope proceeds without scenarios (UX-13)",
+      "kind": "artifact-contains",
+      "target": "copy-audit.md",
+      "expect": "copy audit"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UA-OUT-005-live-browser",
+   "skill": "ux-audit",
+   "prompt": {
+    "text": "Audit the running app at http://localhost:9/ live: check the primary CTA reaches its handler in a real browser and record the result in live-audit.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "browser",
+    "case_digest": "fd94864b7fe377bf82c3807ed79596e6ab28d8e453ceedfe819b750dd9d30919"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "a browser is reachable (absent browser is NOT_RUN, never PASS)",
+      "command": "command -v chromium || command -v google-chrome || test -d '/Applications/Google Chrome.app'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-audit"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "the live result is recorded",
+      "kind": "artifact-contains",
+      "target": "live-audit.md",
+      "expect": "result:"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -89,9 +89,25 @@ cannot produce one.
 - `JTBD-NN` **Status** — `proposed | confirmed | retired`
 - `vision.md` **Status** — `draft | approved`
 
-A persona and a job are either an assumption or something an observation has
-confirmed, and `proposed → confirmed` is the only claim either layer makes about
-itself. Both had been carrying `confirmed` with no enum anywhere covering them.
+**A persona or job carries THREE separate axes, not one `confirmed`
+(FIX-UX-08.01)** — because an operator's approval and an observation are
+different things, and collapsing them lets a founder confirm a wished-for
+persona without research:
+
+- **evidence_kind** — where the belief comes from: `brief | owner-belief |
+  interview | telemetry | code-inference`. Reverse-engineering from the UI is
+  `code-inference`; a founder's statement is `owner-belief`.
+- **decision_status** — `proposed | accepted | rejected`. The operator's
+  approval moves THIS, and only this.
+- **validation_status** — `unvalidated | observed | contradicted`. Only a
+  real interview, telemetry or observation — with a DATED receipt — moves it
+  to `observed`. Approval never does.
+
+So `confirmed` on `P-NN`/`JTBD-NN` is shorthand for `decision_status: accepted`;
+it makes no claim about validation. An accepted persona whose evidence_kind is
+`owner-belief` is `validation_status: unvalidated`, and the record shows all
+three rather than one word that hides which. Both had been carrying `confirmed`
+with no enum anywhere covering them.
 
 **Two layers carry no status at all, and that is declared rather than left
 open.** `FLW-NN` and `JRN-NN` have no `Status` field: a flow's delivery state is
@@ -113,6 +129,32 @@ Drifted again, in the other direction, and it took until 2026-08-20 to see:
 values sat on layers no enum covered — four flows, two personas and three jobs —
 each of them unrefused, unaccepted and invisible. The parity check was real and
 its alphabet was short.
+
+### `Pressure:` — the optional state-stress receipt (never a second table)
+
+A scenario MAY carry a `Pressure:` block — a RECEIPT pointing at
+[state-stress-matrix.md](state-stress-matrix.md) rows by this scenario's own id,
+never a second scenario table: the steps, states and expected results live once,
+in the scenario; the receipt records only what pressure was applied and what it
+produced.
+
+- **Evidence classes, separated:** `planned` (rows written, nothing run),
+  `simulated` (a fixture produced the state), `observed` (seen on the actual
+  render), and `inherited` — an approved assumption carried from an earlier
+  record, named as such. **Migration invents nothing:** an existing scenario
+  migrates with every unmarked row as `planned` or `inherited`, never as
+  `observed` — an observed status nobody observed is the exact lie this
+  receipt exists to prevent.
+- **Scope follows risk.** A small change — one visual polish — declares a
+  risk-based SUBSET: only the states its change can plausibly affect, with the
+  subset's reason on the receipt (`coverage: subset — polish touches the empty
+  and loading states only`). A large flow declares `coverage: full` and owes
+  every state in the taxonomy. Demanding all product states for a one-line
+  polish is how receipts stop being written.
+- **Interactive evidence matches visual evidence.** An interaction trace
+  counts only for the SAME state and viewport a visual compare covered — a
+  trace at desktop over a screenshot at mobile is two half-receipts, not one
+  whole one.
 
 ### `Product` — the state a shipped thing is still allowed to be in
 
@@ -161,7 +203,11 @@ Optional, and owned by the `vision` skill. Present or absent, never partial:
 a vision missing its anti-vision is the one shape that reliably settles no
 argument.
 
-**Nine sections, these headings, in this order.** The linter keys off them.
+**Nine sections, numbered, in this order — the NUMBER is the section's machine
+identity, the title after it is a localizable display name.** The linter keys
+off the number (`## 6.`), so a vision written in any language keeps all nine
+ids; the English titles below are the seed default, not a requirement. Do not
+demand English prose for the parser's sake.
 
 ```markdown
 # <Product> — Vision
@@ -179,6 +225,10 @@ argument.
 ## 8. The one sentence
 ## 9. The alignment test
 ```
+
+A Russian vision writes `## 6. Анти-видение` and passes; a vision that OMITS
+section 6 fails (`U030`), whatever language the others are in — the id is the
+number, the language is free.
 
 **It is a gate, not a document.** Writing `vision.md` without installing the
 `## Vision alignment — hard rule (super-ux)` block into the project's own
@@ -835,6 +885,7 @@ here — the meaning of a rule never lives only in its source.
 | U031 | E | an approved vision whose anti-vision or alignment test is empty |
 | U032 | W | `vision.md` exists but the project has no instruction file for the alignment rule |
 | U033 | W | an instruction file exists but carries no alignment rule — nothing reads the vision |
+| U034 | E | two vision sections share one id (a duplicate `## N.`) — the id is the number, and it is unique |
 | U040 | W | a relative markdown link that does not resolve |
 | U050 | W | `screens.md` has no `Web surfaces:` declaration — the one question an audit afterwards cannot fix |
 | U051 | E | the project declares no web surfaces while a screen carries a `Web surface:` block |

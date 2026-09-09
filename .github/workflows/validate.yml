@@ -36,6 +36,9 @@ jobs:
       - name: UX linter fixtures
         run: python3 test/ux_lint_test.py
 
+      - name: Audit regressions (sherlock plan, one file per closed finding)
+        run: npm run test:audit
+
       # This project's own chain and brand pack, run by the linters it ships.
       # Absent until 0.39.0, which is why docs/brand/ sat red on B030 with a
       # facts.md three counts stale and nothing said so. The hard rule this
@@ -75,9 +78,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ssheleg/make-skill
-          ref: 991cbb415be3e856f05c974e631423df552883e3
+          ref: 5ca5c367ba24295d4dd99ff670dbef97234140e7
           path: .skill-auditor
           persist-credentials: false
+
+      - name: Install a real tokenizer (the budget is MEASURED, never estimated)
+        run: python3 -m pip install --quiet tiktoken
 
       - name: Audit every shipped Agent Skill
         run: |

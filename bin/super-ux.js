@@ -25,9 +25,16 @@ const ROOT = path.resolve(__dirname, '..');
 const REPO = 'ssheleg/super-ux';
 const NAME = 'super-ux';
 
-// Exit codes are the contract: 0 installed or nothing selected, 1 error,
-// 3 refused — the plugin channel owns this agent (--force overrides).
+// Exit codes are the contract: 0 installed/unchanged or nothing selected,
+// 1 a selected operation FAILED (the backend's exit/signal/command are printed
+//   and preserved on the result),
+// 3 refused — the plugin channel owns this agent (--force overrides),
+// 4 unsupported — a selected channel's backend is absent (claude CLI/npx not
+//   found); the remedy is printed, and 4 says "nothing was installed" out loud.
+// Failure outranks refusal outranks unsupported when several were selected.
 const EXIT_PLUGIN_PRESENT = 3;
+const EXIT_FAILED = 1;
+const EXIT_UNSUPPORTED = 4;
 
 /**
  * The plugin spec (`<name>@<marketplace>`) installed for `name` in this home,
@@ -41,10 +48,23 @@ const EXIT_PLUGIN_PRESENT = 3;
  * HOME is the common case, and an installer that crashes on a parse error
  * refuses the machines that need it most.
  */
+// The bundled HostContext resolver (FIX-UP-08.02) — one contract, a local
+// copy per member (npx installers share no lib): a host's config root is an
+// explicit root > the documented host env var > `~/<dir>`, verbatim (spaces
+// preserved), and host existence is a separate probe on the returned path.
+const HOST_ENV = { claude: 'CLAUDE_CONFIG_DIR', codex: 'CODEX_HOME', gemini: 'GEMINI_CONFIG_DIR' };
+const HOST_DIR = { claude: '.claude', codex: '.codex', gemini: '.gemini' };
+function hostRoot(agent, home, env, explicit) {
+  if (explicit) return explicit;
+  const e = (env || process.env)[HOST_ENV[agent]];
+  if (e) return e;
+  return path.join(home, HOST_DIR[agent]);
+}
+
 function installedPluginSpec(home, name) {
   try {
     const raw = fs.readFileSync(
-      path.join(home, '.claude', 'plugins', 'installed_plugins.json'), 'utf8');
+      path.join(hostRoot('claude', home, process.env), 'plugins', 'installed_plugins.json'), 'utf8');
     const parsed = JSON.parse(raw);
     const plugins =
       parsed && typeof parsed === 'object' &&
@@ -199,8 +219,11 @@ function installCursor(target, force) {
 
 function run(cmd, args) {
   const result = spawnSync(cmd, args, { stdio: 'inherit' });
-  if (result.error && result.error.code === 'ENOENT') return 'missing';
-  return result.status === 0 ? 'ok' : 'failed';
+  const command = [cmd, ...args].join(' ');
+  if (result.error && result.error.code === 'ENOENT')
+    return { status: 'missing', code: null, signal: null, command };
+  return { status: result.status === 0 ? 'ok' : 'failed',
+           code: result.status, signal: result.signal ?? null, command };
 }
 
 /**
@@ -219,7 +242,7 @@ function run(cmd, args) {
 function installSkillsCli(force) {
   const home = os.homedir();
   const spec = installedPluginSpec(home, NAME);
-  const marketplace = path.join(home, '.claude', 'plugins', 'marketplaces', NAME);
+  const marketplace = path.join(hostRoot('claude', home, process.env), 'plugins', 'marketplaces', NAME);
   const viaMarketplaceDir = !spec && fs.existsSync(marketplace);
   if ((spec || viaMarketplaceDir) && !force) {
     const found = spec
@@ -241,9 +264,17 @@ function installSkillsCli(force) {
     return 'refused';
   }
   console.log(`\n--- Skills for any agent: delegating to the skills CLI picker ---`);
-  const status = run('npx', ['--yes', 'skills', 'add', REPO]);
-  if (status !== 'ok') console.error(`warning: 'npx skills add ${REPO}' ${status}`);
-  return status;
+  const r = run('npx', ['--yes', 'skills', 'add', REPO]);
+  if (r.status === 'missing') {
+    console.error('The npx command was not found; install Node.js to use the skills channel.');
+    return { status: 'unsupported', ...r };
+  }
+  if (r.status === 'failed') {
+    console.error(`error: '${r.command}' exited ${r.code}` +
+      (r.signal ? ` (signal ${r.signal})` : ''));
+    return { status: 'failed', ...r };
+  }
+  return { status: 'installed', ...r };
 }
 
 /**
@@ -268,16 +299,21 @@ function installClaudePlugin() {
     console.log(`claude CLI not found. Run inside Claude Code instead:
   /plugin marketplace add ${REPO}
   /plugin install super-ux@super-ux`);
-    return;
+    return { status: 'unsupported', code: null, signal: null,
+             command: 'claude --version' };
   }
-  if (run('claude', ['plugin', 'marketplace', 'add', REPO]) !== 'ok') {
+  if (run('claude', ['plugin', 'marketplace', 'add', REPO]).status !== 'ok') {
     console.log('(marketplace may already be added, continuing)');
   }
-  if (run('claude', ['plugin', 'install', 'super-ux@super-ux']) === 'ok') {
+  const r = run('claude', ['plugin', 'install', 'super-ux@super-ux']);
+  if (r.status === 'ok') {
     console.log('Claude Code plugin installed (scope: user). Restart sessions to pick it up; then run /ux in any project.');
-  } else {
-    console.error('warning: claude plugin install failed, see output above');
+    return { status: 'installed', ...r };
   }
+  console.error(`error: '${r.command}' exited ${r.code}` +
+    (r.signal ? ` (signal ${r.signal})` : ''));
+  console.error('The plugin did not install; see the command output above.');
+  return { status: 'failed', ...r };
 }
 
 function makePrompter() {
@@ -441,20 +477,48 @@ async function menu(force) {
   }
   if (prompter) prompter.close();
 
-  if (keys.includes('cursor')) installCursor(cursorDir, false);
-  if (keys.includes('claude')) installClaudePlugin();
-  let refused = false;
-  if (keys.includes('skills')) refused = installSkillsCli(force) === 'refused';
+  // Only the SELECTED install operations are the result — each labelled by its
+  // channel, so a mixed selection reports which one failed rather than a single
+  // aggregate verdict. The router offer below is optional enrichment and is
+  // deliberately NOT in this list: whether it prints a block cannot change
+  // whether the install succeeded.
+  const results = [];
+  if (keys.includes('cursor')) { installCursor(cursorDir, false); results.push({ channel: 'cursor', status: 'installed' }); }
+  if (keys.includes('claude')) results.push({ channel: 'claude', ...installClaudePlugin() });
+  if (keys.includes('skills')) {
+    const r = installSkillsCli(force);
+    results.push({ channel: 'skills', ...(r === 'refused' ? { status: 'refused' } : r) });
+  }
 
   // Same offer the --cursor flag path makes. Two doors into one install that
   // behave differently is how a feature comes to exist for half its users.
   // Offered on the refused path too: the skill IS present on this machine —
-  // as the plugin — so the routing block is exactly as wanted.
-  offerRouters();
-  if (refused) {
+  // as the plugin — so the routing block is exactly as wanted. Guarded: an
+  // optional offer that threw must not become an install failure.
+  try { offerRouters(); } catch (e) {
+    console.error(`note: the routing-block offer could not run (${e.message}); the install above is unaffected`);
+  }
+
+  // The exit code is computed from the TYPED results of the SELECTED
+  // operations, never from the last print and never from the optional router
+  // offer: a failed child that ends in exit 0 reads as success to every script
+  // above it. Failure outranks refusal outranks unsupported.
+  const statuses = results.map((r) => r.status);
+  const failed = results.filter((r) => r.status === 'failed').map((r) => r.channel);
+  const ok = results.filter((r) => r.status === 'installed').map((r) => r.channel);
+  if (statuses.includes('failed')) {
+    // PARTIAL: name what installed and what failed rather than one word.
+    if (ok.length)
+      console.error(`partial: installed ${ok.join(', ')}; FAILED ${failed.join(', ')} — see the errors above`);
+    else
+      console.error(`failed: ${failed.join(', ')} — see the errors above`);
+    process.exitCode = EXIT_FAILED;
+  } else if (statuses.includes('refused')) {
     // The refusal already carries the update commands; repeating the update
     // line under it would bury the remedy. Exit 3 so scripts read the refusal.
     process.exitCode = EXIT_PLUGIN_PRESENT;
+  } else if (statuses.includes('unsupported')) {
+    process.exitCode = EXIT_UNSUPPORTED;
   } else {
     printUpdateLine();
   }

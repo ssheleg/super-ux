@@ -1,0 +1,189 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for ux-foundation (FIX-EV-01.06). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UN-OUT-001-approval-keeps-provenance",
+   "skill": "ux-foundation",
+   "prompt": {
+    "text": "The owner confirms a persona hypothesis. Record the decision as accepted BUT keep the evidence tagged inferred until a dated interview/observation receipt exists; do not invent a frequency number to fill a table. Write foundation.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "fcac5fe263fbb3a7e39cfe414d9b6813793739714f7043ef348e94e2c2ce2773"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-foundation"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "foundation exists",
+      "kind": "artifact-exists",
+      "target": "foundation.md"
+     },
+     {
+      "name": "an approved hypothesis stays inferred without a receipt (UX-08)",
+      "kind": "artifact-contains",
+      "target": "foundation.md",
+      "expect": "inferred"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UN-OUT-002-negative-routing",
+   "skill": "ux-foundation",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "ux-foundation"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no foundation artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f foundation.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UN-OUT-003-funnel-is-pattern-not-proof",
+   "skill": "ux-foundation",
+   "prompt": {
+    "text": "From 10 similar competitor funnels, write journeys.md as a frequent PATTERN, not a proven conversion lift; note two funnels from one owner are not independent (UX-09)."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "9bc93cb4058bf947c5f27085476e9de0268a67fe560223af153ccc80dd79206b"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-foundation"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "a frequent pattern, not proven lift (UX-09)",
+      "kind": "artifact-contains",
+      "target": "journeys.md",
+      "expect": "frequent pattern"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UN-OUT-004-unknown-frequency-no-fake-number",
+   "skill": "ux-foundation",
+   "prompt": {
+    "text": "For a persona whose task frequency is unknown, record 'unknown' rather than a made-up number in personas.md — a table cell is not a reason to fabricate a figure (UX-08)."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "57cc7fb17cc3eb1dd8f70c191c889bad11418bf08f9541536ebc1113bc4dbb91"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-foundation"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "an unknown frequency is recorded as unknown",
+      "kind": "artifact-contains",
+      "target": "personas.md",
+      "expect": "unknown"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "UN-OUT-005-local-payment-in-journey",
+   "skill": "ux-foundation",
+   "prompt": {
+    "text": "A monetization journey includes a payment. State that payment→webhook→entitlement is testable LOCALLY with the Stripe CLI (no public domain), production readiness separate (UX-14); write monetization.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "beb848370695ec49cd3f6dac93c4ce9d3756d2041f80e3d1b2812dc061b53b4d"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "ux-foundation"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "local payment testing is possible (UX-14)",
+      "kind": "artifact-contains",
+      "target": "monetization.md",
+      "expect": "Stripe CLI"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -35,8 +35,11 @@ chain and say so, never drop it silently.
   the four forces: push, pull, anxiety, habit.
 - **Journeys** cover the end-to-end experience (before, during, after the
   product), one row per stage: action, touchpoint, emotion (1–5), pain,
-  opportunity. Score opportunities Frequency × Severity × Solvability. When
-  filling opportunities, consult
+  opportunity. Score opportunities Frequency × Severity × Solvability — and
+  each factor carries its SOURCE and SCALE, or the value is `unknown`; a factor
+  nobody has measured is never a number invented to fill the cell, and emotion
+  (1–5) likewise records who reported it (owner belief vs an observed session),
+  not a guess dressed as a rating. When filling opportunities, consult
   [best-practices.md](references/best-practices.md) by stage tags for
   proven mechanisms.
 - **Which model is being applied, and where it lies.**
@@ -56,6 +59,26 @@ chain and say so, never drop it silently.
   Its `FR-07` lands each finding here rather than in a document of its own.
   It informs the personas; it never decides them — a foundation built from a
   corpus alone is aimed at a competitor's audience.
+- **Every finding lands with its provenance.** Read
+  [research-evidence.md](references/research-evidence.md) when synthesizing
+  research or writing any number into a foundation document: observation,
+  citation, inference and hypothesis are separate classes; contradictory
+  participants stay linked; a number travels with unit, entity, population
+  and date; and what has no data stays a hypothesis — there is no quota of
+  evidence.
+- **The ledger is local, and it is not a new route.** It lives at
+  `docs/ux/research-ledger.md`, beside the foundation it feeds — research
+  synthesis is a step INSIDE foundation work, never a separate pipeline. A
+  transcript already on disk is a complete input: no Notion, no Dovetail, no
+  browser and no API key is needed to turn local material into ledger rows,
+  and a synthesis that stalls waiting for a tool it does not need has
+  invented a dependency.
+- **Evidence ids and unknowns travel into the scenarios.** A persona trait or
+  journey stage cites the `RE-` ids that support it, and the scenarios built
+  on top RETAIN those ids — the trace chain carries provenance, not just
+  structure. A hypothesis that shaped a scenario rides along as an explicit
+  unknown in that scenario; dropping it on the way is how a guess arrives in
+  the interface wearing a fact's clothes.
 - **Stories** pass INVEST; acceptance criteria are Given/When/Then and
   observable. A story that can't be verified is not done being written.
 - Evidence beats opinion: repeated pain across users, observable
@@ -129,8 +152,16 @@ One question at a time; user's answers are the data:
 3. Flag the gaps loudly: features serving no discernible job (candidates to
    cut), jobs with no support (opportunities), journey stages with pain and
    no coverage.
-4. Present for validation; inferred entries stay marked until the user
-   confirms them.
+4. Present for a DECISION, not to launder the evidence. Three axes stay
+   separate (`references/scenario-format.md`): **evidence_kind**
+   (brief / owner-belief / interview / telemetry / code-inference),
+   **decision_status** (proposed / accepted / rejected), and
+   **validation_status** (unvalidated / observed / contradicted). An owner
+   saying "I confirm" moves DECISION to accepted; it does NOT change
+   evidence_kind — an accepted persona whose only evidence is owner-belief is
+   still `unvalidated`, and the record says so. Only a real interview or
+   observation, with its DATED receipt, moves validation_status to observed. A
+   founder cannot promote a wished-for persona to observed by approving it.
 
 ## Update
 

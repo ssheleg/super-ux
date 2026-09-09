@@ -1,0 +1,195 @@
+{
+ "contract": "outcome-case/1 (schemas/outcome-case.schema.json + test/outcome_harness.py in ssheleg/sshlg-skills)",
+ "note": "Outcome corpus for copywriting (FIX-EV-01.03). Judged on ARTIFACTS via the family harness: the runner records the actual output oracle verdict AND the raw result per case; with/without-skill arms are the harness's baseline contract. Nothing in the production skill was changed for grader convenience.",
+ "arms": {
+  "baseline": "same prompts, skill absent",
+  "current": "same prompts, skill installed"
+ },
+ "cases": [
+  {
+   "schema_version": "outcome-case/1",
+   "id": "CW-OUT-001-positive-string-ownership",
+   "skill": "copywriting",
+   "prompt": {
+    "text": "Change the checkout error string 'Card declined' to 'Your card was declined — try another'. Update the source AND the proposed strings.md row in one pass, touching neither voice.md nor facts.md; write change-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "432dab8543b99e2d64e387911bde2be790f0609adf4b0da1e5b526348cd1faf9"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "copywriting"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "report exists",
+      "kind": "artifact-exists",
+      "target": "change-report.md"
+     },
+     {
+      "name": "source and strings.md row updated together (UX-04)",
+      "kind": "artifact-contains",
+      "target": "change-report.md",
+      "expect": "strings.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "CW-OUT-002-negative-routing",
+   "skill": "copywriting",
+   "prompt": {
+    "text": "Explain in two sentences what a webhook is."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "a5da94aa03520bb6226ea88328a75ab6d7e3985c73a0e90a1379bf168fead57e"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [],
+     "expect_not_loaded": [
+      "copywriting"
+     ]
+    },
+    "outcome": [
+     {
+      "name": "no copy artifact appears",
+      "kind": "command-exit-0",
+      "target": "test ! -f change-report.md"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "CW-OUT-003-humanization-preserves-negation",
+   "skill": "copywriting",
+   "prompt": {
+    "text": "Humanize 'The service will never share your data with third parties' without changing its meaning; record before/after and the preserved negation in humanize-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "de6bdea0a5c5d0ef4e4f2b78097cf2033b8f37c9013ffc29837c41af55359718"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "copywriting"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "the negation is preserved (UX-03/B060)",
+      "kind": "artifact-contains",
+      "target": "humanize-report.md",
+      "expect": "never"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "CW-OUT-004-noop-unique-text-no-spam",
+   "skill": "copywriting",
+   "prompt": {
+    "text": "Review this 100-word paragraph of all-unique words for repetition spam; record the finding count in spam-report.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "4f390c6406e885fc731412b199e32f967d567561292de0f30292c3f1ab5a58c8"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "copywriting"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "unique text raises no spam finding (UX-02/B051)",
+      "kind": "artifact-contains",
+      "target": "spam-report.md",
+      "expect": "findings: 0"
+     }
+    ]
+   }
+  },
+  {
+   "schema_version": "outcome-case/1",
+   "id": "CW-OUT-005-consent-vs-notice",
+   "skill": "copywriting",
+   "prompt": {
+    "text": "Write the data-handling copy for a necessary contract-processing flow AND an optional marketing opt-in; keep the necessary notice free of a fake consent gate and make the marketing consent separate and revocable; write consent-copy.md."
+   },
+   "environment": {
+    "model": "inherit",
+    "host": "any",
+    "case_digest": "24f49702c2fe3f7e96919546f322f3100c38fad7ec396599ba92a7cb02d43c91"
+   },
+   "checks": {
+    "tool": [
+     {
+      "name": "python3 present",
+      "command": "python3 -c 'pass'"
+     }
+    ],
+    "load_trace": {
+     "expect_loaded": [
+      "copywriting"
+     ],
+     "expect_not_loaded": []
+    },
+    "outcome": [
+     {
+      "name": "necessary processing gets a notice, not a consent gate (UX-15)",
+      "kind": "artifact-contains",
+      "target": "consent-copy.md",
+      "expect": "notice"
+     },
+     {
+      "name": "marketing consent is separate and revocable",
+      "kind": "artifact-contains",
+      "target": "consent-copy.md",
+      "expect": "revocable"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -63,11 +63,32 @@ Three facts, in this order:
 
 Never blame the user. Never say "unexpected": it tells the reader the team
 was surprised, which is not reassuring. Never show a code without a sentence
-beside it; a code alone is a support ticket the user has to write.
+beside it; a code alone is a support ticket the user has to write — and
+**never surface the internal exception itself**: a stack trace, an ORM error
+or a vendor message in the UI leaks the implementation and reads as the
+product thinking out loud.
 
 **A blocked action names the blocker and the unblocking step.** "You do not
 have permission" is half a message; "Only owners can delete a project. Ask
 <name>, or leave the project instead" is a whole one.
+
+**The state-message tuple — every state string answers five slots.** For each
+scenario state, the copy is checkable against: **fact** (what happened),
+**preservation** (what was not affected), **action** (the one next step),
+**consequence** (what happens if the user does nothing), and **forbidden
+claims** — the promises THIS scenario does not prove. "Try again" is a
+forbidden claim where the scenario has no retry path; "your changes are
+saved" is one where nothing saves them: an error may not promise retry or
+safety the flow does not deliver. Each slot's wording carries its provenance
+(**observed** in the running product, or **hypothesis** from the scenario) —
+and localization translates the COMPLETE message, never slot-by-slot
+concatenation, which no grammar survives.
+
+**Copy polishes states; it never mints them.** The scenario's state list is
+the contract: a copy edit may not add a success, loading or error state the
+scenario does not have — a new state is a scenario change first. And a polish
+of legal or payment wording may not change what the condition MEANS; meaning
+belongs to the policy decision, not to the copywriter's ear.
 
 ## Empty states
 

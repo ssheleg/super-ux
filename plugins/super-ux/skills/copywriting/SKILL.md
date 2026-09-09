@@ -22,9 +22,17 @@ to remove.
 or **"draft it"** / **«черновиком»** — is the operator declining this route:
 write directly and say the pack was skipped on request, never skip it silently.
 
-**This skill never writes to `docs/brand/`.** A term that is missing from the
-dictionary, or a number with no row in `facts.md`, is **reported** — never
-invented to finish the sentence. Adding it is `brand-voice`'s decision.
+**Ownership is by FILE, not by directory.** `brand-voice` owns the pack's
+sources of truth — `voice.md`, the terminology dictionary, `facts.md`, the
+channel playbooks and the locale policy — and this skill **never writes those**:
+a term missing from the dictionary, or a number with no row in `facts.md`, is
+**reported**, never invented to finish the sentence — adding it is
+`brand-voice`'s decision. This skill DOES own **`strings.md`** (the interface-
+string registry, written with `Status: proposed`) and the product text itself.
+Both live under `docs/brand/`, but the directory is not the owner — the file
+is. Writing a `strings.md` row is this skill's job and needs no extra approval
+for its LOCATION; a coordinated run claims the file before editing, and voice
+and facts stay untouched in the same pass.
 
 ## References
 
@@ -126,10 +134,18 @@ guards govern the pass wherever it runs, and they are not optional:
 - Text that already reads naturally is left alone. Editing what is fine to
   prove the pass ran is this mode's failure.
 - **A marker count is not a verdict and never gates anything.** Say which markers
-  are present at what density; never say a text was AI-written. The false
-  positives fall hardest on people writing in a second language, and a writer is
-  not a defect to be edited into fluency they did not ask for. `ai-tells.md`
-  carries the measurement and what it binds.
+  are present at what density; never say a text was AI-written. A number of
+  markers does not prove authorship — the false positives fall hardest on people
+  writing in a second language, and a writer is not a defect to be edited into
+  fluency they did not ask for. The humanization pass is ADVISORY throughout:
+  `B060` warns, it does not error. `ai-tells.md` carries the measurement and
+  what it binds.
+- **A quote, a registered term, and an explicit `off` never force a rewrite.** A
+  marker inside a quotation is the source's word; a term in `terminology.md` is
+  meant to recur; and `Humanization: off` (with its reason) preserves the text
+  exactly. **Brand bans are a separate user policy** — a forbidden word is the
+  brand's own choice in `terminology.md`, not a machine-drafting tell, and it is
+  that check's business, not this pass's.
 - **Read `voice.md`'s two fields first.** `Humanization:` is whether the pass
   runs and defaults to `on`; `Humanization pass:` names which implementation,
   and absent it is `own`. Neither absence stops work: run the default, print the

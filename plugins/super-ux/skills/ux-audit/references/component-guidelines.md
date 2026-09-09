@@ -12,6 +12,14 @@ The rule above all: **reach for the platform's standard component before
 inventing one** (Jakob's law, PRN-14) — it ships with the accessibility,
 states, and motion behavior you'd otherwise rebuild wrong.
 
+## Contents
+
+- [Choosing a control by the job](#choosing-a-control-by-the-job)
+- [Control rules worth auditing](#control-rules-worth-auditing)
+- [Every interactive component ships all its states](#every-interactive-component-ships-all-its-states)
+- [Inventory before migration — reuse, modify or create, with the reason](#inventory-before-migration--reuse-modify-or-create-with-the-reason)
+- [Cross-platform stance](#cross-platform-stance)
+
 ## Choosing a control by the job
 
 | The user needs to… | Use | Not |
@@ -81,6 +89,29 @@ focus (visible ring — WCAG), active/pressed, disabled (with the reason
 discoverable), loading where async, error where it can fail, selected where
 applicable. Missing states are how PRN-01/PRN-09 silently fail — the audit
 checks the state set, and Figma variants (BP-096) must carry them.
+
+## Inventory before migration — reuse, modify or create, with the reason
+
+Before a kit migration, the component inventory marks every item
+**reuse / modify / create**, each with its reason and the scenario ids it
+serves — a disposition nobody can explain is a migration nobody can review.
+
+- **Token names are not an API.** A primitive sharing the kit's semantic CSS
+  tokens proves the PAINT is compatible, not the component: the mandatory
+  contract is the **DOM/API half** — roles, native props passed through,
+  focus behaviour, keyboard handling, disabled semantics. Two Buttons with
+  identical token names and different `disabled` semantics are two components.
+- **A single-use item is not extracted for the count.** Extraction needs a
+  second consumer or a named upcoming one; raising the component number is
+  not a reason.
+- **Creation carries a reason, never a ritual permission.** "Nothing fits
+  because X" names what was checked and why it fails; "we may create
+  components" authorizes nothing in particular and therefore everything.
+- **The adapter checklist is change-specific**: which tokens map, which API
+  gaps exist (roles, props, focus, keyboard, disabled — per component), and
+  which fixes are owed. The kit fixes themselves stay separate
+  implementation tasks (the DS-01/VD-05 line) — an inventory that starts
+  patching kits mid-count loses both the count and the patch.
 
 ## Cross-platform stance
 

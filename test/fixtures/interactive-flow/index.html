@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interactive flow fixture — bounded scenario graph</title>
+<!--
+  CTX-03.02: the clickable half of the bounded scenario graph
+  (references/interactive-flow-prototypes.md). Everything this page can do is
+  DECLARED in the JSON below and interpreted by the generic runner — the page
+  invents no screen and no transition. No external SDK, no network call of any
+  kind: the payment step is a LABELLED SIMULATION (IFP-05), and clicking it
+  proves a browser can click, never that money moves. A preview raises no
+  status (IFP-06).
+-->
+<style>
+  :root { --bg: #ffffff; --ink: #1a1a1a; --line: #d0d0d0; --accent: #0a5dc2; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif;
+         margin: 0 auto; max-width: 640px; padding: 24px; }
+  header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+           border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  select, button { font: inherit; padding: 6px 12px; }
+  #screen { border: 1px solid var(--line); border-radius: 8px; padding: 24px; margin-top: 16px; }
+  #screen h2 { margin-top: 0; }
+  .controls button { margin: 4px 8px 4px 0; }
+  .sim { border: 2px dashed var(--accent); padding: 12px; margin-top: 12px; }
+  .sim::before { content: "SIMULATION — no live service is called"; display: block;
+                 font-weight: 700; color: var(--accent); font-size: 13px; }
+  #trail { color: #555; font-size: 13px; margin-top: 16px; word-break: break-word; }
+</style>
+</head>
+<body>
+<header>
+  <label for="scenario">Scenario:</label>
+  <select id="scenario" data-role="scenario-selector"></select>
+  <button id="reset" data-action="reset">Reset</button>
+  <span id="flow-name"></span>
+</header>
+<main id="screen" data-role="screen"></main>
+<p id="trail" data-role="trail"></p>
+
+<script type="application/json" id="flow-graph">
+{
+  "flow": "FL-checkout",
+  "entry": "SCR-01",
+  "screens": [
+    {"id": "SCR-01", "title": "Cart"},
+    {"id": "SCR-02", "title": "Address"},
+    {"id": "SCR-03", "title": "Payment error"},
+    {"id": "SCR-04", "title": "Done"},
+    {"id": "SCR-05", "title": "Payment provider (simulated)", "simulates": "external:payment-provider"}
+  ],
+  "external": [
+    {"id": "external:payment-provider", "mock": "explicit"}
+  ],
+  "terminals": ["SCR-04"],
+  "transitions": [
+    {"id": "TR-01", "origin": "SCR-01", "action": "Continue", "result": "SCR-02", "kind": "happy"},
+    {"id": "TR-02", "origin": "SCR-02", "action": "Pay", "result": "SCR-05", "kind": "external"},
+    {"id": "TR-03", "origin": "SCR-02", "action": "Invalid card", "result": "SCR-03", "kind": "error"},
+    {"id": "TR-04", "origin": "SCR-03", "action": "Fix and retry", "result": "SCR-02", "kind": "recovery"},
+    {"id": "TR-05", "origin": "SCR-02", "action": "Back", "result": "SCR-01", "kind": "back"},
+    {"id": "TR-06", "origin": "SCR-01", "action": "Cancel order", "result": "SCR-04", "kind": "cancel"},
+    {"id": "TR-07", "origin": "SCR-05", "action": "Simulated success", "result": "SCR-04", "kind": "happy"}
+  ],
+  "scenarios": [
+    {"id": "SCN-001", "kind": "happy", "title": "Happy path", "path": ["TR-01", "TR-02", "TR-07"]},
+    {"id": "SCN-002", "kind": "error", "title": "Card declined, then recovered", "path": ["TR-01", "TR-03", "TR-04", "TR-02", "TR-07"]},
+    {"id": "SCN-003", "kind": "cancel", "title": "Cancelled from cart", "path": ["TR-06"]}
+  ],
+  "absent": ["returning"]
+}
+</script>
+
+<script>
+"use strict";
+/* The generic runner: it reads the graph and renders exactly what is
+   declared. Deep link: #SCR-02 opens that screen, #SCN-002 arms that
+   scenario. No network primitive and no external script exists on this
+   page — the walk IS the artifact. */
+(function () {
+  var G = JSON.parse(document.getElementById("flow-graph").textContent);
+  var screens = {};
+  G.screens.forEach(function (s) { screens[s.id] = s; });
+  /* A screen that SIMULATES an external destination renders inside the
+     labelled box — the declaration in `external` records what it stands for. */
+  var current = G.entry, walked = [];
+
+  var sel = document.getElementById("scenario");
+  G.scenarios.forEach(function (sc) {
+    var o = document.createElement("option");
+    o.value = sc.id;
+    o.textContent = sc.id + " — " + sc.title + " (" + sc.kind + ")";
+    sel.appendChild(o);
+  });
+  document.getElementById("flow-name").textContent = G.flow;
+
+  function render() {
+    var s = screens[current];
+    var el = document.getElementById("screen");
+    el.innerHTML = "";
+    var h = document.createElement("h2");
+    h.textContent = s.title + " (" + s.id + ")";
+    el.appendChild(h);
+    var box = el;
+    if (s.simulates) {
+      box = document.createElement("div");
+      box.className = "sim";
+      box.setAttribute("data-mock", "explicit");
+      el.appendChild(box);
+    }
+    var controls = document.createElement("div");
+    controls.className = "controls";
+    G.transitions.filter(function (t) { return t.origin === current; })
+      .forEach(function (t) {
+        var b = document.createElement("button");
+        b.textContent = t.action;
+        b.setAttribute("data-transition", t.id);
+        b.setAttribute("data-kind", t.kind);
+        b.onclick = function () { walk(t); };
+        controls.appendChild(b);
+      });
+    box.appendChild(controls);
+    document.getElementById("trail").textContent =
+      "walked: " + (walked.join(" → ") || "(nothing yet)");
+  }
+
+  function walk(t) {
+    walked.push(t.id);
+    current = t.result;
+    render();
+  }
+
+  function reset() {
+    current = G.entry;
+    walked = [];
+    render();
+  }
+
+  document.getElementById("reset").onclick = reset;
+  sel.onchange = reset;
+
+  var hash = decodeURIComponent(location.hash.replace("#", ""));
+  if (screens[hash]) { current = hash; }
+  if (G.scenarios.some(function (sc) { return sc.id === hash; })) { sel.value = hash; }
+  render();
+}());
+</script>
+</body>
+</html>

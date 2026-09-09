@@ -160,8 +160,9 @@ restates a figure from it, because it states none.
 
 #### BP-005: Loading screens that sell, not spin
 - **Do:** replace generic loaders before the paywall with value messaging, social proof, or personalized copy.
-- **Why:** primes intent in dead time; excited users convert better.
-- **Apply when:** any loading/preparation moment exists before a conversion point.
+- **Don't:** manufacture the wait. This practice fills a delay that ALREADY exists — it never adds one, never holds a ready result back, and its copy never claims analysis that is not happening ("analyzing your answers…" over a lookup table is a false claim, not priming).
+- **Why:** primes intent in dead time; excited users convert better. Dead time only — staged time is a dark pattern with a measurement bill.
+- **Apply when:** a real loading/preparation moment exists before a conversion point. Instant local results render without a timer; a deliberate narrative pause, if the product chooses one, is named honestly and its cost/comprehension measured.
 - **Tags:** onboarding, paywall, social-proof, conversion
 - **Source:** [48Laws] L5
 
@@ -2015,24 +2016,41 @@ corpus of them can and cannot tell you — is `funnel-research.md`.
 - **Source:** [FFox26]/[48Laws]
 - **Checked:** 2026-08-14
 
-#### BP-212: Publicly addressable before it takes money, instrumented before it takes traffic
-- **Do:** order the build so the funnel has a real public address before a payment provider is wired to it, and so product analytics and the ad-platform pixel are live before the first paid click. Treat each as a gate on the next step, not as a task to catch up on.
-- **Why:** both orderings are forced rather than tidy. A provider confirms a charge by calling an address on the public internet, so the whole post-payment path — entitlement written, success screen shown, access delivered — is untestable while the funnel exists only on a laptop, and the usual way to find that out is the first real card. Traffic bought before instrumentation cannot be read afterwards either: the sessions are spent, the step that was losing people was never recorded, and the campaign gets judged on a total that names nothing. BP-039 orders lifecycle after the funnel for the same reason one level up.
+#### BP-212: Local sandbox tests the payment path; production delivery needs a public HTTPS endpoint
+- **Do:** separate the THREE environments. Wire and TEST the payment path
+  locally with the provider's webhook forwarding or official emulator (Stripe:
+  `stripe listen --forward-to localhost:4242/webhook`, no registered URL
+  needed); PRODUCTION delivery needs a real public HTTPS endpoint with
+  signature verification. And keep product analytics and the ad-platform pixel
+  live before the first paid click. Treat production HTTPS availability as a
+  gate on going live, not as a gate on writing the wiring.
+- **Why:** a provider confirms a charge by calling an address, but that address
+  is a **local forwarded one in the sandbox** — the whole post-payment path
+  (entitlement written, success screen shown, access delivered) IS testable on
+  a laptop with the provider's CLI, and "untestable until it has a public
+  address" is false, it just needs the right tool. What genuinely requires a
+  public HTTPS endpoint is PRODUCTION delivery, and readiness for that is a
+  separate check (endpoint reachable, TLS valid, signature verified) — a
+  provider-capability question, not a universal UX gate that blocks local work.
+  Traffic bought before instrumentation cannot be read afterwards either: the
+  sessions are spent, the losing step was never recorded, and the campaign is
+  judged on a total that names nothing. BP-039 orders lifecycle after the
+  funnel for the same reason one level up.
 - **Apply when:** standing up any web funnel, or adding a payment step to one that had none.
 - **Tags:** checkout, analytics, web2app, conversion, testing, web
 - **Source:** [FFox26]/[CRO26]
 - **Checked:** 2026-08-14
 
 #### BP-213: A collected answer carries three decisions no screen shows
-- **Do:** for every field the funnel stores — quiz answers, email, payment status — decide and record three things: who may read the row, when the person was told what is collected and why, and how they get it deleted. Default the datastore to deny and reach it only through your own server path; put the notice and consent **before the first write**, not on the paywall; give the deletion request a real route rather than an address nobody reads.
-- **Why:** not one of the three is visible from the front end, so a funnel that renders correctly and takes money looks finished while its answers table is readable by anyone who guesses the endpoint — hosted datastores are open until a row policy is written, and a generated funnel does not write one unless told to. The timing is not a preference: `[GDPR]` Art. 13 requires the identity, the purposes and the legal basis to be given *at the time the data is obtained*, and Art. 17 gives the person erasure without undue delay, so a funnel with no deletion route has promised something it cannot do.
+- **Do:** for every field the funnel stores — quiz answers, email, payment status — decide and record four SEPARATE things, because they are different duties, not one gate: **(1) information** — the notice (what is collected, by whom, why) goes *before the first write*, always; **(2) legal basis** — name which of the six Art. 6(1) bases covers THIS field (contract necessity for payment status, legal obligation for tax records, legitimate interest, consent, …); **(3) explicit consent** — a checkbox only where consent IS the chosen basis (marketing, non-essential tracking, special categories), never as a universal gate on fields another basis already covers; **(4) geography** — which regime applies to THIS audience (GDPR by territorial scope; other regimes differ), so the same UI serving two regions gets two verdicts, not one. Plus the operational pair: who may read the row (default the datastore to deny, reach it through your own server path) and a real deletion route rather than an address nobody reads. **The scenario REFERENCES the policy decision; the frontend implements it, never invents it**: the UX scenario names which basis and which regime were decided (by counsel or the operator — BP-214's territory) and the screens are then checked against THAT decision — notice present, checkbox present exactly where the decided basis is consent. A jurisdiction or basis nobody has decided is marked **decision-needed** in the scenario and blocks that screen's legal verdict — it is never guessed from the UI's shape. And an **informational acknowledgement is not consent**: dismissing a notice, "Got it", continuing to scroll — none of these records an affirmative choice, so a flow that logs them as consent has fabricated the one artifact an audit would ask for.
+- **Why:** none of this is visible from the front end, so a funnel that renders correctly and takes money looks finished while its answers table is readable by anyone who guesses the endpoint — hosted datastores are open until a row policy is written, and a generated funnel does not write one unless told to. The dimensions must not collapse into "consent before first write": `[GDPR]` Art. 13 is an INFORMATION duty — identity, purposes and legal basis given *at the time the data is obtained* — and it holds under every basis; the EDPB lists six lawful bases of which consent is one, so a field necessary for the contract or required by law neither needs nor benefits from a consent checkbox (a checkbox on such a field misleads: it implies a refusal the processing does not honour). Art. 17 gives the person erasure without undue delay, so a funnel with no deletion route has promised something it cannot do. Which basis covers a concrete field is counsel's call — BP-214 owns where the words come from.
 - **Apply when:** the funnel stores anything about a person — every funnel with a quiz or a checkout.
 - **Tags:** legal, trust, forms, error-recovery, web
 - **Source:** [FFox26]/[GDPR]
 - **Checked:** 2026-08-14
 
 #### BP-214: The legal text is sourced, never generated
-- **Do:** take the privacy policy and the terms from a generator, a regional template or counsel, and give the agent only the technical half — place the document, put the consent gate before the first write, wire the deletion route. Review the sourced text against what the system actually does before publishing it.
+- **Do:** take the privacy policy and the terms from a generator, a regional template or counsel, and give the agent only the technical half — place the document, put the notice before the first write, gate on consent only the processing whose basis IS consent (BP-213's four dimensions), wire the deletion route. Review the sourced text against what the system actually does before publishing it.
 - **Why:** a policy is a statement about your own processing, so generated prose is a fabricated claim about it — BP-194's failure with a regulator for a reader and an enforceable claim as the artifact. `[GDPR]` Art. 13(1) requires the purposes and the legal basis specifically, which is the part a model has no way to know and every incentive to fill in fluently. The failure is quiet: the text reads well, cites the right regulation, and describes a product that does not exist.
 - **Apply when:** any surface publishing a policy, terms, or a consent notice.
 - **Tags:** legal, trust, copy, microcopy

@@ -10,10 +10,11 @@ web2app chain, BP-211..215 the wiring underneath.
 **The premise, and the whole reason this is a method rather than a browse:** you
 cannot see anyone's revenue. Not in an ad library, not in a review site, not
 anywhere. A product can be making millions with nothing on its funnel that says
-so. Every signal below is a proxy for spend, and spend is a proxy for return
-made by someone whose judgement you cannot inspect. The output is a **shape to
-start from**, never a template, and BP-001 is the discipline that keeps it that
-way.
+so. Every signal below is OBSERVED EXPOSURE — a proxy for spend — and any claim
+that spend proves RETURN is a HYPOTHESIS with alternative explanations (a
+funded launch burning runway, a vanity spend, a strategic loss-leader), not a
+measurement. The output is a **shape to start from**, never a template or a
+proven result, and BP-001 is the discipline that keeps it that way.
 
 ## Contents
 
@@ -78,8 +79,8 @@ strongest inference available and it is still an inference.
 
 | Signal | Read | Why it carries information |
 |---|---|---|
-| **How long the ad has been running** | Libraries publish the launch date | Nobody keeps paying to run an ad at a loss for months. Longevity is the cheapest signal and the hardest to fake |
-| **How many creatives are in rotation on one offer** | Count the variants pointing at the same funnel | Variant count is production spend, and production spend follows return. A dozen creatives on one offer is a team that has decided this funnel earns |
+| **How long the ad has been running** | Libraries publish the launch date | Longevity is OBSERVED EXPOSURE — a well-funded advertiser can run a loss-making ad for months, so read it as "someone is spending here", the cheapest and hardest-to-fake signal of THAT, never as proof the funnel earns |
+| **How many creatives are in rotation on one offer** | Count the variants pointing at the same funnel | Variant count is production SPEND — observed exposure, not observed return. "Production spend follows return" is a HYPOTHESIS with alternatives (a funded launch, a vanity bet, a mandate); a dozen creatives says a team is spending here, not that the funnel earns |
 | **How fast reviews are growing** | The rate, never the count | Count is mostly age. Rate is current traffic, which is what you want and what the sort in FR-01 gets wrong |
 | **Recurrence across independent players** | The same move in several unrelated funnels | Once is taste, three times is a pattern. This is the only one of the four that is about the *mechanic* rather than the advertiser |
 
@@ -115,8 +116,15 @@ count anything.
 
 Count frequencies across the table and split the result:
 
-- **What almost everyone does** is the proven base. Start from it, because the
-  cost of discovering it independently has already been paid by the category.
+- **What almost everyone does** is a FREQUENT PATTERN, not a proven conversion
+  lift. Frequency across a corpus is observed exposure repeated; it is a shape
+  worth starting from because the category has already spent to discover it —
+  but "frequent" is not "proven", and adoption is decided by a LOCAL experiment
+  on your own funnel, never asserted from the count. The frequency is computed
+  by a script over the corpus with an explicit DENOMINATOR, and DUPLICATES are
+  collapsed first: two funnels owned by the SAME company are one observation,
+  not two, and a single known loss-making-but-funded advertiser does not move
+  the pattern.
 - **What almost nobody does** is open space, and the corpus **cannot tell you
   which kind**. An untried idea and an idea the category tried and abandoned look
   exactly the same from here. Before spending on one, look for the reason: a
@@ -189,16 +197,18 @@ starting point rather than a rule.
 |---|---|---|
 | Landing | Pick up the ad's exact promise and move the visitor into the quiz | BP-116, BP-117 |
 | Quiz | Build commitment, and collect the few answers the offer repeats | BP-002, BP-143, BP-211 |
-| Loading | A calculated pause that makes the result feel computed for this person | BP-005 |
+| Loading | Only where REAL asynchronous work exists: show the actual operation, never delay a ready result. A product that wants a narrative pause names it honestly — no claim of personal analysis that is not happening — and measures its cost | BP-005 |
 | Offer | The answers come back as a plan, wording branched, price not | BP-010, BP-211 |
 | Paywall | Tiers, what is included, the trial, the anchor unit | BP-118, BP-022, BP-070 |
 | Checkout | The smallest identity that unblocks the purchase, total visible before the last step | BP-119, BP-120 |
 | Success | Confirmation, and the handoff into the product | BP-125, BP-215 |
 
 Every one of those steps is a screen in `screens.md` and a scenario in
-`scenarios.md`, including the loading screen and including the branch where the
-quiz answer is missing. A step that exists in the build and not in the record is
-the drift the chain exists to prevent.
+`scenarios.md`, including the loading screen — where one legitimately exists —
+and including the branch where the quiz answer is missing; that branch shows
+its honest empty state, never a staged personalization over answers nobody
+gave. An instant local result renders without a timer. A step that exists in
+the build and not in the record is the drift the chain exists to prevent.
 
 ## What this method cannot do
 
