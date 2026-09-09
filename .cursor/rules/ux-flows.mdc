@@ -1,0 +1,73 @@
+---
+description: "Design or improve user flows (docs/ux/flows.md): apply for task analysis, flow diagrams, screen states, wireframes, heuristic UX evaluation, or any 'improve/fix the UX' request"
+alwaysApply: false
+---
+
+# ux-flows — Design HOW Users Move
+
+`docs/ux/flows.md` is the HOW layer between foundation (stories) and
+scenarios: task analysis + mermaid user flows referencing screens by
+`SCR-ID`. The canonical per-screen spec lives in `docs/ux/screens.md` — the
+UI map: every screen and state with its Figma frame, wireframe, code
+coverage, scenarios, and resources. IDs `FLW-NN`/`SCR-NN`, sequential, never
+reused. Any interface change updates `screens.md` (and the Figma frame when
+enabled) in the same change — a screen whose code diverges from its record
+is `drifted`.
+
+## Flow entry (ux-contract v4)
+
+Fields: `Traces` (story/job IDs), `Goal` (observable end state), `Entry
+points` (ALL of them), `Success exit`, `Task analysis` (numbered
+user-visible micro-steps), mermaid `flowchart` (screens as
+`Screen: <name>`, decisions as diamonds, `*_err` error nodes with labeled
+recovery edges), `Screens traversed` table (`| Screen | States used here |`
+— SCR-IDs only; the full per-screen spec lives once in `screens.md`).
+
+Each screen entry in `screens.md`: `Used by`, `Purpose`, `Elements` (mark
+the ONE primary action), `States` table (`| State | Trigger | Figma frame |
+Behavior |` — a row per loading/empty/error/success that applies),
+`Wireframe`, `Coverage` (file:line), `Scenarios`, `Resources`, `Status`
+(designed|built|drifted|retired).
+
+## Design rules
+
+- One flow = one user goal. Task analysis first: cut/merge/default-away
+  every step that doesn't serve the job; pull first value as early as
+  possible; happy path ≤5 steps or justified.
+- Every decision an explicit branch; every error edge lands on recovery —
+  dead ends are defects; all entry points enumerated.
+- Wireframes optional (`docs/ux/wireframes/FLW-NN.md`, ASCII hierarchy +
+  primary action, not pixels); storyboard only when usage context drives
+  design.
+- Visual identity BEFORE any frame: `screens.md` → Design system →
+  `Style pack`. Empty and no design system in the project → pick a pack with
+  the **sheleg-design** companion skill (`workbench` for product UI /
+  dashboards / tools, `instrument-console`, `editorial-luxury`, or a new
+  pack on its contract; cinematic scroll pages also take its motion
+  methodology) and record the pack + token file. Missing → offer the
+  one-time install once (`npx sheleg-design-skill`) and continue on platform
+  defaults; recommend, don't force. The pack owns palette/type/motion and
+  its bans; BP-079..090 stay the floors it must clear. Never invent a look
+  per screen.
+- Figma mockups optional (default on): if the foundation's Design tooling
+  enables Figma and a Figma MCP is available, mirror each screen into a
+  frame built on the pack's tokens (they become the Figma variable
+  collections) applying visual-craft practices (BP-079..090), and link every
+  screen row to its frame; ask the user once at the start of design.
+- Backwards mode (existing product): reconstruct flows as they ARE from
+  code with file:line evidence, tag `inferred` until confirmed; gaps
+  between is/should become the improvement backlog.
+
+## Improving existing UX
+
+Walk flows against heuristics: system status visible; user's words not
+jargon; undo/cancel/back everywhere; consistency; error prevention over
+error messages; recognition over recall; shortcuts for frequent users;
+minimalist screens; recovery-oriented error text; help in context;
+progressive disclosure; smart defaults; limited choices; familiar
+patterns; prominent primary targets; polished peaks and endings.
+
+Violations: `[PRN-NN] node — issue — severity`. Redesign proposals MUST
+trace to a pain/job/story, cite the principle/practice, show flow
+before → after, and state the expected observable effect. Prioritize
+Frequency × Severity × Solvability. Cascade approved changes to scenarios.

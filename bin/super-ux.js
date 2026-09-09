@@ -464,24 +464,41 @@ async function menu(force) {
   }
   if (prompter) prompter.close();
 
+  // Only the SELECTED install operations are the result — each labelled by its
+  // channel, so a mixed selection reports which one failed rather than a single
+  // aggregate verdict. The router offer below is optional enrichment and is
+  // deliberately NOT in this list: whether it prints a block cannot change
+  // whether the install succeeded.
   const results = [];
-  if (keys.includes('cursor')) { installCursor(cursorDir, false); results.push({ status: 'installed' }); }
-  if (keys.includes('claude')) results.push(installClaudePlugin());
+  if (keys.includes('cursor')) { installCursor(cursorDir, false); results.push({ channel: 'cursor', status: 'installed' }); }
+  if (keys.includes('claude')) results.push({ channel: 'claude', ...installClaudePlugin() });
   if (keys.includes('skills')) {
     const r = installSkillsCli(force);
-    results.push(r === 'refused' ? { status: 'refused' } : r);
+    results.push({ channel: 'skills', ...(r === 'refused' ? { status: 'refused' } : r) });
   }
 
   // Same offer the --cursor flag path makes. Two doors into one install that
   // behave differently is how a feature comes to exist for half its users.
   // Offered on the refused path too: the skill IS present on this machine —
-  // as the plugin — so the routing block is exactly as wanted.
-  offerRouters();
-  // The exit code is computed from the TYPED results, never from the last
-  // print: a failed child that ends in exit 0 reads as success to every
-  // script above it. Failure outranks refusal outranks unsupported.
+  // as the plugin — so the routing block is exactly as wanted. Guarded: an
+  // optional offer that threw must not become an install failure.
+  try { offerRouters(); } catch (e) {
+    console.error(`note: the routing-block offer could not run (${e.message}); the install above is unaffected`);
+  }
+
+  // The exit code is computed from the TYPED results of the SELECTED
+  // operations, never from the last print and never from the optional router
+  // offer: a failed child that ends in exit 0 reads as success to every script
+  // above it. Failure outranks refusal outranks unsupported.
   const statuses = results.map((r) => r.status);
+  const failed = results.filter((r) => r.status === 'failed').map((r) => r.channel);
+  const ok = results.filter((r) => r.status === 'installed').map((r) => r.channel);
   if (statuses.includes('failed')) {
+    // PARTIAL: name what installed and what failed rather than one word.
+    if (ok.length)
+      console.error(`partial: installed ${ok.join(', ')}; FAILED ${failed.join(', ')} — see the errors above`);
+    else
+      console.error(`failed: ${failed.join(', ')} — see the errors above`);
     process.exitCode = EXIT_FAILED;
   } else if (statuses.includes('refused')) {
     // The refusal already carries the update commands; repeating the update
