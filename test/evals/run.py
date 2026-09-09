@@ -49,13 +49,28 @@ REFUSAL_MARKERS = ("i can't help", "i cannot help", "i won't", "i must decline",
 
 def classify(returncode: int, text: str, case: dict) -> tuple[str, list, list]:
     """One state per run, exit code FIRST: substring luck on a dead process is
-    the defect this function exists to close."""
+    the defect this function exists to close.
+
+    Three expectation kinds (FIX-UX-05.02), all judged on the OUTPUT:
+    * `expect` — substrings that must appear at least once;
+    * `expect_count` — {substring: n}: the SURFACE COUNT check. One status line
+      cannot satisfy a per-surface promise made to two surfaces;
+    * `invariants` — text that must survive VERBATIM (case-sensitive): the
+      semantic facts an adaptation or a no-op pass must not rewrite.
+    """
     if returncode != 0:
         return "EXIT_ERROR", [], []
     lowered = text.lower()
     if any(m in lowered for m in REFUSAL_MARKERS):
         return "REFUSAL", [], []
     missing = [e for e in case["expect"] if e.lower() not in lowered]
+    for needle, want in (case.get("expect_count") or {}).items():
+        got = lowered.count(needle.lower())
+        if got < want:
+            missing.append(f"{needle!r} x{want} (found {got})")
+    for inv in case.get("invariants") or []:
+        if inv not in text:
+            missing.append(f"invariant altered or lost: {inv!r}")
     present = [f for f in case.get("forbid", []) if f.lower() in lowered]
     if missing or present:
         return "FAIL", missing, present
