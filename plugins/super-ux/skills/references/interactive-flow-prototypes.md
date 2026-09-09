@@ -80,6 +80,9 @@ its declared `external:*` destination, inside the labelled SIMULATION box —
 clicking it proves a browser can click, never that money moves. No network
 primitive, no external script, no SDK.
 
+The coverage matrix, the walkthrough probes and the handoff receipt are in
+[prototype-walkthrough.md](prototype-walkthrough.md).
+
 ## What this file does not own
 
 The clickable artifact (selector, reset, labelled simulations), the

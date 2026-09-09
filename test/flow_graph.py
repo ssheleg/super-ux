@@ -119,3 +119,78 @@ def validate_graph(graph):
                     problems.append(f"IFP-02 {where}: path step {step!r} names "
                                     "no declared transition")
     return problems
+
+
+# --------------------------------------------------------------------------
+# CTX-03.03 — coverage and the handoff receipt, on the bounded graph above.
+
+def coverage(graph, walked):
+    """Declared vs walked vs NOT_RUN — three states, never two. `walked` is a
+    list of {"transition", "from", "to"} records from an actual run."""
+    fired = [w.get("transition") for w in walked]
+    fired_set = set(fired)
+    transitions = {t["id"]: t for t in graph.get("transitions", [])}
+    out = {"transitions": {}, "scenarios": {}, "kinds": {}}
+    for tid in transitions:
+        out["transitions"][tid] = "walked" if tid in fired_set else "NOT_RUN"
+    for sc in graph.get("scenarios", []):
+        path = sc.get("path", [])
+        n = len(path)
+        walked_prefix = any(fired[i:i + n] == path for i in range(len(fired) - n + 1))
+        out["scenarios"][sc["id"]] = "walked" if walked_prefix else "NOT_RUN"
+    declared_absent = set(graph.get("absent", []))
+    for kind in sorted(KINDS):
+        if kind in declared_absent:
+            out["kinds"][kind] = "declared absent"
+        elif any(transitions[tid].get("kind") == kind for tid in fired_set
+                 if tid in transitions):
+            out["kinds"][kind] = "walked"
+        else:
+            out["kinds"][kind] = "NOT_RUN"
+    return out
+
+
+def smoke(graph, walked):
+    """A dead control fails the smoke, by name: a fired transition that moved
+    nothing, or a declared transition the smoke never reached."""
+    problems = []
+    transitions = {t["id"]: t for t in graph.get("transitions", [])}
+    for w in walked:
+        t = transitions.get(w.get("transition"))
+        if t is None:
+            problems.append(f"smoke: {w.get('transition')!r} fired but is not "
+                            "declared — the page invented a control")
+        elif w.get("from") == w.get("to") and t["result"] != t["origin"]:
+            problems.append(f"smoke: {t['id']} ({t['action']!r}) is a DEAD "
+                            "control — clicked, moved nothing")
+    fired = {w.get("transition") for w in walked}
+    for tid in sorted(set(transitions) - fired):
+        problems.append(f"smoke: {tid} declared but never walked — "
+                        "coverage NOT_RUN, and a smoke that skips it is not "
+                        "a smoke of this graph")
+    return problems
+
+
+def receipt(graph, walked, artifact_bytes):
+    """The persistent handoff record: what was declared, what actually ran,
+    pinned to the artifact's exact bytes. It carries NO status axis — a
+    preview never upgrades implemented/product evidence — and the production
+    gate and the art-direction gate are separate entries a walkthrough
+    cannot merge."""
+    import hashlib
+    for site in (graph, *(w for w in walked if isinstance(w, dict))):
+        for f in STATUS_SMUGGLE:
+            if f in site:
+                raise ValueError(f"receipt: {f!r} has no place here — a preview "
+                                 "raises no status (IFP-06)")
+    if not walked and artifact_bytes:
+        functional = "NOT_RUN — screenshots alone are not a functional pass"
+    else:
+        functional = "walked" if not smoke(graph, walked) else "FAILED smoke"
+    return {
+        "artifact_sha256": hashlib.sha256(artifact_bytes or b"").hexdigest(),
+        "coverage": coverage(graph, walked),
+        "functional": functional,
+        "gates": {"production": "separate — code against scenarios (/ux-audit)",
+                  "art_direction": "separate — sheleg-design critique"},
+    }
