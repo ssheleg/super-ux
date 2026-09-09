@@ -389,6 +389,13 @@ silent("U076 silent once one section is written",
 silent("U076 silent on a fully written vision",
        {"vision.md": VISION_OK}, {"U076"}, root_files={"CLAUDE.md": RULE + "\n"})
 
+case("U034 a vision with a duplicate section id",
+     {"vision.md": VISION_OK.replace(
+         "## 6. Anti-vision\n\nwritten\n",
+         "## 6. Anti-vision\n\nwritten\n## 6. Second Six\n\ndup\n")},
+     errors={"U034"}, root_files={"CLAUDE.md": RULE + "\n"})
+silent("U034 clean when every section id is unique",
+       {"vision.md": VISION_OK}, {"U034"}, root_files={"CLAUDE.md": RULE + "\n"})
 case("U031 an approved vision with an empty anti-vision",
      {"vision.md": VISION_OK.replace("## 6. Anti-vision\n\nwritten\n", "## 6. Anti-vision\n\n")
       + "\n**Status:** approved\n"},

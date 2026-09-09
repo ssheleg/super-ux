@@ -754,10 +754,18 @@ def check_vision(ux: Path, vision: str) -> None:
     if not vision.strip():
         return
     for n in VISION_SECTION_IDS:
-        if not re.search(_VSEC(n), vision, re.MULTILINE):
+        hits = re.findall(_VSEC(n), vision, re.MULTILINE)
+        if not hits:
             err(f"[U030] vision.md: missing section '## {n}.' "
                 f"(e.g. '{n}. {VISION_SECTION_TITLES[n]}' — the number is the id, "
                 f"the title may be in the document's language)")
+        elif len(hits) > 1:
+            # FIX-UX-07.02: the id is the number, so two `## N.` headings are two
+            # sections claiming one identity — a duplicate the parser would
+            # otherwise resolve to whichever it found first, silently.
+            err(f"[U034] vision.md: section id {n} appears {len(hits)} times — "
+                f"a section id is unique; give one of them a different number or "
+                f"merge them (found: {', '.join(h.strip() for h in hits)})")
     # Emptiness is a defect only once the document claims to be finished.
     # A freshly seeded template is all headings and no content by design, and
     # a linter that fails on its own seed teaches people to skip the linter.

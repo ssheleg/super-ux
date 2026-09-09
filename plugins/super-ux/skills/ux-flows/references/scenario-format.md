@@ -869,6 +869,7 @@ here — the meaning of a rule never lives only in its source.
 | U031 | E | an approved vision whose anti-vision or alignment test is empty |
 | U032 | W | `vision.md` exists but the project has no instruction file for the alignment rule |
 | U033 | W | an instruction file exists but carries no alignment rule — nothing reads the vision |
+| U034 | E | two vision sections share one id (a duplicate `## N.`) — the id is the number, and it is unique |
 | U040 | W | a relative markdown link that does not resolve |
 | U050 | W | `screens.md` has no `Web surfaces:` declaration — the one question an audit afterwards cannot fix |
 | U051 | E | the project declares no web surfaces while a screen carries a `Web surface:` block |
