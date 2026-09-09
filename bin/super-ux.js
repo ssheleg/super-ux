@@ -48,10 +48,23 @@ const EXIT_UNSUPPORTED = 4;
  * HOME is the common case, and an installer that crashes on a parse error
  * refuses the machines that need it most.
  */
+// The bundled HostContext resolver (FIX-UP-08.02) — one contract, a local
+// copy per member (npx installers share no lib): a host's config root is an
+// explicit root > the documented host env var > `~/<dir>`, verbatim (spaces
+// preserved), and host existence is a separate probe on the returned path.
+const HOST_ENV = { claude: 'CLAUDE_CONFIG_DIR', codex: 'CODEX_HOME', gemini: 'GEMINI_CONFIG_DIR' };
+const HOST_DIR = { claude: '.claude', codex: '.codex', gemini: '.gemini' };
+function hostRoot(agent, home, env, explicit) {
+  if (explicit) return explicit;
+  const e = (env || process.env)[HOST_ENV[agent]];
+  if (e) return e;
+  return path.join(home, HOST_DIR[agent]);
+}
+
 function installedPluginSpec(home, name) {
   try {
     const raw = fs.readFileSync(
-      path.join(home, '.claude', 'plugins', 'installed_plugins.json'), 'utf8');
+      path.join(hostRoot('claude', home, process.env), 'plugins', 'installed_plugins.json'), 'utf8');
     const parsed = JSON.parse(raw);
     const plugins =
       parsed && typeof parsed === 'object' &&
@@ -229,7 +242,7 @@ function run(cmd, args) {
 function installSkillsCli(force) {
   const home = os.homedir();
   const spec = installedPluginSpec(home, NAME);
-  const marketplace = path.join(home, '.claude', 'plugins', 'marketplaces', NAME);
+  const marketplace = path.join(hostRoot('claude', home, process.env), 'plugins', 'marketplaces', NAME);
   const viaMarketplaceDir = !spec && fs.existsSync(marketplace);
   if ((spec || viaMarketplaceDir) && !force) {
     const found = spec
