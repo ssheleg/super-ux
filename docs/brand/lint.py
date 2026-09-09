@@ -1736,11 +1736,15 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
         if not hits:
             continue
         grade = "B" if len(hits) < 3 else "C"
-        severity = SEVERITY_ERROR if len(hits) >= 3 else SEVERITY_WARN
+        # B060 is ADVISORY (FIX-UX-03.01/03.02): it WARNS, and it NEVER escalates
+        # to an error by marker count. A count is a signal to a writer, not proof
+        # of authorship and not a gate — so marker-rich but correct text does not
+        # block the run. The grade stays as an advisory reading of the density.
         findings.append(Finding(
-            "B060", severity, path, 0,
+            "B060", SEVERITY_WARN, path, 0,
             f"{len(hits)} S1 marker(s) -- {', '.join(sorted(hits))}. "
-            f"Naturalness grade {grade}",
+            f"Naturalness grade {grade} (advisory — vary the wording if you wish; "
+            f"a marker count is not proof of authorship)",
         ))
 
     # B062 -- the rhetorical dash, in every surface that ships prose.
