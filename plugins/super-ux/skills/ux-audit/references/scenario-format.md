@@ -89,9 +89,25 @@ cannot produce one.
 - `JTBD-NN` **Status** — `proposed | confirmed | retired`
 - `vision.md` **Status** — `draft | approved`
 
-A persona and a job are either an assumption or something an observation has
-confirmed, and `proposed → confirmed` is the only claim either layer makes about
-itself. Both had been carrying `confirmed` with no enum anywhere covering them.
+**A persona or job carries THREE separate axes, not one `confirmed`
+(FIX-UX-08.01)** — because an operator's approval and an observation are
+different things, and collapsing them lets a founder confirm a wished-for
+persona without research:
+
+- **evidence_kind** — where the belief comes from: `brief | owner-belief |
+  interview | telemetry | code-inference`. Reverse-engineering from the UI is
+  `code-inference`; a founder's statement is `owner-belief`.
+- **decision_status** — `proposed | accepted | rejected`. The operator's
+  approval moves THIS, and only this.
+- **validation_status** — `unvalidated | observed | contradicted`. Only a
+  real interview, telemetry or observation — with a DATED receipt — moves it
+  to `observed`. Approval never does.
+
+So `confirmed` on `P-NN`/`JTBD-NN` is shorthand for `decision_status: accepted`;
+it makes no claim about validation. An accepted persona whose evidence_kind is
+`owner-belief` is `validation_status: unvalidated`, and the record shows all
+three rather than one word that hides which. Both had been carrying `confirmed`
+with no enum anywhere covering them.
 
 **Two layers carry no status at all, and that is declared rather than left
 open.** `FLW-NN` and `JRN-NN` have no `Status` field: a flow's delivery state is

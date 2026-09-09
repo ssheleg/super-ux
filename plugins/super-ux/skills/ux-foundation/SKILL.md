@@ -35,8 +35,11 @@ chain and say so, never drop it silently.
   the four forces: push, pull, anxiety, habit.
 - **Journeys** cover the end-to-end experience (before, during, after the
   product), one row per stage: action, touchpoint, emotion (1–5), pain,
-  opportunity. Score opportunities Frequency × Severity × Solvability. When
-  filling opportunities, consult
+  opportunity. Score opportunities Frequency × Severity × Solvability — and
+  each factor carries its SOURCE and SCALE, or the value is `unknown`; a factor
+  nobody has measured is never a number invented to fill the cell, and emotion
+  (1–5) likewise records who reported it (owner belief vs an observed session),
+  not a guess dressed as a rating. When filling opportunities, consult
   [best-practices.md](references/best-practices.md) by stage tags for
   proven mechanisms.
 - **Which model is being applied, and where it lies.**
@@ -149,8 +152,16 @@ One question at a time; user's answers are the data:
 3. Flag the gaps loudly: features serving no discernible job (candidates to
    cut), jobs with no support (opportunities), journey stages with pain and
    no coverage.
-4. Present for validation; inferred entries stay marked until the user
-   confirms them.
+4. Present for a DECISION, not to launder the evidence. Three axes stay
+   separate (`references/scenario-format.md`): **evidence_kind**
+   (brief / owner-belief / interview / telemetry / code-inference),
+   **decision_status** (proposed / accepted / rejected), and
+   **validation_status** (unvalidated / observed / contradicted). An owner
+   saying "I confirm" moves DECISION to accepted; it does NOT change
+   evidence_kind — an accepted persona whose only evidence is owner-belief is
+   still `unvalidated`, and the record says so. Only a real interview or
+   observation, with its DATED receipt, moves validation_status to observed. A
+   founder cannot promote a wished-for persona to observed by approving it.
 
 ## Update
 
