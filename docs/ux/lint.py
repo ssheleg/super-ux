@@ -728,6 +728,20 @@ documentation, or anything with no user-facing surface. A vision check on a
 typo fix is how a team learns to skip the check that matters."""
 INSTRUCTION_FILES = ("CLAUDE.md", "AGENTS.md", "GEMINI.md")
 
+# Which instruction file each HOST actually reads, and the marker directory that
+# says the host is present in this project (FIX-UX-06.01). A rule in CLAUDE.md
+# does not cover a Codex host, which reads AGENTS.md — so the check is per active
+# host, not "any of the three files exists".
+HOST_TARGET = {"claude": "CLAUDE.md", "codex": "AGENTS.md", "gemini": "GEMINI.md"}
+HOST_MARKER = {"claude": ".claude", "codex": ".codex", "gemini": ".gemini"}
+
+
+def active_hosts(root: Path) -> list[str]:
+    """Hosts present in this project, by their marker directory. When none is
+    detectable the target defaults to Claude, matching the seed default."""
+    found = [h for h, m in HOST_MARKER.items() if (root / m).is_dir()]
+    return found or ["claude"]
+
 
 def check_vision(ux: Path, vision: str) -> None:
     """The vision layer: all nine sections, and the rule that makes it read.
@@ -785,16 +799,31 @@ def check_vision(ux: Path, vision: str) -> None:
              f"document. Write it, or delete the file until you do")
 
     root = ux.parent.parent if ux.name == "ux" else ux.parent
-    present = [root / n for n in INSTRUCTION_FILES if (root / n).is_file()]
-    if not present:
-        warn("[U032] vision.md exists but the project has no CLAUDE.md / AGENTS.md / "
-             "GEMINI.md — the alignment rule has nowhere to live")
-        return
-    carrying = [p for p in present if VISION_RULE_HEADING in read(p)]
-    if not carrying:
+    # FIX-UX-06.01 — the rule must live in the file the ACTIVE HOST reads, not
+    # in any of the three. A Codex project with the rule only in CLAUDE.md is
+    # uncovered: Codex reads AGENTS.md and never sees it.
+    hosts = active_hosts(root)
+    carrying = []
+    missing_file = []      # U032: the active host has no instruction file at all
+    missing_rule = []      # U033: the file exists but carries no rule block
+    for h in hosts:
+        target = root / HOST_TARGET[h]
+        if not target.is_file():
+            missing_file.append((h, HOST_TARGET[h]))
+        elif VISION_RULE_HEADING in read(target):
+            carrying.append(target)
+        else:
+            missing_rule.append((h, HOST_TARGET[h]))
+    if missing_file:
+        detail = ", ".join(f"{h} reads {f}" for h, f in missing_file)
+        warn(f"[U032] vision.md exists but the active host has no instruction file "
+             f"({detail}) — the alignment rule has nowhere the running host can read it")
+    if missing_rule:
+        detail = ", ".join(f"{f} ({h})" for h, f in missing_rule)
         warn(f"[U033] vision.md exists but no '{VISION_RULE_HEADING}' block in "
-             f"{', '.join(p.name for p in present)} — nothing ever reads the vision "
+             f"{detail} — nothing the running host reads ever sees the vision "
              f"(run the `vision` skill's step 4)")
+    if not carrying:
         return
     for path in carrying:
         text = read(path)

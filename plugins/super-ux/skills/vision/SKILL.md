@@ -120,15 +120,24 @@ Check every one, and fix rather than rationalize:
 
 ## Step 4 — install the alignment rule
 
-Write the rule into **the project's own instruction file**, the same one
-`ux-rule` uses: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex and opencode,
-`GEMINI.md` for Gemini. Detect which the project already has; create `CLAUDE.md`
-only if none exists. **Never hardcode one agent's path** — a rule installed
-where the running agent cannot see it is worse than no rule, because everyone
-believes it is covered.
+Write the rule into **the file the running HOST actually reads** — decide the
+target by host capability FIRST: `CLAUDE.md` for Claude Code, `AGENTS.md` for
+Codex and opencode, `GEMINI.md` for Gemini. Detect the active host by its
+marker directory (`.claude/`, `.codex/`, `.gemini/`); an **explicit project
+target** (a file already carrying the rule) takes priority over the default.
+When NONE exists, create the one THIS host reads — `AGENTS.md` on a Codex
+project, `GEMINI.md` on a Gemini one, `CLAUDE.md` only when the host is Claude
+or undetectable. **Never hardcode `CLAUDE.md`** — a rule installed where the
+running agent cannot see it is worse than no rule, because everyone believes it
+is covered.
 
-Idempotent: if the heading is already present, update the block in place rather
-than appending a second copy.
+A **mixed-host** project (more than one marker present) gets the rule in EACH
+active host's file, every target marked explicitly, so no host is left
+uncovered.
+
+Idempotent: if the heading is already present in a host's file, update the
+block in place rather than appending a second copy; a repeat run writes
+nothing new.
 
 ```markdown
 ## Vision alignment — hard rule (super-ux)
