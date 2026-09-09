@@ -69,6 +69,17 @@ scenarios `SCN-NNN`; transitions are `TR-NN`, sequential, never reused.
   as much as reading it does — not at all. Status lives in
   `docs/ux/scenarios.md` and moves only by its own rules.
 
+## The clickable half — the fixture pattern
+
+The reference implementation is `test/fixtures/interactive-flow/index.html`
+in the super-ux repository: one local page, the graph embedded as JSON, a
+generic runner that renders ONLY what is declared — scenario selector, reset,
+deep link (`#SCR-…`/`#SCN-…`), per-transition buttons derived from the graph.
+A step the preview cannot actually run renders as a screen that `simulates`
+its declared `external:*` destination, inside the labelled SIMULATION box —
+clicking it proves a browser can click, never that money moves. No network
+primitive, no external script, no SDK.
+
 ## What this file does not own
 
 The clickable artifact (selector, reset, labelled simulations), the
