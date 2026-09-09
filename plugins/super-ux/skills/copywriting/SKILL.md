@@ -126,10 +126,18 @@ guards govern the pass wherever it runs, and they are not optional:
 - Text that already reads naturally is left alone. Editing what is fine to
   prove the pass ran is this mode's failure.
 - **A marker count is not a verdict and never gates anything.** Say which markers
-  are present at what density; never say a text was AI-written. The false
-  positives fall hardest on people writing in a second language, and a writer is
-  not a defect to be edited into fluency they did not ask for. `ai-tells.md`
-  carries the measurement and what it binds.
+  are present at what density; never say a text was AI-written. A number of
+  markers does not prove authorship — the false positives fall hardest on people
+  writing in a second language, and a writer is not a defect to be edited into
+  fluency they did not ask for. The humanization pass is ADVISORY throughout:
+  `B060` warns, it does not error. `ai-tells.md` carries the measurement and
+  what it binds.
+- **A quote, a registered term, and an explicit `off` never force a rewrite.** A
+  marker inside a quotation is the source's word; a term in `terminology.md` is
+  meant to recur; and `Humanization: off` (with its reason) preserves the text
+  exactly. **Brand bans are a separate user policy** — a forbidden word is the
+  brand's own choice in `terminology.md`, not a machine-drafting tell, and it is
+  that check's business, not this pass's.
 - **Read `voice.md`'s two fields first.** `Humanization:` is whether the pass
   runs and defaults to `on`; `Humanization pass:` names which implementation,
   and absent it is `own`. Neither absence stops work: run the default, print the

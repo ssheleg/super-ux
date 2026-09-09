@@ -32,18 +32,28 @@ ids are how the linter and the doctrine stay pointed at the same thing.
 | **S2** | one or two are fine; three or more is a signal |
 | **S3** | weak alone, decisive when stacked with others |
 
-`B060` warns at any S1 or three S2, and errors at three S1.
+`B060` is **advisory: it WARNS, it never errors and never gates.** A count of markers is a signal to a writer, not a verdict on authorship — three S1 markers no more prove a machine wrote the text than two prove a person did, and the false positives fall hardest on someone writing in a second language. The severity above ranks how much ONE marker suggests, so a writer knows which to look at first; it is not a threshold that fails a text.
 
 ## Naturalness grade, applied to the result
 
-After the rewrite, not the input:
+After the rewrite, not the input. **The grade is advisory — a reading of how
+many traces remain, never a claim that a person or a machine wrote it, and never
+a gate.** It describes the RESULT so a writer can decide whether another pass is
+worth it; it decides nothing on its own.
 
-- **A**: no S1, at most two S2. Reads as written by a person.
-- **B**: one or two S1, or three to five S2. Natural with minor traces.
-- **C**: three or more S1, or six or more S2. Traces are obvious; another
-  pass is warranted.
-- **D**: violations across several categories, or the change-rate guard
-  fired.
+- **A**: no S1, at most two S2. Few traces.
+- **B**: one or two S1, or three to five S2. Minor traces.
+- **C**: three or more S1, or six or more S2. Traces are obvious; another pass
+  may be worth it.
+- **D**: traces across several categories, or the change-rate guard fired.
+
+**A quote, a registered domain term, and an explicit `Humanization: off` do NOT
+force a rewrite.** A marker inside quoted material is the source's word, not the
+writer's; a term the brand registered is meant to recur; and `off` (with its
+recorded reason) preserves the text exactly. None of the three lowers the grade
+into a demand to change what the writer chose. **Brand bans are a separate user
+policy**, not an AI-tell: a word the brand forbids is the brand's decision, in
+`terminology.md`, and belongs to that check — not to this one.
 
 ## The markers
 
