@@ -12,6 +12,14 @@ The rule above all: **reach for the platform's standard component before
 inventing one** (Jakob's law, PRN-14) — it ships with the accessibility,
 states, and motion behavior you'd otherwise rebuild wrong.
 
+## Contents
+
+- [Choosing a control by the job](#choosing-a-control-by-the-job)
+- [Control rules worth auditing](#control-rules-worth-auditing)
+- [Every interactive component ships all its states](#every-interactive-component-ships-all-its-states)
+- [Inventory before migration — reuse, modify or create, with the reason](#inventory-before-migration--reuse-modify-or-create-with-the-reason)
+- [Cross-platform stance](#cross-platform-stance)
+
 ## Choosing a control by the job
 
 | The user needs to… | Use | Not |
