@@ -27,7 +27,8 @@ requires.
 | handoff.claude | \n--- Claude Code plugin --- | bin/super-ux.js:265 | SCN-013 | agreed | copy |
 | claude.marketplace.exists | (marketplace may already be added, continuing) | bin/super-ux.js:274 | SCN-013 | agreed | copy |
 | claude.installed | Claude Code plugin installed (scope: user). Restart sessions to pick it up; then run /ux in any project. | bin/super-ux.js:277 | SCN-013 | agreed | copy |
-| warning.plugin.install | warning: claude plugin install failed, see output above | bin/super-ux.js:279 | SCN-013 | agreed | copy |
+| warning.plugin.install | The plugin did not install; see the command output above. | bin/super-ux.js:302 | SCN-013 | agreed | copy |
+| warning.npx.missing | The npx command was not found; install Node.js to use the skills channel. | bin/super-ux.js:256 | SCN-013 | agreed | copy |
 | menu.hint.keys | \x1b[2K  ↑/↓ move · space/number toggle · a all · enter confirm · q quit\n | bin/super-ux.js:355 | SCN-001 | agreed | copy |
 | menu.select.prompt | Select [e.g. 1,3 \| all \| q]:  | bin/super-ux.js:405 | SCN-004 | agreed | copy |
 | menu.intro | super-ux: scenario-driven UI development. Select what to install:\n | bin/super-ux.js:412 | SCN-001 | agreed | copy |

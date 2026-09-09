@@ -33,6 +33,7 @@ One spelling, everywhere: interface, marketing, billing, support, docs.
 | Cursor | cursor (mid-sentence, as the product) |
 | Codex | codex, OpenAI Codex |
 | Claude Code plugin | plugin for Claude Code |
+| Node.js | NodeJS, node.js (as the product name) |
 
 ## Banned
 

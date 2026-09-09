@@ -13,7 +13,7 @@ the whole surface is a terminal.
 | ID | Screen | Used by | Figma | Status | Coverage |
 |----|--------|---------|-------|--------|----------|
 | SCR-01 | Interactive multi-select list | FLW-01 | n/a | built | `bin/super-ux.js:338-399 selectInteractive` |
-| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:401-409 selectFallback` |
+| SCR-02 | Non-TTY numbered list + prompt | FLW-02 | n/a | built | `bin/super-ux.js:423-431 selectFallback` |
 | SCR-03 | Project directory prompt | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:436-440` |
 | SCR-04 | Install log | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:105-198 installCursor` |
 | SCR-05 | Skills CLI handoff | FLW-01, FLW-02 | n/a | built | `bin/super-ux.js:219-251` |
@@ -68,7 +68,7 @@ CLI can leave behind.
 ### SCR-02: Non-TTY numbered list + prompt
 **Status:** built
 **Used by:** FLW-02
-**Coverage:** `bin/super-ux.js:401-409 selectFallback`
+**Coverage:** `bin/super-ux.js:423-431 selectFallback`
 
 | State | Shown | Frame |
 |---|---|---|
