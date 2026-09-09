@@ -114,6 +114,32 @@ values sat on layers no enum covered — four flows, two personas and three jobs
 each of them unrefused, unaccepted and invisible. The parity check was real and
 its alphabet was short.
 
+### `Pressure:` — the optional state-stress receipt (never a second table)
+
+A scenario MAY carry a `Pressure:` block — a RECEIPT pointing at
+[state-stress-matrix.md](state-stress-matrix.md) rows by this scenario's own id,
+never a second scenario table: the steps, states and expected results live once,
+in the scenario; the receipt records only what pressure was applied and what it
+produced.
+
+- **Evidence classes, separated:** `planned` (rows written, nothing run),
+  `simulated` (a fixture produced the state), `observed` (seen on the actual
+  render), and `inherited` — an approved assumption carried from an earlier
+  record, named as such. **Migration invents nothing:** an existing scenario
+  migrates with every unmarked row as `planned` or `inherited`, never as
+  `observed` — an observed status nobody observed is the exact lie this
+  receipt exists to prevent.
+- **Scope follows risk.** A small change — one visual polish — declares a
+  risk-based SUBSET: only the states its change can plausibly affect, with the
+  subset's reason on the receipt (`coverage: subset — polish touches the empty
+  and loading states only`). A large flow declares `coverage: full` and owes
+  every state in the taxonomy. Demanding all product states for a one-line
+  polish is how receipts stop being written.
+- **Interactive evidence matches visual evidence.** An interaction trace
+  counts only for the SAME state and viewport a visual compare covered — a
+  trace at desktop over a screenshot at mobile is two half-receipts, not one
+  whole one.
+
 ### `Product` — the state a shipped thing is still allowed to be in
 
 `unobserved` is the default and the honest one. **A record may stay `unobserved`
