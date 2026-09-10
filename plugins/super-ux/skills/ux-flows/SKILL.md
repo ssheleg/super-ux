@@ -295,15 +295,28 @@ Follow the improvement procedure in the principles doc, strictly:
    `/plugin install task-pipeline@task-pipeline`; or superpowers
    writing-plans / by hand. Same-change rule holds; re-audit after.
 
-## Prototype when the answer is not on paper (optional step)
+## Clickable journey preview (recommended for multi-screen flows)
 
 When a static spec cannot settle the question, and what a prototype must answer before
 it earns the time: [`references/prototyping.md`](references/prototyping.md).
 
+For a new or substantially changed journey, recommend an interactive preview with a
+screen map, scenario selector, working transitions and explicit simulated
+error/recovery states. When requested, deliver it. Draft scenario coverage with the
+flow and let the preview inform approval; a review prototype may be built before the
+production build gate. A copy-only change need not grow a prototype. What the operator
+receives, and what its evidence may claim:
+[`clickable-flow-prototypes.md`](references/clickable-flow-prototypes.md). The bounded
+graph underneath it — variation coverage, screen-state links, tool fallbacks and the
+handoff receipt — is
+[`interactive-flow-prototypes.md`](references/interactive-flow-prototypes.md). Keep
+logic review separate from visual-direction approval; record what was actually clicked
+and what remains unwalked, because mock behaviour is not production Coverage nor a
+measured Product outcome.
 
 ## The build gate (state this to the user plainly)
 
-Interface code does not get written until this workflow is done: the chain
+Production interface code does not get written until this workflow is done: the chain
 (foundation → flows → screens → scenarios) is designed and approved, the
 style pack is recorded, and — when Figma is enabled (default) — the UI is
 mocked up with every screen linked to its frame. When a user jumps straight
@@ -317,6 +330,8 @@ the whole point of super-ux.
 - Every screen the flows touch exists in `screens.md` with states,
   elements, coverage, scenarios, resources; no orphan screens either way.
 - Scenarios cover every node and edge (checked with `ux-scenarios`).
+- When a clickable preview is requested or selected: it is linked, resettable,
+  traced to screen-states/scenarios, and reports walked and unwalked branches.
 - When Figma enabled: every screen state has a frame link in `screens.md`;
   visual-craft practices applied on the frames; Design system block filled
   (including `Style pack` — a named pack or an explicit "none — platform
