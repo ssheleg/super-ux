@@ -150,3 +150,8 @@ against `docs/ux/vision.md` — specifically the **anti-vision** and the
 **Do NOT trigger for:** bug fixes, refactors, dependency work, tests,
 documentation, or anything with no user-facing surface. A vision check on a
 typo fix is how a team learns to skip the check that matters.
+
+## Active audit handoff
+
+Read [docs/HANDOFF.md](docs/HANDOFF.md) for the family audit, bounded task packets
+and cross-repository branch index before resuming that work.
