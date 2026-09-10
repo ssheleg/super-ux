@@ -1,3 +1,36 @@
+## 0.56.0 — the sherlock audit closes, and two prototype documents stop pretending to be one
+
+Sherlock external-v3, 41 findings across this member, each one a commit carrying
+its own executable regression under `test/audit_regressions/`. The ones worth
+naming here:
+
+- **Scenarios carry three axes, not one word.** `evidence_kind`,
+  `decision_status` and `validation_status` are separate: approval moves the
+  decision, and only a dated interview or observation moves validation. A founder
+  cannot promote a wished-for persona to `observed` by approving it.
+- **Competitor funnels are observed exposure, never a proven base.** The reference
+  admitted a well-funded loss-maker looks profitable and then called common
+  patterns proven; it now says what it can see. Frequency is computed with a
+  denominator, duplicates collapsed — two funnels of one owner are ONE
+  observation — and adoption is decided by a local experiment.
+- **`/ux-audit` preconditions are per scope.** A standalone blog with a brand pack
+  and no scenarios runs the copy audit instead of being routed into writing
+  scenarios it has no use for. Evidence is typed by claim: `file:line` for this
+  codebase, URL + timestamp + capture for anything outside it.
+- **BP-212 no longer calls local payment testing impossible.** Three environments:
+  a local sandbox tests the whole payment→webhook→entitlement→success path with
+  the provider's own forwarding, and a public HTTPS endpoint is what PRODUCTION
+  delivery needs.
+
+Two documents now share the ground one filename used to: `interactive-flow-prototypes.md`
+is the machine-checkable graph contract (`IFP-01 … IFP-06`), and
+`clickable-flow-prototypes.md` is the operator-facing practice that arrived with the
+context-ready handoff. `prototyping.md` owns the decision to reach for either.
+
+`ux-audit` and `ux-flows` were split back under the house working limit —
+`audit-depth.md` and `prototyping.md` — after the audit's own doctrine grew them
+past it. CI now MEASURES that budget with a real tokenizer instead of estimating it.
+
 ## 0.55.1 — the opt-out the router promises now lives in the bodies that honor it
 
 Family audit 2026-09-06, wave AUDIT-WAVE-0906. **The operator's routing block

@@ -8,6 +8,21 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-10 — the sherlock audit closes on this member, v0.56.0
+
+Sherlock external-v3 (41 findings) plus the context-ready handoff (PR #24), both
+merged to main before this release.
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| SH-1 | Every sherlock finding assigned here closes with its own executable regression | `test/audit_regressions/` holds 40 suites; `npm test` runs all of them and exits 0 | **observed** — two of them were watched failing first: the U076 seeded-template case after a regex matched only a heading prefix, and the fix-ux-13.01 copy-scope fixture |
+| SH-2 | No skill body sits past the house working limit | `audit_skill.py --house` over all seven skills: 0 GAP. `ux-audit` 4882 → 4005 and `ux-flows` 4830 → 4747 by splitting `audit-depth.md` and `prototyping.md` out | **planted** — the audit refused the pre-split tree with `GAP BODY_HEADROOM` on both, which is the finding this row closes |
+| SH-3 | The house audit MEASURES that budget in CI rather than estimating it | the pinned auditor ran with no tokenizer and gapped seven family skills from a chars/3.9 estimate; all seven are inside the limit when measured. The pin moved to make-skill@5ca5c36 and the job installs tiktoken — the failing run reported `~4944`, the passing one `4830 tokens (tiktoken:cl100k_base)` | **observed** — the estimate produced a verdict the measurement contradicts, on this repository, in CI |
+| SH-4 | The two prototype documents are separate and each names the other | `interactive-flow-prototypes.md` (graph contract, `IFP-01 … IFP-06`) and `clickable-flow-prototypes.md` (operator practice) both resolve from `ux-flows/SKILL.md`; the repo's link checker refuses a dangling one | **observed** — the merge conflicted add/add and keeping either alone would have deleted the other |
+| SH-5 | This ledger names v0.56.0, the version it was measured on | `validate_ledger_names_its_version` refused the tree — *the newest section names v0.55.1 while package.json ships 0.56.0* — and this section is what turns it green | **planted** |
+
+**Rows at `never`: 0 in this section.**
+
 ## 2026-09-06 — the refusal the router promises is written where a standalone install can read it, v0.55.1
 
 Family audit 2026-09-06, wave AUDIT-WAVE-0906.
