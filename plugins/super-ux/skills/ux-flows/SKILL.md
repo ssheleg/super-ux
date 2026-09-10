@@ -300,19 +300,12 @@ Follow the improvement procedure in the principles doc, strictly:
 When a static spec cannot settle the question, and what a prototype must answer before
 it earns the time: [`references/prototyping.md`](references/prototyping.md).
 
-For a new or substantially changed journey, recommend an interactive preview with a
-screen map, scenario selector, working transitions and explicit simulated
-error/recovery states. When requested, deliver it. Draft scenario coverage with the
-flow and let the preview inform approval; a review prototype may be built before the
-production build gate. A copy-only change need not grow a prototype. What the operator
-receives, and what its evidence may claim:
-[`clickable-flow-prototypes.md`](references/clickable-flow-prototypes.md). The bounded
-graph underneath it — variation coverage, screen-state links, tool fallbacks and the
-handoff receipt — is
-[`interactive-flow-prototypes.md`](references/interactive-flow-prototypes.md). Keep
-logic review separate from visual-direction approval; record what was actually clicked
-and what remains unwalked, because mock behaviour is not production Coverage nor a
-measured Product outcome.
+For a new or substantially changed journey, recommend an interactive preview and
+deliver it when asked — a review prototype may precede the production build gate, and
+a copy-only change need not grow one. Mock behaviour is never production Coverage
+nor a measured Product outcome. What the operator receives, and its
+evidence: [`clickable-flow-prototypes.md`](references/clickable-flow-prototypes.md); the
+graph underneath: [`interactive-flow-prototypes.md`](references/interactive-flow-prototypes.md).
 
 ## The build gate (state this to the user plainly)
 
