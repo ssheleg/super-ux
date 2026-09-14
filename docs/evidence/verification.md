@@ -8,6 +8,19 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-14 — the contract that pointed at a neighbour, v0.56.1
+
+From the 2026-09-13 family audit (HK-07).
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| HK-7a | `vision` carries the contract it names | the SKILL.md link now reads `references/scenario-format.md` and resolves inside the skill; `test/sync_references.py` wrote it and its closure — `vision: 11 contract(s) shipped` | **observed** |
+| HK-7b | The check that should have caught it is no longer keyed to one spelling | `validate_shipped_references` refused only `../references/`; it now refuses any `<sibling-skill>/references/<file>.md`, keyed to the real sibling names | **planted** — a copy of the tree with the old backticked wording restored is refused by name (*a path into a SIBLING skill*), and the clean tree passes at `OK (4821 checks)` |
+| HK-7c | The counted fact about this validator is counted | `docs/brand/facts.md` `repo validator checks` 4718 → 4821 by its own Source command, dated 2026-09-14 | **observed** — the ledger guard refused the tree until it agreed |
+| Gate | The whole suite on this tree | `npm test` EXIT=0 | **observed** |
+
+**Rows at `never`: 0 in this section.**
+
 ## 2026-09-10 — the sherlock audit closes on this member, v0.56.0
 
 Sherlock external-v3 (41 findings) plus the context-ready handoff (PR #24), both

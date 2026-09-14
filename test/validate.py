@@ -441,6 +441,24 @@ def validate_shipped_references() -> None:
             f"{skill_dir.name}/SKILL.md links ../references/ — contracts must live INSIDE the skill dir "
             f"(a sibling dir is not shipped by the skills CLI)",
         )
+        # The same defect wearing a different spelling, and the `../` test never saw it:
+        # `vision/SKILL.md` named its section contract as `ux-scenarios/references/
+        # scenario-format.md` in BACKTICKS. No `../`, no markdown link — so neither this
+        # check nor the sync below looked at it, and `vision/references/` held one file
+        # while the text pointed at a neighbour the skills CLI does not ship (2026-09-14).
+        # Keyed on the real sibling names rather than a generic pattern, so a project
+        # output path like `docs/ux/...` cannot trip it.
+        siblings = sorted(q.name for q in root.iterdir()
+                          if q.is_dir() and q.name not in ("references", skill_dir.name))
+        for other in siblings:
+            hit = re.search(rf"(?<![\w/-]){re.escape(other)}/references/([a-z0-9-]+\.md)", text)
+            check(
+                hit is None,
+                f"{skill_dir.name}/SKILL.md names {other}/references/"
+                f"{hit.group(1) if hit else ''} — a path into a SIBLING skill. Write it as "
+                f"](references/<file>.md) and run `python3 test/sync_references.py`, which "
+                f"ships the contract and its closure inside this skill",
+            )
         linked = sorted(set(re.findall(r"\]\(references/([a-z0-9-]+\.md)\)", text)))
         for name in linked:
             local = skill_dir / "references" / name
