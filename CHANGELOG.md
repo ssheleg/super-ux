@@ -1,3 +1,18 @@
+## 0.56.2 — the closure says it is a closure
+
+Hygiene from the 2026-09-13 family audit (HK-11). Five skills ship more contracts than
+their bodies name — `ux-audit` names 8 of 21, `ux-scenarios` 5 of 13, `ux-foundation`
+8 of 14, `brand-voice` 6 of 10, `copywriting` 10 of 12. That is the transitive closure
+`test/sync_references.py` builds on purpose: a named contract links others, and the
+skills CLI installs one directory, so a sibling's file would arrive dangling.
+
+It was a design choice nothing stated, which reads the same as clutter. Each of the five
+now carries one sentence naming both counts — measured from the tree, not written — and
+saying that the unnamed files are reached BY NAME from the contracts that link them.
+
+`ux-flows` is not in this list: its body is at 4747 of the 4750 working limit and the
+answer at that ceiling is a split, not three more tokens.
+
 ## 0.56.1 — the one contract that pointed at a neighbour
 
 `vision/SKILL.md` named its section contract as `` `ux-scenarios/references/scenario-format.md` `` —

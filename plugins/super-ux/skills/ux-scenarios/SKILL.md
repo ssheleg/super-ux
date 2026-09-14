@@ -191,3 +191,5 @@ a finding against its scenario, not against the participant.
 - Index, personas, and entries in sync; format contract honored.
 - The user has seen and approved new/changed scenarios (`validated`).
 - Gaps and conflicts reported honestly — never silently dropped.
+
+**What else is in `references/`.** This skill names 5 contract(s) directly; `references/` holds 13, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.

@@ -193,3 +193,5 @@ Given new knowledge (user feedback, analytics, pivot, new segment):
   silently drifts.
 - Next layer offered: stories ready → `ux-flows` turns them into user flows
   before any UI work.
+
+**What else is in `references/`.** This skill names 8 contract(s) directly; `references/` holds 14, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.
