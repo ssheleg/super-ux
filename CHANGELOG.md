@@ -1,3 +1,21 @@
+## 0.56.1 — the one contract that pointed at a neighbour
+
+`vision/SKILL.md` named its section contract as `` `ux-scenarios/references/scenario-format.md` `` —
+a path into a SIBLING skill, in backticks. The skills CLI ships only a skill's own
+directory, so on Cursor, Codex, OpenClaw and the rest the contract arrived dangling;
+`vision/references/` held a single file while the text pointed elsewhere. The four other
+skills that use the same contract all write it as `](references/scenario-format.md)`.
+
+- The link is now local, and `test/sync_references.py` ships `scenario-format.md` plus
+  its transitive closure (10 files) inside `vision/`.
+- **The validator had a check for this and it was keyed to the wrong spelling.**
+  `validate_shipped_references` refused `../references/`, so a bare
+  `<sibling>/references/<file>.md` passed for as long as it existed. It now refuses any
+  path naming another skill's `references/`, keyed to the real sibling directory names so
+  a project output path like `docs/ux/…` cannot trip it — watched refusing the
+  pre-change wording before this shipped.
+- `docs/brand/facts.md`: the stated validator check count recomputed, 4718 → 4821.
+
 ## 0.56.0 — the sherlock audit closes, and two prototype documents stop pretending to be one
 
 Sherlock external-v3, 41 findings across this member, each one a commit carrying
