@@ -178,3 +178,5 @@ guards govern the pass wherever it runs, and they are not optional:
 - `python3 docs/brand/lint.py` exits 0 for the touched surfaces.
 - Anything reported as missing — a term, a fact, a surface — is named
   explicitly, not worked around.
+
+**What else is in `references/`.** This skill names 10 contract(s) directly; `references/` holds 12, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.

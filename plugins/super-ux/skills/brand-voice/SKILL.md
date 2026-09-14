@@ -131,3 +131,5 @@ Present section by section for approval. Approved moves `draft` →
 - `python3 docs/brand/lint.py` exits 0, or every remaining finding is
   reported with a reason.
 - Unknowns stated as unknowns. Nothing invented to make a table look full.
+
+**What else is in `references/`.** This skill names 6 contract(s) directly; `references/` holds 10, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.

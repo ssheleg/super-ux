@@ -8,6 +8,19 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-09-14 — the closure says it is a closure, v0.56.2
+
+From the 2026-09-13 family audit (HK-11).
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| HK-11a | Five skills state both reference counts, measured rather than written | each sentence was generated from the tree: `ux-audit` 8/21, `ux-scenarios` 5/13, `ux-foundation` 8/14, `brand-voice` 6/10, `copywriting` 10/12 — the named count from the SKILL.md links, the shipped count from `ls` | **observed** |
+| HK-11b | The transitive closure is named as a design, not left looking like clutter | `test/sync_references.py` builds it because the skills CLI installs one directory; the sentence says the unnamed files are reached BY NAME from the contracts that link them | **observed** |
+| HK-11c | `ux-flows` was left alone deliberately | its body is 4747 of the 4750 working limit; the house answer at that ceiling is a split, and a split is not hygiene | **observed** — `audit_skill.py --house` measures it |
+| Gate | The whole suite on this tree | `npm test` EXIT=0 | **observed** |
+
+**Rows at `never`: 0 in this section.**
+
 ## 2026-09-14 — the contract that pointed at a neighbour, v0.56.1
 
 From the 2026-09-13 family audit (HK-07).
