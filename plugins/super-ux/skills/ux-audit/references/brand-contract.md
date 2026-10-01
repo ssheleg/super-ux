@@ -388,6 +388,12 @@ not provide a whole-project coverage verdict. Report which source keys and
 files the changed surface actually used.
 
 HTML sources contribute static visible text, not markup or quoted attributes.
+B021 checks explicitly registered strings against that full visible text. B022
+suggests registry rows only for explicit HTML links, controls, labels and
+alert/status roles; a marketing paragraph does not become an interface decision
+because one action on its page is registered. Adjacent navigation/CTA anchors
+remain separate candidates; ordinary inline prose links do not split sentences.
+CSS-styled link cards may still need human review of the extracted control name.
 `B063` reads h1–h6 with nested inline tags, entities and `<br>` fragments, as well
 as Markdown ATX headings and front-matter titles. Preserve those roles in any
 copy projection. Hidden/template/script text is excluded; `aria-hidden` alone
@@ -448,7 +454,7 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B012 | E | an entity or tier name spelled inconsistently |
 | B020 | E | one action carries two different names |
 | B021 | E | a registered string diverged from the code |
-| B022 | W | a code string has no registry row |
+| B022 | W | a code string or explicit HTML control/message has no registry row; ordinary marketing prose is outside the HTML candidate sweep |
 | B023 | E | a registry row points at a location that does not exist |
 | B024 | E | declared casing violated |
 | B025 | W | a button label names no outcome |

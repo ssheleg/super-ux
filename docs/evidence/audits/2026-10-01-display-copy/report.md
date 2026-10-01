@@ -71,6 +71,30 @@ critical wording. This is measured instruction parity, not measured model behavi
 Temporary absolute checkout paths in `red.txt` are normalized to `<checkout>`;
 assertions and exception text are preserved.
 
+## Consumer follow-up before integration
+
+The coordinator ran the candidate against passioncode-ai.github.io and found
+concatenated adjacent navigation/CTA labels. The focused fixture reproduced that
+failure (`anchor-red.txt`), while a negative control kept inline prose links
+whole. Boundaries now separate adjacent structural links without splitting
+paragraph/heading links or ordinary prose around links.
+
+The initial HTML B022 sweep was also too broad for an interface registry: it
+flagged all visible marketing paragraphs on a file containing one registered
+action. B022 now considers explicit links, controls, labels and status/alert
+roles. B021 still checks any explicitly registered string against full visible
+text, even in a heading-only file, and an attribute value cannot satisfy it.
+Full visible copy remains available to documents/B063. A standalone current-
+directory token (`git add .`, `<code>cd .</code>`) is not a decorative full stop.
+
+`test/display_copy_test.py` now has 20 passing cases. The consumer scan at website
+`f31b14a0b4a3fd4f4646e5ead64abe79cabb73f7` returns 0 errors and 185 B022 advisory
+findings after narrowing the sweep. These are candidates for registry review,
+not 185 proven missing decisions: repeated navigation, decorative arrow text and
+CSS-styled whole-card link names require interpretation. No website registry rows
+were added, and this is not called a clean brand review. The earlier B005 warning
+is absent in the later consumer tree; that website calibration changed separately.
+
 ## Next task
 
 Independently review this branch and run release preflight from its clean commit.

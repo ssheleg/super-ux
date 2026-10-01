@@ -740,11 +740,13 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
             continue
 
         body = read(target) or ""
-        literals = html_copy(body).blocks if target.suffix.lower() in HTML_SUFFIXES else [
+        html = html_copy(body) if target.suffix.lower() in HTML_SUFFIXES else None
+        source_copy = " ".join(html.blocks) if html is not None else body
+        literals = html.interface_texts if html is not None else [
             lit for lit in code_literals(_strip_comments(body, target.suffix))
             if _looks_like_copy(lit)
         ]
-        if literals:
+        if literals or html is not None:
             # The registry records what a reader sees, so the built page is the
             # authority whenever there is one. Source is the fallback and stays
             # byte-exact for projects that do not build.
@@ -766,11 +768,9 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
             # would then refuse, which is a check with no passing answer. It
             # compares the same wording across a newline the reader never sees,
             # which is exactly what the rendered-page branch above already does.
-            elif row["text"] not in body \
-                    and row["text"].strip() not in body \
-                    and normalise(row["text"]) not in normalise(body) \
-                    and not (target.suffix.lower() in HTML_SUFFIXES
-                             and normalise(row["text"]) in normalise(" ".join(literals))):
+            elif row["text"] not in source_copy \
+                    and row["text"].strip() not in source_copy \
+                    and normalise(row["text"]) not in normalise(source_copy):
                 findings.append(Finding(
                     "B021", SEVERITY_ERROR, location, 0,
                     f"`{row['key']}` is \"{row['text']}\" in the registry, "
@@ -912,6 +912,11 @@ class HTMLCopy(HTMLParser):
     BLOCK = {"p", "div", "section", "article", "main", "li", "ul", "ol",
              "header", "footer", "nav", "button", "figcaption", "td", "tr"}
     OMIT = {"script", "style", "template", "noscript", "head"}
+    PHRASING = {"p", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote",
+                "li", "dt", "dd", "td", "th", "figcaption", "label", "summary"}
+    CONTROLS = {"a", "button", "label", "legend", "summary", "option"}
+    INTERFACE_ROLES = {"button", "link", "menuitem", "tab", "option", "checkbox",
+                       "radio", "switch", "alert", "status"}
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -919,6 +924,9 @@ class HTMLCopy(HTMLParser):
         self.parts = []
         self.headings = []
         self.heading = None
+        self.last_anchor_end = None
+        self.controls = []
+        self.interface_texts = []
 
     @property
     def blocked(self):
@@ -930,6 +938,18 @@ class HTMLCopy(HTMLParser):
             re.search(r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:!important\s*)?(?:;|$)",
                       attrs.get("style", ""), re.I))
         if not hidden:
+            if tag in self.CONTROLS or attrs.get("role", "").lower() in self.INTERFACE_ROLES:
+                self.controls.append((tag, len(self.stack), []))
+            if tag == "br" or tag in self.BLOCK or re.fullmatch(r"h[1-6]", tag):
+                for control in self.controls:
+                    control[2].append(" ")
+            # Adjacent navigation/CTA anchors are separate labels, even when
+            # minified HTML has no intervening whitespace. A link within prose
+            # stays inline; turning every <a> into a block splits sentences.
+            if tag == "a" and self.last_anchor_end is not None \
+                    and not any(parent[0] in self.PHRASING for parent in self.stack) \
+                    and not any(part.strip() for part in self.parts[self.last_anchor_end:]):
+                self.parts.append("\n")
             if re.fullmatch(r"h[1-6]", tag):
                 self.parts.append("\n")
                 self.heading = (tag, self.getpos()[0], [])
@@ -948,6 +968,19 @@ class HTMLCopy(HTMLParser):
             self.handle_endtag(tag)
 
     def handle_endtag(self, tag):
+        if not self.blocked and (tag in self.BLOCK or re.fullmatch(r"h[1-6]", tag)):
+            for control in self.controls:
+                control[2].append(" ")
+        # Registry candidates are interface controls/messages, not every
+        # marketing paragraph on a page that contains one registered action.
+        for control in list(self.controls):
+            if control[0] == tag and control[1] == len(self.stack) - 1:
+                text = " ".join("".join(control[2]).split())
+                if text:
+                    self.interface_texts.append(text)
+                self.controls.remove(control)
+        if tag == "a" and not self.blocked:
+            self.last_anchor_end = len(self.parts)
         if self.heading and tag == self.heading[0]:
             _, line, parts = self.heading
             for fragment in "".join(parts).split("\n"):
@@ -965,6 +998,8 @@ class HTMLCopy(HTMLParser):
     def handle_data(self, data):
         if not self.blocked:
             self.parts.append(re.sub(r"\s+", " ", data))
+            for control in self.controls:
+                control[2].append(data)
             if self.heading:
                 # Source wrapping does not create a displayed line break.
                 self.heading[2].append(re.sub(r"\s+", " ", data))
@@ -1750,6 +1785,8 @@ def markdown_headings(text: str) -> list[tuple[int, str]]:
 def title_full_stop(title: str) -> bool:
     """AT-07. True when a title ends in a full stop that is a full stop."""
     text = title.strip()
+    if text == "." or text.endswith(" ."):
+        return False  # A standalone current-directory token is not punctuation.
     if not text.endswith("."):
         return False
     if text.endswith("..") or text.endswith("…"):

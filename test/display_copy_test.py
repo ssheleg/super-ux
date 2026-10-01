@@ -61,6 +61,13 @@ class DisplayCopy(unittest.TestCase):
         self.source('page.html', '<h1>What happens next?</h1><h2>Open...</h2><h2>Wait…</h2><h2>Built on Node.js</h2><h2>Version 1.2.3</h2><h2>Visit https://example.com</h2><h2>Logs, etc.</h2><h2>Made in the U.S.</h2>')
         self.assertEqual(self.headings(), [])
 
+    def test_current_directory_token_is_not_decorative_punctuation(self):
+        self.source('page.html', '<h1><code>cd .</code></h1>')
+        self.assertEqual(self.headings(), [])
+        self.declare('page.md')
+        self.source('page.md', '## `git add .`\n\n## .\n')
+        self.assertEqual(self.headings(), [])
+
     def test_markdown_inline_formatting_and_staccato(self):
         self.declare('page.md')
         self.source('page.md', '## **Your tools.**\n\n## [Your agents.](https://example.com)\n\n## Your agents. Your tools.\n\n## <em>Build together.</em>\n\n```md\n# Example code.\n```\n\nA paragraph ends normally.\n')
@@ -101,6 +108,33 @@ class DisplayCopy(unittest.TestCase):
         (self.brand / 'strings.md').write_text('Contract: brand-contract v1\n\n| Key | Text | Location | Scenario | Status |\n|---|---|---|---|---|\n| title.home | Build together | page.html:1 | SCN-001 | agreed |\n')
         findings = brand_lint.run(self.brand)
         self.assertFalse(any(f.code in {'B021', 'B022'} for f in findings), findings)
+
+    def test_adjacent_navigation_and_cta_links_remain_separate_labels(self):
+        html = '<nav><a href="#tools">The tools</a><a href="#workflow">Your workflow</a><a href="#builders">For builders</a><a href="#about">About</a></nav><div class="hero-actions"><a class="button" href="#products">Explore the tools <span aria-hidden="true">↘</span></a><a class="button" href="#download">Download Switchboard <span aria-hidden="true">↓</span></a></div>'
+        self.assertEqual(brand_lint.html_copy(html).blocks,
+                         ['The tools', 'Your workflow', 'For builders', 'About',
+                          'Explore the tools ↘', 'Download Switchboard ↓'])
+
+    def test_inline_prose_links_do_not_split_sentences(self):
+        html = '<p>Read the <a href="/guide">setup guide</a> before you begin.</p><div>Use <a href="/one">one tool</a> or <a href="/two">another</a> for this task.</div><h2><a href="/one">Your</a> <a href="/two">workspace</a></h2>'
+        self.assertEqual(brand_lint.html_copy(html).blocks,
+                         ['Read the setup guide before you begin.',
+                          'Use one tool or another for this task.', 'Your workspace'])
+
+    def test_html_registry_candidates_are_interface_text_not_marketing_prose(self):
+        self.source('page.html', '<h1>Your <em>workspace</em></h1><p>All your projects stay together.</p><a href="/start">Get started</a><label for="name">Workspace name</label><div role="alert">Changes saved.</div><button hidden>Hidden action</button>')
+        (self.brand / 'strings.md').write_text('Contract: brand-contract v1\n\n| Key | Text | Location | Scenario | Status |\n|---|---|---|---|---|\n| title.home | Your workspace | page.html:1 | SCN-001 | agreed |\n| button.start | Get started | page.html:1 | SCN-001 | agreed |\n')
+        findings = brand_lint.run(self.brand)
+        self.assertFalse(any(f.code == 'B021' for f in findings), findings)
+        warnings = [f.message for f in findings if f.code == 'B022']
+        self.assertEqual(len(warnings), 2, warnings)
+        self.assertTrue(any('Workspace name' in w for w in warnings))
+        self.assertTrue(any('Changes saved.' in w for w in warnings))
+
+    def test_registered_heading_mismatch_is_checked_without_controls(self):
+        self.source('page.html', '<h1 data-copy="Wrong title">Your <em>workspace</em></h1>')
+        (self.brand / 'strings.md').write_text('Contract: brand-contract v1\n\n| Key | Text | Location | Scenario | Status |\n|---|---|---|---|---|\n| title.home | Wrong title | page.html:1 | SCN-001 | agreed |\n')
+        self.assertTrue(any(f.code == 'B021' for f in brand_lint.run(self.brand)))
 
     def test_distributed_copy_rules_share_critical_guards(self):
         skill = (ROOT / 'plugins/super-ux/skills/copywriting/SKILL.md').read_text()
