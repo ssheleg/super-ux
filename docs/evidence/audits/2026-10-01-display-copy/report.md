@@ -91,8 +91,10 @@ directory token (`git add .`, `<code>cd .</code>`) is not a decorative full stop
 `f31b14a0b4a3fd4f4646e5ead64abe79cabb73f7` returns 0 errors and 185 B022 advisory
 findings after narrowing the sweep. These are candidates for registry review,
 not 185 proven missing decisions: repeated navigation, decorative arrow text and
-CSS-styled whole-card link names require interpretation. No website registry rows
-were added, and this is not called a clean brand review. The earlier B005 warning
+CSS-styled whole-card link names require interpretation. The canonical copywriting gotcha also requires reapplying current punctuation
+policy when restoring historical copy: an old snapshot is not an exception. The final house audit returns 19 PASS,
+198 lines and 2694 tokens for that skill; closure sync changes zero files.
+No website registry rows were added, and this is not called a clean brand review. The earlier B005 warning
 is absent in the later consumer tree; that website calibration changed separately.
 
 ## Next task

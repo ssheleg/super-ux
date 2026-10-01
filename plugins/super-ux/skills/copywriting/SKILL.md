@@ -167,6 +167,8 @@ guards govern the pass wherever it runs, and they are not optional:
   ellipses, abbreviations, versions, URLs and normal paragraph punctuation.
   A project may extend this rule to hero summaries and captions; record that
   scope in its brand policy and test the generated page too.
+  When restoring historical copy, reapply the current project punctuation policy;
+  an old exact-text snapshot is not an intentional exception.
 
 - **No fabricated facts, statistics, quotes or experts.** Not for a deadline,
   not for a benchmark, not because a placeholder would look better. Refuse,
