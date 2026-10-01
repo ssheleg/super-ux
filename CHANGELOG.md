@@ -1,3 +1,19 @@
+## 0.56.3 — check the heading the reader sees
+
+The no-title-period rule already existed, but its linter read Markdown headings
+only and let multi-sentence titles escape. It now reads HTML headings, inline
+markup and line-break fragments, with source-line evidence. HTML registry checks
+read visible text rather than attribute fragments. Paragraph punctuation,
+questions, abbreviations, versions and URLs keep their meaning.
+
+- `--fail-on B063` makes selected warnings block without promoting unrelated
+  advice; default warning behavior and JSON output remain compatible.
+- `B009` blocks unmatched declared source globs. Brace patterns advertised by
+  the contract now expand; seed projects must replace placeholder sources.
+- Copywriting now verifies rendered roles, generators, actual linter paths and
+  gate coverage. The contract no longer describes advisory B060 as an error.
+- Regression receipts and scope limits: [DC-01](docs/evidence/audits/2026-10-01-display-copy/report.md).
+
 ## 0.56.2 — the closure says it is a closure
 
 Hygiene from the 2026-09-13 family audit (HK-11). Five skills ship more contracts than

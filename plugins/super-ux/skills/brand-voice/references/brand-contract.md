@@ -379,10 +379,26 @@ Sources:
   locales:   src/locales/*.json
 ```
 
-Nothing outside these paths is scanned. A missing block is `B006` and blocks:
-the linter refuses to report a clean run over a surface it never read. Any
-subset may be declared; checks whose source is absent are counted as skipped
-in the summary, never silently passed.
+Nothing outside these paths is scanned. A missing block is `B006`; an empty
+declared source glob is `B009`. Both block. Comma braces are expanded, including
+the examples above; overlapping patterns read a file once per source key.
+`robots` is exempt from the generic empty-glob check because `B050` owns its
+crawler policy. Omitted keys are unscanned, not passed; the findings array does
+not provide a whole-project coverage verdict. Report which source keys and
+files the changed surface actually used.
+
+HTML sources contribute static visible text, not markup or quoted attributes.
+B021 checks explicitly registered strings against that full visible text. B022
+suggests registry rows only for explicit HTML links, controls, labels and
+alert/status roles; a marketing paragraph does not become an interface decision
+because one action on its page is registered. Adjacent navigation/CTA anchors
+remain separate candidates; ordinary inline prose links do not split sentences.
+CSS-styled link cards may still need human review of the extracted control name.
+`B063` reads h1–h6 with nested inline tags, entities and `<br>` fragments, as well
+as Markdown ATX headings and front-matter titles. Preserve those roles in any
+copy projection. Hidden/template/script text is excluded; `aria-hidden` alone
+is visual text. Browser review covers CSS and runtime content this parser cannot
+resolve. Normal paragraph punctuation is outside the title rule.
 
 `ui` and `marketing` also classify a finding, because several checks apply to only
 one of the two.
@@ -417,7 +433,11 @@ the linter owns the detection. A code the linter can emit that is absent here
 is a validator failure, because its meaning would otherwise live only in the
 source of the thing doing the checking.
 
-Severity is fixed per code: **E** blocks, **W** reports.
+Severity is stated per code: **E** blocks with exit 2; **W** reports without
+blocking by default. `--strict` makes any warning exit 1; `--fail-on B063` makes
+only selected warning codes exit 1 (repeat the flag or use comma-separated
+codes). Unknown warning codes fail with usage/exit 2. Errors always block.
+`--json` remains an array of findings; selecting blockers does not hide advice.
 
 | Code | | Fires when |
 |---|---|---|
@@ -428,12 +448,13 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B005 | W | `foundation.md` changed after `Last calibrated` |
 | B006 | E | `README.md` has no `Sources:` block, so nothing to scan |
 | B007 | W | `## Voice references` names no admired or no refused brand, once the voice leaves `draft` |
+| B009 | E | a declared non-robots source glob matches no files |
 | B010 | E | a banned word appears in a registered string |
 | B011 | E | a generic word used where a product term exists |
 | B012 | E | an entity or tier name spelled inconsistently |
 | B020 | E | one action carries two different names |
 | B021 | E | a registered string diverged from the code |
-| B022 | W | a code string has no registry row |
+| B022 | W | a code string or explicit HTML control/message has no registry row; ordinary marketing prose is outside the HTML candidate sweep |
 | B023 | E | a registry row points at a location that does not exist |
 | B024 | E | declared casing violated |
 | B025 | W | a button label names no outcome |
@@ -452,10 +473,10 @@ Severity is fixed per code: **E** blocks, **W** reports.
 | B052 | E | a filler opener |
 | B053 | W | no named author where the surface needs one |
 | B054 | W | the title promises more than the body delivers |
-| B060 | W/E | machine-drafting markers; error at three S1 |
+| B060 | W | machine-drafting markers above the advisory threshold; not an authorship verdict |
 | B061 | E | humor where the user is losing something |
 | B062 | E | AT-06, a rhetorical dash standing in for a full stop, comma or colon |
-| B063 | W | AT-07, a document title or heading ends in a full stop |
+| B063 | W | AT-07, a document title, Markdown ATX heading or HTML heading fragment ends in a full stop |
 | B065 | E | a registry row carries a `Kind` the contract does not declare |
 | B064 | W/E | the humanization pass: absent field warns that the default `on` applies unrecorded; an out-of-enum value errors; `off` with no `Humanization declined:` reason errors |
 | B070 | E | a declared locale has no locale file |

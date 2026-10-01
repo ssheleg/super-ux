@@ -167,15 +167,19 @@ I can put it in a setup script.
 **Status:** delivered
 **Product:** unobserved
 
-### ST-005: Land in a state that already passes its own checks
-As P-01, I want the seeded project to lint clean immediately, so that my
-first experience of the linter is not a wall of errors about templates.
+### ST-005: Validate the seeded project against its actual sources
+As P-01, I want seeded checks to explain what needs configuration, so that an
+empty source pattern cannot look like a verified product.
 **Priority:** must
 **Acceptance criteria:**
 - Given a freshly seeded project, when I run `python3 docs/ux/lint.py`, then
   it exits 0.
-- Given the same project, when I run `python3 docs/brand/lint.py`, then it
-  exits 0.
+- Given the same project with placeholder source globs, brand lint exits 2 with
+  B009 and tells me to configure or remove the unmatched declarations.
+- Given source declarations that resolve to the product, brand lint reports the
+  actual findings; advisory warnings remain non-blocking unless selected.
+- Given `--fail-on B063`, heading punctuation warnings exit 1, other warnings
+  remain visible advice and errors still exit 2.
 **Status:** delivered
 **Product:** unobserved
 

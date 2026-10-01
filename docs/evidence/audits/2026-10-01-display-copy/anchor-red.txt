@@ -1,0 +1,35 @@
+.F...............
+======================================================================
+FAIL: test_adjacent_navigation_and_cta_links_remain_separate_labels (__main__.DisplayCopy.test_adjacent_navigation_and_cta_links_remain_separate_labels)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 107, in test_adjacent_navigation_and_cta_links_remain_separate_labels
+    self.assertEqual(brand_lint.html_copy(html).blocks,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     ['The tools', 'Your workflow', 'For builders', 'About',
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      'Explore the tools ↘', 'Download Switchboard ↓'])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['The toolsYour workflowFor buildersAbout', 'Explore[31 chars]d ↓'] != ['The tools', 'Your workflow', 'For builders', 'Abou[47 chars]d ↓']
+
+First differing element 0:
+'The toolsYour workflowFor buildersAbout'
+'The tools'
+
+Second list contains 4 additional elements.
+First extra element 2:
+'For builders'
+
+- ['The toolsYour workflowFor buildersAbout',
+-  'Explore the tools ↘Download Switchboard ↓']
++ ['The tools',
++  'Your workflow',
++  'For builders',
++  'About',
++  'Explore the tools ↘',
++  'Download Switchboard ↓']
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.059s
+
+FAILED (failures=1)

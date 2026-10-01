@@ -27,7 +27,10 @@ Then:
    headlines and CTAs, each with what it trades away.
 4. Interface strings get a `strings.md` row — key, `file:line`, scenario,
    `Status: proposed`.
-5. Run `python3 docs/brand/lint.py` over what you touched.
+5. Resolve and run the actual brand linter using the skill's closing checklist.
+   Preserve heading roles in Sources and copy projections; inspect rendered copy
+   and generators. Use `--fail-on B063` for a required no-title-period gate and
+   report scanned surfaces, warnings and the exact command.
 
 **Report, never invent.** A term missing from the dictionary or a number with
 no row in `facts.md` is named as missing. No fabricated statistics, quotes or

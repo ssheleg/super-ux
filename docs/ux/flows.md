@@ -22,6 +22,8 @@ written and a reason given.
 | FLW-03 | Direct project install | `npx super-ux --cursor <dir>` | SCR-04, SCR-06 |
 | FLW-04 | Read before running | `npx super-ux --help` | SCR-07 |
 
+| FLW-05 | Gate selected copy policy | `brand_lint.py <pack> --fail-on B063` | SCR-08 |
+
 ## Flows
 
 **No flow carries a `Status:`.** Four of them did, reading `confirmed`, and
@@ -119,3 +121,12 @@ flowchart TD
     A["npx super-ux --help"] --> U[SCR-07 usage] --> Z[exit 0, nothing written]
     B["npx super-ux --bogus"] --> ER["SCR-04 error: unknown mode"] --> U2[SCR-07 usage] --> X[exit 1]
 ```
+
+### FLW-05: Gate selected copy policy
+**Traces:** ST-005
+
+The operator resolves the project-local or installed brand linter, then runs it
+against the configured pack. SCR-08 reports source/contract errors (exit 2),
+selected warnings (exit 1), or advisory findings/clean result (exit 0). The
+operator corrects the source or copy and reruns the same command. JSON preserves
+all findings; selecting blockers does not hide other advice.

@@ -20,6 +20,8 @@ the whole surface is a terminal.
 | SCR-06 | Claude plugin install output | FLW-01, FLW-02, FLW-03 | n/a | built | `bin/super-ux.js:264-281` |
 | SCR-07 | Usage / help | FLW-04 | n/a | built | `bin/super-ux.js:71-98` |
 
+| SCR-08 | Brand lint findings | FLW-05 | n/a | built | `plugins/super-ux/scripts/brand_lint.py` |
+
 ## Design system
 
 - **Style pack:** none — no visual layer. This project's interface is ANSI
@@ -165,3 +167,20 @@ marketplace is not an error and says so.
 
 What this screen claims item 2 writes must match what SCR-04 actually
 writes. It drifted once and the audit of 2026-08-10 caught it.
+
+### SCR-08: Brand lint findings
+**Status:** built
+**Used by:** FLW-05
+**Coverage:** `plugins/super-ux/scripts/brand_lint.py`, `test/display_copy_test.py`
+
+| State | Shown | Frame |
+|---|---|---|
+| loading | synchronous scan | n/a |
+| empty | missing source declaration or unmatched glob is an error | n/a |
+| error | code, source path, line where available, explanation; exit 2 | n/a |
+| warning | visible advice; selected warning codes exit 1 | n/a |
+| success | no blocking findings; unselected advice may remain; exit 0 | n/a |
+
+`--json` returns the existing findings array. `--fail-on` is repeatable and accepts
+comma-separated known warning codes; a typo is usage/exit 2. This terminal surface
+requires no Figma frame. Static checks do not replace rendered browser review.

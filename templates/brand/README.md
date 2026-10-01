@@ -22,7 +22,7 @@ Owned by the `brand-voice` skill. Written by `copywriting`. Checked by
 
 **Fill this in before anything else.** The linter scans nothing outside these
 paths, and refuses to report a clean run over a surface it never read
-(`B006`). Delete the keys this project does not have — a declared-but-absent
+(`B006` for no block, `B009` for an unmatched glob). Delete the keys this project does not have — a declared-but-absent
 source is worse than an omitted one.
 
 ```
@@ -33,6 +33,12 @@ Sources:
   robots:    public/robots.txt
   locales:   src/locales/*.json
 ```
+
+For a website, list the HTML under `marketing` or retain heading markers in a
+copy projection. Flat paragraphs cannot prove heading coverage. To make the
+no-title-period rule a required gate, run the resolved brand linter with
+`--fail-on B063`; default warnings remain advisory. The placeholder source
+patterns above must be replaced before the first real lint run.
 
 `ui` and `marketing` also classify findings — several checks apply to only
 one of the two.

@@ -8,6 +8,19 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-01 — semantic display-copy guards, v0.56.3
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| DC-01a | HTML and Markdown headings retain their role | `test/display_copy_test.py`: baseline 6 failures and 1 CLI error, then 15 passing tests; nested tags, line breaks, entities, formatted titles and source lines | **planted** |
+| DC-01b | The gate can block only the requested copy policy | `test_cli_selective_warning_gate_and_json_contract`, `test_unknown_selective_gate_code_is_rejected` | **planted** |
+| DC-01c | Empty source globs fail instead of implying coverage | B009 fixture in `test/brand_lint_test.py`; brace expansion fixture in `test/display_copy_test.py` | **planted** |
+| DC-01d | Attribute fragments are not visible HTML copy | `test_registry_html_does_not_sweep_attributes`; inline markup still matches the registry | **planted** |
+
+Scope and final command receipts live in
+[audit report](audits/2026-10-01-display-copy/report.md). No model-outcome or live
+publication result is implied by these deterministic tests.
+
 ## 2026-09-14 — the closure says it is a closure, v0.56.2
 
 From the 2026-09-13 family audit (HK-11).

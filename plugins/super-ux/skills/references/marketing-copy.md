@@ -111,7 +111,12 @@ rhythm, not vocabulary (see [ai-tells.md](ai-tells.md)).
 
 No rhetorical dash and no full stop after a title. Both are `AT-06` and
 `AT-07`, both are checked by `B062` and `B063`, and the replacement is
-chosen from the meaning rather than by find-and-replace.
+chosen from the meaning rather than by find-and-replace. Check the actual
+heading after inline markup and responsive line breaks, plus any generator
+that can restore old wording. Project display-copy rules may also cover hero
+summaries and captions; paragraph punctuation stays normal. Keep semantic
+heading roles in copy exports and put required `B063` checks in the delivery
+gate with `--fail-on B063`, not an advisory-only command.
 
 ## Long form: grounding
 
