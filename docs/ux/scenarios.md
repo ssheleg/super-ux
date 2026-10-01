@@ -20,13 +20,15 @@ change.
 | SCN-008 | Never overwrite an existing base | install | P-02 | ST-003, FLW-03, SCR-04 | implemented | 2026-08-10 |
 | SCN-009 | Refresh rules and linters with --force | install | P-02 | ST-004, FLW-03, SCR-04 | implemented | 2026-08-10 |
 | SCN-010 | Survive a linter missing from the payload | install | P-02 | ST-003, FLW-03, SCR-04 | implemented | 2026-08-10 |
-| SCN-011 | Seeded project passes both linters | install | P-01 | ST-005, FLW-03, SCR-04 | implemented | 2026-08-10 |
+| SCN-011 | Seeded project validates its configured sources | install | P-01 | ST-005, FLW-03, SCR-04 | implemented | 2026-08-10 |
 | SCN-012 | Offer the routing block from either door | routing | P-02 | ST-006, FLW-01, FLW-03 | implemented | 2026-08-10 |
 | SCN-013 | Install the Claude Code plugin without the CLI | install | P-01 | ST-001, FLW-01, SCR-06 | implemented | 2026-08-10 |
 | SCN-014 | Read the help before running | install | P-02 | ST-007, FLW-04, SCR-07 | implemented | 2026-08-10 |
 | SCN-015 | Reject an unknown flag | install | P-02 | ST-007, FLW-04, SCR-07 | implemented | 2026-08-10 |
 | SCN-016 | Refuse the shadow the skills handoff would create | install | P-01 | ST-001, ST-003, FLW-01, FLW-02, SCR-05 | implemented | 2026-08-29 |
 | SCN-017 | Be told how the next version arrives | install | P-01 | ST-006, FLW-01, FLW-02, FLW-03 | implemented | 2026-08-29 |
+
+| SCN-018 | Make a copy policy block delivery | brand lint | P-02 | ST-005, FLW-05, SCR-08 | implemented | 2026-10-01 |
 
 ## Personas
 
@@ -157,15 +159,16 @@ worse than a named gap.
 **Coverage:** `bin/super-ux.js:181-189`
 **Product:** unobserved
 
-### SCN-011: Seeded project passes both linters
+### SCN-011: Seeded project validates its configured sources
 **Traces:** ST-005, FLW-03, SCR-04 · **Status:** implemented
 **Steps:**
 1. Seed a fresh project.
 2. Run `python3 docs/ux/lint.py`.
 3. Run `python3 docs/brand/lint.py`.
-**Expected result:** both exit 0. A first run that greets the user with errors
-about the templates teaches them to ignore the linter, which is the one
-habit this product cannot survive.
+**Expected result:** UX lint exits 0. Brand lint reports B009/exit 2 for
+placeholder source patterns that match no files. Replace or remove those
+patterns, then rerun against actual product sources; findings determine the
+exit code. An empty scan is not a clean product.
 **Coverage:** `bin/super-ux.js:135-167`, `templates/scenarios.md`, `templates/screens.md`
 **Product:** unobserved
 
@@ -251,4 +254,21 @@ mentions updates has still chosen an update model: never. The refused path
 prints no `Updates:` block — its refusal already carries the update
 commands, and repeating them under it would bury the remedy.
 **Coverage:** `bin/super-ux.js:255-262`, `bin/super-ux.js:454-460`, `bin/super-ux.js:514`
+**Product:** unobserved
+
+### SCN-018: Make a copy policy block delivery
+**Traces:** ST-005, FLW-05, SCR-08 · **Status:** implemented
+**Preconditions:** a configured brand pack with marketing/store sources.
+**Steps:**
+1. Run the resolved `brand_lint.py` with the brand directory and `--fail-on B063`.
+2. A rendered HTML heading or formatted Markdown heading ends in a full stop.
+3. Correct the heading, keeping normal paragraph punctuation, and rerun.
+**Expected result:** the first run reports B063 with path/line and exits 1;
+the corrected run exits 0 unless another error or selected warning remains.
+Default warnings remain advisory. `--strict` selects all warnings; repeated or
+comma-separated `--fail-on` values select known warning codes. Unknown codes
+exit 2. JSON remains an array and includes unselected advice.
+**Errors & recovery:** unmatched non-robots source glob yields B009/exit 2;
+fix the declaration instead of accepting an empty scan.
+**Coverage:** `plugins/super-ux/scripts/brand_lint.py`, `test/display_copy_test.py`
 **Product:** unobserved

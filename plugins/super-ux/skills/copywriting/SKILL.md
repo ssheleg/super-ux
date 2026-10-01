@@ -8,7 +8,7 @@ license: MIT
 # copywriting — write it in the product's own voice
 
 > Part of **super-ux** — see [system-map.md](references/system-map.md).
-> After changes, run `python3 docs/brand/lint.py`.
+> After changes, resolve and run the brand linter as described below.
 
 **First action, every time: read the brand pack.** `docs/brand/voice.md`,
 `terminology.md`, and the `channels.md` record for the surface being written.
@@ -161,6 +161,13 @@ guards govern the pass wherever it runs, and they are not optional:
 
 ## Non-negotiables
 
+- **No decorative full stop in headings or labels**, including nested HTML,
+  formatted Markdown and staccato fragments such as “Your agents. Your tools.”
+  Read the rendered role, not merely a flat copy export. Keep real questions,
+  ellipses, abbreviations, versions, URLs and normal paragraph punctuation.
+  A project may extend this rule to hero summaries and captions; record that
+  scope in its brand policy and test the generated page too.
+
 - **No fabricated facts, statistics, quotes or experts.** Not for a deadline,
   not for a benchmark, not because a placeholder would look better. Refuse,
   say why, offer to find a real one.
@@ -175,7 +182,19 @@ guards govern the pass wherever it runs, and they are not optional:
 - Every string or section traces to a surface record and a voice.
 - The humanization status line is printed, whichever state it reports.
 - New interface strings are in `strings.md` with location and scenario.
-- `python3 docs/brand/lint.py` exits 0 for the touched surfaces.
+- Resolve the linter before running it: use `docs/brand/lint.py` if present;
+  otherwise locate the installed super-ux linter `brand_lint.py` in its scripts directory and pass the
+  project's `docs/brand` path. Do not invent a project-local script or assume
+  the shell exports a plugin-root variable. If neither exists, name the missing
+  tool and the manual coverage; never call it a lint pass.
+- Confirm `Sources:` resolves to the touched surfaces. HTML heading roles must
+  survive a copy projection; flat paragraphs do not prove heading coverage.
+  Run the resolved script with `--fail-on B063` when title punctuation is a
+  required gate (or `--strict` for all warnings). An older script that rejects
+  the flag needs an update, not a retry that quietly drops the gate.
+- Report scanned surfaces, remaining warnings and the exact command/exit code.
+  Exit zero with advisory warnings is not a clean review. Inspect the rendered
+  copy and generators; a source-only check cannot see external CSS or runtime text.
 - Anything reported as missing — a term, a fact, a surface — is named
   explicitly, not worked around.
 

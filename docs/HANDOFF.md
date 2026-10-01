@@ -1,3 +1,14 @@
+# Display-copy guard handoff, 2026-10-01
+
+Start with [DC-01 report](evidence/audits/2026-10-01-display-copy/report.md).
+The branch prepares super-ux 0.56.3: semantic heading checks, source coverage,
+selective warning gates and the copywriting delivery contract. The coordinator
+owns independent review, merge, tag, npm publication and umbrella refresh.
+Do not treat this branch or deterministic fixtures as a published release or
+proof that every agent/model now follows the instruction.
+
+---
+
 # Sherlock family audit: handoff
 
 This branch contains the prepared super-ux instruction changes from the family

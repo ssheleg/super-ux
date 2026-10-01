@@ -134,14 +134,23 @@ subject line: each is a name, not a statement, so it takes no terminal
 punctuation. A question mark is fine where the title genuinely asks. An
 ellipsis is fine where the control genuinely opens something further.
 
-The full stop is different. It is the single most reliable sign that prose
-was generated into a slot meant for a name, and a reader registers it as
-stiffness before they can say why. `B026` catches it in the string registry,
-`B063` in marketing documents.
+A decorative full stop is a copy-policy defect, not proof of who wrote the
+text. `B026` catches it in registered labels; `B063` checks document titles,
+Markdown headings and HTML h1–h6 in declared marketing/store sources. Nested
+inline tags, entities and `<br>` fragments keep their heading role. Splitting
+“Your agents. Your tools.” into sentences does not exempt a heading.
 
-Exceptions the checks already allow, because they are not the defect: a title
-that is several sentences (a different problem), an ellipsis, and a trailing
-abbreviation such as `etc.` or `Node.js` that carries its own period.
+Keep questions, ellipses, abbreviations such as `etc.`, versions and URLs.
+Ordinary paragraph sentences keep their punctuation. Hero summaries and
+captions are a project's explicit display-copy policy, not a global ban on
+punctuation anywhere above the fold.
+
+Inspect the rendered surface and its generator. A flat prose export can erase
+heading roles; declare the HTML or retain Markdown heading markers. Static HTML
+checks ignore scripts, templates, attributes and visibly hidden source elements;
+`aria-hidden` alone is not visually hidden. External CSS and runtime-generated
+text require browser review. Make a required title rule block with `--fail-on
+B063`; an advisory exit zero does not prove that the title rule was checked.
 
 ### AT-08. The rule-of-three habit, S2
 

@@ -1,0 +1,80 @@
+FFusage: display_copy_test.py [-h] [--fix] [--brief] [--json] [--strict] [path]
+display_copy_test.py: error: unrecognized arguments: --fail-on B063
+EF.FFF.
+======================================================================
+ERROR: test_cli_selective_warning_gate_and_json_contract (__main__.DisplayCopy.test_cli_selective_warning_gate_and_json_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 84, in test_cli_selective_warning_gate_and_json_contract
+    code = brand_lint.main([str(self.brand), '--json', '--fail-on', 'B063'])
+  File "<checkout>/plugins/super-ux/scripts/brand_lint.py", line 2004, in main
+    args = parser.parse_args(argv)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/argparse.py", line 2012, in parse_args
+    self.error(msg)
+    ~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/argparse.py", line 2785, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/argparse.py", line 2772, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+======================================================================
+FAIL: test_accessibility_hidden_is_still_visible (__main__.DisplayCopy.test_accessibility_hidden_is_still_visible)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 54, in test_accessibility_hidden_is_still_visible
+    self.assertEqual(len(self.headings()), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_break_fragments_and_entities (__main__.DisplayCopy.test_break_fragments_and_entities)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 50, in test_break_fragments_and_entities
+    self.assertEqual(len(self.headings()), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_empty_source_glob_is_error (__main__.DisplayCopy.test_empty_source_glob_is_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 79, in test_empty_source_glob_is_error
+    self.assertTrue(any(f.code == 'B009' and f.severity == 'error' for f in findings))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_html_copy_does_not_read_attributes_as_quoted_literals (__main__.DisplayCopy.test_html_copy_does_not_read_attributes_as_quoted_literals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 72, in test_html_copy_does_not_read_attributes_as_quoted_literals
+    self.assertIn('Build together', documents[0][2])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Build together' not found in '<h1 data-copy="This is not public copy">Build <em>together</em></h1>'
+
+======================================================================
+FAIL: test_markdown_inline_formatting_and_staccato (__main__.DisplayCopy.test_markdown_inline_formatting_and_staccato)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 67, in test_markdown_inline_formatting_and_staccato
+    self.assertEqual(len(self.headings()), 3)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 3
+
+======================================================================
+FAIL: test_nested_html_and_source_line (__main__.DisplayCopy.test_nested_html_and_source_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/display_copy_test.py", line 45, in test_nested_html_and_source_line
+    self.assertEqual(len(findings), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.105s
+
+FAILED (failures=6, errors=1)

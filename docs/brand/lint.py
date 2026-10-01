@@ -20,7 +20,10 @@ Read-only by default. `--fix` applies only the changes that cannot be wrong.
     python3 brand_lint.py [path] --json    # machine-readable findings
     python3 brand_lint.py [path] --strict  # warnings block too
 
-Exit codes: 0 clean or warnings only, 1 warnings under `--strict`, 2 any error.
+    python3 brand_lint.py [path] --fail-on B063  # selected warnings block
+
+Exit codes: 0 clean or advisory warnings, 1 selected warnings (`--strict` or
+`--fail-on`), 2 any error. JSON remains an array of findings.
 
 One pack, one policy: `ux_lint.py` has always blocked on errors and needed
 `--strict` before a warning could fail a build, and this file returned 1 for
@@ -36,6 +39,8 @@ import argparse
 import json
 import re
 import sys
+from html import unescape
+from html.parser import HTMLParser
 from collections import namedtuple
 from pathlib import Path
 
@@ -76,6 +81,7 @@ STRING_KINDS = ("copy", "layout")
 
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
+WARNING_CODES = set("B003 B005 B007 B022 B025 B026 B031 B043 B051 B053 B054 B060 B063 B064 B071 B072".split())
 
 Finding = namedtuple("Finding", "code severity path line message")
 
@@ -240,7 +246,7 @@ def load_sources(brand_dir: Path) -> dict[str, list[str]]:
     The linter cannot guess where a project keeps its text, and guessing
     wrong produces the worst possible output: a clean report about a surface
     that was never read. So an absent block is a finding (B006) and an
-    absent key means its checks are skipped and counted as skipped.
+    absent key means its checks are not run (not a passed coverage verdict).
     """
     text = read(brand_dir / "README.md") or ""
     block = re.search(r"^Sources:\s*$(.*?)(?=^\S|\Z)", text, re.M | re.S)
@@ -248,7 +254,7 @@ def load_sources(brand_dir: Path) -> dict[str, list[str]]:
         return {}
     sources: dict[str, list[str]] = {}
     for line in block.group(1).splitlines():
-        entry = re.match(r"^\s+(\w+):\s*(.+?)\s*$", line)
+        entry = re.match(r"^\s+(\w+):\s*(.*?)\s*$", line)
         if not entry:
             continue
         key, value = entry.group(1), entry.group(2)
@@ -714,7 +720,7 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
         text = row["text"].rstrip()
         if not text.endswith(".") or text.endswith("..") or text.endswith("…"):
             continue
-        if ". " in text:      # genuinely several sentences -- a different defect
+        if not title_full_stop(text):
             continue
         findings.append(Finding(
             "B026", SEVERITY_WARN, "strings.md", 0,
@@ -734,7 +740,7 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
             continue
 
         body = read(target) or ""
-        literals = [
+        literals = html_copy(body).blocks if target.suffix.lower() in HTML_SUFFIXES else [
             lit for lit in code_literals(_strip_comments(body, target.suffix))
             if _looks_like_copy(lit)
         ]
@@ -762,7 +768,9 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
             # which is exactly what the rendered-page branch above already does.
             elif row["text"] not in body \
                     and row["text"].strip() not in body \
-                    and normalise(row["text"]) not in normalise(body):
+                    and normalise(row["text"]) not in normalise(body) \
+                    and not (target.suffix.lower() in HTML_SUFFIXES
+                             and normalise(row["text"]) in normalise(" ".join(literals))):
                 findings.append(Finding(
                     "B021", SEVERITY_ERROR, location, 0,
                     f"`{row['key']}` is \"{row['text']}\" in the registry, "
@@ -889,6 +897,122 @@ CODE_SUFFIXES = {
     ".py", ".go", ".rb", ".rs", ".java", ".kt", ".swift", ".php",
 }
 
+HTML_SUFFIXES = {".html", ".htm"}
+
+
+class HTMLCopy(HTMLParser):
+    """Static visible text and heading fragments, never attribute values.
+
+    Inline CSS/hidden/template exclusions are knowable from this source. External
+    CSS, scripts and responsive visibility still need a browser review.
+    aria-hidden is deliberately not excluded: it does not hide visual text.
+    """
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input",
+            "link", "meta", "param", "source", "track", "wbr"}
+    BLOCK = {"p", "div", "section", "article", "main", "li", "ul", "ol",
+             "header", "footer", "nav", "button", "figcaption", "td", "tr"}
+    OMIT = {"script", "style", "template", "noscript", "head"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack = []
+        self.parts = []
+        self.headings = []
+        self.heading = None
+
+    @property
+    def blocked(self):
+        return bool(self.stack and self.stack[-1][1])
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        hidden = self.blocked or tag in self.OMIT or "hidden" in attrs or bool(
+            re.search(r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:!important\s*)?(?:;|$)",
+                      attrs.get("style", ""), re.I))
+        if not hidden:
+            if re.fullmatch(r"h[1-6]", tag):
+                self.parts.append("\n")
+                self.heading = (tag, self.getpos()[0], [])
+            elif tag in self.BLOCK:
+                self.parts.append("\n")
+            elif tag == "br":
+                self.parts.append("\n")
+                if self.heading:
+                    self.heading[2].append("\n")
+        if tag not in self.VOID:
+            self.stack.append((tag, hidden))
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if tag not in self.VOID:
+            self.handle_endtag(tag)
+
+    def handle_endtag(self, tag):
+        if self.heading and tag == self.heading[0]:
+            _, line, parts = self.heading
+            for fragment in "".join(parts).split("\n"):
+                text = " ".join(fragment.split())
+                if text:
+                    self.headings.append((line, text))
+            self.heading = None
+        if not self.blocked and (tag in self.BLOCK or re.fullmatch(r"h[1-6]", tag)):
+            self.parts.append("\n")
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] == tag:
+                del self.stack[index:]
+                break
+
+    def handle_data(self, data):
+        if not self.blocked:
+            self.parts.append(re.sub(r"\s+", " ", data))
+            if self.heading:
+                # Source wrapping does not create a displayed line break.
+                self.heading[2].append(re.sub(r"\s+", " ", data))
+
+    @property
+    def blocks(self):
+        return [" ".join(line.split()) for line in "".join(self.parts).split("\n")
+                if line.strip()]
+
+
+def html_copy(text: str) -> HTMLCopy:
+    parser = HTMLCopy()
+    parser.feed(text)
+    parser.close()
+    return parser
+
+
+def source_paths(root: Path, pattern: str) -> list[Path]:
+    """Expand comma braces advertised by the brand contract, then glob."""
+    brace = re.search(r"\{([^{}]+)\}", pattern)
+    if brace and "," in brace.group(1):
+        return sorted({path for choice in brace.group(1).split(",")
+                       for path in source_paths(root, pattern[:brace.start()] + choice
+                                                + pattern[brace.end():])})
+    return sorted(path for path in root.glob(pattern) if path.is_file())
+
+
+def check_source_coverage(brand_dir: Path, sources: dict) -> list[Finding]:
+    root = brand_dir.parent.parent
+    findings = []
+    for key, patterns in sources.items():
+        if key == "robots":  # Missing robots is handled by the crawler policy.
+            continue
+        for pattern in patterns or [""]:
+            if not pattern:
+                findings.append(Finding(
+                    "B009", SEVERITY_ERROR, "README.md", 0,
+                    f"Sources {key}: no pattern declared; configure the source or remove its key",
+                ))
+                continue
+            if not source_paths(root, pattern):
+                findings.append(Finding(
+                    "B009", SEVERITY_ERROR, "README.md", 0,
+                    f"Sources {key}: `{pattern}` matches no files; correct the "
+                    "path or remove the source declaration. No copy was scanned",
+                ))
+    return findings
+
 # `${...}` in a template literal is a value, not a word.
 #
 # Replaced by a space rather than dropped, so `founder of ${n} products` does not
@@ -974,12 +1098,16 @@ def documents(brand_dir: Path, sources: dict, key: str) -> list[tuple]:
     """(relative path, front matter, body) for one declared source key."""
     root = brand_dir.parent.parent
     out = []
+    seen = set()
     for pattern in sources.get(key, []):
-        for path in sorted(root.glob(pattern)):
-            if not path.is_file():
+        for path in source_paths(root, pattern):
+            if path in seen:
                 continue
+            seen.add(path)
             fields, body = _front_matter(read(path) or "")
-            if path.suffix in CODE_SUFFIXES:
+            if path.suffix.lower() in HTML_SUFFIXES:
+                body = "\n\n".join(html_copy(body).blocks)
+            elif path.suffix in CODE_SUFFIXES:
                 body = _copy_in_code(body, path.suffix)
             out.append((path.relative_to(root).as_posix(), fields, body))
     return out
@@ -1589,14 +1717,42 @@ def dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding
     return findings
 
 
+def markdown_title(text: str) -> str:
+    """Read common inline heading markup as the displayed label."""
+    text = re.sub(r"!?\[([^\]]+)\]\([^)]*\)", r"\1", text)
+    text = re.sub(r"\s+#+\s*$", "", text)
+    if re.search(r"</?[A-Za-z][^>]*>", text):
+        text = " ".join(html_copy(text).blocks)
+    return unescape(re.sub(r"[*_~`]", "", text)).strip()
+
+
+def markdown_headings(text: str) -> list[tuple[int, str]]:
+    """ATX headings with source lines; fences are examples, inline code is a label."""
+    out = []
+    match = FRONT_MATTER_RE.match(text)
+    if match:
+        text = "\n" * match.group(0).count("\n") + text[match.end():]
+    fence = None
+    for number, line in enumerate(text.splitlines(), 1):
+        marker = re.match(r"^\s{0,3}(`{3,}|~{3,})", line)
+        if marker:
+            current = marker.group(1)
+            if fence is None:
+                fence = current
+            elif current[0] == fence[0] and len(current) >= len(fence):
+                fence = None
+            continue
+        if fence is None and (match := re.match(r"^ {0,3}#{1,6}\s+(.+?)\s*$", line)):
+            out.append((number, markdown_title(match.group(1))))
+    return out
+
+
 def title_full_stop(title: str) -> bool:
     """AT-07. True when a title ends in a full stop that is a full stop."""
     text = title.strip()
     if not text.endswith("."):
         return False
     if text.endswith("..") or text.endswith("…"):
-        return False
-    if ". " in text:            # several sentences -- a different defect
         return False
     return not ABBREVIATION_RE.search(text)
 
@@ -1773,10 +1929,15 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
                     f'the title ends in a full stop: "{title.strip()}". '
                     f"A title is a name, not a statement",
                 ))
-            for heading in re.findall(r"^#{1,6}\s+(.+?)\s*$", prose_only(body), re.M):
+            source = brand_dir.parent.parent / path
+            if source.suffix.lower() in HTML_SUFFIXES:
+                headings = html_copy(read(source) or "").headings
+            else:
+                headings = markdown_headings(read(source) or "")
+            for line, heading in headings:
                 if title_full_stop(heading):
                     findings.append(Finding(
-                        "B063", SEVERITY_WARN, path, 0,
+                        "B063", SEVERITY_WARN, path, line,
                         f'a heading ends in a full stop: "{heading.strip()}". '
                         f"A heading is a name, not a statement",
                     ))
@@ -1844,7 +2005,7 @@ def check_locales(brand_dir: Path, sources: dict) -> list[Finding]:
     if primary and limit and "locales" in sources:
         catalogues: dict[str, set] = {}
         for pattern in sources["locales"]:
-            for path in sorted(root.glob(pattern)):
+            for path in source_paths(root, pattern):
                 try:
                     data = json.loads(read(path) or "{}")
                 except json.JSONDecodeError:
@@ -1961,6 +2122,7 @@ def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     sources = load_sources(brand_dir)
     findings: list[Finding] = []
     findings.extend(check_contract(brand_dir))
+    findings.extend(check_source_coverage(brand_dir, sources))
     findings.extend(check_terminology(brand_dir))
     findings.extend(check_consistency(brand_dir, sources))
     findings.extend(check_facts(brand_dir, sources))
@@ -1997,11 +2159,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fix", action="store_true")
     parser.add_argument("--brief", action="store_true")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--fail-on", action="append", default=[], metavar="CODE",
+                        help="make selected warning codes block (repeat or comma-separate)")
     parser.add_argument(
         "--strict", action="store_true",
         help="let warnings fail the run too (same meaning as ux_lint.py --strict)",
     )
     args = parser.parse_args(argv)
+    fail_on = {code.strip() for value in args.fail_on for code in value.split(",")}
+    if fail_on - WARNING_CODES:
+        parser.error("--fail-on expects a warning code: " + ", ".join(sorted(WARNING_CODES)))
 
     brand_dir = Path(args.path)
     if not brand_dir.is_dir():
@@ -2020,7 +2187,7 @@ def main(argv: list[str] | None = None) -> int:
     # A warning is advice about a judgement a person still has to make -- an
     # unregistered string, a fact past review, a label naming no outcome. It
     # blocks only when the caller asks, which is what `--strict` is for.
-    return 1 if (args.strict and findings) else 0
+    return 1 if ((args.strict and findings) or any(f.code in fail_on for f in findings)) else 0
 
 
 if __name__ == "__main__":

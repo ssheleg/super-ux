@@ -39,7 +39,7 @@ MARKER = "Contract: brand-contract v1"
 TODAY = datetime.date.today().isoformat()
 
 MINIMAL = {
-    "README.md": MARKER + "\n\nSources:\n  ui: src/**/*.ts\n",
+    "README.md": MARKER + "\n\nSources:\n  ui: docs/brand/strings.md\n",
     "voice.md": (
         MARKER + "\n"
         "Voice pack: operator-brief\n"
@@ -93,6 +93,11 @@ def case(name: str, files: dict, expect: set, project: dict | None = None) -> No
         root = Path(tmp)
         brand = root / "docs" / "brand"
         brand.mkdir(parents=True)
+        # Fixtures that declare TypeScript sources need an actual source. The
+        # empty-source error has separate negative fixtures; avoid testing it
+        # incidentally in every unrelated brand-code case.
+        (root / "src").mkdir()
+        (root / "src/fixture.ts").write_text("// fixture source\n")
         for rel, body in files.items():
             target = brand / rel
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -208,6 +213,9 @@ def fix_idempotent() -> None:
 
 def main() -> int:
     case("clean minimal base", MINIMAL, set())
+    case("B009 refuses an empty declared source glob",
+         {**MINIMAL, "README.md": MARKER + "\nSources:\n  marketing: absent/**/*.html\n"},
+         {"B009"})
 
     case(
         "no Sources block",
@@ -1039,9 +1047,9 @@ def main() -> int:
         set(), project={"src/a.ts": "Saving…\n"},
     )
     case(
-        "B026 silent on a multi-sentence label, which is prose in a bad place",
+        "B026 catches a multi-sentence label too",
         {**MINIMAL, "strings.md": registry("| title.welcome | Welcome. Let us begin. | src/a.ts:1 | SCN-001 | agreed |\n")},
-        set(), project={"src/a.ts": "Welcome. Let us begin.\n"},
+        {"B026"}, project={"src/a.ts": "Welcome. Let us begin.\n"},
     )
 
     # A source file is not prose: comments and identifiers are addressed to a
