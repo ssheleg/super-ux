@@ -1,3 +1,12 @@
+## 0.58.3 — copywriting answers "video hook", not every hook
+
+0.57.0 taught `copywriting` short-video hooks and advertised the bare trigger
+"hook" / "хук". A router that selects on that word would also take every git
+hook and every Claude Code hook — the umbrella's selector could not route it
+and had to declare it unreachable. The advertised trigger is now
+"video hook" / "хук ролика": specific enough to route, and still the phrase a
+person asks with. Nothing else in the skill changed.
+
 ## 0.58.2 — RuStore's own pages disagree on the name, and the listing now says so
 
 0.58.1 read RuStore's help through a page summary, and RuStore's help is a

@@ -8,6 +8,12 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-08 — the hook trigger names video, v0.58.3
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| VH-1 | `copywriting` advertises "video hook" / "хук ролика" instead of "hook" / "хук" | description re-read: one occurrence replaced, 769 characters; the umbrella's trigger test that declared the bare word unreachable is the consumer | **observed** |
+
 ## 2026-10-07 — RuStore and Horizon re-read from the rendered pages, v0.58.2
 
 | REQ | What ships | How it was confirmed | Confirmed |
