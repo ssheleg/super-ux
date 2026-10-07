@@ -1,6 +1,6 @@
-# Store listings: App Store and Google Play
+# Store listings: App Store, Google Play, RuStore and Meta Horizon
 
-Field limits, indexing rules and craft for the two store surfaces. Field
+Field limits, indexing rules and craft for the store surfaces. Field
 values live in the project's `channels.md`; the limits below are what the
 platforms enforce, and `B040` checks copy against them with the locale's
 length coefficient applied.
@@ -17,20 +17,35 @@ length coefficient applied.
 - [Localization](#localization)
 
 
-*Platform limits checked 2026-08-05. Both stores change them; re-verify
-before a listing rewrite rather than trusting this table.*
+*Platform limits checked 2026-10-07 against each store's own page (sources
+under the table). Stores change them; re-verify before a listing rewrite
+rather than trusting this table.*
 
 ## Field limits
 
-| Field | App Store | Google Play |
-|---|---|---|
-| Title | 30 | 50 |
-| Subtitle | 30 | — |
-| Short description | — | 80 |
-| Keyword field | 100 | — |
-| Promotional text | 170 | — |
-| Full description | 4000 | 4000 |
-| What's new | 4000 | 500 |
+| Field | App Store | Google Play | RuStore | Meta Horizon |
+|---|---|---|---|---|
+| Title | 30 | 30 | 30 | 40 |
+| Subtitle | 30 | — | — | — |
+| Short description | — | 80 | 80 | 500 |
+| Keyword field | 100 | — | 5 search tags | — |
+| Promotional text | 170 | — | — | — |
+| Full description | 4000 | 4000 | 4000 | 1500 |
+| What's new | 4000 | 500 | not stated | — |
+
+Sources, read 2026-10-07:
+[Google Play metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842)
+("Your app title must be 30 characters or less" — an earlier version of this
+table said 50);
+[RuStore app publication](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/app-publication)
+(name "не более 30 символов", short "до 80", full "до 4000", "до 5 поисковых
+тегов"; no What's new limit stated);
+[the RuStore team on listing design](https://habr.com/ru/companies/vk/articles/772844/)
+(2023-11-09: a name claiming superiority over other products, "Лучшее
+приложение в RuStore" or "Игра №1 в RuStore", may not pass moderation — a
+team article, not the policy page);
+[Meta Horizon app metadata](https://developers.meta.com/horizon/resources/publish-app-metadata/)
+(Name 40, Short description 500, Long description 1500; page updated 2025-08-20).
 
 Two structural differences that change how each is written:
 
@@ -48,8 +63,11 @@ Two structural differences that change how each is written:
 
 - **No space after commas.** `task,todo,planner`, because each space is a
   character bought for nothing.
-- **No plurals.** Both forms are matched from the singular; `reminders` costs
-  a character for no reach.
+- **No plurals — in English.** Both English forms are matched from the
+  singular; `reminders` costs a character for no reach. Matching of inflected
+  forms in other languages (Russian cases and numbers, for one) is not
+  documented by the store: check a form in the store's own search before
+  dropping it, rather than assuming the English rule carries over.
 - **Nothing already in the title or subtitle.** Those are indexed at higher
   weight; repeating them here spends the field twice.
 - **No competitor brand names.** Not a style preference: it is grounds for
