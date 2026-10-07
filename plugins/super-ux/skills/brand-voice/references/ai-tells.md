@@ -16,12 +16,12 @@ destroys meaning while improving rhythm.
 - [What "human" is not](#what-human-is-not)
 
 
-Used by the `Humanize` mode of `copywriting` and by `B060`, `B062` and `B063`
-in `brand_lint.py`. Voice, once the generic is gone, comes from
+Used by the `Humanize` mode of `copywriting` and by `B060`, `B062`, `B063`
+and `B066` in `brand_lint.py`. Voice, once the generic is gone, comes from
 [voice-packs.md](voice-packs.md) via the project's `voice.md`.
 
 Every marker carries an id. A rule set that cannot be enumerated cannot have
-coverage computed over it, and three of these are now mechanical checks whose
+coverage computed over it, and four of these are now mechanical checks whose
 ids are how the linter and the doctrine stay pointed at the same thing.
 
 ## Severity
@@ -74,6 +74,7 @@ policy**, not an AI-tell: a word the brand forbids is the brand's decision, in
 | AT-13 | The colon hook | S2 | judgement |
 | AT-14 | Symmetrical headings | S3 | judgement |
 | AT-15 | Over-signposting | S3 | judgement |
+| AT-16 | Invisible characters | S2 | `B066` |
 
 ### AT-01. Vocabulary, S1
 
@@ -209,6 +210,55 @@ Every heading the same grammatical shape and roughly the same length.
 
 "First, let's look at…", "Now that we've covered…", "Let's dive into…".
 Structure the reader can see does not need narrating.
+
+### AT-16. Invisible characters, S2
+
+Zero-width spaces and joiners, a word joiner, a byte-order mark in mid-text, a
+soft hyphen, direction marks and overrides, tag characters, and the
+look-alike spaces (no-break, narrow no-break, thin, figure, em and en space).
+They render as nothing or as an ordinary space, survive every paste, and break
+search, hyphenation and exact-match checks downstream; text pasted out of a
+chat window often carries them. **A fingerprint of the pipeline, not proof of
+authorship**, so S2 and advisory: `B066` warns, names the code point and its
+line, and rewrites nothing.
+
+The eighteen named classes are the ones the humanizer in
+`Jakeschincariol/instagram-agent-skill` strips
+([`skills/ig-human/slop.json`](https://github.com/Jakeschincariol/instagram-agent-skill/blob/d03c56bb598be770c60b201f94237e5d1a4268a6/skills/ig-human/slop.json),
+MIT, read 2026-10-07): U+200B, U+200C, U+200D, U+2060, U+FEFF, U+00AD,
+U+180E, U+061C, U+200E, U+200F, U+2063, the tag block U+E0000–U+E007F, and
+U+00A0, U+202F, U+2009, U+2007, U+2003, U+2002. Any other Unicode format
+character (category `Cf`: bidi embeddings, overrides and isolates among them)
+is reported by the same check.
+
+**What this marker does not take from that humanizer:** its typography pass,
+which turns an em dash into a comma, an en dash into a hyphen and curly quotes
+into straight ones. In Russian the dash is normative and «ёлочки» are the
+quotation marks; the rhetorical dash is AT-06, which knows the difference.
+
+Every class has a context where it is correct, and those contexts are numbered
+so that each has a fixture asserting silence:
+
+- **`AT-16-E1`** A zero-width joiner inside an emoji sequence: it is part of
+  the emoji (a family emoji is three people joined by two of them).
+- **`AT-16-E2`** A joiner or non-joiner beside a letter of a script that spells
+  with it: Persian, Arabic, the Indic scripts.
+- **`AT-16-E3`** A direction mark or isolate in text that carries
+  right-to-left letters. Embeddings and overrides (U+202A–U+202E) stay
+  reported even there: isolates replaced them, and an override is the
+  mechanism of the "Trojan Source" attack.
+- **`AT-16-E4`** Tag characters inside a flag sequence (🏴 plus tags plus
+  U+E007F, as in the flag of England).
+- **`AT-16-E5`** A no-break or narrow space in a locale whose typography puts
+  one there: Russian, Ukrainian, Belarusian, French (from the document's
+  `locale`, the pack's primary locale, or Cyrillic in the text).
+- **`AT-16-E6`** Dashes and quotation marks: never examined by this marker, in
+  any language.
+- **`AT-16-E7`** A byte-order mark as the first character of a file: the
+  file's encoding signature, not text.
+
+`B066` reads the raw source files, so an HTML entity such as `&nbsp;`, which
+someone typed on purpose, is not reported; a literal character is.
 
 ## The dash rule in full
 

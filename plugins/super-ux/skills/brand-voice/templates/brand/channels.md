@@ -103,10 +103,32 @@ Locales:    <coefficient applies to both limits>
 Register:   density +1, distance -1
 Format:     one idea; threads 5-12 posts, each standing alone
 Limits:     280
-Forbidden:  physics: link in body suppresses reach; >2 hashtags penalised;
-            editing within 30 minutes resets distribution
-            | brand: <engagement bait, fake urgency>
+Forbidden:  physics: link in body (practice; unverified in the open ranker) | brand: <engagement bait, fake urgency>
 CTA:        <in the first reply, not the post>
+Proof:      <one figure, sourced>
+Locales:    <…>
+```
+
+### Instagram
+
+```
+Register:   distance -1
+Format:     a caption; the first line is the window the feed shows
+Limits:     body 2200
+Forbidden:  physics: link in body, max 5 hashtags, fold 125, one ask | brand: <engagement bait>
+CTA:        one, spoken in the video as well
+Proof:      <one figure, sourced>
+Locales:    <…>
+```
+
+### short video
+
+```
+Register:   distance -1, density +1
+Format:     hook triple (frame 0, on-screen text, first line), body, one ask
+Limits:     <running time; Russian and other locales timed by reading aloud>
+Forbidden:  physics: none | brand: <fabricated testimonials, unlabelled synthetic people>
+CTA:        one, or a loop back to the first line
 Proof:      <one figure, sourced>
 Locales:    <…>
 ```
@@ -125,5 +147,5 @@ Locales:    <…>
 ```
 
 <add the remaining marketing surfaces this product uses: landing body,
-pricing, blog, changelog, LinkedIn, HN and Product Hunt, App Store,
-Google Play, ads, lifecycle email>
+pricing, blog, changelog, TikTok, YouTube Shorts, LinkedIn, HN and Product
+Hunt, App Store, Google Play, ads, lifecycle email>

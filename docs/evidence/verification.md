@@ -8,6 +8,24 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-07 — short video, hooks and captions, v0.57.0
+
+From the family's 2026-10-07 short-video plan, tasks C1–C8.
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| SV-C1 | `channel-playbooks.md` `## Instagram` and `## Short video`, every rule with a source URL and a checked date | `validate_short_video_shelf`: the Skip Rate bullet's only link removed, refused with "rule has no source URL" | **planted** |
+| SV-C2 | `video-script.md`: angle, modular anatomy, ten ad structures, English words per second, shot list, gates G2–G4; Russian timed by reading aloud, no coefficient | a `Words (RU, −15%)` column planted, refused; fixture "a short-video script written to the reference lints clean" | **planted** |
+| SV-C3 | `hooks.md`: mechanics, the triple, taxonomy, HF-01..26, HT-01..40, each template sourced | HT-17's URL removed and HF-26 renumbered, each refused | **planted** |
+| SV-C4 | `B044` hook filter, 0.6 × mean + 0.4 × min − 15 per dealbreaker, AUC caveat in the row | greeting dealbreaker deleted, WEAK branch deleted, weights changed to 1.0/0.0: each failed its fixture; unit checks assert WHICH branch fired | **planted** |
+| SV-C5 | `B066` / AT-16: 18 named classes, catch-all `Cf`, exemptions AT-16-E1..E7, dashes and quotes never examined | one fixture per class; E1, E2, E4, E5, E7 removed, E3 widened to overrides, catch-all deleted: each failed | **planted** |
+| SV-C6 | `research-outliers.md` method and worked example | a multiple edited (3.4 → 3.9) and a reading edited (between → signal), each refused by the recompute | **planted** |
+| SV-C7 | `B045` feed window, `B046` one ask; `B042`, `B043` on Instagram physics | mention-opener, long-line and zero-ask branches removed, each failed; the tag-in-window plant first stayed GREEN because its fixture opened with `#` and the opener branch answered, so the fixture was rewritten and re-planted | **planted** |
+| SV-C8 | X re-read against `xai-org/x-algorithm@e62790c99484` | weights and the 48-hour filter read from `param.rs` and README via `gh api` on 2026-10-07; the bookmark claim re-added as a rule, refused | **planted** |
+| Gate | The whole suite on this tree | `npm test` and each CI step run alone, exit codes read | **observed** |
+
+**Rows at `never`: 0 in this section.**
+
 ## 2026-10-01 — semantic display-copy guards, v0.56.3
 
 | REQ | What ships | How it was confirmed | Confirmed |

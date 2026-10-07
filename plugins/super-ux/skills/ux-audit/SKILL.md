@@ -291,4 +291,4 @@ disagree. Off by default; offer it when the tooling is present.
 - Report on disk, summary honest, base statuses updated.
 - Findings offered to planning; nothing swallowed.
 
-**What else is in `references/`.** This skill names 8 contract(s) directly; `references/` holds 21, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.
+**What else is in `references/`.** This skill names 8 contract(s) directly; `references/` holds 24, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.

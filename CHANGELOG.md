@@ -1,3 +1,57 @@
+## 0.57.0 — short video gets a playbook, a hook filter and a caption linter
+
+`copywriting` covered posts for X, Reddit and LinkedIn and nothing that moves:
+no Reels, Shorts or TikTok physics, no hook, no script, no caption rules, and
+an X playbook asserting two ranking rules the open ranker does not contain.
+This release fills that from the family's 2026-10-07 research, every rule with
+its source and the date it was read.
+
+- **Three new references, linked from `copywriting`.** `video-script.md`: the
+  angle in one sentence, the modular hook, body and ask, six organic and ten
+  ad structures, words per second for English, the shot list, gates G2–G4,
+  reading the retention chart. **Russian timing is measured by reading aloud,
+  and the file carries no coefficient**: the research proposed one as its
+  author's assumption, and a table would have made it a rule nobody re-measures.
+  `hooks.md`: the mechanics (frame 0, text by about 0.5 s, works muted, the body
+  pays), the triple (frame 0, on-screen text of ten words or fewer, first line),
+  a taxonomy, 26 formulas and 40 templates, each template with its source.
+  `research-outliers.md`: views ÷ the account's median, 3× a signal, under 1.5×
+  noise, a sample within 10× of your size, with a worked example.
+- **`channel-playbooks.md`.** New `Instagram` (the 125-character feed window,
+  five hashtags since 2025-12-18, links that do not click, one ask, sends as
+  the signal for non-followers) and `Short video` (platform signals, originality,
+  AI labelling, safe zones, length, pace, the loop, trial reels). **X is re-read
+  against `xai-org/x-algorithm@e62790c`**: the published weights (share via
+  copy link 20, reply, quote and share via DM 5, a reply from a mutual follow
+  +15, follow 4, like 0.5, report −234, mute −58.8) and the 48-hour window are
+  in; "bookmarks weigh heavily" and "more than two hashtags is penalised" are
+  out, because neither is in the ranker; link suppression stays as practice,
+  marked unverified. The seeded `channels.md` X record no longer carries them.
+- **Four new codes, 42 → 46.** `B044` filters short-video hooks: five checks,
+  0.6 × mean + 0.4 × minimum, −15 per dealbreaker, and on-screen text over ten
+  words. It is a filter, not a predictor, and its row says so in numbers (AUC
+  0.83 at catching a bad hook, 0.56 at picking a winner); a hook in Cyrillic is
+  not scored against English vocabulary. `B045` and `B046` read two new
+  physics tokens, `fold N` and `one ask`. `B066` is the new marker AT-16:
+  invisible and look-alike-space characters, eighteen named classes plus any
+  other format character, seven numbered exemptions with a fixture each, and
+  it never examines a dash or a quotation mark. `B030` now reads the `hook` and
+  `on-screen` fields as public copy. `B042`'s message no longer assumes every
+  surface's reason is reach.
+- **New surfaces:** `Instagram`, `TikTok`, `YouTube Shorts` and `short video`.
+- **A gate for the shelf itself.** `validate_short_video_shelf` counts HF-01..26
+  and HT-01..40, refuses a template without a source URL, a short-video or
+  Instagram rule without one, the two removed X claims coming back, and
+  recomputes every multiple and reading in the outlier example. Each was
+  watched failing on a planted defect.
+- Because `channel-playbooks.md` links the three new files, the closure ships
+  them inside `brand-voice` (13) and `ux-audit` (24) as well; their reference
+  sentences were recounted from the tree.
+- Provenance: the 26 formula names, the scoring arithmetic, the dealbreakers,
+  the caption mechanics, the outlier method and the eighteen character classes
+  come from `Jakeschincariol/instagram-agent-skill` at `d03c56b` (MIT); shapes,
+  examples, word lists and code are rewritten and no text is reproduced.
+
 ## 0.56.3 — check the heading the reader sees
 
 The no-title-period rule already existed, but its linter read Markdown headings

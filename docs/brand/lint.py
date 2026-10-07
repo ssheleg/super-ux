@@ -81,7 +81,7 @@ STRING_KINDS = ("copy", "layout")
 
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
-WARNING_CODES = set("B003 B005 B007 B022 B025 B026 B031 B043 B051 B053 B054 B060 B063 B064 B071 B072".split())
+WARNING_CODES = set("B003 B005 B007 B022 B025 B026 B031 B043 B044 B045 B046 B051 B053 B054 B060 B063 B064 B066 B071 B072".split())
 
 Finding = namedtuple("Finding", "code severity path line message")
 
@@ -1369,7 +1369,13 @@ def check_facts(brand_dir: Path, sources: dict) -> list[Finding]:
                 f"`{row['fact']}` was due for review on {row['review']}",
             ))
 
-    for path, _fields, body in documents(brand_dir, sources, "marketing"):
+    for path, fields, body in documents(brand_dir, sources, "marketing"):
+        # A short-video hook is the first public sentence anyone hears, so its
+        # figure needs a row exactly as a body figure does (video-script.md).
+        spoken = [v for k, v in fields.items()
+                  if HOOK_FIELD_RE.match(k) or re.match(r"^on-screen(?:-\d+)?$", k)]
+        if spoken:
+            body = body + "\n\n" + "\n\n".join(spoken)
         for m in NUMBER_RE.finditer(body):
             number = m.group(0)
             digits = re.sub(r"\s+", "", number)
@@ -1461,9 +1467,23 @@ def check_channels(brand_dir: Path, sources: dict) -> list[Finding]:
             if "link in body" in physics and re.search(r"https?://", body):
                 findings.append(Finding(
                     "B042", SEVERITY_ERROR, path, 0,
-                    "link in the post body -- this surface suppresses reach "
-                    "for it; the convention is the first reply",
+                    "link in the post body, which this surface's physics "
+                    "forbid -- it suppresses reach or does not click there; "
+                    "put it where channels.md says (first reply, bio, DM)",
                 ))
+            fold = re.search(r"fold (\d+)", physics)
+            if fold:
+                findings.extend(_feed_window(path, body, int(fold.group(1))))
+            if "one ask" in physics:
+                asks = caption_asks(body)
+                if len(asks) != 1:
+                    findings.append(Finding(
+                        "B046", SEVERITY_WARN, path, 0,
+                        (f"{len(asks)} asks ({', '.join(asks)}) -- two asks "
+                         f"split one reader's single action" if asks else
+                         "no ask -- decide what this post is for and ask for "
+                         "that one thing"),
+                    ))
             cap = re.search(r"max (\d+) hashtags", physics)
             if cap:
                 used = re.findall(r"(?<!\w)#\w+", body)
@@ -1477,6 +1497,236 @@ def check_channels(brand_dir: Path, sources: dict) -> list[Finding]:
             keywords = fields.get("keywords")
             if keywords is not None:
                 findings.extend(_ios_keywords(path, fields, keywords))
+    return findings
+
+
+# B045 -- the feed window. Instagram shows roughly the first 125 characters of
+# a caption before "... more", so the first line either fits the window or is
+# cut mid-thought, and a tag or a mention spent there is a hook not written.
+# The window size is declared per surface (`fold N`) because it is platform
+# physics that moves, and the number belongs in channels.md, not in this file.
+# Method: `skills/ig-caption/caption.py` in Jakeschincariol/instagram-agent-skill
+# @d03c56b (MIT), re-implemented here; see channel-playbooks.md#instagram.
+HASHTAG_TOKEN_RE = re.compile(r"(?<![\w&])#\w+")
+
+
+def _feed_window(path: str, body: str, fold: int) -> list[Finding]:
+    text = body.strip()
+    if not text:
+        return []
+    first = text.splitlines()[0].strip()
+    window = text[:fold]
+    reasons = []
+    if first[:1] in ("#", "@"):
+        reasons.append(f"it opens with `{first.split()[0]}`")
+    if HASHTAG_TOKEN_RE.search(window) and first[:1] != "#":
+        reasons.append("a hashtag sits inside the window")
+    if len(first) > fold:
+        reasons.append(f"the first line is {len(first)} characters and the "
+                       f"feed cuts it at {fold}")
+    if not reasons:
+        return []
+    shown = window.split("\n")[0] if len(first) > fold else first
+    return [Finding(
+        "B045", SEVERITY_WARN, path, 0,
+        f"the feed window ({fold} characters before \"... more\"): "
+        f"{'; '.join(reasons)}. The feed shows: \"{shown[:fold]}\"",
+    )]
+
+
+# B046 -- one ask per post. Patterns are the asks a caption actually makes;
+# a question mark alone is not an ask, because most captions ask nothing by
+# asking a rhetorical question. English after caption.py's eight (re-written),
+# Russian as their direct equivalents.
+CAPTION_ASKS = (
+    (re.compile(r"(?i)\bcomment (?:the word )?[\"']?[A-Z0-9]{2,}\b"), "comment a keyword"),
+    (re.compile(r"(?i)\b(?:dm|message) (?:me|us)\b"), "DM"),
+    (re.compile(r"(?i)\bsave (?:this|it)\b"), "save this"),
+    (re.compile(r"(?i)\b(?:share|send) (?:this|it)\b"), "share this"),
+    (re.compile(r"(?i)\bfollow (?:me|us|for)\b"), "follow"),
+    (re.compile(r"(?i)\blink in (?:my |our |the )?bio\b"), "link in bio"),
+    (re.compile(r"(?i)\b(?:swipe|tap) (?:through|left|right|for|to)\b"), "swipe or tap"),
+    (re.compile(r"(?i)\btell me\b|\bwhat would you\b|\bwhich one\b"), "answer a question"),
+    (re.compile(r"(?i)напиши(?:те)? в комментари|коммент(?:арий)? [А-ЯЁA-Z0-9]{2,}"), "comment a keyword"),
+    (re.compile(r"(?i)напиши(?:те)? (?:мне|нам) в (?:директ|личку|лс)"), "DM"),
+    (re.compile(r"(?i)\bсохрани(?:те)?\b"), "save this"),
+    (re.compile(r"(?i)\b(?:отправь|отправьте|перешли|перешлите)\b"), "share this"),
+    (re.compile(r"(?i)\bподпиши(?:сь|тесь)\b"), "follow"),
+    (re.compile(r"(?i)ссылк[аиу] в (?:профиле|шапке|био)"), "link in bio"),
+)
+
+
+def caption_asks(body: str) -> list[str]:
+    """The asks a caption makes, one entry per distinct kind."""
+    return [name for pattern, name in CAPTION_ASKS if pattern.search(body)]
+
+
+# B044 -- the hook filter. A FILTER, never a predictor, and the reference says
+# so in numbers: on its author's corpus of 74 real short-form hooks the method
+# separates written-to-be-bad hooks from real ones at AUC 0.83 and a creator's
+# hits from the same creator's misses at AUC 0.56, where 0.50 is a coin. So
+# B044 warns on what it catches well (greetings, preambles, a line with
+# nothing concrete or nothing at stake) and never ranks two decent hooks.
+#
+# Method and arithmetic: `skills/ig-reel/hookscore.py` in
+# Jakeschincariol/instagram-agent-skill @d03c56b (MIT) -- five checks 0..100,
+# overall = 0.6 * mean + 0.4 * min - 15 per dealbreaker, STRONG at >= 70 with
+# no check under 55 and no dealbreaker, WEAK under 50. The vocabularies below
+# are this file's own and shorter, so a score can differ by a few points from
+# the original's. They are English, so a hook in another script is not scored
+# at all; only the two script-independent dealbreakers apply to it.
+HOOK_WORD_RE = re.compile(r"[A-Za-z0-9$%'’-]+")
+HOOK_FIGURE_RE = re.compile(
+    r"[$€£]\s?\d[\d,]*(?:\.\d+)?"
+    r"|\b\d[\d,]*(?:\.\d+)?\s?(?:%|k\b|x\b|hours?\b|hrs?\b|minutes?\b|mins?\b"
+    r"|days?\b|weeks?\b|months?\b|years?\b)?",
+    re.I,
+)
+HOOK_PROPER_RE = re.compile(r"(?<!^)\b[A-Z][a-z]{2,}\b")
+HOOK_SPOKEN_FIGURES = {
+    "zero", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    "ten", "twelve", "twenty", "thirty", "fifty", "hundred", "thousand",
+    "million", "billion", "dozen", "half", "twice", "triple",
+    "dollars", "dollar", "bucks", "grand", "percent", "revenue", "salary",
+    "profit", "rent",
+}
+HOOK_STAKES = {
+    "stop", "never", "wrong", "mistake", "mistakes", "lose", "lost", "losing",
+    "cost", "costs", "broke", "failed", "fail", "nobody", "no", "not", "don't",
+    "can't", "won't", "didn't", "quit", "fired", "deleted", "killed",
+    "replaced", "cut", "free", "paid", "saved", "banned", "worst", "hate",
+    "wasted", "waste", "scam", "lied", "truth", "secret", "hidden", "before",
+    "until", "instead", "but", "unless", "problem", "risk", "warning",
+    "regret", "only", "without", "versus", "vs", "actually", "forgot",
+}
+HOOK_WEAK_OPENERS = (
+    "so", "ok", "okay", "hey", "hi", "hello", "guys", "welcome", "today",
+    "basically", "honestly", "just", "let's", "lets", "um", "i wanted",
+    "i want", "have you", "do you", "did you", "are you", "in this",
+    "in today", "this is", "there is", "there are", "it is", "you know",
+)
+HOOK_IMPERATIVES = {
+    "stop", "steal", "copy", "delete", "try", "watch", "read", "save", "use",
+    "build", "make", "write", "send", "start", "quit", "never", "always",
+    "don't", "check", "cancel",
+}
+HOOK_EMOJI_RE = re.compile("[\U0001F300-\U0001FAFF☀-➿]")
+HOOK_DEALBREAKERS = (
+    ("stop-scrolling", re.compile(r"(?i)^\s*(?:stop scrolling|don'?t scroll)")),
+    ("preamble", re.compile(r"(?i)\b(?:in (?:this|today'?s) (?:video|reel)"
+                            r"|i'?m going to show you|i'?ll show you how)\b")),
+    ("greeting", re.compile(r"(?i)^\s*(?:hey|hi|hello|what'?s up|welcome)\b")),
+    ("hashtag", re.compile(r"(?:^|\s)#\w+")),
+    ("emoji", HOOK_EMOJI_RE),
+)
+# Applied to a hook in any script: neither depends on the vocabulary.
+SCRIPT_INDEPENDENT_DEALBREAKERS = ("hashtag", "emoji")
+
+
+def _hook_words(text: str) -> list[str]:
+    return HOOK_WORD_RE.findall(re.sub(r"(?<=\d),(?=\d)", "", text))
+
+
+def hook_score(text: str) -> dict:
+    """Score one spoken hook. `verdict` is None for a hook not in Latin script.
+
+    Returns {score, verdict, checks: {LENGTH, SPECIFICITY, STAKES, FRONTLOAD,
+    ADDRESS}, flags: [dealbreaker ids]}.
+    """
+    flags = [name for name, pattern in HOOK_DEALBREAKERS if pattern.search(text)]
+    if CYRILLIC_RE.search(text) or not re.search(r"[A-Za-z]", text):
+        return {"score": None, "verdict": None, "checks": {},
+                "flags": [f for f in flags if f in SCRIPT_INDEPENDENT_DEALBREAKERS]}
+    words = _hook_words(text)
+    low = [w.lower().strip("'’") for w in words]
+
+    n = len(words)
+    length = 100.0 if 5 <= n <= 12 else (100 - (5 - n) * 20 if n < 5
+                                         else 100 - (n - 12) * 11)
+    if len(text.strip()) > 60:  # two lines of large on-screen text
+        length -= 12
+
+    figures = [m for m in HOOK_FIGURE_RE.findall(text) if m.strip()]
+    hits = len(figures) + len(set(HOOK_PROPER_RE.findall(text))) \
+        + sum(1 for w in low if w in HOOK_SPOKEN_FIGURES)
+    specificity = 15.0 if hits == 0 else 45 + 30 * hits
+
+    markers = set(w for w in low if w in HOOK_STAKES)
+    if re.search(r"[$€£]\s?\d", text):
+        markers.add("a price")
+    stakes = {0: 20.0, 1: 70.0}.get(len(markers), 100.0)
+
+    opener = " ".join(low[:2])
+    penalty = 30 if any(opener.startswith(w) or (low and low[0] == w)
+                        for w in HOOK_WEAK_OPENERS) else 0
+    payload = next((i for i, w in enumerate(low)
+                    if w in HOOK_STAKES or w in HOOK_SPOKEN_FIGURES
+                    or HOOK_FIGURE_RE.match(words[i])
+                    or (i and HOOK_PROPER_RE.match(words[i]))), None)
+    frontload = (30.0 if payload is None else 100.0 if payload <= 3
+                 else 70.0 if payload <= 6 else 40.0) - penalty
+
+    lowered = text.lower()
+    if re.search(r"\b(?:you|your|you're|yourself)\b", lowered):
+        address = 100.0
+    elif low and low[0] in HOOK_IMPERATIVES:
+        address = 90.0
+    elif re.search(r"\b(?:i|my|me|we|our)\b", lowered):
+        address = 70.0
+    else:
+        address = 35.0
+
+    clamp = lambda v: max(0.0, min(100.0, float(v)))  # noqa: E731
+    checks = {"LENGTH": clamp(length), "SPECIFICITY": clamp(specificity),
+              "STAKES": clamp(stakes), "FRONTLOAD": clamp(frontload),
+              "ADDRESS": clamp(address)}
+    parts = list(checks.values())
+    score = clamp(0.6 * sum(parts) / len(parts) + 0.4 * min(parts)
+                  - 15 * len(flags))
+    verdict = ("STRONG" if score >= 70 and min(parts) >= 55 and not flags
+               else "OK" if score >= 50 else "WEAK")
+    return {"score": score, "verdict": verdict, "checks": checks, "flags": flags}
+
+
+HOOK_FIELD_RE = re.compile(r"^hook(?:-\d+)?$")
+ON_SCREEN_LIMIT = 10
+
+
+def check_short_video(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B044 -- every `hook` / `hook-N` field, and its on-screen companion."""
+    findings: list[Finding] = []
+    for key in ("marketing", "store"):
+        for path, fields, _body in documents(brand_dir, sources, key):
+            for name in sorted(f for f in fields if HOOK_FIELD_RE.match(f)):
+                hook = fields[name]
+                if not hook:
+                    continue
+                got = hook_score(hook)
+                reasons = []
+                if got["verdict"] == "WEAK":
+                    weakest = min(got["checks"], key=got["checks"].get)
+                    reasons.append(f"scores {got['score']:.0f} (WEAK); weakest "
+                                   f"check {weakest} at "
+                                   f"{got['checks'][weakest]:.0f}")
+                if got["flags"]:
+                    reasons.append(f"dealbreaker(s): {', '.join(got['flags'])}")
+                if reasons:
+                    findings.append(Finding(
+                        "B044", SEVERITY_WARN, path, 0,
+                        f"`{name}`: \"{hook}\" {'; '.join(reasons)}. A filter, "
+                        f"not a predictor: AUC 0.83 at catching a bad hook, "
+                        f"0.56 at picking a winner (hooks.md)",
+                    ))
+            for name in sorted(f for f in fields
+                               if re.match(r"^on-screen(?:-\d+)?$", f)):
+                words = fields[name].split()
+                if len(words) > ON_SCREEN_LIMIT:
+                    findings.append(Finding(
+                        "B044", SEVERITY_WARN, path, 0,
+                        f"`{name}` is {len(words)} words; on-screen hook text "
+                        f"is read in about half a second, {ON_SCREEN_LIMIT} "
+                        f"words at most (hooks.md)",
+                    ))
     return findings
 
 
@@ -1998,6 +2248,141 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
     return findings
 
 
+# AT-16 / B066 -- invisible and look-alike-space characters. They render as
+# nothing or as an ordinary space, survive every paste, and break search,
+# hyphenation and exact-match checks downstream. The eighteen named classes
+# are the ones the humanizer in Jakeschincariol/instagram-agent-skill @d03c56b
+# strips (`skills/ig-human/slop.json`); any other Unicode format character
+# (category Cf -- bidi embeddings, overrides and isolates among them) is
+# reported by the catch-all. This check REPORTS; it does not rewrite, because
+# every class below has a context where it is correct, and those contexts are
+# the numbered exemptions in ai-tells.md (AT-16-E1..E7).
+#
+# What it deliberately does NOT port from that humanizer: the typography pass
+# that turns an em dash into ", ", an en dash into "-" and curly quotes into
+# straight ones. In Russian the dash is normative and «ёлочки» are the
+# quotation marks; a rule that rewrote them would make correct text wrong.
+# The rhetorical dash is AT-06 / B062, which knows the difference.
+import unicodedata  # noqa: E402
+
+INVISIBLE_NAMED = {
+    0x200B: "zero-width", 0x200C: "zero-width", 0x200D: "zero-width",
+    0x2060: "zero-width", 0xFEFF: "zero-width", 0x00AD: "zero-width",
+    0x180E: "zero-width", 0x2063: "zero-width",
+    0x061C: "bidi", 0x200E: "bidi", 0x200F: "bidi",
+    0x00A0: "space", 0x202F: "space", 0x2009: "space", 0x2007: "space",
+    0x2003: "space", 0x2002: "space",
+}
+TAG_RANGE = range(0xE0000, 0xE0080)
+BIDI_ISOLATES = range(0x2066, 0x206A)
+RTL_RE = re.compile("[֐-ࣿיִ-﷿ﹰ-ﻼ]")
+# Locales whose own typography puts a no-break or narrow space where a writer
+# means one: «в пятницу», «1 000», « Prix : ». Short on purpose, like
+# COPULA_LOCALES: a wrong entry silences the space class for a whole language.
+TYPOGRAPHIC_SPACE_LOCALES = ("ru", "uk", "be", "fr")
+
+
+def _is_pictograph(char: str) -> bool:
+    cp = ord(char)
+    return (0x1F000 <= cp <= 0x1FAFF or 0x2600 <= cp <= 0x27BF
+            or 0x2300 <= cp <= 0x23FF or cp == 0xFE0F)
+
+
+def _needs_joiner(char: str) -> bool:
+    """A letter of a script that spells with ZWJ/ZWNJ (Arabic, Persian, Indic…)."""
+    return 0x0590 <= ord(char) < 0x2000 and char.isalpha() \
+        and not CYRILLIC_RE.match(char) and not ("Ͱ" <= char <= "Ͽ")
+
+
+def invisible_chars(text: str, locale: str | None = None) -> list[tuple]:
+    """(index, code point, name, class) for every reportable character.
+
+    Exemptions, numbered in ai-tells.md: E1 a joiner inside an emoji sequence,
+    E2 a joiner beside a letter of a script that needs it, E3 a direction mark
+    or isolate in text that carries right-to-left letters, E4 tag characters
+    inside a flag sequence, E5 typographic spaces in a locale whose typography
+    uses them, E6 dashes and quotation marks (never examined), E7 a byte-order
+    mark opening the file.
+    """
+    rtl = any(c.isalpha() for c in RTL_RE.findall(text))  # letters, not marks
+    spaces_ok = bool(CYRILLIC_RE.search(text)) or (
+        bool(locale) and locale.split("-")[0].lower() in TYPOGRAPHIC_SPACE_LOCALES)
+    hits = []
+    for i, char in enumerate(text):
+        cp = ord(char)
+        if cp in INVISIBLE_NAMED:
+            cls = INVISIBLE_NAMED[cp]
+        elif cp in TAG_RANGE:
+            cls = "tag"
+        elif unicodedata.category(char) == "Cf":
+            cls = "format"
+        else:
+            continue
+        prev = text[i - 1] if i else ""
+        nxt = text[i + 1] if i + 1 < len(text) else ""
+        if cp == 0xFEFF and i == 0:                                  # E7
+            continue
+        if cp == 0x200D and prev and nxt and _is_pictograph(prev) \
+                and _is_pictograph(nxt):                             # E1
+            continue
+        if cp in (0x200C, 0x200D) and ((prev and _needs_joiner(prev))
+                                       or (nxt and _needs_joiner(nxt))):  # E2
+            continue
+        if rtl and (cls == "bidi" or cp in BIDI_ISOLATES):           # E3
+            continue
+        if cls == "tag":                                             # E4
+            start = i
+            while start and ord(text[start - 1]) in TAG_RANGE:
+                start -= 1
+            end = i
+            while end + 1 < len(text) and ord(text[end + 1]) in TAG_RANGE:
+                end += 1
+            if start and text[start - 1] == "\U0001F3F4" and ord(text[end]) == 0xE007F:
+                continue
+        if cls == "space" and spaces_ok:                             # E5
+            continue
+        name = unicodedata.name(char, f"U+{cp:04X}")
+        hits.append((i, cp, name, cls))
+    return hits
+
+
+def check_invisible(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B066 -- AT-16 over every declared copy source, read as raw text.
+
+    Raw on purpose: a literal character is what travels into a paste, while
+    an HTML entity such as `&nbsp;` is markup someone typed deliberately and
+    is not reported. One finding per file and class, at the first line.
+    """
+    findings: list[Finding] = []
+    primary, _ = declared_locales(brand_dir)
+    root = brand_dir.parent.parent
+    seen: set = set()
+    for key in ("ui", "marketing", "store", "locales"):
+        for pattern in sources.get(key, []):
+            for path in source_paths(root, pattern):
+                if path in seen or not path.is_file():
+                    continue
+                seen.add(path)
+                text = read(path) or ""
+                fields, _ = _front_matter(text)
+                hits = invisible_chars(text, fields.get("locale") or primary)
+                grouped: dict = {}
+                for index, cp, name, cls in hits:
+                    grouped.setdefault((cls, cp, name), []).append(index)
+                rel = path.relative_to(root).as_posix()
+                for (cls, cp, name), where in sorted(grouped.items(),
+                                                     key=lambda kv: kv[1][0]):
+                    line = text.count("\n", 0, where[0]) + 1
+                    findings.append(Finding(
+                        "B066", SEVERITY_WARN, rel, line,
+                        f"U+{cp:04X} {name} ({cls} class) x{len(where)} -- "
+                        f"invisible in the editor and carried into every "
+                        f"paste. Remove it, or keep it where ai-tells.md "
+                        f"AT-16 names the context that needs it",
+                    ))
+    return findings
+
+
 def declared_locales(brand_dir: Path) -> tuple[str | None, list[str]]:
     """(primary, others) from voice.md's `Locales:` line."""
     text = read(brand_dir / "voice.md") or ""
@@ -2164,8 +2549,10 @@ def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     findings.extend(check_consistency(brand_dir, sources))
     findings.extend(check_facts(brand_dir, sources))
     findings.extend(check_channels(brand_dir, sources))
+    findings.extend(check_short_video(brand_dir, sources))
     findings.extend(check_bot_safety(brand_dir, sources))
     findings.extend(check_ai_tells(brand_dir, sources))
+    findings.extend(check_invisible(brand_dir, sources))
     findings.extend(check_locales(brand_dir, sources))
     return findings
 

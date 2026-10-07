@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: Use when writing, rewriting or editing any text a user will read — interface strings, buttons, errors, empty states, landing and pricing pages, blog posts, changelogs, social posts, app store listings, ads, lifecycle email. Triggers - "write copy" / "напиши текст", "rewrite this" / "перепиши", "headline" / "заголовок", "CTA" / "кнопка", "post for X" / "пост в твиттер", "store listing" / "описание в сторе", "this sounds like AI" / "звучит как нейросеть", "microcopy" / "микрокопия", "error text" / "текст ошибки", "build a landing page" / "сделай лендинг" (the copy for it; the visual layer is sheleg-design's). For defining the voice itself, see brand-voice.
+description: Use when writing, rewriting or editing any text a user will read — interface strings, buttons, errors, empty states, landing and pricing pages, blog posts, changelogs, social posts and captions, short-video scripts and hooks, app store listings, ads, lifecycle email. Triggers - "write copy" / "напиши текст", "rewrite this" / "перепиши", "headline" / "заголовок", "CTA" / "кнопка", "post for X" / "пост в твиттер", "reel script" / "сценарий рилса", "hook" / "хук", "store listing" / "описание в сторе", "this sounds like AI" / "звучит как нейросеть", "microcopy" / "микрокопия", "error text" / "текст ошибки", "build a landing page" / "сделай лендинг" (the copy for it; the visual layer is sheleg-design's). For defining the voice itself, see brand-voice.
 compatibility: Any agent with file read/write. The closing lint (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
@@ -42,6 +42,9 @@ and facts stay untouched in the same pass.
 | [marketing-copy.md](references/marketing-copy.md) | pages, long form, the seven sweeps, grounding |
 | [landing-pages.md](references/landing-pages.md) | assembling a landing page: the offer, awareness, proof, the action |
 | [channel-playbooks.md](references/channel-playbooks.md) | a social, blog, changelog, ads or email surface |
+| [video-script.md](references/video-script.md) | a reel, short, TikTok or video ad: angle, structure, timing, shot list, gates |
+| [hooks.md](references/hooks.md) | the first three seconds: the triple, 26 formulas, 40 templates, the `B044` filter |
+| [research-outliers.md](references/research-outliers.md) | before a video: which videos beat their own account |
 | [store-copy.md](references/store-copy.md) | App Store or Google Play |
 | [seo-aeo-safety.md](references/seo-aeo-safety.md) | anything a crawler or answer engine reads |
 | [ai-tells.md](references/ai-tells.md) | every mode that produces text: the pass runs by default |
@@ -200,4 +203,4 @@ guards govern the pass wherever it runs, and they are not optional:
 - Anything reported as missing — a term, a fact, a surface — is named
   explicitly, not worked around.
 
-**What else is in `references/`.** This skill names 10 contract(s) directly; `references/` holds 12, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.
+**What else is in `references/`.** This skill names 13 contract(s) directly; `references/` holds 15, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.
