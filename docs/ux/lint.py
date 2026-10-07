@@ -203,6 +203,38 @@ def missing_axes(value: str) -> list[str]:
     return [a for a in AXES if _unfilled(found.get(a, ""))]
 
 
+# The registry format a `screens.md` opted into. Format 2 (0.58.0) makes the
+# screen matrix -- states, axes, stories, a frame for every declared state --
+# a gate; format 1 reports the same findings as warnings, because turning them
+# on as errors newly failed 71 of 80 passing real registries on upgrade. The marker is an
+# HTML comment, so it is read from the RAW file: `read()` strips comments.
+SCREENS_FORMAT = re.compile(r"<!--\s*screens-format:\s*(\d+)\s*-->")
+FORMAT_HINT = (" (a warning while screens.md is format 1 — add the missing "
+               "fields, then `<!-- screens-format: 2 -->` to make it a gate)")
+
+
+def screens_format(path: Path) -> int:
+    """1 unless the file carries `<!-- screens-format: N -->`."""
+    try:
+        m = SCREENS_FORMAT.search(path.read_text(encoding="utf-8"))
+    except OSError:
+        return 1
+    return int(m.group(1)) if m else 1
+
+
+def legacy_frameless(body: str) -> set[str]:
+    """The states the pre-0.58 U020 flagged: one of four names, cell read by
+    position. Kept so a format-1 registry fails exactly where it always did."""
+    out = set()
+    for state, rest in re.findall(r"^\s*\|\s*(loading|empty|error|success)\s*\|(.*)\|\s*$",
+                                  body, re.MULTILINE | re.IGNORECASE):
+        cells = [c.strip() for c in rest.split("|")]
+        frame = cells[1] if len(cells) >= 2 else ""
+        if not frame or frame in ("-", "—", "<frame deep-link>", "<frame link>"):
+            out.add(state.lower())
+    return out
+
+
 def section(text: str, heading: str) -> str:
     """The body of `## <heading>` up to the next `## `, or ''."""
     m = re.search(rf"^##[ \t]+{re.escape(heading)}[ \t]*$", text, re.MULTILINE)
@@ -1119,6 +1151,14 @@ def main() -> int:
         fig = figma_enabled(foundation)
         screens_root = project_root
         default_axes = axes_value(section(screens, "Design system"))
+        gated = screens_format(ux / "screens.md") >= 2
+
+        def matrix(msg: str) -> None:
+            """U079-U081 and the widened U020: errors on format 2, warnings before."""
+            if gated:
+                err(msg)
+            else:
+                warn(msg + FORMAT_HINT)
         for sid, body in screen_blocks(screens).items():
             # Read by value, not matched against a copy of the enum: the copy
             # was one value short of the contract for as long as `blocked`
@@ -1132,7 +1172,7 @@ def main() -> int:
             # state somebody happened to render.
             states = declared_states(body)
             if not states:
-                err(f"[U079] screens.md: {sid} declares no states — list the ones "
+                matrix(f"[U079] screens.md: {sid} declares no states — list the ones "
                     f"that apply (default, loading, empty, error, offline, "
                     f"long-content, keyboard-up, first-run)")
             # Axes are the sheet's columns. A screen may inherit the project's
@@ -1141,12 +1181,12 @@ def main() -> int:
             if axes is None:
                 axes = default_axes
             if axes is None:
-                err(f"[U080] screens.md: {sid} declares no **Axes:** and the Design "
+                matrix(f"[U080] screens.md: {sid} declares no **Axes:** and the Design "
                     f"system sets no default — name viewport, theme, text and locale")
             else:
                 gaps = missing_axes(axes)
                 if gaps:
-                    err(f"[U080] screens.md: {sid} axes leave out {', '.join(gaps)} — "
+                    matrix(f"[U080] screens.md: {sid} axes leave out {', '.join(gaps)} — "
                         f"write `name: values` for each of {', '.join(AXES)}")
             headers, rows = state_table(body)
             frame_col = next((i for i, h in enumerate(headers)
@@ -1154,21 +1194,29 @@ def main() -> int:
             story_col = next((i for i, h in enumerate(headers)
                               if re.search(r"\b(?:stor(?:y|ies)|preview)\b", h)), None)
             if fig is not False:  # enabled or default-on
+                frameless: list[str] = []
                 if rows:
                     for row in rows:
                         frame = row[frame_col] if frame_col is not None and frame_col < len(row) else ""
                         if _unfilled(frame):
-                            err(f"[U020] screens.md: {sid} state '{row[0]}' has no Figma frame link")
+                            frameless.append(row[0])
                 else:
-                    for state in states:
-                        err(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
+                    frameless = list(states)
+                # What the old rule caught stays an error on every format;
+                # only the newly covered states wait for the opt-in.
+                legacy = legacy_frameless(body)
+                for state in legacy:
+                    err(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
+                for state in frameless:
+                    if state.lower() not in legacy:
+                        matrix(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
             # A Story column is the build-side twin of the frame: once a screen
             # is built, each state it declares can be shown on its own.
             if story_col is not None and status == "built":
                 for row in rows:
                     story = row[story_col] if story_col < len(row) else ""
                     if _unfilled(story):
-                        err(f"[U081] screens.md: {sid} is built and state '{row[0]}' "
+                        matrix(f"[U081] screens.md: {sid} is built and state '{row[0]}' "
                             f"names no story — the state cannot be rendered on its own")
             cov_m = re.search(r"\*\*Coverage:\*\*\s*(.+)", body)
             cov = cov_m.group(1).strip() if cov_m else ""

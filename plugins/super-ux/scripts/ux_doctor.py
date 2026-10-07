@@ -40,6 +40,19 @@ ADDITIVE = [
 
 ARTIFACTS = ["vision.md", "foundation.md", "flows.md", "screens.md", "scenarios.md"]
 
+# `screens.md` format 2 (0.58.0): the screen matrix — a state list and render
+# axes per screen, a frame for every declared state, a story per state once
+# built — is a gate. Format 1 gets the same findings as lint warnings. The
+# upgrade is content, so the doctor names it and never stamps the marker.
+SCREENS_FORMAT = re.compile(r"<!--\s*screens-format:\s*(\d+)\s*-->")
+SCREENS_MIGRATION = (
+    "screens.md is on format 1: U079/U080/U081 (and U020 for states beyond "
+    "loading/empty/error/success) are lint warnings, not a gate. To migrate: "
+    "add `- **Axes:** viewport: …; theme: …; text: …; locale: …` to the Design "
+    "system block, give every screen a state list, run the linter until those "
+    "warnings are gone, then add `<!-- screens-format: 2 -->` under the title."
+)
+
 # Names the contract owns, and the near-misses seen in the wild.
 RENAMES = {
     "ux-scenarios.md": "scenarios.md",
@@ -89,7 +102,13 @@ def diagnose(ux: Path) -> dict:
         if f.exists() and needle not in f.read_text(encoding="utf-8", errors="ignore"):
             missing_additive.append(label)
 
+    screens_format = None
+    if present.get("screens.md"):
+        m = SCREENS_FORMAT.search((ux / "screens.md").read_text(encoding="utf-8", errors="ignore"))
+        screens_format = int(m.group(1)) if m else 1
+
     return {
+        "screens_format": screens_format,
         "present": present,
         "markers": markers,
         "effective": min(known) if known else None,
@@ -147,6 +166,9 @@ def report(ux: Path, d: dict) -> int:
 
     for label in d["missing_additive"]:
         print(f"  optional, absent: {label}")
+
+    if d.get("screens_format") == 1:
+        print(f"  migration offered: {SCREENS_MIGRATION}")
 
     print("  OK — on the current contract" if problems == 0 else f"  {problems} problem(s)")
     return problems
@@ -222,6 +244,8 @@ def main() -> int:
             flags.append("loose-audits")
         if d["audits"] and not d["present"].get("scenarios.md"):
             flags.append("audits-without-base")
+        if d.get("screens_format") == 1:
+            flags.append("screens-format-1")
         print(f"{ux}  {state}{'  ' + ','.join(flags) if flags else ''}")
         return 0
 

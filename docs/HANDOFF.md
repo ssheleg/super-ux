@@ -11,6 +11,10 @@ surface, states × axes per screen and the onboarding budget. Start with the
 - Done: U1–U5 of the family plan plus the screen matrix and onboarding budget;
   seven new linter codes `U079`..`U085`, each watched failing on a planted
   defect; `npm test` and every CI step green locally.
+- Revised after review: the matrix codes warn on format-1 registries and fail
+  only on `<!-- screens-format: 2 -->`, which the seed writes; the doctor offers
+  the migration and `/ux-update` performs it. Swept over 118 local registries:
+  0 newly failing (the first cut newly failed 71). Ledger rows DF-MIG1..5.
 - Open: review and merge, tag `v0.58.0`, npm publication, the umbrella pin in
   `sshlg-skills/skills.json`, refreshing local installs. None is implied by
   this branch.

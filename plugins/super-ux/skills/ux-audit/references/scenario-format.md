@@ -543,6 +543,16 @@ Rules:
   A `Story` column is optional; once present, a `built` screen names a story
   or preview for every state it declares (`U081`). Figma off and no Story
   column → the state list is all that is required.
+- **Format 2 makes the matrix a gate; format 1 is told, not failed.** A
+  registry carrying `<!-- screens-format: 2 -->` (the seed writes it under the
+  title, so a new project starts there) fails on `U079`, `U080`, `U081` and on
+  `U020` for any declared state. A registry without it (format 1, every file
+  written before 0.58.0) gets the same findings as warnings — except `U020` on
+  `loading`/`empty`/`error`/`success`, which was an error before and stays one.
+  The migration: an `Axes:` line in the Design system block, a state list per
+  screen, the lint clean of those warnings, then the marker.
+  `docs/ux/doctor.py` offers it; `/ux-update` performs it. `--strict` still
+  turns every warning into a failure, format 1 included.
 - Status lifecycle: `designed` → `built` (coverage confirmed by audit) →
   `drifted` (code diverged from this record — an audit finding, fix or
   update) → `retired`.
@@ -919,7 +929,7 @@ here — the meaning of a rule never lives only in its source.
 | U012 | W | a scenario traces to a story absent from `foundation.md` |
 | U013 | W | a scenario traces to a flow absent from `flows.md` |
 | U014 | W | a `must`/`should` story with no scenario tracing to it |
-| U020 | E | a screen state has no Figma frame link while Figma is enabled |
+| U020 | E | a screen state has no Figma frame link while Figma is enabled — on a format-1 registry, a W for states other than loading/empty/error/success |
 | U021 | W | a screen marked `built` names no `Coverage` |
 | U030 | E | `vision.md` is missing one of the nine sections |
 | U031 | E | an approved vision whose anti-vision or alignment test is empty |
@@ -952,9 +962,9 @@ here — the meaning of a rule never lives only in its source.
 | U074 | E | a job is missing one of `Statement`, `Personas`, `Type`, `Forces`, `Success metric` — the metric is the observable a job is unfinished without, one layer above a story's acceptance criteria |
 | U075 | E | a `Status:` on `FLW-NN` or `JRN-NN`, layers the contract deliberately gives none — silence about a state is not permission to invent a vocabulary for it |
 | U078 | W | a `Coverage:` citation names a subject that is not inside the lines it cites — a range proves its bounds, never what it is about |
-| U079 | E | a screen declares no states — the contact sheet gets no rows, and the screen is reviewed in whichever state happened to render |
-| U080 | E | a screen has no `Axes:` (own or Design system default), or leaves out one of `viewport`, `theme`, `text`, `locale` — the sheet gets no columns |
-| U081 | E | a `built` screen's state has an empty cell in its `Story` column — the state cannot be rendered on its own |
+| U079 | E (W on format 1) | a screen declares no states — the contact sheet gets no rows, and the screen is reviewed in whichever state happened to render |
+| U080 | E (W on format 1) | a screen has no `Axes:` (own or Design system default), or leaves out one of `viewport`, `theme`, `text`, `locale` — the sheet gets no columns |
+| U081 | E (W on format 1) | a `built` screen's state has an empty cell in its `Story` column — the state cannot be rendered on its own |
 | U082 | E | a flow puts more than one onboarding screen before the first value without `Onboarding budget:` citing a director record that exists and discusses onboarding |
 | U083 | W | a flow named for onboarding or first run declares no `Onboarding:` — the budget cannot be counted |
 | U084 | W | a flow counts onboarding screens and names no `First value:` — the count is against a destination nobody wrote down |

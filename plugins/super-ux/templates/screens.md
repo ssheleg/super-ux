@@ -1,5 +1,9 @@
 # UI Screen Registry
 
+<!-- screens-format: 2 -->
+<!-- The line above puts this registry on format 2: the screen matrix
+(states, axes, a frame per state, a story per built state) is a lint gate.
+Keep it. -->
 <!-- Managed with super-ux (ux-contract v4). The design map: every screen and
 state with its Figma frame, wireframe, code coverage, and related UX/UI
 resources. Update in the same change as any interface change; when Figma is

@@ -1,5 +1,6 @@
 # UI Screen Registry
 
+<!-- screens-format: 2 -->
 <!-- Managed with super-ux (ux-contract v4). The UI map. -->
 
 The UI map for super-ux's own installer. A "screen" here is one coherent

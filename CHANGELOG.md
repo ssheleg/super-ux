@@ -51,10 +51,19 @@ matrix and the onboarding budget.
   director record that exists and discusses onboarding; **`U083`** warns on a
   flow named for onboarding that declares nothing; **`U084`** on a count with
   no first value.
-- **Upgrading a project:** the new errors fire on existing `screens.md`
-  files. One `- **Axes:** viewport: …; theme: …; text: …; locale: …` line in
-  the Design system block clears `U080` for every screen; this repository's
-  own chain needed exactly that.
+- **Warn first, gate on opt-in.** Existing `screens.md` files are format 1:
+  `U079`, `U080`, `U081`, and `U020` on states beyond loading / empty / error /
+  success, report as **warnings** there, and the lint still exits 0 — what
+  `U020` failed before 0.58.0 still fails. A registry carrying
+  `<!-- screens-format: 2 -->` makes them errors; the seeded `screens.md`
+  writes the marker, so a new project is strict from its first line.
+  `docs/ux/doctor.py` names the migration on a format-1 file and `/ux-update`
+  performs it: one `- **Axes:** …` line in the Design system block, a state
+  list per screen, the lint clean of those warnings, then the marker. This
+  repository's own registry is on format 2. `--strict` still fails on every
+  warning. Measured over all 118 registries on the maintainer's machine: the first
+  cut of this release newly failed 71 of the 80 that passed; this one newly
+  fails none and adds no error anywhere.
 - Evals `EV-06` (visual drift is found) and `EV-07` (one key screen, 2-up,
   no pack list) join `test/evals/cases.json`; not run in CI, as before.
 

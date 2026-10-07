@@ -80,8 +80,11 @@ VISION_ALL_PLACEHOLDER = "\n".join(
 )
 
 
-def screens(*entries: str, declaration: str | None = "no", index: bool = True) -> str:
+def screens(*entries: str, declaration: str | None = "no", index: bool = True,
+            fmt: int = 1) -> str:
     out = ["# UI Screen Registry", ""]
+    if fmt >= 2:
+        out = ["<!-- screens-format: 2 -->"] + out
     if index:
         out += ["## Index", "",
                 "| ID | Screen | Used by | Figma | Status | Coverage |",
@@ -264,9 +267,14 @@ silent("U020 silent when Figma is disabled",
 # error / success), so a `keyboard-up` or `offline` row with an empty frame cell
 # passed a project whose hard rule says every state has a frame. The column is
 # found by its header now, not by its position after the state name.
+def screens2(*entries: str, **kw) -> str:
+    """A registry that opted into format 2: the matrix codes are errors here."""
+    return screens(*entries, fmt=2, **kw)
+
+
 STATES_NEW_NAME = STATES_EMPTY.replace("| error |", "| keyboard-up |")
 case("U020 a state outside the old four still needs its frame",
-     {"screens.md": screens(STATES_NEW_NAME)},
+     {"screens.md": screens2(STATES_NEW_NAME)},
      errors={"U020"})
 silent("U020 clean when the new-name state carries its frame",
        {"screens.md": screens(STATES_NEW_NAME.replace(
@@ -287,10 +295,10 @@ STATE_ROW_FIG = ("- **States:**\n"
 FIG_OFF = {"foundation.md": "# F\n\n**Figma:** disabled\n"}
 
 case("U079 a screen with no state list",
-     {"screens.md": screens("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n")},
+     {"screens.md": screens2("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n")},
      errors={"U079"})
 case("U079 still fires with Figma off: the list is required either way",
-     {"screens.md": screens("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n"),
+     {"screens.md": screens2("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n"),
       **FIG_OFF},
      errors={"U079"})
 silent("U079 clean on a States table",
@@ -304,15 +312,15 @@ silent("U079 silent on a retired screen",
        {"screens.md": screens("- **Purpose:** p\n- **Status:** retired\n")}, {"U079", "U080"})
 
 case("U080 a screen with no axes and no project default",
-     {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG + "- **Status:** designed\n")},
+     {"screens.md": screens2("- **Purpose:** p\n" + STATE_ROW_FIG + "- **Status:** designed\n")},
      errors={"U080"})
 case("U080 an axes line that omits one of the four",
-     {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG
+     {"screens.md": screens2("- **Purpose:** p\n" + STATE_ROW_FIG
                             + "- **Axes:** viewport: 375; theme: light, dark; text: default\n"
                             + "- **Status:** designed\n")},
      errors={"U080"})
 case("U080 a placeholder is not a value",
-     {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG
+     {"screens.md": screens2("- **Purpose:** p\n" + STATE_ROW_FIG
                             + "- **Axes:** viewport: <widths>; theme: light; text: default; locale: en\n"
                             + "- **Status:** designed\n")},
      errors={"U080"})
@@ -335,7 +343,7 @@ STATES_STORY = ("- **States:**\n"
                 "  | default | open | https://figma.com/file/x?node-id=1 | src/List.stories.tsx | list |\n"
                 "  | empty | none | https://figma.com/file/x?node-id=2 | — | prompt |\n")
 case("U081 a built screen's state with no story in its Story column",
-     {"screens.md": screens("- **Purpose:** p\n" + STATES_STORY + AXES_LINE
+     {"screens.md": screens2("- **Purpose:** p\n" + STATES_STORY + AXES_LINE
                             + "- **Coverage:** none yet\n- **Status:** built\n")},
      errors={"U081"})
 silent("U081 clean when every state names its story",
@@ -355,6 +363,125 @@ silent("U081 silent without a Story column: Figma-off projects keep the list onl
        {"screens.md": screens("- **Purpose:** p\n- **States:** default, empty\n" + AXES_LINE
                               + "- **Coverage:** none yet\n- **Status:** built\n"), **FIG_OFF},
        {"U081", "U020", "U079"})
+
+# --- The migration: format 1 warns, format 2 fails --------------------------
+#
+# U079-U081 and the widened U020 arrived in 0.58.0 as errors on every registry,
+# and 71 of the 80 passing `screens.md` files on the maintainer's machine went
+# red on upgrade. A registry now opts in with `<!-- screens-format: 2 -->`, which the
+# seed writes, so a new project is strict from its first line and an old one is
+# told what to add without its CI breaking. These cases read the EXIT CODE as
+# well as the codes, because "a warning" that still exits 1 is the same break.
+
+def lint_tree(files: dict, root_files: dict | None = None) -> tuple[set, set, int]:
+    with tempfile.TemporaryDirectory() as tmp:
+        base = Path(tmp)
+        ux = base / "docs" / "ux"
+        ux.mkdir(parents=True)
+        for rel, body in {**MINIMAL, **files}.items():
+            (ux / rel).write_text(body, encoding="utf-8")
+        for rel, body in (root_files or {}).items():
+            path = base / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(body, encoding="utf-8")
+        ux_lint.ERRORS.clear()
+        ux_lint.WARNS.clear()
+        argv, stdout = sys.argv, sys.stdout
+        sys.argv = ["ux_lint.py", str(ux)]
+        sys.stdout = io.StringIO()
+        try:
+            rc = ux_lint.main()
+        finally:
+            sys.argv, sys.stdout = argv, stdout
+        return ({c for m in ux_lint.ERRORS for c in CODE_RE.findall(m)},
+                {c for m in ux_lint.WARNS for c in CODE_RE.findall(m)}, rc)
+
+
+def migration(name: str, files: dict, *, warns: set = frozenset(),
+              errors: set = frozenset(), not_errors: set = frozenset(),
+              rc: int | None = None) -> None:
+    global checks
+    checks += 1
+    got_e, got_w, got_rc = lint_tree(files)
+    if not warns <= got_w:
+        failures.append(f"{name}: expected warning(s) {sorted(warns - got_w)}, got {sorted(got_w)}")
+    if not errors <= got_e:
+        failures.append(f"{name}: expected error(s) {sorted(errors - got_e)}, got {sorted(got_e)}")
+    if got_e & not_errors:
+        failures.append(f"{name}: {sorted(got_e & not_errors)} fired as ERROR on a format-1 registry")
+    if rc is not None and got_rc != rc:
+        failures.append(f"{name}: exit {got_rc}, expected {rc} (errors {sorted(got_e)})")
+
+
+LEGACY_STATES = ("- **Purpose:** p\n- **States:**\n"
+                 "  | State | Trigger | Figma frame | Behavior |\n"
+                 "  |---|---|---|---|\n"
+                 "  | success | default | https://figma.com/file/x?node-id=1 | list |\n"
+                 "  | error | fail | https://figma.com/file/x?node-id=2 | retry |\n"
+                 "- **Status:** designed\n")
+MATRIX = {"U079", "U080", "U081"}
+
+migration("format 1: an old registry with no axes warns U080 and exits 0",
+          {"screens.md": screens(LEGACY_STATES)},
+          warns={"U080"}, not_errors=MATRIX | {"U020"}, rc=0)
+migration("format 1: a screen with no state list warns U079 and exits 0",
+          {"screens.md": screens("- **Purpose:** p\n- **Status:** designed\n")},
+          warns={"U079", "U080"}, not_errors=MATRIX, rc=0)
+migration("format 1: a frameless state the old rule never read warns, exits 0",
+          {"screens.md": screens(STATES_NEW_NAME.replace("- **Status:**", AXES_LINE + "- **Status:**"))},
+          warns={"U020"}, not_errors={"U020"}, rc=0)
+migration("format 1: a built state with an empty Story cell warns U081, exits 0",
+          {"screens.md": screens("- **Purpose:** p\n" + STATES_STORY + AXES_LINE
+                                 + "- **Coverage:** none yet\n- **Status:** built\n")},
+          warns={"U081"}, not_errors=MATRIX, rc=0)
+migration("format 1: the old U020 — one of the four rows with no frame — still fails",
+          {"screens.md": screens(STATES_EMPTY + AXES_LINE)},
+          errors={"U020"}, rc=1)
+migration("format 2: a marked registry missing axes fails U080",
+          {"screens.md": screens2(LEGACY_STATES)},
+          errors={"U080"}, rc=1)
+migration("format 2: a marked registry with no state list fails U079",
+          {"screens.md": screens2("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n")},
+          errors={"U079"}, rc=1)
+
+checks += 1
+for seed in (ROOT / "templates" / "screens.md",
+             ROOT / "plugins" / "super-ux" / "templates" / "screens.md"):
+    if ux_lint.screens_format(seed) != 2:
+        failures.append(f"the seed {seed.relative_to(ROOT)} does not carry "
+                        f"`<!-- screens-format: 2 -->` — a new project would start lenient")
+checks += 1
+if ux_lint.screens_format(ROOT / "docs" / "ux" / "screens.md") != 2:
+    failures.append("this repository's own screens.md is not on format 2 — the migration "
+                    "the pack asks of others has not been done here")
+# The migration is offered by the doctor -- the pack's existing "this chain is
+# behind the contract" tool -- so a format-1 project is told what to add.
+import ux_doctor  # noqa: E402
+
+
+def doctor_says(screens_text: str) -> str:
+    with tempfile.TemporaryDirectory() as tmp:
+        ux = Path(tmp) / "docs" / "ux"
+        ux.mkdir(parents=True)
+        (ux / "screens.md").write_text(screens_text, encoding="utf-8")
+        out, stdout = io.StringIO(), sys.stdout
+        sys.stdout = out
+        try:
+            ux_doctor.report(ux, ux_doctor.diagnose(ux))
+        finally:
+            sys.stdout = stdout
+        return out.getvalue()
+
+
+checks += 1
+said = doctor_says(screens(LEGACY_STATES))
+if "screens-format: 2" not in said or "Axes" not in said:
+    failures.append("doctor: a format-1 screens.md is not offered the migration "
+                    f"(Axes line, state lists, then the marker); it said: {said!r}")
+checks += 1
+said = doctor_says(screens2(LEGACY_STATES))
+if "format 1" in said:
+    failures.append("doctor: offers the format-2 migration to a registry already on it")
 
 # --- U082 / U083 / U084: the onboarding budget (design-award R2) ----------------
 #
