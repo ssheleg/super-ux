@@ -8,6 +8,17 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-07 — store limits from the stores' own pages, v0.58.1
+
+A reported error in `store-copy.md` (Google Play title 50) checked against each store's page before any edit.
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| SL-1 | Google Play title limit 30, not 50 | Google Play metadata policy (support.google.com/googleplay/android-developer/answer/9898842) read 2026-10-07: "Your app title must be 30 characters or less" | **observed** |
+| SL-2 | RuStore column: name 30, short 80, full 4000, 5 search tags, What's new not stated; superiority names may fail moderation | RuStore publication help page read 2026-10-07 (the four figures quoted); the moderation sentence is from the RuStore team's 2023-11-09 article, cited as an article, not as policy; a reported name limit of 50 was not found and is not stated | **observed** |
+| SL-3 | Meta Horizon column: name 40, short 500, long 1500 | Meta Horizon "Providing App Metadata" page read 2026-10-07 (updated 2025-08-20); a reported rule on screenshot text was not on the page and is not stated | **observed** |
+| SL-4 | "No plurals" scoped to English; other languages checked in the store's own search | wording only; no store documents inflection matching for Russian | **never** for the behaviour |
+
 ## 2026-10-07 — direction before frames, critique before approval, v0.58.0
 
 From the family's 2026-10-07 design-pipeline plan, tasks U1–U5, the screen

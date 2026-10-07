@@ -1,3 +1,24 @@
+## 0.58.1 — a store title is 30 characters on Google Play too, and two more stores have their limits
+
+`store-copy.md` said a Google Play title takes 50 characters. Google's metadata
+policy says 30 ("Your app title must be 30 characters or less", read
+2026-10-07), so a title written to the old figure would be cut or refused. The
+error was reported by a neighbouring writing agent's research and checked here
+against the policy page before anything changed.
+
+- **Google Play title: 30, not 50.** The limits table now cites each store's own
+  page with the date it was read.
+- **RuStore and Meta Horizon columns.** RuStore: name 30, short description 80,
+  full 4000, up to 5 search tags, no What's new limit stated (publication help
+  page); a name claiming superiority may not pass moderation (RuStore team
+  article, 2023-11-09, cited as such). Meta Horizon: name 40, short description
+  500, long description 1500 (metadata page, updated 2025-08-20). Two figures
+  passed along with the report — a RuStore name of 50 and a Horizon rule on text
+  in screenshots — were not found on the stores' pages and are not stated.
+- **"No plurals" is an English rule.** Matching of inflected forms in other
+  languages is not documented by the stores, so the rule now says to check a
+  form in the store's own search before dropping it.
+
 ## 0.58.0 — the look is decided before the frames, and approved on a critique
 
 `ux-flows` picked the style pack itself, from three or four names copied out of
