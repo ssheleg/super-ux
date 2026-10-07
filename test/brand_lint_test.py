@@ -211,6 +211,284 @@ def fix_idempotent() -> None:
             failures.append(f"fix: second pass rewrote {second} file(s)")
 
 
+SOCIAL_SOURCES = MARKER + (
+    "\n\nSources:\n  ui: src/**/*.ts\n  marketing: content/**/*.md\n"
+)
+
+SHORT_VIDEO = (
+    MARKER + "\n\n### short video\n\n```\n"
+    "Register:   distance -1\n"
+    "Format:     hook, body, one ask; spoken line and on-screen text written apart\n"
+    "Limits:     none\n"
+    "Forbidden:  physics: none | brand: none\n"
+    "CTA:        one\n"
+    "Proof:      one sourced figure\n"
+    "Locales:    none\n"
+    "```\n"
+)
+
+INSTAGRAM = (
+    MARKER + "\n\n### Instagram\n\n```\n"
+    "Register:   distance -1\n"
+    "Format:     a caption; the first line is what the feed shows\n"
+    "Limits:     body 2200\n"
+    "Forbidden:  physics: link in body, max 5 hashtags, fold 125, one ask"
+    " | brand: none\n"
+    "CTA:        one\n"
+    "Proof:      none\n"
+    "Locales:    none\n"
+    "```\n"
+)
+
+# The hook figure is public copy like any other, so the fixtures that use it
+# carry its row. Without the row the hook is a B030, which one case asserts.
+HOOK_FACTS = (
+    MARKER + "\n\n"
+    "| Fact | Value | Source | Checked | Review by | Public |\n"
+    "|---|---|---|---|---|---|\n"
+    f"| forgotten subscription spend | $400 | billing export | {TODAY} "
+    "| 2099-01-01 | yes |\n"
+)
+
+STRONG_HOOK = "You lose $400 a month to one subscription you forgot."
+
+
+def reel(fields: dict, body: str = "Open the bank app and sort by date.") -> dict:
+    head = "".join(f"{k}: {v}\n" for k, v in {"surface": "short video",
+                                             "title": "Reel", **fields}.items())
+    return {"content/r.md": f"---\n{head}---\n\n{body}\n"}
+
+
+def short_video_cases() -> None:
+    """B044 -- the hook filter. A filter, never a predictor (hooks.md).
+
+    Every dealbreaker fixture is built on a hook that otherwise scores above
+    the WEAK line, so the end-to-end code can only have come from the
+    dealbreaker branch; the unit checks below then assert WHICH branch fired,
+    because a set of codes proves the code arrived and not why (retro #5).
+    """
+    global checks
+    pack = {**MINIMAL, "README.md": SOCIAL_SOURCES, "channels.md": SHORT_VIDEO,
+            "facts.md": HOOK_FACTS}
+
+    case("B044 silent on a hook that passes the filter",
+         pack, set(), project=reel({"hook": STRONG_HOOK,
+                                    "on-screen": "$400 A MONTH, GONE"}))
+    case("B044 fires on a hook the five checks call WEAK",
+         pack, {"B044"},
+         project=reel({"hook": "So today I wanted to talk about some things"}))
+    case("B044 reads every numbered hook variant, not only the first",
+         pack, {"B044"},
+         project=reel({"hook": STRONG_HOOK,
+                       "hook-2": "So today I wanted to talk about some things"}))
+    case("B044 fires on on-screen text longer than ten words",
+         pack, {"B044"},
+         project=reel({"hook": STRONG_HOOK,
+                       "on-screen": "this is a very long line of on screen "
+                                    "text that nobody will read"}))
+    dealbreakers = {
+        "stop-scrolling": "Stop scrolling: you lose $400 a month to one subscription.",
+        "preamble": "You lose $400 a month, and I'll show you how to stop it.",
+        "greeting": "Hey, you lose $400 a month to one subscription.",
+        "hashtag": "You lose $400 a month to one subscription #money",
+        "emoji": "You lose $400 a month to one subscription \U0001F4B8",
+    }
+    for flag, hook in dealbreakers.items():
+        case(f"B044 dealbreaker `{flag}` fires on its own",
+             pack, {"B044"}, project=reel({"hook": hook}))
+        checks += 1
+        got = brand_lint.hook_score(hook)
+        if flag not in got["flags"] or got["verdict"] == "WEAK":
+            failures.append(
+                f"hook_score: `{flag}` should be the only reason this hook is "
+                f"filtered, got verdict {got['verdict']} flags {got['flags']}")
+
+    checks += 1
+    strong = brand_lint.hook_score(STRONG_HOOK)
+    if strong["verdict"] != "STRONG" or strong["flags"]:
+        failures.append(f"hook_score: the strong hook scored {strong}")
+    checks += 1
+    weak = brand_lint.hook_score("So today I wanted to talk about some things")
+    if weak["verdict"] != "WEAK" or weak["flags"]:
+        failures.append(f"hook_score: the weak hook scored {weak}")
+    checks += 1
+    # The arithmetic the reference states: 0.6 * mean + 0.4 * min - 15 per flag.
+    parts = list(strong["checks"].values())
+    expected = round(0.6 * sum(parts) / len(parts) + 0.4 * min(parts), 1)
+    if round(strong["score"], 1) != expected:
+        failures.append(f"hook_score: {strong['score']} is not 0.6*mean+0.4*min "
+                        f"({expected}) over {strong['checks']}")
+
+    # The vocabulary is English, so a hook in another script is not scored;
+    # the two script-independent dealbreakers still apply.
+    russian = "Ты теряешь деньги на подписке, о которой давно забыл."
+    case("B044 does not score a Cyrillic hook against English vocabulary",
+         pack, set(), project=reel({"hook": russian}))
+    checks += 1
+    if brand_lint.hook_score(russian)["verdict"] is not None:
+        failures.append("hook_score: a Cyrillic hook was scored against "
+                        "English word lists")
+    case("B044 still applies the hashtag dealbreaker to a Cyrillic hook",
+         pack, {"B044"}, project=reel({"hook": russian + " #деньги"}))
+
+    case("B030 reads the spoken hook: its figure needs a facts.md row",
+         {**pack, "facts.md": MARKER + "\n"}, {"B030"},
+         project=reel({"hook": STRONG_HOOK}))
+
+    # The script itself (video-script.md): hook, on-screen text, beats, one
+    # ask. Fixture for C2 -- a script written to the reference lints clean.
+    script = (
+        "## Beats\n\n"
+        "0:00 Hook. Open on the bank app, scrolled to the charge.\n\n"
+        "0:02 Stakes. Every month it renews, and nobody opens it.\n\n"
+        "0:07 Body. Sort the statement by merchant. Circle anything you have "
+        "not opened in thirty days. Cancel from the store, not the app.\n\n"
+        "0:24 Payoff. The charge is gone from next month.\n\n"
+        "0:27 Ask. Send this to the friend who still pays for that gym.\n"
+    )
+    case("a short-video script written to the reference lints clean",
+         pack, set(),
+         project=reel({"hook": STRONG_HOOK, "on-screen": "$400 A MONTH, GONE"},
+                      body=script))
+
+
+def instagram_caption_cases() -> None:
+    """B045 (the feed window), B046 (one ask), and the existing B042/B043
+    mechanics declared for Instagram's physics."""
+    pack = {**MINIMAL, "README.md": SOCIAL_SOURCES, "channels.md": INSTAGRAM}
+
+    def caption(body: str) -> dict:
+        return {"content/c.md":
+                f"---\nsurface: Instagram\ntitle: Caption\n---\n\n{body}\n"}
+
+    tail = ("\n\nSort the statement by merchant and circle every charge you "
+            "have not opened in a month. Cancel from the store, not the app, "
+            "or it renews anyway.")
+    clean = ("Your bank app hides the charge you forgot." + tail
+             + "\n\nComment CANCEL and I will send the checklist."
+             + "\n\n#budgeting #subscriptions")
+    case("an Instagram caption written to the playbook lints clean",
+         pack, set(), project=caption(clean))
+    case("B045 fires when the first line runs past the feed window",
+         pack, {"B045"},
+         project=caption("Your bank app hides the charge you forgot, and it "
+                         "keeps renewing every single month because nobody "
+                         "opens the app it belongs to anymore at all" + tail
+                         + "\n\nComment CANCEL and I will send the checklist."))
+    # The tag is mid-line on purpose: a caption OPENING with `#` is answered
+    # by the opener branch, and that fixture stayed green with this branch
+    # deleted (planted 2026-10-07).
+    case("B045 fires on a hashtag inside the feed window",
+         pack, {"B045"},
+         project=caption("Your bank app hides the #budgeting charge you forgot."
+                         + tail
+                         + "\n\nComment CANCEL and I will send the checklist."))
+    case("B045 fires on a caption that opens with a mention",
+         pack, {"B045"},
+         project=caption("@bank your app hides the charge I forgot." + tail
+                         + "\n\nComment CANCEL and I will send the checklist."))
+    case("B046 fires on a caption with no ask",
+         pack, {"B046"},
+         project=caption("Your bank app hides the charge you forgot." + tail))
+    case("B046 fires on a caption with two asks",
+         pack, {"B046"},
+         project=caption("Your bank app hides the charge you forgot." + tail
+                         + "\n\nComment CANCEL for the checklist, and save this "
+                           "for the first of the month."))
+    case("B046 counts a Russian ask as one ask",
+         pack, set(),
+         project=caption("Банк прячет подписку, о которой ты забыл."
+                         "\n\nОтсортируй выписку по магазину и отметь всё, что "
+                         "ты не открывал месяц. Отменяй в сторе, а не в самом "
+                         "приложении, иначе оно продлится."
+                         "\n\nНапиши в комментариях ОТМЕНА, и я пришлю чеклист."))
+    case("B046 counts two Russian asks as two",
+         pack, {"B046"},
+         project=caption("Банк прячет подписку, о которой ты забыл."
+                         "\n\nОтсортируй выписку по магазину и отметь всё, что "
+                         "ты не открывал месяц. Отменяй в сторе, а не в самом "
+                         "приложении, иначе оно продлится."
+                         "\n\nНапиши в комментариях ОТМЕНА. Сохрани пост, "
+                         "чтобы не потерять."))
+    case("B042 applies to an Instagram caption: links there do not click",
+         pack, {"B042"},
+         project=caption(clean.replace("I will send the checklist.",
+                                       "I will send https://example.com/list")))
+    case("B043 applies Instagram's five-hashtag cap",
+         pack, {"B043"},
+         project=caption(clean.replace("#budgeting #subscriptions",
+                                       "#a1 #b2 #c3 #d4 #e5 #f6")))
+
+
+def invisible_character_cases() -> None:
+    """B066 -- AT-16, invisible and look-alike-space characters.
+
+    One fixture per class the reference names (raw source: the eighteen
+    classes the humanizer in `Jakeschincariol/instagram-agent-skill` strips),
+    one for the catch-all, and one per numbered exemption. The dash and the
+    quotation marks are never this check's business, in any language.
+    """
+    global checks
+    pack = {**MINIMAL, "README.md": SOCIAL_SOURCES, "channels.md": SHORT_VIDEO}
+
+    def doc(body: str) -> dict:
+        return {"content/a.md":
+                f"---\nsurface: short video\ntitle: Ship\n---\n\n{body}\n"}
+
+    classes = {
+        "​": "ZERO WIDTH SPACE", "‌": "ZERO WIDTH NON-JOINER",
+        "‍": "ZERO WIDTH JOINER", "⁠": "WORD JOINER",
+        "﻿": "ZERO WIDTH NO-BREAK SPACE", "­": "SOFT HYPHEN",
+        "᠎": "MONGOLIAN VOWEL SEPARATOR", "؜": "ARABIC LETTER MARK",
+        "‎": "LEFT-TO-RIGHT MARK", "‏": "RIGHT-TO-LEFT MARK",
+        "⁣": "INVISIBLE SEPARATOR", "\U000E0041": "TAG LATIN CAPITAL LETTER A",
+        " ": "NO-BREAK SPACE", " ": "NARROW NO-BREAK SPACE",
+        " ": "THIN SPACE", " ": "FIGURE SPACE",
+        " ": "EM SPACE", " ": "EN SPACE",
+    }
+    for char, name in classes.items():
+        case(f"B066 finds U+{ord(char):04X} {name}",
+             pack, {"B066"}, project=doc(f"Ship your{char}first release today."))
+        checks += 1
+        hits = brand_lint.invisible_chars(f"Ship your{char}first release today.")
+        if [h[1] for h in hits] != [ord(char)]:
+            failures.append(f"invisible_chars: U+{ord(char):04X} reported as {hits}")
+    case("B066 catch-all: any other format character (U+202E override)",
+         pack, {"B066"}, project=doc("Ship your‮first release today."))
+    case("B066 reports an embedding override even inside right-to-left text",
+         pack, {"B066"}, project=doc("שלום ‮world, ship today."))
+
+    # Exemptions. Each id is declared in ai-tells.md and named here, and
+    # `validate_ai_tell_coverage` refuses either side without the other.
+    case("AT-16-E1: a joiner inside an emoji sequence is the emoji",
+         pack, set(),
+         project=doc("The family plan \U0001F468‍\U0001F469‍\U0001F467 ships today."))
+    case("AT-16-E2: a joiner inside a script that needs it is spelling",
+         pack, set(), project=doc("Ship today: می‌خواهم."))
+    case("AT-16-E3: a direction mark inside right-to-left text is layout",
+         pack, set(), project=doc("שלום‏ world, ship today."))
+    case("AT-16-E4: tag characters inside a flag sequence are the flag",
+         pack, set(),
+         project=doc("Made in England \U0001F3F4\U000E0067\U000E0062\U000E0065"
+                     "\U000E006E\U000E0067\U000E007F and shipped today."))
+    case("AT-16-E5: a no-break space in Russian typography is normative",
+         pack, set(), project=doc("Релиз выходит в пятницу, в полдень."))
+    checks += 1
+    if brand_lint.invisible_chars("Prix : douze euros", locale="fr"):
+        failures.append("invisible_chars: AT-16-E5 did not honour locale fr")
+    checks += 1
+    if not brand_lint.invisible_chars("Price : twelve euros", locale="en"):
+        failures.append("invisible_chars: a narrow space in English went unreported")
+    case("AT-16-E6: the dash and the quotation marks are never this check's business",
+         pack, set(),
+         project=doc("Москва — столица России. Сезон 2020–2024 закрыт. "
+                     "Он сказал «готово» и ушёл."))
+    case("AT-16-E7: a byte-order mark opening a file is its encoding signature",
+         pack, set(),
+         project={"content/a.md": "﻿---\nsurface: short video\ntitle: Ship\n"
+                                  "---\n\nShip your first release today.\n"})
+
+
 def main() -> int:
     case("clean minimal base", MINIMAL, set())
     case("B009 refuses an empty declared source glob",
@@ -1155,6 +1433,10 @@ def main() -> int:
             failures.append(f"strip_comments: {name}: lost {present!r}")
         if absent and absent in got:
             failures.append(f"strip_comments: {name}: kept {absent!r}")
+
+    short_video_cases()
+    instagram_caption_cases()
+    invisible_character_cases()
 
     fix_idempotent()
 

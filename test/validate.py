@@ -2154,6 +2154,124 @@ def check_routed_triggers_still_advertised():
         _disclose_routing(f"routed triggers — {(proc.stderr or 'the checker could not look').strip()}")
 
 
+def _bullets(section: str) -> list[str]:
+    """Top-level Markdown bullets, each joined with its indented continuation."""
+    out: list[str] = []
+    current = None
+    for line in section.splitlines():
+        if line.startswith("- "):
+            if current:
+                out.append(current)
+            current = line
+        elif current is not None and line.startswith("  ") and line.strip():
+            current += " " + line.strip()
+        else:
+            if current:
+                out.append(current)
+            current = None
+    if current:
+        out.append(current)
+    return out
+
+
+def validate_short_video_shelf() -> None:
+    """The short-video shelf (2026-10-07) proves its own numbers and sources.
+
+    `hooks.md` promises twenty-six formulas and forty templates, every template
+    with its source; the outlier example in `research-outliers.md` promises
+    arithmetic; the X playbook promises its weights came from one commit of the
+    open ranker; every Instagram and short-video rule promises a source URL.
+    Each promise is a count or a recomputation here, so a deleted row, a source
+    dropped from a row, or a multiple edited by hand turns this gate red instead
+    of reading as fine -- standing instruction #4: an artifact added to stop
+    drift answers "what would notice if this fell behind?".
+    """
+    refs = ROOT / "plugins/super-ux/skills/references"
+    hooks = read(refs / "hooks.md") or ""
+    if not check(bool(hooks), "references/hooks.md: missing or empty"):
+        return
+    for prefix, count, noun in (("HF", 26, "formula"), ("HT", 40, "template")):
+        rows = re.findall(rf"^\|\s*({prefix}-\d+)\s*\|(.*)$", hooks, re.M)
+        ids = [r[0] for r in rows]
+        check(ids == [f"{prefix}-{i:02d}" for i in range(1, count + 1)],
+              f"hooks.md: the {noun} set is {ids[:3]}…{ids[-3:]} ({len(ids)} rows) -- "
+              f"it promises {prefix}-01..{prefix}-{count:02d}, in order, once each")
+        if prefix == "HT":
+            for ident, rest in rows:
+                check("](https://" in rest,
+                      f"hooks.md: {ident} names no source URL -- every template "
+                      f"carries the source of its mechanism")
+    for figure in ("0.83", "0.56"):
+        check(f"AUC {figure}" in hooks,
+              f"hooks.md: the filter's caveat lost `AUC {figure}` -- B044 is a "
+              f"filter, not a predictor, and the two figures are what say so")
+    contract = read(refs / "brand-contract.md") or ""
+    check("0.56" in contract and "0.83" in contract,
+          "brand-contract.md: B044's row lost its AUC caveat")
+
+    playbooks = read(refs / "channel-playbooks.md") or ""
+    for heading in ("Instagram", "Short video"):
+        block = re.search(rf"^## {heading}\n(.*?)(?=^## )", playbooks, re.M | re.S)
+        if not check(block is not None,
+                     f"channel-playbooks.md: no `## {heading}` section"):
+            continue
+        check("checked 20" in block.group(1),
+              f"channel-playbooks.md: `## {heading}` carries no checked date")
+        bullets = _bullets(block.group(1))
+        check(bool(bullets), f"channel-playbooks.md: `## {heading}` has no rules")
+        for bullet in bullets:
+            check("](http" in bullet,
+                  f"channel-playbooks.md: `## {heading}` rule has no source URL: "
+                  f"{bullet[:70]}…")
+    x = re.search(r"^## X\n(.*?)(?=^## )", playbooks, re.M | re.S)
+    if check(x is not None, "channel-playbooks.md: no `## X` section"):
+        body = x.group(1)
+        check("xai-org/x-algorithm" in body and "e62790c" in body,
+              "channel-playbooks.md: the X weights no longer cite "
+              "xai-org/x-algorithm@e62790c")
+        for weight in ("| share via copy link | 20 |", "| reply | 5 |",
+                       "| reply from a mutual follow | +15 boost |",
+                       "| follow author | 4 |", "| report | −234 |",
+                       "| mute author | −58.8 |", "| like | 0.5 |"):
+            check(weight in body, f"channel-playbooks.md: X lost the row `{weight}`")
+        check("48 hours" in body, "channel-playbooks.md: X lost the 48-hour window")
+        for claim in ("- Bookmarks weigh heavily", "- More than two hashtags is penalised"):
+            check(claim not in body,
+                  f"channel-playbooks.md: `{claim[2:]}` is back as a rule -- the "
+                  f"open ranker carries no such weight (removed 2026-10-07)")
+
+    outliers = read(refs / "research-outliers.md") or ""
+    own = re.search(r"Your account: ([\d,]+) followers", outliers)
+    if check(own is not None, "research-outliers.md: the worked example names no "
+                              "`Your account: N followers`"):
+        mine = int(own.group(1).replace(",", ""))
+        rows = re.findall(r"^\| (V\d+) \| [^|]+ \| ([\d,]+) \| ([\d,]+) \| "
+                          r"([\d,]+) \| ([\d.]+) \| ([a-z ]+) \|$", outliers, re.M)
+        check(len(rows) >= 5, f"research-outliers.md: {len(rows)} worked rows parsed")
+        for vid, followers, median, views, multiple, reading in rows:
+            f, m, v = (int(x.replace(",", "")) for x in (followers, median, views))
+            got = round(v / m, 1)
+            check(f"{got:.1f}" == multiple,
+                  f"research-outliers.md: {vid} states {multiple}x, "
+                  f"{v} / {m} is {got:.1f}x")
+            if not (mine / 10 <= f <= mine * 10):
+                want = "outside the sample"
+            else:
+                want = "signal" if got >= 3 else "noise" if got < 1.5 else "between"
+            check(reading.strip() == want,
+                  f"research-outliers.md: {vid} reads `{reading.strip()}`, "
+                  f"the rule gives `{want}`")
+
+    script = read(refs / "video-script.md") or ""
+    check(bool(script), "references/video-script.md: missing or empty")
+    check("No coefficient" in script or "carries no coefficient" in script,
+          "video-script.md: the Russian timing rule no longer says it carries no "
+          "coefficient -- Russian is measured by reading aloud")
+    check(not re.search(r"\|\s*Words \(RU", script),
+          "video-script.md: a Russian words-per-second column is back; Russian "
+          "timing is measured by reading aloud, never converted")
+
+
 def validate_ledger_names_its_version() -> None:
     """The ledger has to name the version it was measured on.
 
@@ -2214,6 +2332,7 @@ def main() -> int:
     validate_audit_leaves_product_alone()
     validate_run_instructions()
     validate_ai_tell_coverage()
+    validate_short_video_shelf()
     validate_front_matter_is_yaml()
     validate_ledger_table_shape()
     validate_graph_claims()

@@ -157,11 +157,12 @@ Commands: `/brand` (status → one recommended action), `/brand-init`,
 python3 docs/brand/lint.py
 ```
 
-42 deterministic checks (`B001`..`B073`): banned words, one action under two names, a figure
+46 deterministic checks (`B001`..`B073`): banned words, one action under two names, a figure
 with no sourced fact, a field over its limit with the locale coefficient
 applied, blocked AI crawlers, keyword stuffing, humor on a billing screen,
 a rhetorical dash, a title that ends in a full stop, a locale that lags
-without saying so. Exit 0 clean **or warnings only**, 1 warnings under `--strict`, 2 any error. That is the policy `docs/ux/lint.py` has always had, and one pack cannot hold two opposite meanings for a warning: this linter returned 1 on warnings alone until 2026-08-20, so 13 of its 39 codes turned a build red while printing `0 error(s), 1 warning(s)`.
+without saying so, a short-video hook the filter calls weak, a caption that
+spends the feed window or asks twice, an invisible character pasted in. Exit 0 clean **or warnings only**, 1 warnings under `--strict`, 2 any error. That is the policy `docs/ux/lint.py` has always had, and one pack cannot hold two opposite meanings for a warning: this linter returned 1 on warnings alone until 2026-08-20, so 13 of its 39 codes turned a build red while printing `0 error(s), 1 warning(s)`.
 
 Clean means *checkable*, not *good*: tone drift, unproven claims and a voice
 that has overshot its own failure mode are judged by `/ux-audit copy`.
@@ -243,7 +244,7 @@ to is a skill nobody runs.
 | skill `ux-scenarios` | `docs/ux/scenarios.md`: use-case scenarios (action → observable response, alt and error paths) covering every flow node and edge, `Traces:` to stories and flows, validated for conflicts, coverage and traceability |
 | skill `ux-audit` | Batched audit with full context: code vs every scenario plus its story's acceptance criteria; verdicts PASS / PARTIAL / FAIL / BLOCKED with `file:line` evidence; depths `quick` / `standard` / `deep`; a `coverage` scope that audits the chain itself |
 | skill `brand-voice` | `docs/brand/`: the pack and its five axes, the words the product owns and bans, canonical facts, the per-surface register, locales, plus six shipped voice packs, each declaring the degeneration it collapses into when overdone |
-| skill `copywriting` | Writes in that voice and never writes *to* it: interface strings, errors, empty states, landing and pricing pages, posts, changelogs, store listings, ads, lifecycle email. A missing term or an unsourced number is reported, never invented |
+| skill `copywriting` | Writes in that voice and never writes *to* it: interface strings, errors, empty states, landing and pricing pages, posts and captions, short-video scripts and hooks, changelogs, store listings, ads, lifecycle email. A missing term or an unsourced number is reported, never invented |
 | `/ux` | **The one command**: sets up whatever is missing, reports status across every layer, then offers only the applicable actions with one marked recommended. Idempotent |
 | `/vision` `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` `/ux-doctor` · `/brand` `/brand-init` `/brand-update` `/brand-lint` `/copy` | Direct controls for when you know exactly what you want; `/ux-rule` installs both hard rules and seeds `lint.py` + `doctor.py`; `/brand-init` seeds `docs/brand/` and its linter |
 | `docs/ux/lint.py` + `/ux-lint` | The deterministic half: missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, ID gaps, broken links. Stdlib-only, exit 1 on problems, so wire it into CI and drift can't merge |

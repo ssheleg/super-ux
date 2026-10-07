@@ -1,3 +1,23 @@
+# Short-video copy handoff, 2026-10-07
+
+Branch `feat/short-video-copy` prepares super-ux 0.57.0: the short-video,
+Instagram and X playbooks, `video-script.md`, `hooks.md`,
+`research-outliers.md`, and four brand-lint codes (`B044` hook filter, `B045`
+feed window, `B046` one ask, `B066` invisible characters). Start with the
+[0.57.0 changelog section](../CHANGELOG.md) and the
+[verification ledger](evidence/verification.md) rows SV-C1..SV-C8.
+
+- Done: every task C1–C8 of the family plan, each check watched failing on a
+  planted defect; `npm test` and every CI step green locally.
+- Open: review and merge, tag `v0.57.0`, npm publication, the umbrella pin in
+  `sshlg-skills/skills.json`, and refreshing local installs. None of these is
+  implied by this branch.
+- Not done on purpose: no Russian words-per-second coefficient (measured by
+  reading aloud); `B044` scores English only; `B066` reports and never rewrites.
+- Next task: review the PR, then release per `CONTRIBUTING.md` → Releasing.
+
+---
+
 # Display-copy guard handoff, 2026-10-01
 
 Start with [DC-01 report](evidence/audits/2026-10-01-display-copy/report.md).

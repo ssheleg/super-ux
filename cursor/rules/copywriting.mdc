@@ -1,5 +1,5 @@
 ---
-description: "Write or rewrite any text a user reads (interface strings, errors, empty states, landing and pricing pages, posts, changelogs, store listings, ads, email): apply when asked to write copy, rewrite a headline or CTA, fix microcopy, or when a draft reads machine-made"
+description: "Write or rewrite any text a user reads (interface strings, errors, empty states, landing and pricing pages, posts and captions, short-video scripts and hooks, changelogs, store listings, ads, email): apply when asked to write copy, rewrite a headline or CTA, fix microcopy, or when a draft reads machine-made"
 alwaysApply: false
 ---
 
@@ -53,6 +53,17 @@ Machine-made tells to strip: tricolons that add nothing, "seamless /
 effortless / unlock / elevate / robust", em-dash cadence in every paragraph,
 "it's not just X, it's Y", hedges stacked two deep, and a closing sentence
 that summarizes what was just said.
+
+## Short video
+
+A hook is three things at once, about one thing: frame 0, on-screen text of
+ten words or fewer, and the first spoken line. The body pays the promise
+before the middle. Write the angle first ("for [persona], who wants
+[desire], we show [proof]"), time the script by reading it aloud (never
+convert a word count into another language), and give every figure in the
+hook its `facts.md` row. `B044` filters weak hooks; it is a filter, never a
+predictor of which hook wins. A caption fits the feed window and makes one
+ask (`B045`, `B046`).
 
 ## Localization
 

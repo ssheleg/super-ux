@@ -274,6 +274,20 @@ Locales:    de headline budget 60 * 1.30
 **Forbidden** always carries both halves, `physics:` and `brand:`, even when
 one is `none`; see the second rule below.
 
+**What the linter reads in a record.** `Limits:` is `field N` pairs, `body`
+meaning the document body (`B040`, `B073`). In the `physics:` half of
+`Forbidden:` it reads four tokens and nothing else: `link in body` (`B042`),
+`max N hashtags` (`B043`), `fold N`, the characters the feed shows before
+"… more" (`B045`), and `one ask` (`B046`). A physics clause in other words is
+documentation for a reader, not a rule the linter applies, so the platform
+fact belongs in the playbook and the token belongs here.
+
+**Short video.** A script document carries its hook in front matter:
+`hook:` (and `hook-2:`, `hook-3:` … for variants) for the first spoken line,
+`on-screen:` (`on-screen-2:` …) for the overlay text. `B044` filters each hook
+and the overlay length; `B030` reads both fields as public copy. The method
+and its limits are in the `copywriting` skill's `hooks.md`.
+
 ### Surfaces
 
 Product: `primary action` · `empty state` · `error` · `loading` ·
@@ -282,8 +296,13 @@ Product: `primary action` · `empty state` · `error` · `loading` ·
 `transactional email and push` · `docs and help`.
 
 Marketing: `landing hero` · `landing body` · `pricing` · `blog` ·
-`changelog` · `X` · `Reddit` · `LinkedIn` · `HN and Product Hunt` ·
+`changelog` · `X` · `Instagram` · `TikTok` · `YouTube Shorts` ·
+`short video` · `Reddit` · `LinkedIn` · `HN and Product Hunt` ·
 `App Store` · `Google Play` · `ads` · `lifecycle email`.
+
+`Instagram`, `TikTok` and `YouTube Shorts` are the caption or post on that
+platform; `short video` is the spoken script and on-screen text, shared across
+the three when one video ships to all of them.
 
 A project may omit a surface it does not have. It may not rename one: the
 linter and the audit both address surfaces by these names.
@@ -468,6 +487,9 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B041 | E | an iOS keyword-field rule broken |
 | B042 | E | a link in a body where the surface's physics forbid it |
 | B043 | W | more hashtags than the surface tolerates |
+| B044 | W | a short-video hook fails the filter: it scores WEAK, carries a dealbreaker (a "stop scrolling" opener, a video preamble, a greeting, a hashtag, an emoji), or its on-screen text runs past ten words. A filter, not a predictor: AUC 0.83 at catching a bad hook, 0.56 at picking a winner; a hook in a non-Latin script gets only the hashtag and emoji dealbreakers |
+| B045 | W | a caption's first line runs past the surface's `fold`, opens with a hashtag or a mention, or spends the window on a hashtag |
+| B046 | W | a caption on a `one ask` surface makes no ask, or more than one |
 | B050 | E | AI search declared a target while a crawler is blocked |
 | B051 | W | a token REPEATS unnaturally on one rendered page (advisory: ≥5x and >4%, min 40 words, registered terms exempt) — Google's spam policy is manipulative repetition, not a fixed percentage; no claim about citation likelihood |
 | B052 | E | a filler opener |
@@ -478,6 +500,7 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B062 | E | AT-06, a rhetorical dash standing in for a full stop, comma or colon |
 | B063 | W | AT-07, a document title, Markdown ATX heading or HTML heading fragment ends in a full stop |
 | B065 | E | a registry row carries a `Kind` the contract does not declare |
+| B066 | W | AT-16, an invisible or look-alike-space character in a declared source file, outside the numbered exemptions; it reports and never rewrites, and it never examines a dash or a quotation mark |
 | B064 | W/E | the humanization pass: absent field warns that the default `on` applies unrecorded; an out-of-enum value errors; `off` with no `Humanization declined:` reason errors |
 | B070 | E | a declared locale has no locale file |
 | B071 | W | locale parity below the declared threshold |

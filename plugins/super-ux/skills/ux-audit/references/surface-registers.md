@@ -58,12 +58,13 @@ is safe to revisit when the platform changes its ranking.
 So `Forbidden:` always carries both halves, and one of them may be `none`:
 
 ```
-Forbidden:  physics: link in body suppresses reach; >2 hashtags penalised
+Forbidden:  physics: link in body, max 5 hashtags, fold 125, one ask
             | brand: no engagement bait, no fake urgency
 ```
 
-The linter enforces the physics half (`B042`, `B043`, `B040`) because it is
-mechanical. The brand half is judged by the `copy` audit scope, because it is
+The linter enforces the physics half (`B040`, `B042`, `B043`, `B045`,
+`B046`) because it is mechanical; the tokens it reads are listed in the brand
+contract. The brand half is judged by the `copy` audit scope, because it is
 a decision.
 
 ## Rule 3: humor is forbidden where the user is losing something
@@ -201,6 +202,19 @@ the reader, not which module was refactored.
 
 Density +1, distance −1. One idea per post; the first line decides whether
 the rest is read.
+
+### Instagram, TikTok and YouTube Shorts
+
+Distance −1. The caption under the video: the first line is the window the
+feed shows, so it carries the hook or the context, never a tag. One ask,
+spoken in the video as well as written.
+
+### short video
+
+Distance −1, density +1, confidence +1. Spoken, so written for the ear: short
+sentences, one idea per beat, figures said aloud. The on-screen text and the
+spoken line are two sentences about one thing. Craft is in the `copywriting`
+skill's `video-script.md` and `hooks.md`.
 
 ### Reddit
 
