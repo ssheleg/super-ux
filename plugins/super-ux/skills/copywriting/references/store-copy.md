@@ -25,27 +25,40 @@ rather than trusting this table.*
 
 | Field | App Store | Google Play | RuStore | Meta Horizon |
 |---|---|---|---|---|
-| Title | 30 | 30 | 30 | 40 |
+| Title | 30 | 30 | 30 (see note) | 40 |
 | Subtitle | 30 | — | — | — |
 | Short description | — | 80 | 80 | 500 |
 | Keyword field | 100 | — | 5 search tags | — |
 | Promotional text | 170 | — | — | — |
 | Full description | 4000 | 4000 | 4000 | 1500 |
-| What's new | 4000 | 500 | not stated | — |
+| What's new | 4000 | 500 | 5000 | — |
 
-Sources, read 2026-10-07:
-[Google Play metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842)
-("Your app title must be 30 characters or less" — an earlier version of this
-table said 50);
-[RuStore app publication](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/app-publication)
-(name "не более 30 символов", short "до 80", full "до 4000", "до 5 поисковых
-тегов"; no What's new limit stated);
-[the RuStore team on listing design](https://habr.com/ru/companies/vk/articles/772844/)
-(2023-11-09: a name claiming superiority over other products, "Лучшее
-приложение в RuStore" or "Игра №1 в RuStore", may not pass moderation — a
-team article, not the policy page);
-[Meta Horizon app metadata](https://developers.meta.com/horizon/resources/publish-app-metadata/)
-(Name 40, Short description 500, Long description 1500; page updated 2025-08-20).
+Sources, read 2026-10-07 from the rendered pages (RuStore's help is a
+JavaScript shell; a summary of the raw HTML misreads it):
+
+- [Google Play metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842):
+  "Your app title must be 30 characters or less" (an earlier version of this
+  table said 50).
+- **RuStore disagrees with itself on the name.** The
+  [publication help page](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/app-publication)
+  says "не более 30 символов"; the
+  [ASO recommendations](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/aso-recommendations)
+  say "до 50 символов", and the
+  [publishing API](https://www.rustore.ru/help/en/work-with-rustore-api/api-upload-publication-app/create-draft-version)
+  accepts `appName` up to 50. Write the name to 30: it passes every page.
+  The same API gives short 80, full 4000, `whatsNew` 5000; the help page gives
+  up to 5 search tags.
+- [RuStore app requirements §6.4](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/requirement-apps):
+  the name, descriptions and version history must not carry clickbait —
+  "лучший", "единственный", "запрещённый", "секретный", "самый" and the like —
+  and "официальный" must be provable. A name or listing that breaks this can be
+  refused at moderation.
+- [Meta Horizon app metadata](https://developers.meta.com/horizon/resources/publish-app-metadata/)
+  (updated 2025-08-20): Name 40, Short description 500, Long description 1500.
+  [Meta Horizon asset guidelines](https://developers.meta.com/horizon/resources/asset-guidelines/)
+  (updated 2026-05-11), Screenshots: "No banners, badges, titles, or marketing
+  text" — a screenshot caption is a store-copy decision only on the stores that
+  allow one.
 
 Two structural differences that change how each is written:
 

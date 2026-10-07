@@ -8,6 +8,17 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-07 — RuStore and Horizon re-read from the rendered pages, v0.58.2
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| SL-5 | RuStore name: the conflict stated (help 30, ASO page and API 50), write to 30 | rendered `innerText` of the three pages in headless Chrome, 2026-10-07: "не более 30 символов"; "Название (до 50 символов)"; "appName … Maximum length — 50 characters" | **observed** |
+| SL-6 | RuStore What's new 5000 | publishing API page: "whatsNew … Maximum length — 5000 characters" | **observed** |
+| SL-7 | RuStore clickbait ban cited to requirements §6.4 | requirements page §6.4 "Название и описание", rendered text quoted | **observed** |
+| SL-8 | Horizon screenshots: no banners, badges, titles or marketing text | asset guidelines page, rendered, "Updated: 11 May 2026" | **observed** |
+
+The 0.58.1 rows SL-2 and SL-3 were read through a page summary and missed these; the summary tool is not used for a JavaScript-rendered page again.
+
 ## 2026-10-07 — store limits from the stores' own pages, v0.58.1
 
 A reported error in `store-copy.md` (Google Play title 50) checked against each store's page before any edit.

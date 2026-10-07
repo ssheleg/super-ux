@@ -1,3 +1,25 @@
+## 0.58.2 — RuStore's own pages disagree on the name, and the listing now says so
+
+0.58.1 read RuStore's help through a page summary, and RuStore's help is a
+JavaScript shell: the summary missed figures that the rendered pages carry. A
+neighbouring writing agent re-read them in a real browser and reported back;
+every point below was then read again here from the rendered page.
+
+- **RuStore name: the stores' pages disagree.** The publication help page says
+  30; the ASO recommendations and the publishing API (`appName`) say 50. The
+  listing now states the conflict and says to write to 30, which passes all
+  three.
+- **RuStore What's new: 5000** (`whatsNew` in the publishing API), not "not
+  stated".
+- **RuStore's clickbait ban is a rule, not just an article.** App requirements
+  §6.4 bans "лучший", "единственный", "запрещённый", "секретный", "самый" and the
+  like in the name, descriptions and version history, and requires proof for
+  "официальный". The 2023 team article is no longer the citation.
+- **Meta Horizon screenshots carry no marketing text.** The asset guidelines
+  (updated 2026-05-11) forbid banners, badges, titles and marketing text on
+  screenshots; 0.58.1 had looked only at the metadata page and said there was
+  no such rule.
+
 ## 0.58.1 — a store title is 30 characters on Google Play too, and two more stores have their limits
 
 `store-copy.md` said a Google Play title takes 50 characters. Google's metadata
