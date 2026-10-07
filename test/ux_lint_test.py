@@ -260,6 +260,169 @@ silent("U020 silent when Figma is disabled",
        {"screens.md": screens(STATES_EMPTY),
         "foundation.md": "# F\n\n**Figma:** disabled\n"}, {"U020"})
 
+# U020 used to read only the four rows it had a name for (loading / empty /
+# error / success), so a `keyboard-up` or `offline` row with an empty frame cell
+# passed a project whose hard rule says every state has a frame. The column is
+# found by its header now, not by its position after the state name.
+STATES_NEW_NAME = STATES_EMPTY.replace("| error |", "| keyboard-up |")
+case("U020 a state outside the old four still needs its frame",
+     {"screens.md": screens(STATES_NEW_NAME)},
+     errors={"U020"})
+silent("U020 clean when the new-name state carries its frame",
+       {"screens.md": screens(STATES_NEW_NAME.replace(
+           "<frame deep-link>", "https://figma.com/file/x?node-id=2"))}, {"U020"})
+
+# --- U079 / U080 / U081: states and axes, the rows and columns of review ----
+#
+# The contact sheet a human approves has screen states for rows and render axes
+# for columns, and both come from here. A screen with no state list gives the
+# sheet no rows; one with no axes gives it no columns, and a reviewer then sees
+# the happy path at one width in one theme and calls it the screen.
+
+AXES_LINE = "- **Axes:** viewport: 375, 1280; theme: light, dark; text: default, 200%; locale: en, ar\n"
+STATE_ROW_FIG = ("- **States:**\n"
+                 "  | State | Trigger | Figma frame | Behavior |\n"
+                 "  |---|---|---|---|\n"
+                 "  | default | open | https://figma.com/file/x?node-id=1 | list |\n")
+FIG_OFF = {"foundation.md": "# F\n\n**Figma:** disabled\n"}
+
+case("U079 a screen with no state list",
+     {"screens.md": screens("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n")},
+     errors={"U079"})
+case("U079 still fires with Figma off: the list is required either way",
+     {"screens.md": screens("- **Purpose:** p\n" + AXES_LINE + "- **Status:** designed\n"),
+      **FIG_OFF},
+     errors={"U079"})
+silent("U079 clean on a States table",
+       {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG + AXES_LINE
+                              + "- **Status:** designed\n")}, {"U079"})
+silent("U079 clean on an inline state list with Figma off",
+       {"screens.md": screens("- **Purpose:** p\n- **States:** default, loading, error\n"
+                              + AXES_LINE + "- **Status:** designed\n"), **FIG_OFF},
+       {"U079", "U020"})
+silent("U079 silent on a retired screen",
+       {"screens.md": screens("- **Purpose:** p\n- **Status:** retired\n")}, {"U079", "U080"})
+
+case("U080 a screen with no axes and no project default",
+     {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG + "- **Status:** designed\n")},
+     errors={"U080"})
+case("U080 an axes line that omits one of the four",
+     {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG
+                            + "- **Axes:** viewport: 375; theme: light, dark; text: default\n"
+                            + "- **Status:** designed\n")},
+     errors={"U080"})
+case("U080 a placeholder is not a value",
+     {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG
+                            + "- **Axes:** viewport: <widths>; theme: light; text: default; locale: en\n"
+                            + "- **Status:** designed\n")},
+     errors={"U080"})
+silent("U080 clean when the screen declares all four",
+       {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG + AXES_LINE
+                              + "- **Status:** designed\n")}, {"U080"})
+silent("U080 reads a declaration wrapped over several lines",
+       {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG
+                              + "- **Axes:** viewport: 375, 1280; theme: light, dark;\n"
+                              + "  text: default, 200%; locale: en\n"
+                              + "- **Status:** designed\n")}, {"U080"})
+silent("U080 clean when the Design system sets the project default",
+       {"screens.md": screens("- **Purpose:** p\n" + STATE_ROW_FIG + "- **Status:** designed\n")
+        .replace("## Web surfaces", "## Design system\n\n" + AXES_LINE + "\n## Web surfaces")},
+       {"U080"})
+
+STATES_STORY = ("- **States:**\n"
+                "  | State | Trigger | Figma frame | Story | Behavior |\n"
+                "  |---|---|---|---|---|\n"
+                "  | default | open | https://figma.com/file/x?node-id=1 | src/List.stories.tsx | list |\n"
+                "  | empty | none | https://figma.com/file/x?node-id=2 | — | prompt |\n")
+case("U081 a built screen's state with no story in its Story column",
+     {"screens.md": screens("- **Purpose:** p\n" + STATES_STORY + AXES_LINE
+                            + "- **Coverage:** none yet\n- **Status:** built\n")},
+     errors={"U081"})
+silent("U081 clean when every state names its story",
+       {"screens.md": screens("- **Purpose:** p\n"
+                              + STATES_STORY.replace("| — |", "| src/List.stories.tsx#Empty |")
+                              + AXES_LINE + "- **Coverage:** none yet\n- **Status:** built\n")},
+       {"U081"})
+silent("U081 silent before the build: a designed screen has no story yet",
+       {"screens.md": screens("- **Purpose:** p\n" + STATES_STORY + AXES_LINE
+                              + "- **Status:** designed\n")}, {"U081"})
+silent("U081 reads a header as a word: `History` is not a Story column",
+       {"screens.md": screens("- **Purpose:** p\n"
+                              + STATES_STORY.replace("| Story |", "| History |")
+                              + AXES_LINE + "- **Coverage:** none yet\n- **Status:** built\n")},
+       {"U081"})
+silent("U081 silent without a Story column: Figma-off projects keep the list only",
+       {"screens.md": screens("- **Purpose:** p\n- **States:** default, empty\n" + AXES_LINE
+                              + "- **Coverage:** none yet\n- **Status:** built\n"), **FIG_OFF},
+       {"U081", "U020", "U079"})
+
+# --- U082 / U083 / U084: the onboarding budget (design-award R2) ----------------
+#
+# At most one onboarding screen stands between the entry and the first value.
+# More is allowed only when the director record says why, and the linter can
+# check that the record exists and talks about onboarding; it cannot judge the
+# reason, which is the human's.
+
+def flow(body: str, name: str = "Get started") -> str:
+    return f"# Flows\n\n### FLW-01: {name}\n- **Goal:** g\n{body}"
+
+case("U082 two onboarding screens and no budget record",
+     {"flows.md": flow("- **Onboarding:** SCR-01, SCR-02\n- **First value:** SCR-03\n")},
+     errors={"U082"})
+case("U082 a budget record that does not exist",
+     {"flows.md": flow("- **Onboarding:** SCR-01, SCR-02\n- **First value:** SCR-03\n"
+                       "- **Onboarding budget:** docs/design/app/director-record.md\n")},
+     errors={"U082"})
+case("U082 a budget record that never mentions onboarding",
+     {"flows.md": flow("- **Onboarding:** SCR-01, SCR-02\n- **First value:** SCR-03\n"
+                       "- **Onboarding budget:** docs/design/app/director-record.md\n")},
+     errors={"U082"},
+     root_files={"docs/design/app/director-record.md": "# Record\n\n## Brief\n\ncalm\n"})
+silent("U082 clean on one onboarding screen",
+       {"flows.md": flow("- **Onboarding:** SCR-01\n- **First value:** SCR-02\n")}, {"U082"})
+silent("U082 clean on two screens the director record justifies",
+       {"flows.md": flow("- **Onboarding:** SCR-01, SCR-02\n- **First value:** SCR-03\n"
+                         "- **Onboarding budget:** docs/design/app/director-record.md\n")},
+       {"U082"},
+       root_files={"docs/design/app/director-record.md":
+                   "# Record\n\n## Open\n\nTwo onboarding screens: consent is a legal step.\n"})
+
+case("U083 a flow named onboarding that declares no budget field",
+     {"flows.md": flow("", name="First-run onboarding")},
+     warns={"U083"})
+silent("U083 clean once the flow declares its onboarding screens",
+       {"flows.md": flow("- **Onboarding:** none\n- **First value:** SCR-01\n",
+                         name="First-run onboarding")}, {"U083"})
+silent("U083 silent on a flow that is not onboarding",
+       {"flows.md": flow("", name="Export a report")}, {"U083"})
+
+case("U084 an onboarding count with no first value to count against",
+     {"flows.md": flow("- **Onboarding:** SCR-01\n")},
+     warns={"U084"})
+silent("U084 clean when the first value is named",
+       {"flows.md": flow("- **Onboarding:** SCR-01\n- **First value:** SCR-02\n")}, {"U084"})
+
+# --- U085: art direction is approved on a critique, and says which ----------
+
+case("U085 art direction approved with no critique cited",
+     {"flows.md": flow("- **Art direction:** approved 2026-10-07 by the owner\n")},
+     errors={"U085"})
+case("U085 a cited critique that does not resolve",
+     {"flows.md": flow("- **Art direction:** approved 2026-10-07 — critique: "
+                       "docs/design/app/director-record.md#critique\n")},
+     errors={"U085"})
+silent("U085 clean when the approval cites a critique that exists",
+       {"flows.md": flow("- **Art direction:** approved 2026-10-07 — critique: "
+                         "docs/design/app/director-record.md#critique\n")},
+       {"U085"},
+       root_files={"docs/design/app/director-record.md": "# R\n\n## Critique\n\nx\n"})
+silent("U085 clean when the critique is a link the reader can open",
+       {"flows.md": flow("- **Art direction:** approved — critique: "
+                         "https://figma.com/file/x?node-id=9\n")}, {"U085"})
+silent("U085 silent while art direction is pending",
+       {"flows.md": flow("- **Art direction:** pending — two directions on the 2-up sheet\n")},
+       {"U085"})
+
 case("U021 a built screen with no coverage",
      {"screens.md": screens("- **Purpose:** p\n- **Coverage:** none yet\n"
                             "- **Status:** built\n")},

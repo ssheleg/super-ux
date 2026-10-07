@@ -60,7 +60,14 @@ Passes:
    respected, dark mode from its twin — a screen ignoring the recorded pack
    is `drifted`, not a taste debate. No pack recorded and the visual layer
    looks improvised → suggest the **sheleg-design** companion once, as an
-   opportunity finding.
+   opportunity finding. With the companion installed, its project linter
+   (`npx sheleg-design-skill --lint <dir>`) runs here whatever the pack —
+   `Style pack: none` included — and an S1 hit is a finding; absent, the
+   report records the marker check as `NOT_RUN`. When the live pass ran (see
+   `ux-audit` → Live pass and visual drift), its **`visual-drift`** findings
+   are reported in this pass beside `drifted`: `drifted` compares the code
+   with its record, `visual-drift` compares the rendered build with its
+   Figma frame.
 5. **Coverage pass** — the chain itself: orphan stories/flows/screens/
    scenarios, journey stages without scenarios, jobs without stories, unused
    personas, screens not used by any flow, flows referencing missing

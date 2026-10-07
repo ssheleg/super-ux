@@ -1,3 +1,63 @@
+## 0.58.0 — the look is decided before the frames, and approved on a critique
+
+`ux-flows` picked the style pack itself, from three or four names copied out of
+a catalogue that had grown to dozens, then drew a frame for every state of
+every flow in that one guess and asked for approval of the lot. The approval
+covered the flow and the look at once, on frames nobody had critiqued. This
+release hands the visual decision to its owner and splits the approvals, from
+the family's 2026-10-07 design-pipeline plan, tasks U1–U5 plus the screen
+matrix and the onboarding budget.
+
+- **U1. `/sheleg-design` decides the look; super-ux keeps no pack list.**
+  `ux-flows` step 4, `visual-identity.md`, `/ux`, the Cursor rule, the
+  `screens.md` seed and the README now delegate to the companion's own index,
+  defaults and director record. An underdetermined brief gets **directions
+  before frames**: one key screen in one state, two directions only when the
+  fork is real (rubric first), the human picks on a 2-up mini sheet, then the
+  rest of the frames. `validate_direction_before_frames` refuses a pack name in
+  any of those seven files.
+- **U2. `Style pack: none` keeps the floor.** With sheleg-design installed its
+  `SLOP_MARKERS.md` catalogue applies pack or no pack; where code exists,
+  `npx sheleg-design-skill --lint <dir>` runs and its result is recorded;
+  companion absent or a version without `--lint` → `Markers: NOT_RUN`, never a
+  pass. `visual-identity.md`, `figma-integration.md`, `audit-depth.md`.
+- **U3. Flow approval and art-direction approval are two decisions.** Frames
+  are critiqued with `get_screenshot` against the director record's rubric
+  before approval, findings as region → defect → fix triples, one re-render
+  round (two at most), then `unresolved` to the human. The flow records
+  `Art direction: approved <date> — critique: <where>`; **`U085`** refuses an
+  approval that cites no critique or a path that does not resolve.
+- **U4. `visual-drift` in `ux-audit`.** The live pass compares the build with
+  its Figma frame in the same state, viewport and theme, under the capture
+  record of sheleg-design's `VISUAL_REVIEW.md`; an unfit or missing capture is
+  BLOCKED, never PASS. The live pass is offered by default for
+  `surface_class: flagship` or `ad`, and for landing, onboarding, paywall and
+  store screens when no class is recorded.
+- **U5. Figma is a file per surface.** `foundation.md` → Design tooling
+  records the folder and a `Figma files` table with a row per surface the
+  product has (App / Web / ASO); the "single project file" wording is gone
+  from the template, the contract, `figma-integration.md` and `ux-foundation`.
+- **Every screen declares its states and axes.** States: default, loading,
+  empty, error, offline, long-content, keyboard-up, first-run (those that
+  apply). Axes: `viewport; theme; text; locale`, per screen or as a Design
+  system default. **`U079`** (no states, Figma or not), **`U080`** (no axes or
+  one missing), **`U081`** (a built screen's state with an empty `Story`
+  cell). `U020` now finds the frame column by its header and covers every
+  declared state, not only loading / empty / error / success: a `keyboard-up`
+  row with no frame used to pass.
+- **The onboarding budget is one screen** (R2 of the Apple Design
+  Awards-derived rubric), in `onboarding.md` ON-06 and the flow contract. Flows record `Onboarding:` and `First value:`;
+  **`U082`** refuses a second screen without `Onboarding budget:` citing a
+  director record that exists and discusses onboarding; **`U083`** warns on a
+  flow named for onboarding that declares nothing; **`U084`** on a count with
+  no first value.
+- **Upgrading a project:** the new errors fire on existing `screens.md`
+  files. One `- **Axes:** viewport: …; theme: …; text: …; locale: …` line in
+  the Design system block clears `U080` for every screen; this repository's
+  own chain needed exactly that.
+- Evals `EV-06` (visual drift is found) and `EV-07` (one key screen, 2-up,
+  no pack list) join `test/evals/cases.json`; not run in CI, as before.
+
 ## 0.57.0 — short video gets a playbook, a hook filter and a caption linter
 
 `copywriting` covered posts for X, Reddit and LinkedIn and nothing that moves:

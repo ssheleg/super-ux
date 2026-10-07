@@ -12,7 +12,7 @@ text-only design is always a valid fallback.
 - [When to ask](#when-to-ask)
 - [Preflight (only when Figma is chosen)](#preflight-only-when-figma-is-chosen)
 - [Which tool for which job](#which-tool-for-which-job)
-- [Recording the file (foundation.md → Design tooling)](#recording-the-file-foundationmd--design-tooling)
+- [Recording the files (foundation.md → Design tooling)](#recording-the-files-foundationmd--design-tooling)
 - [Design loop with Figma (inside ux-flows Design)](#design-loop-with-figma-inside-ux-flows-design)
 - [Improve mode with Figma](#improve-mode-with-figma)
 - [Keeping Figma in sync (same-change rule)](#keeping-figma-in-sync-same-change-rule)
@@ -49,12 +49,18 @@ again per flow — the project-level choice holds until the user changes it.
    read the equivalent MCP resource (`skill://figma/<name>/SKILL.md`, listed
    by the server's own skill tools). These are the API's rules, not
    super-ux's — follow them verbatim and don't hand-guess the calls.
-3. **File location recorded?** If Design tooling has no Figma file yet,
-   create one — `whoami` first for the plan key (ask which team/org when the
-   user has several), then `create_new_file` with `editorType: "design"` —
-   or ask the user for the target file URL. Write the URL into
-   `foundation.md` immediately, before drawing anything, so the location is
-   never lost.
+3. **Files recorded — one per surface?** A product's Figma is a **set of
+   files in the product's folder**, one per surface it has: **App** (the
+   product's screens), **Web** (landing, pricing, docs pages), **ASO** (store
+   screenshots, icon, preview frames). One file for everything mixes three
+   audiences, three review cadences and three export pipelines, and the
+   surfaces nobody recorded go missing first. For each surface the product
+   has and Design tooling does not list yet, create the file — `whoami`
+   first for the plan key (ask which team/org when the user has several),
+   then `create_new_file` with `editorType: "design"` in the product's
+   folder — or ask the user for its URL. Write each URL into `foundation.md`
+   → Design tooling immediately, before drawing anything, so no location is
+   ever lost. A surface the product does not have gets no file.
 4. **Design system?** If the project has a Figma library / design system,
    pull it (`get_libraries` / `search_design_system`) and build on its
    components and tokens instead of inventing new ones. `get_variable_defs`
@@ -62,10 +68,12 @@ again per flow — the project-level choice holds until the user changes it.
    what exists before creating a parallel set.
 5. **Style pack?** If there is no design system yet, settle the visual
    identity BEFORE drawing: read `screens.md` → Design system → `Style pack`,
-   and when it's empty use the **sheleg-design** companion skill to pick one
-   (or offer its one-time install once, then continue either way). Its token
-   file becomes the Figma variable collections. Full protocol and the
-   division of labor: [visual-identity.md](visual-identity.md).
+   and when it's empty `/sheleg-design` decides it (or offer its one-time
+   install once, then continue either way). An underdetermined brief draws
+   **one key screen in one state** first and gets its direction picked on a
+   2-up sheet before any other frame exists. The chosen pack's token file
+   becomes the Figma variable collections. Full protocol and the division of
+   labor: [visual-identity.md](visual-identity.md).
 
 **File structure & naming:** organize the file and name pages, frames,
 components, and tokens per [figma-structure.md](figma-structure.md)
@@ -97,34 +105,66 @@ so — never invent a call.
 from `figma.com/design/:fileKey/...`. Both live in `screens.md` links
 already, which is why the deep-links are worth keeping accurate.
 
-## Recording the file (foundation.md → Design tooling)
+## Recording the files (foundation.md → Design tooling)
 
-`foundation.md` → Design tooling records the on/off choice and the file
-URL. The **design system** details and all **per-screen/per-state frame
-links** live in `screens.md` (the UI map):
+`foundation.md` → Design tooling records the on/off choice, the folder and
+**one file per surface**:
+
+```markdown
+## Design tooling           (in foundation.md)
+- **Figma:** enabled
+- **Figma folder:** <team / project the product's files live in>
+- **Figma files:**
+  | Surface | File | Holds |
+  |---------|------|-------|
+  | App | <url> | every SCR-NN frame of the product |
+  | Web | <url> | landing, pricing, docs pages |
+  | ASO | <url> | store screenshots, icon, preview frames |
+```
+
+A row per surface the product actually has; a missing row is a surface with
+no design home. The **design system** details and all **per-screen/per-state
+frame links** live in `screens.md` (the UI map):
 
 ```markdown
 ## Design system            (in screens.md)
-- **Style pack:** <sheleg-design pack, or "none — platform defaults">
+- **Style pack:** <the pack /sheleg-design chose, or "none — platform defaults">
+- **Director record:** <docs/design/<surface>/director-record.md, or "none — sheleg-design not installed">
+- **Axes:** viewport: <widths>; theme: <themes>; text: <sizes>; locale: <locales>
 - **Figma library:** <url/name, or "none">
 - **Tokens in code:** <src/theme/tokens.ts>
 - **Component source:** <src/components/>
 - **Assets:** <icons/illustrations location>
 ```
 
+**`none` declines a pack, not the floor.** With `sheleg-design` installed,
+its `SLOP_MARKERS.md` catalogue applies to every frame under `Style pack:
+none` exactly as under a pack: its `review` rows are read in the critique
+below, and where code exists `npx sheleg-design-skill --lint <dir>` runs and
+its result is recorded. Companion absent, or a version without `--lint` →
+`Markers: NOT_RUN — <reason>`, never a pass.
+[visual-identity.md](visual-identity.md) has the table.
+
 **Every screen state has a frame link.** In `screens.md` each screen's
-States table carries a Figma frame deep-link per state (success / empty /
-error / loading). No state in a Figma-enabled project is without its frame
-link; a state with an empty frame cell is an incomplete-design finding. The
-Index's `Figma` column links the screen's page for quick access.
+States table carries a Figma frame deep-link per declared state — `default`,
+`loading`, `empty`, `error`, `offline`, `long-content`, `keyboard-up`,
+`first-run`, whichever apply. No state in a Figma-enabled project is without
+its frame link; a state with an empty frame cell is `U020`. The Index's
+`Figma` column links the screen's page for quick access.
 
 ## Design loop with Figma (inside ux-flows Design)
 
-For each flow, AFTER the flow diagram + screen/state table are agreed:
+For each flow, AFTER the flow diagram + screen/state table are agreed. The
+**flow approval** is about those two — structure and behaviour — and is never
+given or withheld on how a frame looks:
 
+0. **Direction first, when the brief is underdetermined.** One key screen in
+   one state, two directions only when the fork is real, the human picks on
+   a 2-up mini sheet; only then the remaining frames
+   ([visual-identity.md](visual-identity.md) → Directions before frames).
 1. Build the mockup in Figma from the flow's screen list and each screen's
-   declared states (loading / empty / error / success) — one frame per
-   screen-state that matters, on the flow's page.
+   declared states — one frame per screen-state, on the flow's page, in the
+   App, Web or ASO file the surface belongs to.
 2. Build on the recorded **style pack** (visual-identity.md): its tokens
    become the file's variable collections, its type scale/spacing/motion the
    frame defaults, its bans hard limits. Then apply the visual-craft
@@ -149,7 +189,24 @@ For each flow, AFTER the flow diagram + screen/state table are agreed:
    hand-guess the calls.
 5. Write each state's frame deep-link into that screen's States table in
    `screens.md`, and the screen's page link into the Index `Figma` column.
-   Present the mockup for approval alongside the flow.
+6. **Critique the frames before anyone approves them.** `get_screenshot`
+   each frame (the key screen's first, then every new state) and read the
+   picture — not the layer tree — against the director record's `Rubric`
+   (sheleg-design), the `SLOP_MARKERS.md` `review` rows and the BP-079..090
+   floors. Write every finding as a triple, **region → defect → fix**
+   ("hero, top third → two competing accents → keep the brand accent, mute
+   the badge"), fix it, and re-render within a budget of one round, two at
+   most; what is still open after that goes to the human as `unresolved`,
+   not into a third round. The triples go into the director record's
+   `Critique`; with no director record (companion absent), into the flow
+   entry, and the rubric used is the floors plus the pack's bans, said so.
+   No `get_screenshot` in the session → the critique is `NOT_RUN`, and the
+   approval request says so instead of implying the frames were looked at.
+7. **Art-direction approval is a second decision.** Present the frames with
+   the critique beside them and ask for the look: the art-direction approval,
+   separate from the flow approval (`ux-flows` step 8 presents both). Record it on the flow:
+   `**Art direction:** approved <date> — critique: <director record#critique
+   or link>`. An approval that cites no critique is `U085`.
 
 The compliance table (practice-selection protocol) records the visual-craft
 BPs as `applied` with the Figma frame as their evidence.
@@ -180,5 +237,5 @@ together.
   screen record is a finding.
 - Never let a missing/unauthenticated MCP block design — degrade to
   markdown + wireframes and sync later.
-- Don't publish or share the Figma file anywhere; the user owns
+- Don't publish or share the Figma files anywhere; the user owns
   distribution.

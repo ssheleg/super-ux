@@ -25,9 +25,13 @@ recovery edges), `Screens traversed` table (`| Screen | States used here |`
 
 Each screen entry in `screens.md`: `Used by`, `Purpose`, `Elements` (mark
 the ONE primary action), `States` table (`| State | Trigger | Figma frame |
-Behavior |` — a row per loading/empty/error/success that applies),
+Story | Behavior |` — a row per default/loading/empty/error/offline/
+long-content/keyboard-up/first-run state that applies), `Axes`
+(viewport; theme; text; locale — or the Design system default),
 `Wireframe`, `Coverage` (file:line), `Scenarios`, `Resources`, `Status`
-(designed|built|drifted|retired).
+(designed|blocked|built|drifted|retired). A flow that onboards records
+`Onboarding:` and `First value:`; the budget is one screen before the first
+value unless the director record says why.
 
 ## Design rules
 
@@ -40,20 +44,23 @@ Behavior |` — a row per loading/empty/error/success that applies),
   primary action, not pixels); storyboard only when usage context drives
   design.
 - Visual identity BEFORE any frame: `screens.md` → Design system →
-  `Style pack`. Empty and no design system in the project → pick a pack with
-  the **sheleg-design** companion skill (`workbench` for product UI /
-  dashboards / tools, `instrument-console`, `editorial-luxury`, or a new
-  pack on its contract; cinematic scroll pages also take its motion
-  methodology) and record the pack + token file. Missing → offer the
-  one-time install once (`npx sheleg-design-skill`) and continue on platform
-  defaults; recommend, don't force. The pack owns palette/type/motion and
-  its bans; BP-079..090 stay the floors it must clear. Never invent a look
-  per screen.
-- Figma mockups optional (default on): if the foundation's Design tooling
-  enables Figma and a Figma MCP is available, mirror each screen into a
-  frame built on the pack's tokens (they become the Figma variable
-  collections) applying visual-craft practices (BP-079..090), and link every
-  screen row to its frame; ask the user once at the start of design.
+  `Style pack`. Empty and no design system in the project →
+  `/sheleg-design` decides from its own pack index and defaults and keeps
+  the director record; record the pack + token file. A brief that leaves
+  the look open gets directions first: one key screen in one state, two
+  directions only when the fork is real, the human picks on a 2-up sheet,
+  then the rest. Missing → offer the one-time install once
+  (`npx sheleg-design-skill`) and continue on platform defaults; `none`
+  still keeps the sheleg-design slop-marker floor where it is installed.
+  The pack owns palette/type/motion and its bans; BP-079..090 stay the
+  floors it must clear. Never invent a look per screen.
+- Figma mockups optional (default on): one Figma file per surface (App /
+  Web / ASO). If the foundation's Design tooling enables Figma and a Figma
+  MCP is available, mirror each screen-state into a frame built on the
+  pack's tokens applying BP-079..090, and link every state to its frame.
+  Critique the frames with `get_screenshot` (region → defect → fix) before
+  approval; the art direction is approved separately from the flow and the
+  approval cites the critique.
 - Backwards mode (existing product): reconstruct flows as they ARE from
   code with file:line evidence, tag `inferred` until confirmed; gaps
   between is/should become the improvement backlog.

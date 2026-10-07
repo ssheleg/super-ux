@@ -14,10 +14,14 @@ whose code diverges from its record here is a "drifted" finding. -->
 ## Design system
 
 <!-- Style pack = the locked visual identity every frame and built screen obeys.
-Pick it with the sheleg-design companion skill (workbench for product UI /
-dashboards / tools, instrument-console, editorial-luxury, or a new pack on its
-contract) before drawing anything; record its token file below. -->
-- **Style pack:** <pack name, or "none — platform defaults">
+/sheleg-design chooses it from its own pack index and defaults, before any
+frame is drawn (directions first when the brief leaves the look open), and
+writes the director record. "none" declines a pack, not the slop-marker
+floor. Axes = the columns every screen is reviewed across; a screen's own
+**Axes:** line overrides this default. -->
+- **Style pack:** <the pack /sheleg-design chose, or "none — platform defaults">
+- **Director record:** <docs/design/<surface>/director-record.md, or "none">
+- **Axes:** viewport: <widths>; theme: <light, dark, …>; text: <default, 200%, …>; locale: <locales>
 - **Figma library:** <url/name, or "none — platform defaults">
 - **Tokens in code:** <where color/type/spacing tokens live, e.g. src/theme/tokens.ts>
 - **Component source:** <shared UI components dir, e.g. src/components/>
@@ -42,13 +46,15 @@ the problem it can no longer fix. -->
 - **Used by:** <FLW-… and the step(s)>
 - **Purpose:** <the job step this screen serves>
 - **Elements:** <each element; mark the ONE primary action>
-- **States:**
-  | State | Trigger | Figma frame | Behavior |
-  |-------|---------|-------------|----------|
-  | success | default | <frame deep-link> | <what shows> |
-  | empty | <trigger> | <frame deep-link> | <prompt to act> |
-  | error | <trigger> | <frame deep-link> | <message + recovery> |
-  | loading | <trigger> | <frame deep-link> | <skeleton/progress> |
+- **States:** (every one that applies: default, loading, empty, error,
+  offline, long-content, keyboard-up, first-run, product-specific ones)
+  | State | Trigger | Figma frame | Story | Behavior |
+  |-------|---------|-------------|-------|----------|
+  | default | <trigger> | <frame deep-link> | <story/preview, once built> | <what shows> |
+  | empty | <trigger> | <frame deep-link> | <story> | <prompt to act> |
+  | error | <trigger> | <frame deep-link> | <story> | <message + recovery> |
+  | loading | <trigger> | <frame deep-link> | <story> | <skeleton/progress> |
+- **Axes:** (only when this screen differs from the Design system default)
 - **Web surface:** (only when this screen is a public URL; all five required)
   - **Route:** </pricing — the path, readable and stable>
   - **Answers:** <the ONE question this page answers; a second question is a second page>

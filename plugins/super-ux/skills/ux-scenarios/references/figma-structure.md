@@ -1,7 +1,9 @@
 # Figma File Structure — How the Agent Builds & Navigates
 
-How to organize a project's Figma file so an agent finds any screen
-deterministically, keeps it in sync with `screens.md`, and never gets lost.
+How to organize each of a project's Figma files — one per surface (App, Web,
+ASO; see [figma-integration.md](figma-integration.md)) — so an agent finds
+any screen deterministically, keeps it in sync with `screens.md`, and never
+gets lost.
 The workflow (when to ask, MCP preflight, sync) lives in
 [figma-integration.md](figma-integration.md); this is the file's internal
 structure and the naming that ties Figma to the super-ux chain. Practices:
