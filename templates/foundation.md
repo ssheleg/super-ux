@@ -50,11 +50,18 @@ even when the answer is "none":
 ## Design tooling
 
 <!-- Visual mockups in Figma are optional (default on). Ask the user at the
-start of design; record the choice here (see figma-integration). The Figma
-file and design-system details live in docs/ux/screens.md (the UI map);
-this section just records the on/off choice and the file location.
+start of design; record the choice here (see figma-integration). Figma is a
+set of files in the product's folder, one per surface the product has; the
+design-system details and frame links live in docs/ux/screens.md (the UI
+map). This section records the on/off choice and where the files are.
 - **Figma:** enabled | disabled
-- **Figma file:** <url — one project file, one page per feature/flow group>
+- **Figma folder:** <team / project the product's files live in>
+- **Figma files:**
+  | Surface | File | Holds |
+  |---------|------|-------|
+  | App | <url> | every SCR-NN frame of the product |
+  | Web | <url> | landing, pricing, docs pages |
+  | ASO | <url> | store screenshots, icon, preview frames |
 -->
 
 ## User stories

@@ -121,8 +121,10 @@ One question at a time; user's answers are the data:
    acceptance criteria; prioritize must/should/could against the job's
    success metric.
 5. Record **Design tooling** when design work is about to start: the Figma
-   on/off choice (default on) and the project's Figma file URL — the two
-   fields this file owns. Everything else about the visual layer (design
+   on/off choice (default on), the product's Figma folder, and **one file
+   per surface the product has** — App, Web, ASO — the fields this file
+   owns. One URL for everything is how the store art and the site end up
+   with no recorded home. Everything else about the visual layer (design
    system, style pack, per-state frame links) lives in `screens.md`; see
    [figma-integration.md](references/figma-integration.md) and
    [visual-identity.md](references/visual-identity.md). Ask the Figma

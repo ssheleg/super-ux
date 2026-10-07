@@ -334,10 +334,19 @@ the same rigor as in-app screens — see BP-116..129.
 ```markdown
 ## Design tooling
 - **Figma:** enabled | disabled
-- **Figma file:** <url — the single project file, one page per feature/flow group>
+- **Figma folder:** <team / project the product's files live in>
+- **Figma files:**
+  | Surface | File | Holds |
+  |---------|------|-------|
+  | App | <url> | every SCR-NN frame of the product |
+  | Web | <url> | landing, pricing, docs pages |
+  | ASO | <url> | store screenshots, icon, preview frames |
 ```
 
-Exactly two fields: the on/off choice and the file location. The **design
+The on/off choice and where the files are: **one file per surface the
+product has** (App / Web / ASO), never one file for everything — a product
+with an app, a site and store art that records a single URL loses the other
+two first. A surface the product does not have gets no row. The **design
 system** (library, tokens in code, component source, assets) belongs to
 `screens.md` → Design system — one owner per fact, never both. When Figma is
 enabled, every screen state in `screens.md` carries its Figma frame link. See
@@ -383,6 +392,11 @@ One entry per user goal (one story or a tight story cluster):
   1. Understand what the app is for (value screen)
   2. Name the project (input; system may suggest a default)
   3. Confirm and land in the project
+- **Onboarding:** SCR-01 *(the screens shown before the first value — `none`
+  is an answer; more than one needs `Onboarding budget:`)*
+- **First value:** SCR-03 — the project exists and is visible
+- **Onboarding budget:** *(only past one screen)* docs/design/app/director-record.md
+- **Art direction:** approved 2026-07-19 — critique: docs/design/app/director-record.md#critique
 - **Rejected shape:** one-field modal over the empty state — lost because the
   project name is the first thing the user owns and a modal makes it feel like a
   setting. *(Optional but expected on any flow carrying real weight: `ux-flows`
@@ -430,6 +444,17 @@ Flow rules (from the principles doc, enforced by validation and audits):
   above five need justification.
 - IDs `FLW-NN`, sequential, never reused; superseded flows kept with a
   strikethrough note.
+- **The onboarding budget is one screen.** A flow that onboards states the
+  screens between its entry and the first value in `Onboarding:` and names
+  the destination in `First value:` (onboarding.md, ON-01). More than one
+  screen is allowed only with `Onboarding budget:` citing the director record
+  that says why — `U082`; a flow that reads as onboarding and declares
+  nothing is `U083`; a count with no destination is `U084`.
+- **Two approvals, never one.** The flow is approved on its diagram and
+  screen/state table; the look is approved on frames that were critiqued
+  first. `Art direction:` records the second — `pending`, or `approved
+  <date>` with the critique it was made on (a path that resolves, or a
+  link). An approval citing no critique is `U085`.
 
 ## `docs/ux/screens.md` — the UI map
 
@@ -449,7 +474,9 @@ one entry per screen.
 | SCR-01 | Welcome | FLW-01 | <page/frame link> | built | src/onboarding/Welcome.tsx:1 |
 
 ## Design system
-- **Style pack:** <sheleg-design pack name (workbench | instrument-console | editorial-luxury | custom), or "none — platform defaults">
+- **Style pack:** <the pack /sheleg-design chose, or "none — platform defaults">
+- **Director record:** <docs/design/<surface>/director-record.md, or "none">
+- **Axes:** viewport: 375, 1280; theme: light, dark; text: default, 200%; locale: en, ar
 - **Figma library:** <url/name, or "none">
 - **Tokens in code:** <where color/type/spacing tokens live, e.g. src/theme/tokens.ts>
 - **Component source:** <shared UI components dir, e.g. src/components/>
@@ -465,11 +492,13 @@ one entry per screen.
 - **Purpose:** <the job step this screen serves>
 - **Elements:** <each element; mark the ONE primary action>
 - **States:**
-  | State | Trigger | Figma frame | Behavior |
-  |-------|---------|-------------|----------|
-  | success | default | <frame deep-link> | value copy + CTA |
-  | empty | nothing created | <frame deep-link> | "Create your first project" prompt |
-  | error | load failed | <frame deep-link> | inline error + retry |
+  | State | Trigger | Figma frame | Story | Behavior |
+  |-------|---------|-------------|-------|----------|
+  | default | first launch | <frame deep-link> | <story or preview, once built> | value copy + CTA |
+  | empty | nothing created | <frame deep-link> | <story> | "Create your first project" prompt |
+  | error | load failed | <frame deep-link> | <story> | inline error + retry |
+  | keyboard-up | name field focused | <frame deep-link> | <story> | CTA stays above the keyboard |
+- **Axes:** (optional — only where this screen differs from the Design system default)
 - **Web surface:** (optional — only when this screen is a public URL)
   - **Route:** /pricing
   - **Answers:** what does it cost, and what is in each tier
@@ -501,9 +530,29 @@ Rules:
 
 - IDs `SCR-NN`, sequential, never reused; retired screens kept with a
   reason.
-- Every state a screen can show gets a row — including empty/error/loading;
-  each state carries its own Figma frame link when Figma is enabled (a
-  state without a frame is an incomplete-design finding).
+- **Every screen declares its states and its axes** — the rows and columns of
+  the contact sheet a person reviews. States: `default`, `loading`, `empty`,
+  `error`, `offline`, `long-content`, `keyboard-up`, `first-run` — every one
+  that applies, plus product-specific ones (`success` is read as `default` in
+  older records). A screen with no state list is `U079`, Figma or not.
+  Axes: `viewport`, `theme`, `text` (size) and `locale`, written
+  `name: values` and separated by `;`; the Design system's `Axes:` is the
+  project default and a screen's own line overrides it. A missing axis is
+  `U080`; `n/a — <why>` is a value.
+- Each state carries its own Figma frame link when Figma is enabled (`U020`).
+  A `Story` column is optional; once present, a `built` screen names a story
+  or preview for every state it declares (`U081`). Figma off and no Story
+  column → the state list is all that is required.
+- **Format 2 makes the matrix a gate; format 1 is told, not failed.** A
+  registry carrying `<!-- screens-format: 2 -->` (the seed writes it under the
+  title, so a new project starts there) fails on `U079`, `U080`, `U081` and on
+  `U020` for any declared state. A registry without it (format 1, every file
+  written before 0.58.0) gets the same findings as warnings — except `U020` on
+  `loading`/`empty`/`error`/`success`, which was an error before and stays one.
+  The migration: an `Axes:` line in the Design system block, a state list per
+  screen, the lint clean of those warnings, then the marker.
+  `docs/ux/doctor.py` offers it; `/ux-update` performs it. `--strict` still
+  turns every warning into a failure, format 1 included.
 - Status lifecycle: `designed` → `built` (coverage confirmed by audit) →
   `drifted` (code diverged from this record — an audit finding, fix or
   update) → `retired`.
@@ -513,9 +562,10 @@ Rules:
   `Resources` collects the design-system components, assets, and data
   dependencies the screen relies on.
 - `Style pack` names the visual identity every frame and every built screen
-  obeys — recorded ONCE here, referenced everywhere else. Chosen with the
-  **sheleg-design** companion skill when it's available; see
-  [visual-identity.md](visual-identity.md).
+  obeys — recorded ONCE here, referenced everywhere else. Chosen by
+  `/sheleg-design` when it's available, from its own index and defaults;
+  `Director record` points at its record of that decision. `none` declines a
+  pack and keeps the floor; see [visual-identity.md](visual-identity.md).
 - **`Web surfaces` is answered once per project, `yes` or `no`** — does this
   product have pages a search engine or an AI answer engine will read? `no`
   is a complete answer and silences the rest; an *unanswered* question is
@@ -879,7 +929,7 @@ here — the meaning of a rule never lives only in its source.
 | U012 | W | a scenario traces to a story absent from `foundation.md` |
 | U013 | W | a scenario traces to a flow absent from `flows.md` |
 | U014 | W | a `must`/`should` story with no scenario tracing to it |
-| U020 | E | a screen state has no Figma frame link while Figma is enabled |
+| U020 | E | a screen state has no Figma frame link while Figma is enabled — on a format-1 registry, a W for states other than loading/empty/error/success |
 | U021 | W | a screen marked `built` names no `Coverage` |
 | U030 | E | `vision.md` is missing one of the nine sections |
 | U031 | E | an approved vision whose anti-vision or alignment test is empty |
@@ -912,5 +962,12 @@ here — the meaning of a rule never lives only in its source.
 | U074 | E | a job is missing one of `Statement`, `Personas`, `Type`, `Forces`, `Success metric` — the metric is the observable a job is unfinished without, one layer above a story's acceptance criteria |
 | U075 | E | a `Status:` on `FLW-NN` or `JRN-NN`, layers the contract deliberately gives none — silence about a state is not permission to invent a vocabulary for it |
 | U078 | W | a `Coverage:` citation names a subject that is not inside the lines it cites — a range proves its bounds, never what it is about |
+| U079 | E (W on format 1) | a screen declares no states — the contact sheet gets no rows, and the screen is reviewed in whichever state happened to render |
+| U080 | E (W on format 1) | a screen has no `Axes:` (own or Design system default), or leaves out one of `viewport`, `theme`, `text`, `locale` — the sheet gets no columns |
+| U081 | E (W on format 1) | a `built` screen's state has an empty cell in its `Story` column — the state cannot be rendered on its own |
+| U082 | E | a flow puts more than one onboarding screen before the first value without `Onboarding budget:` citing a director record that exists and discusses onboarding |
+| U083 | W | a flow named for onboarding or first run declares no `Onboarding:` — the budget cannot be counted |
+| U084 | W | a flow counts onboarding screens and names no `First value:` — the count is against a destination nobody wrote down |
+| U085 | E | `Art direction: approved` cites no critique, or cites a local path that does not resolve — the look was approved on frames nobody is shown to have looked at |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |

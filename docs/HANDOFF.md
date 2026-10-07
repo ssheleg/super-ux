@@ -1,3 +1,33 @@
+# Direction-before-frames handoff, 2026-10-07
+
+Branch `feat/direction-before-frames` prepares super-ux 0.58.0: `/sheleg-design`
+decides the look (no pack list here), directions before frames, the
+`Style pack: none` floor, flow and art-direction approvals split with a frame
+critique between them, `visual-drift` in `ux-audit`, Figma as a file per
+surface, states × axes per screen and the onboarding budget. Start with the
+[0.58.0 changelog section](../CHANGELOG.md) and the
+[verification ledger](evidence/verification.md) rows DF-U1a..DF-M2.
+
+- Done: U1–U5 of the family plan plus the screen matrix and onboarding budget;
+  seven new linter codes `U079`..`U085`, each watched failing on a planted
+  defect; `npm test` and every CI step green locally.
+- Revised after review: the matrix codes warn on format-1 registries and fail
+  only on `<!-- screens-format: 2 -->`, which the seed writes; the doctor offers
+  the migration and `/ux-update` performs it. Swept over 118 local registries:
+  0 newly failing (the first cut newly failed 71). Ledger rows DF-MIG1..5.
+- Open: review and merge, tag `v0.58.0`, npm publication, the umbrella pin in
+  `sshlg-skills/skills.json`, refreshing local installs. None is implied by
+  this branch.
+- Depends on, outside this repo: sheleg-design's director record validator
+  (`--check-record`) is not released yet; `visual-identity.md` runs it where
+  the installed version ships it and records `NOT_RUN` otherwise. `--lint`
+  shipped in sheleg-design 1.62.0.
+- Not done on purpose: `EV-06` and `EV-07` are authored and anchor-checked,
+  not run (paid, nondeterministic, run by a person per `test/evals/README.md`).
+- Next task: review the PR, then release per `CONTRIBUTING.md` → Releasing.
+
+---
+
 # Short-video copy handoff, 2026-10-07
 
 Branch `feat/short-video-copy` prepares super-ux 0.57.0: the short-video,

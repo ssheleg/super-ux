@@ -17,4 +17,13 @@ elements, coverage) and, when Figma is enabled, the Figma frame(s) and their
 links, all in the same change. Leaving `screens.md` or a frame stale is
 drift.
 
+**Format migration, offered once per project:** if `docs/ux/screens.md` has
+no `<!-- screens-format: 2 -->` line (`docs/ux/doctor.py` reports it), offer
+to bring it to format 2 in this change: add one
+`- **Axes:** viewport: …; theme: …; text: …; locale: …` line to the Design
+system block, give every screen a state list, run `python3 docs/ux/lint.py`
+until no U079/U080/U081 warning is left, then add the marker under the title.
+Until then those findings are warnings; after it, they fail the lint. Declined
+→ leave the file on format 1 and do not ask again.
+
 Change / feature to process: $ARGUMENTS

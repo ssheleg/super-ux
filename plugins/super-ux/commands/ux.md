@@ -24,11 +24,11 @@ connected, recommend connecting it and proceed text-only until it is (see
 figma-integration reference).
 
 **Visual identity, same moment:** if `screens.md` → Design system has no
-`Style pack` and the project has no design system of its own, use the
-**sheleg-design** companion skill to pick one (`workbench` for product UI /
-dashboards / tools, `instrument-console`, `editorial-luxury`, or a new pack
-on its contract) and record the pack + its token file; a cinematic
-scroll-driven landing also takes its motion methodology. Not installed →
+`Style pack` and the project has no design system of its own,
+`/sheleg-design` decides it from its own pack index and defaults and keeps
+the director record; record the pack + its token file. A brief that leaves
+the look open gets directions before frames: one key screen in one state,
+the human picks on a 2-up sheet, then the rest. Not installed →
 offer the one-time install once (`/plugin marketplace add
 ssheleg/sheleg-design-skill` + `/plugin install
 sheleg-design@sheleg-design-skill`, or `npx sheleg-design-skill` in the

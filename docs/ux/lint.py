@@ -136,6 +136,121 @@ CITED_PATH = re.compile(
 )
 
 
+# The four axes a screen is rendered across, by the names the contact sheet
+# uses for its columns. A fifth axis is allowed; these four are required.
+AXES = ("viewport", "theme", "text", "locale")
+AXES_FIELD = re.compile(r"\*\*Axes:\*\*[ \t]*(.*)")
+
+# A cell or value that is still the template's placeholder, or a dash, says
+# nothing — the same as an empty cell.
+def _unfilled(value: str) -> bool:
+    v = value.strip()
+    return (not v or v in ("-", "—", "–")
+            or bool(re.fullmatch(r"<[^>]*>", v)))
+
+
+def state_table(body: str) -> tuple[list[str], list[list[str]]]:
+    """(lower-cased headers, rows) of a screen's States table, found by header.
+
+    The table is the one whose first header cell is `State`. Columns are read
+    by their header name, never by their position after the state name — the
+    position is what let U020 read a `Behavior` cell as a frame link.
+    """
+    lines = body.splitlines()
+    for i, line in enumerate(lines):
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if not line.strip().startswith("|") or not cells or cells[0].lower() != "state":
+            continue
+        headers = [c.lower() for c in cells]
+        rows: list[list[str]] = []
+        for row in lines[i + 1:]:
+            s = row.strip()
+            if not s.startswith("|"):
+                break
+            if re.fullmatch(r"\|[\s:|-]+\|?", s):
+                continue  # the separator row
+            rows.append([c.strip() for c in s.strip("|").split("|")])
+        return headers, rows
+    return [], []
+
+
+def declared_states(body: str) -> list[str]:
+    """State names a screen declares — its table rows, or an inline list."""
+    _, rows = state_table(body)
+    names = [r[0] for r in rows if r and r[0]]
+    if names:
+        return names
+    m = re.search(r"\*\*States:\*\*[ \t]*([^\n|]+)$", body, re.MULTILINE)
+    if m and not _unfilled(m.group(1)):
+        return [s.strip() for s in re.split(r"[,;]", m.group(1)) if s.strip()]
+    return []
+
+
+def axes_value(text: str) -> str | None:
+    """The `**Axes:**` value in a block, wrapped lines joined; None when absent."""
+    value = field_body(text, AXES_FIELD)
+    return None if value is None else " ".join(value.split())
+
+
+def missing_axes(value: str) -> list[str]:
+    """Which of the four required axes a declaration leaves out or leaves blank."""
+    found: dict[str, str] = {}
+    for part in value.split(";"):
+        if ":" not in part:
+            continue
+        name, _, val = part.partition(":")
+        found[name.strip().lower()] = val
+    return [a for a in AXES if _unfilled(found.get(a, ""))]
+
+
+# The registry format a `screens.md` opted into. Format 2 (0.58.0) makes the
+# screen matrix -- states, axes, stories, a frame for every declared state --
+# a gate; format 1 reports the same findings as warnings, because turning them
+# on as errors newly failed 71 of 80 passing real registries on upgrade. The marker is an
+# HTML comment, so it is read from the RAW file: `read()` strips comments.
+SCREENS_FORMAT = re.compile(r"<!--\s*screens-format:\s*(\d+)\s*-->")
+FORMAT_HINT = (" (a warning while screens.md is format 1 — add the missing "
+               "fields, then `<!-- screens-format: 2 -->` to make it a gate)")
+
+
+def screens_format(path: Path) -> int:
+    """1 unless the file carries `<!-- screens-format: N -->`."""
+    try:
+        m = SCREENS_FORMAT.search(path.read_text(encoding="utf-8"))
+    except OSError:
+        return 1
+    return int(m.group(1)) if m else 1
+
+
+def legacy_frameless(body: str) -> set[str]:
+    """The states the pre-0.58 U020 flagged: one of four names, cell read by
+    position. Kept so a format-1 registry fails exactly where it always did."""
+    out = set()
+    for state, rest in re.findall(r"^\s*\|\s*(loading|empty|error|success)\s*\|(.*)\|\s*$",
+                                  body, re.MULTILINE | re.IGNORECASE):
+        cells = [c.strip() for c in rest.split("|")]
+        frame = cells[1] if len(cells) >= 2 else ""
+        if not frame or frame in ("-", "—", "<frame deep-link>", "<frame link>"):
+            out.add(state.lower())
+    return out
+
+
+def section(text: str, heading: str) -> str:
+    """The body of `## <heading>` up to the next `## `, or ''."""
+    m = re.search(rf"^##[ \t]+{re.escape(heading)}[ \t]*$", text, re.MULTILINE)
+    if not m:
+        return ""
+    return re.split(r"^##\s", text[m.end():], maxsplit=1, flags=re.MULTILINE)[0]
+
+
+def resolves(ref: str, ux: Path, root: Path) -> bool:
+    """A cited local path exists — relative to the project root or to docs/ux."""
+    path = ref.split("#", 1)[0].strip()
+    if not path:
+        return False
+    return (root / path).exists() or (ux / path).exists()
+
+
 def screen_blocks(text: str) -> dict[str, str]:
     """Map SCR-id -> its section body."""
     return entry_blocks(text, "SCR")
@@ -737,6 +852,70 @@ HOST_TARGET = {"claude": "CLAUDE.md", "codex": "AGENTS.md", "gemini": "GEMINI.md
 HOST_MARKER = {"claude": ".claude", "codex": ".codex", "gemini": ".gemini"}
 
 
+# The onboarding budget (R2 of the design-award rubric): at most one onboarding screen before
+# the first value. A flow states the count in `Onboarding:` and the destination
+# in `First value:`; more than one screen needs `Onboarding budget:` pointing at
+# the director record that says why. The linter checks the record exists and
+# talks about onboarding — whether the reason is good is a person's call.
+ONBOARDING_NAME = re.compile(r"onboarding|first[- ]run|онбординг", re.IGNORECASE)
+LOCAL_REF = re.compile(r"(?<![\w/])([\w.-]+(?:/[\w.-]+)+\.[A-Za-z]{1,5}(?:#[\w-]+)?)")
+
+
+def check_onboarding(flows: str, ux: Path, root: Path) -> None:
+    names = {fid: name for fid, _, name in entry_names(flows, "FLW")}
+    for fid, body in entry_blocks(flows, "FLW").items():
+        declared = field_body(body, re.compile(r"\*\*Onboarding:\*\*[ \t]*(.*)"))
+        if declared is None:
+            if ONBOARDING_NAME.search(names.get(fid, "")):
+                warn(f"[U083] flows.md: {fid} reads as onboarding and declares no "
+                     f"**Onboarding:** — list the screens before the first value "
+                     f"(or `none`) so the budget can be counted")
+            continue
+        count = len(set(re.findall(r"\bSCR-\d+\b", declared)))
+        first = field_body(body, re.compile(r"\*\*First value:\*\*[ \t]*(.*)"))
+        if not stated(first):
+            warn(f"[U084] flows.md: {fid} counts onboarding screens and names no "
+                 f"**First value:** — the budget is counted against a destination "
+                 f"nobody wrote down")
+        if count <= 1:
+            continue
+        budget = field_body(body, re.compile(r"\*\*Onboarding budget:\*\*[ \t]*(.*)")) or ""
+        ref = LOCAL_REF.search(budget)
+        if not ref:
+            err(f"[U082] flows.md: {fid} puts {count} onboarding screens before the "
+                f"first value — the budget is one; more needs **Onboarding budget:** "
+                f"citing the director record that justifies it")
+        elif not resolves(ref.group(1), ux, root):
+            err(f"[U082] flows.md: {fid} cites '{ref.group(1)}' for its onboarding "
+                f"budget, which does not exist")
+        else:
+            record = (root / ref.group(1).split("#")[0])
+            if not record.exists():
+                record = ux / ref.group(1).split("#")[0]
+            if "onboarding" not in read(record).lower():
+                err(f"[U082] flows.md: {fid} cites '{ref.group(1)}' for its onboarding "
+                    f"budget and the record never mentions onboarding")
+
+
+# Flow approval and art-direction approval are two decisions. The second is made
+# on frames that were critiqued first, so an approval names the critique it
+# read — a director record section, a file, or a link — and a local one resolves.
+def check_art_direction(flows: str, ux: Path, root: Path) -> None:
+    for fid, body in entry_blocks(flows, "FLW").items():
+        value = field_body(body, re.compile(r"\*\*Art direction:\*\*[ \t]*(.*)"))
+        if not value or not value.strip().lower().startswith("approved"):
+            continue
+        if re.search(r"https?://\S+", value):
+            continue
+        ref = LOCAL_REF.search(value)
+        if not ref:
+            err(f"[U085] flows.md: {fid} records art direction approved and cites no "
+                f"critique — the approval names the frame critique it was made on")
+        elif not resolves(ref.group(1), ux, root):
+            err(f"[U085] flows.md: {fid} cites '{ref.group(1)}' as its critique, "
+                f"which does not exist")
+
+
 def active_hosts(root: Path) -> list[str]:
     """Hosts present in this project, by their marker directory. When none is
     detectable the target defaults to Claude, matching the seed default."""
@@ -971,6 +1150,15 @@ def main() -> int:
     if has_screens:
         fig = figma_enabled(foundation)
         screens_root = project_root
+        default_axes = axes_value(section(screens, "Design system"))
+        gated = screens_format(ux / "screens.md") >= 2
+
+        def matrix(msg: str) -> None:
+            """U079-U081 and the widened U020: errors on format 2, warnings before."""
+            if gated:
+                err(msg)
+            else:
+                warn(msg + FORMAT_HINT)
         for sid, body in screen_blocks(screens).items():
             # Read by value, not matched against a copy of the enum: the copy
             # was one value short of the contract for as long as `blocked`
@@ -979,15 +1167,57 @@ def main() -> int:
             status = declared_status(body)
             if status == "retired":
                 continue
-            # every state row present in the States table
-            state_rows = re.findall(r"^\s*\|\s*(loading|empty|error|success)\s*\|(.*)\|\s*$",
-                                    body, re.MULTILINE | re.IGNORECASE)
+            # The state list is required whatever the tooling: it is the rows of
+            # the contact sheet, and a screen with none is reviewed in the one
+            # state somebody happened to render.
+            states = declared_states(body)
+            if not states:
+                matrix(f"[U079] screens.md: {sid} declares no states — list the ones "
+                    f"that apply (default, loading, empty, error, offline, "
+                    f"long-content, keyboard-up, first-run)")
+            # Axes are the sheet's columns. A screen may inherit the project's
+            # default from the Design system block, and override it.
+            axes = axes_value(body)
+            if axes is None:
+                axes = default_axes
+            if axes is None:
+                matrix(f"[U080] screens.md: {sid} declares no **Axes:** and the Design "
+                    f"system sets no default — name viewport, theme, text and locale")
+            else:
+                gaps = missing_axes(axes)
+                if gaps:
+                    matrix(f"[U080] screens.md: {sid} axes leave out {', '.join(gaps)} — "
+                        f"write `name: values` for each of {', '.join(AXES)}")
+            headers, rows = state_table(body)
+            frame_col = next((i for i, h in enumerate(headers)
+                              if "figma" in h or "frame" in h), None)
+            story_col = next((i for i, h in enumerate(headers)
+                              if re.search(r"\b(?:stor(?:y|ies)|preview)\b", h)), None)
             if fig is not False:  # enabled or default-on
-                for state, rest in state_rows:
-                    cells = [c.strip() for c in rest.split("|")]
-                    frame = cells[1] if len(cells) >= 2 else ""
-                    if not frame or frame in ("-", "—", "<frame deep-link>", "<frame link>"):
-                        err(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
+                frameless: list[str] = []
+                if rows:
+                    for row in rows:
+                        frame = row[frame_col] if frame_col is not None and frame_col < len(row) else ""
+                        if _unfilled(frame):
+                            frameless.append(row[0])
+                else:
+                    frameless = list(states)
+                # What the old rule caught stays an error on every format;
+                # only the newly covered states wait for the opt-in.
+                legacy = legacy_frameless(body)
+                for state in legacy:
+                    err(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
+                for state in frameless:
+                    if state.lower() not in legacy:
+                        matrix(f"[U020] screens.md: {sid} state '{state}' has no Figma frame link")
+            # A Story column is the build-side twin of the frame: once a screen
+            # is built, each state it declares can be shown on its own.
+            if story_col is not None and status == "built":
+                for row in rows:
+                    story = row[story_col] if story_col < len(row) else ""
+                    if _unfilled(story):
+                        matrix(f"[U081] screens.md: {sid} is built and state '{row[0]}' "
+                            f"names no story — the state cannot be rendered on its own")
             cov_m = re.search(r"\*\*Coverage:\*\*\s*(.+)", body)
             cov = cov_m.group(1).strip() if cov_m else ""
             if status == "built" and (not cov or cov.lower().startswith("none")):
@@ -1023,6 +1253,8 @@ def main() -> int:
     check_jobs(foundation, scenarios, flows, screens)
     check_vision(ux, vision)
     check_web_surface(screens, flows)
+    check_onboarding(flows, ux, project_root)
+    check_art_direction(flows, ux, project_root)
     check_links(ux)
 
     # --- Report ---

@@ -2272,6 +2272,90 @@ def validate_short_video_shelf() -> None:
           "timing is measured by reading aloud, never converted")
 
 
+# The visual decision is the companion's, so super-ux keeps no list of its packs.
+# Until 0.58.0 `ux-flows` step 4 chose among three or four pack names copied from
+# a catalogue that had grown to dozens, and the copy is what an agent obeyed: the
+# companion's own index and defaults were never consulted. A pack name written
+# into one of these files is that copy coming back.
+PACK_NAMES = ("workbench", "instrument-console", "editorial-luxury", "manpage")
+PACK_FREE = (
+    "plugins/super-ux/skills/ux-flows/SKILL.md",
+    "plugins/super-ux/skills/references/visual-identity.md",
+    "plugins/super-ux/skills/references/scenario-format.md",
+    "plugins/super-ux/commands/ux.md",
+    "cursor/rules/ux-flows.mdc",
+    "templates/screens.md",
+    "README.md",
+)
+
+# Each anchor is the instruction a REQ of 0.58.0 rests on, in the file an agent
+# reads when it needs it. Phrases, not paraphrase: a reworded instruction that
+# drops the mechanism is the regression, and this is what notices it.
+DIRECTION_ANCHORS = {
+    "plugins/super-ux/skills/ux-flows/SKILL.md": (
+        "/sheleg-design", "one key screen", "2-up", "art-direction approval",
+        "critique",
+    ),
+    "plugins/super-ux/skills/references/visual-identity.md": (
+        "/sheleg-design", "director record", "one key screen", "2-up",
+        "Style pack: none", "SLOP_MARKERS.md", "--lint", "NOT_RUN",
+    ),
+    "plugins/super-ux/skills/references/figma-integration.md": (
+        "flow approval", "art-direction approval", "get_screenshot",
+        "region → defect → fix", "SLOP_MARKERS.md", "NOT_RUN",
+        "**Figma files:**", "| App |", "| Web |", "| ASO |",
+    ),
+    "plugins/super-ux/skills/ux-audit/SKILL.md": (
+        "visual-drift", "surface_class", "VISUAL_REVIEW.md",
+    ),
+    "plugins/super-ux/skills/references/audit-depth.md": ("visual-drift",),
+    "plugins/super-ux/skills/ux-foundation/SKILL.md": ("App", "Web", "ASO"),
+    "templates/foundation.md": ("**Figma files:**", "App", "Web", "ASO"),
+    "plugins/super-ux/skills/references/scenario-format.md": (
+        "**Figma files:**", "**Axes:**", "**Onboarding:**", "**First value:**",
+        "**Onboarding budget:**", "**Art direction:**", "keyboard-up",
+    ),
+    "templates/screens.md": ("**Axes:**", "keyboard-up"),
+    "plugins/super-ux/skills/references/onboarding.md": ("U082", "**Onboarding:**"),
+}
+
+# The sentence that made one Figma file the rule. A product with an app, a site
+# and store art keeps a file per surface, and a single recorded URL is how the
+# other two went unrecorded.
+SINGLE_FIGMA_FILE = re.compile(r"single project file|one project file")
+
+
+def validate_direction_before_frames() -> None:
+    """0.58.0: the visual decision is delegated, directions precede frames, frames
+    are critiqued before art direction is approved, Figma is a file per surface.
+    """
+    for rel in PACK_FREE:
+        text = read(ROOT / rel)
+        if not check(text is not None, f"{rel}: missing"):
+            continue
+        for name in PACK_NAMES:
+            check(not re.search(rf"`?\b{re.escape(name)}\b`?", text),
+                  f"{rel}: names the style pack `{name}` -- the pack is chosen by "
+                  f"/sheleg-design from its own index and defaults, and a list kept "
+                  f"here is the copy an agent obeys instead")
+    for rel, anchors in DIRECTION_ANCHORS.items():
+        text = read(ROOT / rel)
+        if not check(text is not None, f"{rel}: missing"):
+            continue
+        for anchor in anchors:
+            check(anchor in text,
+                  f"{rel}: no longer says {anchor!r} -- an instruction 0.58.0 rests "
+                  f"on was reworded away")
+    for rel in ("templates/foundation.md",
+                "plugins/super-ux/skills/references/scenario-format.md",
+                "plugins/super-ux/skills/references/figma-integration.md",
+                "plugins/super-ux/skills/ux-foundation/SKILL.md"):
+        text = read(ROOT / rel) or ""
+        check(not SINGLE_FIGMA_FILE.search(text),
+              f"{rel}: still records ONE Figma file for the project -- Figma is a "
+              f"set of files, one per surface (App / Web / ASO)")
+
+
 def validate_ledger_names_its_version() -> None:
     """The ledger has to name the version it was measured on.
 
@@ -2333,6 +2417,7 @@ def main() -> int:
     validate_run_instructions()
     validate_ai_tell_coverage()
     validate_short_video_shelf()
+    validate_direction_before_frames()
     validate_front_matter_is_yaml()
     validate_ledger_table_shape()
     validate_graph_claims()

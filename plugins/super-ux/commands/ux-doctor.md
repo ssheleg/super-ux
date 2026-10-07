@@ -32,6 +32,11 @@ What it reports:
   there.
 - **Optional and absent** — additive sections the project has not adopted.
   Not a problem; worth knowing.
+- **`screens.md` on format 1** — the screen matrix (states, axes, a frame per
+  state, a story per built state) is reported as lint warnings until the file
+  carries `<!-- screens-format: 2 -->`. The doctor names the migration and
+  never stamps the marker: whether every screen's states and axes are right is
+  a content decision, made in `/ux-update`.
 
 `--fix` applies only what cannot be wrong: renaming a file the contract owns,
 moving audit reports into `audits/`. Contract upgrades are content decisions —

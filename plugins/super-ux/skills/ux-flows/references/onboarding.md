@@ -105,6 +105,18 @@ cheaper fix is the layout.
 Where a tour survives that question, it is short, skippable without penalty,
 and it never blocks the action it describes.
 
+**The budget is one screen.** At most one onboarding screen — welcome, tour
+card, permission primer, setup step — stands between the entry and the first
+value. More is allowed when the director record says why (a legal consent
+step, a pairing that must happen first), and only then. The flow declares
+it where a linter can count it: `**Onboarding:**` lists the screens before
+the first value (or `none`), `**First value:**` names where the value lands
+(ON-01), and a second screen needs `**Onboarding budget:**` citing that
+record. `U082` refuses a count over one with no record, a record that does
+not exist, or one that never mentions onboarding; `U083` flags a flow that
+reads as onboarding and declares nothing. The linter checks that a reason
+is on file. Whether it is a good reason is the person's call.
+
 ### ON-07. Teaching happens at the moment of use
 
 A tip attached to a control the user is about to touch is read. The same tip
@@ -228,4 +240,5 @@ which is itself the first finding on most products.
 Two of these can be checked without analytics, and should be, because they are
 the cheapest: walk the path in a clean account and count the fields before the
 first value (ON-03), and close the tab at each step, then return, and record
-what happens (ON-12).
+what happens (ON-12). A third needs nothing but the record: the screens before
+the first value, counted from `flows.md` by `U082` (ON-06).

@@ -10,6 +10,10 @@ node and edge. -->
 - **Goal:** <observable end state for the user>
 - **Entry points:** <all of them: screen, deep link, push, empty-state CTA>
 - **Success exit:** <where the user lands on success>
+- **First value:** <SCR-ID / step where the user first gets what they came for>
+- **Onboarding:** <SCR-IDs shown before the first value, or none; budget is one>
+- **Onboarding budget:** <only past one screen: the director record that justifies it>
+- **Art direction:** <pending | approved YYYY-MM-DD — critique: <record#critique or link>>
 - **Task analysis:**
   1. <user-visible micro-step; cut everything that doesn't serve the job>
 - **Flow:**

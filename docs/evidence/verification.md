@@ -8,6 +8,30 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-07 — direction before frames, critique before approval, v0.58.0
+
+From the family's 2026-10-07 design-pipeline plan, tasks U1–U5, the screen
+matrix (states × axes) and the onboarding budget (R2 of the Apple Design Awards-derived rubric).
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| DF-U1a | No style pack is named in `ux-flows`, `visual-identity.md`, `scenario-format.md`, `/ux`, the Cursor rule, the `screens.md` seed or the README; `/sheleg-design` decides | `validate_direction_before_frames` on the unchanged tree: 22 pack-name refusals across the seven files (and 42 missing anchors); after the edit, `` `workbench` is the default `` planted into `ux-flows` step 4, refused | **planted** |
+| DF-U1b | Directions before frames: one key screen, one state, two directions only on a real fork, 2-up pick, then the rest | anchors `one key screen` / `2-up` refused on the unchanged tree; `EV-07` anchor reworded, refused by `validate_eval_cases` | **planted** for the text; **never** for the behaviour (`EV-07` is not run in CI) |
+| DF-U2 | `Style pack: none` keeps the `SLOP_MARKERS.md` floor; `--lint` where code exists; `NOT_RUN` when absent | anchors `SLOP_MARKERS.md`, `--lint`, `NOT_RUN` refused in `visual-identity.md` and `figma-integration.md` on the unchanged tree | **planted** |
+| DF-U3 | Flow approval and art-direction approval are separate; frames critiqued with `get_screenshot`, region → defect → fix; the approval cites the critique | `U085`: an approval with no critique, and one citing a path that does not exist, each failed before the rule existed and pass now; a link and a resolving path stay silent | **planted** |
+| DF-U4 | `visual-drift` in `ux-audit` and `audit-depth.md`; live pass offered by default for flagship / ad / brand screens | anchors refused on the unchanged tree; `EV-06` anchor reworded, refused | **planted** for the text; **never** for the behaviour (`EV-06` is not run in CI) |
+| DF-U5 | Figma is a file per surface (App / Web / ASO) recorded in `foundation.md` | `one project file` planted back into `templates/foundation.md`: refused by the single-file check and by both mirror comparisons | **planted** |
+| DF-M1 | `U079` no states, `U080` no axes or one missing, `U081` built state with no story; `U020` finds the frame by header and covers every state | 14 new fixtures failed on the old linter (`U020` keyboard-up row among them); `History` header planted as a story column via the old substring rule, the negative fixture fired; this repository's own `screens.md` went red on `U080` until one Design system line was added, and red again on that line until wrapped field lines were read | **planted** |
+| DF-M2 | Onboarding budget: `U082` over one screen with no record / missing record / record silent on onboarding; `U083`, `U084` | each of the five firing fixtures failed before the code existed; the clean twins stay silent | **planted** |
+| DF-MIG1 | Format 1 (no marker): `U079`/`U080`/`U081` and the widened `U020` are warnings and the lint exits 0; the pre-0.58 `U020` still fails | four format-1 fixtures read the exit code as well as the codes; each failed on the first cut (`fired as ERROR`, `exit 1, expected 0`); the old-`U020` fixture keeps exit 1 | **planted** |
+| DF-MIG2 | Format 2 (`<!-- screens-format: 2 -->`): the same findings fail | marked registry missing axes → `U080` error, exit 1; no state list → `U079` error, exit 1 | **planted** |
+| DF-MIG3 | The seed and this repository's own `screens.md` carry the marker | both seed copies and `docs/ux/screens.md` checked by `screens_format()`; each failed before the marker was written | **planted** |
+| DF-MIG4 | `docs/ux/doctor.py` offers the migration on a format-1 registry, and only there | doctor fixture failed before the offer existed; the format-2 twin stays silent | **planted** |
+| DF-MIG5 | No registry that passed before 0.58.0 fails after it | `python3 -B` with the `origin/main` linter and this branch's over all 118 `docs/ux/screens.md` registries under the maintainer's project root (worktrees included): 38 failing before, 38 after, 0 newly failing, 0 registries with an extra error, 103 now carrying matrix warnings. The first cut (`607336d`) over the same set: 71 of the 80 passing registries newly failed | **observed** |
+| Gate | The whole suite on this tree | `npm test` and each CI step run alone, exit codes read; pinned house auditor on every shipped skill (`ux-flows` body 4712/4750 tokens) | **observed** |
+
+**Rows at `never`: 2, both for model behaviour that CI does not run.**
+
 ## 2026-10-07 — short video, hooks and captions, v0.57.0
 
 From the family's 2026-10-07 short-video plan, tasks C1–C8.

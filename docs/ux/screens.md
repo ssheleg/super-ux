@@ -1,5 +1,6 @@
 # UI Screen Registry
 
+<!-- screens-format: 2 -->
 <!-- Managed with super-ux (ux-contract v4). The UI map. -->
 
 The UI map for super-ux's own installer. A "screen" here is one coherent
@@ -31,6 +32,10 @@ the whole surface is a terminal.
   `skip:`, `keep:`, `seed:`, `sync:`, `warning:`, `error:`, `refused:`. The
   word carries the meaning; colour never does.
 - **Selection glyphs:** `◉` selected, `◯` not, `❯` cursor.
+- **Axes:** viewport: an interactive terminal of 80 columns or more, and a
+  non-TTY pipe; theme: n/a, no colour carries meaning; text: the terminal's
+  own font and size; locale: en only, the CLI ships no translations.
+  Every screen below inherits this line; none overrides it.
 
 ## Web surfaces
 

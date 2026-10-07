@@ -82,6 +82,38 @@
     "Nothing is uploaded unless you press Share."
    ],
    "forbid": []
+  },
+  {
+   "id": "EV-06",
+   "measures": "A build that differs from its Figma frame in the same state, viewport and theme is reported as visual-drift with a region, a defect and a fix",
+   "instruction": {
+    "file": "plugins/super-ux/skills/ux-audit/SKILL.md",
+    "anchor": "Capture the build **in the frame's state, viewport and theme**"
+   },
+   "brief": "Using the ux-audit skill's live pass, compare one screen. The Figma frame SCR-03/Projects/empty at 375x812, dark theme, shows a card reading \"Create your first project\" with a primary button. The build capture record: revision 4f2a9c1, route /projects, scenario SCN-004, state empty, viewport 375x812@3, locale en, theme dark, motion reduced, captured-at 2026-10-07T10:00:00Z, source chrome-devtools take_screenshot. The build shows the text \"No data\" and no card or button. Write the finding.",
+   "expect": [
+    "visual-drift",
+    "SCR-03"
+   ],
+   "forbid": []
+  },
+  {
+   "id": "EV-07",
+   "measures": "An underdetermined brief gets one key screen in two directions and a human pick on a 2-up sheet before any other frame, with the pack chosen by /sheleg-design rather than from a list",
+   "instruction": {
+    "file": "plugins/super-ux/skills/ux-flows/SKILL.md",
+    "anchor": "Underdetermined brief → directions before frames"
+   },
+   "brief": "Using the ux-flows skill: a new habit-tracking app, no brand, no design system, no style pack recorded, sheleg-design is installed and Figma is enabled. The flow FLW-01 and its five screens are approved. Say what you draw in Figma first, in what order, and who decides the look. Do not draw yet; give the plan.",
+   "expect": [
+    "key screen",
+    "2-up"
+   ],
+   "forbid": [
+    "workbench",
+    "instrument-console",
+    "editorial-luxury"
+   ]
   }
  ]
 }
