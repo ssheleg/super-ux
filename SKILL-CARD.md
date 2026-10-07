@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | Pack | `super-ux` |
-| Version | `0.58.1` |
+| Version | `0.58.2` |
 | Skills | `vision`, `ux-foundation`, `ux-flows`, `ux-scenarios`, `ux-audit`, `brand-voice`, `copywriting` |
 | License | MIT |
 | Source | https://github.com/ssheleg/super-ux |
