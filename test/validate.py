@@ -2356,6 +2356,137 @@ def validate_direction_before_frames() -> None:
               f"set of files, one per surface (App / Web / ASO)")
 
 
+# 0.59.0, from the 2026-10-08 read of Figma's MCP guidance. Each anchor is the
+# mechanism a REQ rests on, in the file an agent reads when it does the step.
+FIGMA_PRACTICE_ANCHORS = {
+    "plugins/super-ux/skills/references/figma-integration.md": (
+        # FP-1: a native annotation per frame, carrying the chain's ids
+        "frame.annotations", "SCN-004 · state: error · PRN-03, PRN-09",
+        # FP-2: ready for dev, read back, and the stated fallback
+        "frame.devStatus = { type: 'READY_FOR_DEV'", "the property back in the same `use_figma` call", "section named `Ready for dev`",
+        "**Dev status:** annotation only",
+        # FP-3: the resize pass before the critique
+        "`Axes: viewport`", "frame.resize(width, frame.height)", "resize: NOT_RUN",
+        # FP-4: Improve mode captures into the recorded file
+        "generate_figma_design", "`Captured · <date>`", "Never a new",
+        "never drafts", "defaults to\n  creating a new file instead",
+        # FP-6: Code Connect, and its upkeep in the same change
+        "/figma-code-connect", "updates its mapping in the same change",
+        "Code Connect: none — <reason>",
+        # every claim above names where it was read, and when
+        "## Sources", "Read 2026-10-08",
+        "https://developers.figma.com/docs/figma-mcp-server/structure-figma-file/",
+        "https://developers.figma.com/docs/figma-mcp-server/code-to-canvas/",
+        "https://developers.figma.com/docs/figma-mcp-server/code-connect-integration/",
+        "https://www.figma.com/resource-library/claude-code-for-designers/",
+    ),
+    "plugins/super-ux/skills/references/figma-structure.md": (
+        "FIGMA_BRIDGE.md#token-tiers", "/figma-code-connect",
+        "updates the\n  mapping in the same change", "Captured · <date>",
+    ),
+}
+
+# FP-5: the token tier model has ONE home, sheleg-design's FIGMA_BRIDGE.md. Until
+# 0.59.0 figma-structure.md asked for three tiers while the bridge described a
+# flat model, so an agent obeyed whichever file it read first. A tier COUNT, or the
+# primitive-to-semantic chain spelled out, in a paragraph about tokens or variables
+# is that copy coming back -- in any text this pack ships.
+TOKEN_TIER_RESTATEMENT = re.compile(
+    r"\b(?:one|two|three|four|five|single|flat|[1-5])[- ]tier(?:s|ed)?\b"
+    r"|\bflat\s+(?:token\s+|variable\s+)?model\b"
+    r"|primitive\s*(?:→|->|>)\s*semantic",
+    re.I,
+)
+TOKEN_WORDS = re.compile(r"\btokens?\b|\bvariables?\b", re.I)
+TOKEN_TIER_SELF_TEST = (
+    ("- **Variables = tokens, three tiers:** primitive → semantic alias", True),
+    ("Use a flat token model: one collection of semantic variables.", True),
+    ("Variables as tokens — primitive -> semantic -> component", True),
+    ("Pricing page — three tiers, one visibly recommended", False),
+    ("Components bind token variables; the tier model lives in FIGMA_BRIDGE.md.", False),
+)
+
+
+def _token_tier_restatements(text: str) -> list[str]:
+    """Paragraphs that state a tier model for tokens. Pure, so it is self-tested."""
+    hits = []
+    for para in re.split(r"\n\s*\n|\n(?=\s*[-*] |#)", text):
+        if TOKEN_WORDS.search(para) and TOKEN_TIER_RESTATEMENT.search(para):
+            hits.append(" ".join(para.split())[:90])
+    return hits
+
+
+# FP-7/FP-8: routing words the family's selector needs, first in the list because
+# harness listings cut a long description short. FP-9: the bare hook trigger that
+# 0.58.3 narrowed stays narrowed.
+DESCRIPTION_PHRASES = {
+    "ux-flows": ('"add a screen" / "добавь экран"', '"mockups" / "макеты"'),
+    "copywriting": ('"App Store description" / "описание для App Store"',
+                    '"video hook" / "хук ролика"'),
+}
+TRIGGERS_WITHIN = 300
+BARE_HOOK = re.compile(r'["«](?:hook|хук|hooks|хуки)["»]', re.I)
+
+
+TIER_HOME_LINKS = (
+    "plugins/super-ux/skills/references/figma-structure.md",
+    "plugins/super-ux/skills/references/best-practices.md",
+    "plugins/super-ux/skills/references/visual-identity.md",
+)
+TIER_HOME_ANCHOR = "https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md#token-tiers"
+
+
+def validate_figma_practices() -> None:
+    """0.59.0: annotations, ready for dev, resize before critique, capture into the
+    recorded file, one home for the token tiers, Code Connect upkeep, routing words.
+    """
+    for rel, anchors in FIGMA_PRACTICE_ANCHORS.items():
+        text = read(ROOT / rel)
+        if not check(text is not None, f"{rel}: missing"):
+            continue
+        for anchor in anchors:
+            check(anchor in text,
+                  f"{rel}: no longer says {anchor!r} -- an instruction 0.59.0 rests "
+                  f"on was reworded away")
+
+    for rel in TIER_HOME_LINKS:
+        check(TIER_HOME_ANCHOR in (read(ROOT / rel) or ""),
+              f"{rel}: does not link the tier model's home, {TIER_HOME_ANCHOR} -- "
+              f"a file that names the model without the section sends the reader "
+              f"to look for it")
+    for sample, should_hit in TOKEN_TIER_SELF_TEST:
+        check(bool(_token_tier_restatements(sample)) == should_hit,
+              f"token-tier self-test: {sample!r} should "
+              f"{'be' if should_hit else 'not be'} read as a tier restatement")
+    shipped = sorted((ROOT / "plugins/super-ux").rglob("*.md")) \
+        + sorted((ROOT / "templates").rglob("*.md")) \
+        + sorted((ROOT / "cursor/rules").glob("*.mdc")) + [ROOT / "README.md"]
+    check(len(shipped) > 50, f"token-tier scan walked {len(shipped)} files -- the walk is broken")
+    for path in shipped:
+        for hit in _token_tier_restatements(read(path) or ""):
+            check(False,
+                  f"{path.relative_to(ROOT)}: states a token tier model ({hit!r}) -- "
+                  f"the tier model has one home, sheleg-design's FIGMA_BRIDGE.md "
+                  f"\"Token tiers\"; link it instead of restating it")
+
+    for skill, phrases in DESCRIPTION_PHRASES.items():
+        fm = front_matter(ROOT / f"plugins/super-ux/skills/{skill}/SKILL.md") or {}
+        desc = fm.get("description") or ""
+        if not check(bool(desc), f"{skill}/SKILL.md: no description to read"):
+            continue
+        at = desc.find("Triggers - ")
+        check(-1 < at <= TRIGGERS_WITHIN,
+              f"{skill}/SKILL.md: the Triggers list starts at character {at}, past "
+              f"{TRIGGERS_WITHIN} -- a host that truncates the description loses the "
+              f"words that route to this skill")
+        for phrase in phrases:
+            check(phrase in desc, f"{skill}/SKILL.md: description no longer advertises {phrase}")
+        check(not BARE_HOOK.search(desc),
+              f"{skill}/SKILL.md: advertises a bare hook trigger "
+              f"({BARE_HOOK.search(desc).group(0) if BARE_HOOK.search(desc) else ''}) -- "
+              f"it takes every git hook and Claude Code hook; say \"video hook\"")
+
+
 def validate_ledger_names_its_version() -> None:
     """The ledger has to name the version it was measured on.
 
@@ -2418,6 +2549,7 @@ def main() -> int:
     validate_ai_tell_coverage()
     validate_short_video_shelf()
     validate_direction_before_frames()
+    validate_figma_practices()
     validate_front_matter_is_yaml()
     validate_ledger_table_shape()
     validate_graph_claims()

@@ -204,7 +204,7 @@ then open only those entries. The selection protocol
 - **BP-092** — One page per flow/feature, named to match the chain
 - **BP-093** — Frame names keyed to SCR-ID and state
 - **BP-094** — Purpose-based, code-matched naming (not appearance)
-- **BP-095** — Variables as tokens — primitive → semantic → component
+- **BP-095** — Variables as tokens — components bind variables, never raw values
 - **BP-096** — Variants for states of one object; separate components for different objects
 - **BP-097** — Auto layout on every container
 - **BP-098** — Build on the existing library, don't reinvent
@@ -347,7 +347,7 @@ then open only those entries. The selection protocol
 - **BP-209** — The setup checklist arrives already partly complete
 - **BP-210** — A capability page answers one question per heading
 - **BP-211** — Personalize the wording, never the price
-- **BP-212** — Publicly addressable before it takes money, instrumented before it takes traffic
+- **BP-212** — Local sandbox tests the payment path; production delivery needs a public HTTPS endpoint
 - **BP-213** — A collected answer carries three decisions no screen shows
 - **BP-214** — The legal text is sourced, never generated
 - **BP-215** — Access after payment is a ladder, and the link carries a token rather than a person
