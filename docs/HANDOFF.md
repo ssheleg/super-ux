@@ -9,13 +9,13 @@ delegated to sheleg-design, Code Connect upkeep, and routing words for
 [verification ledger](evidence/verification.md) rows FP-1..FP-10.
 
 - Done: every item of the 2026-10-08 Figma study; `validate_figma_practices`
-  watched failing on 13 planted defects and on the `origin/main` text (35
+  watched failing on 14 planted defects and on the `origin/main` text (37
   refusals); `npm test` and every CI step green locally.
 - Open: review and merge, tag `v0.59.0`, npm publication, the umbrella pin in
   `sshlg-skills/skills.json`. None is implied by this branch.
-- Depends on, outside this repo: sheleg-design's `FIGMA_BRIDGE.md` section
-  "Token tiers" comes from a parallel sheleg-design change. Three files here
-  link the file and name the heading; add the anchor once that section lands.
+- Depends on, outside this repo: the three links to sheleg-design's
+  `FIGMA_BRIDGE.md#token-tiers` resolve on its `main` only once
+  sheleg-design PR #41 merges (the heading is on its head `532a6b2`).
 - The umbrella's selector cannot route the new phrases yet: "add a screen",
   "добавь экран", "макеты", "App Store description", "описание для App Store"
   return no route on `sshlg-skills` `origin/main`. Its completeness fixture will

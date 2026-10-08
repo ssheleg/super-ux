@@ -2381,7 +2381,7 @@ FIGMA_PRACTICE_ANCHORS = {
         "https://www.figma.com/resource-library/claude-code-for-designers/",
     ),
     "plugins/super-ux/skills/references/figma-structure.md": (
-        "FIGMA_BRIDGE.md", '"Token tiers"', "/figma-code-connect",
+        "FIGMA_BRIDGE.md#token-tiers", "/figma-code-connect",
         "updates the\n  mapping in the same change", "Captured · <date>",
     ),
 }
@@ -2428,6 +2428,14 @@ TRIGGERS_WITHIN = 300
 BARE_HOOK = re.compile(r'["«](?:hook|хук|hooks|хуки)["»]', re.I)
 
 
+TIER_HOME_LINKS = (
+    "plugins/super-ux/skills/references/figma-structure.md",
+    "plugins/super-ux/skills/references/best-practices.md",
+    "plugins/super-ux/skills/references/visual-identity.md",
+)
+TIER_HOME_ANCHOR = "https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md#token-tiers"
+
+
 def validate_figma_practices() -> None:
     """0.59.0: annotations, ready for dev, resize before critique, capture into the
     recorded file, one home for the token tiers, Code Connect upkeep, routing words.
@@ -2441,6 +2449,11 @@ def validate_figma_practices() -> None:
                   f"{rel}: no longer says {anchor!r} -- an instruction 0.59.0 rests "
                   f"on was reworded away")
 
+    for rel in TIER_HOME_LINKS:
+        check(TIER_HOME_ANCHOR in (read(ROOT / rel) or ""),
+              f"{rel}: does not link the tier model's home, {TIER_HOME_ANCHOR} -- "
+              f"a file that names the model without the section sends the reader "
+              f"to look for it")
     for sample, should_hit in TOKEN_TIER_SELF_TEST:
         check(bool(_token_tier_restatements(sample)) == should_hit,
               f"token-tier self-test: {sample!r} should "

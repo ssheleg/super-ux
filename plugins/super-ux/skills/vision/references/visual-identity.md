@@ -141,7 +141,8 @@ Inside the `ux-flows` Design loop (see
 screen/state table are agreed and **before** frames get drawn:
 
 - take the pack's tokens as the **Figma variable collections** (in the tier
-  model sheleg-design's `FIGMA_BRIDGE.md` → "Token tiers" sets; BP-095)
+  model sheleg-design's
+  [FIGMA_BRIDGE.md → Token tiers](https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md#token-tiers) sets; BP-095)
   instead of hand-picking colors per frame;
   the pack's ready-made token CSS is the same source the code will use, so
   Figma and code start from one vocabulary. Creating them is a `use_figma`

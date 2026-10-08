@@ -817,7 +817,7 @@ design-system org guides.
 - **Source:** [DSC]/[FigLearn]/[ZH]
 
 #### BP-095: Variables as tokens — components bind variables, never raw values
-- **Do:** bind every component property that has a token to a variable; group variables into named collections (color, spacing, typography); use modes for light/dark and density. Never hardcode a raw value on a component. How many tiers the token graph has and how they alias is decided in one place, sheleg-design's [FIGMA_BRIDGE.md](https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md) → "Token tiers"; follow it rather than a model restated here.
+- **Do:** bind every component property that has a token to a variable; group variables into named collections (color, spacing, typography); use modes for light/dark and density. Never hardcode a raw value on a component. How many tiers the token graph has and how they alias is decided in one place, sheleg-design's [FIGMA_BRIDGE.md → Token tiers](https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md#token-tiers); follow it rather than a model restated here.
 - **Why:** a token graph is what lets one change propagate everywhere and what maps cleanly to code tokens; raw values scattered on components can't be themed or synced.
 - **Apply when:** building or maintaining the design system layer.
 - **Tags:** figma, design-system, dark-mode, maintainability

@@ -23,8 +23,8 @@ and the date it was read, in a new Sources section of `figma-integration.md`.
   file when the URL is not a Design file, so the URL is checked first.
 - **Token tiers are sheleg-design's.** `figma-structure.md`, BP-095 and
   `visual-identity.md` restated a tier model that sheleg-design's
-  `FIGMA_BRIDGE.md` contradicted. All three now link that file's "Token tiers"
-  section and name no count.
+  `FIGMA_BRIDGE.md` contradicted. All three now link that file's
+  `#token-tiers` section and name no count.
 - **Code Connect upkeep.** Core components carry a Code Connect mapping made
   with `/figma-code-connect`, and a change to a mapped component's API updates
   the mapping in the same change.

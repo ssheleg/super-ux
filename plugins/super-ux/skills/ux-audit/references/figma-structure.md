@@ -84,10 +84,9 @@ N. Scratch          drafts / explorations (kept out of the working pages)
   collections group them (color / spacing / type); modes carry
   light/dark/density. **The tier model** (how many tiers the token graph
   has, and how one aliases another) **has one home:** sheleg-design's
-  [FIGMA_BRIDGE.md](https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md),
-  section "Token tiers". It is not restated here: two texts of one rule is
-  the drift this pack exists to prevent, and until 0.59.0 this file named
-  a tier model that sheleg-design's own bridge contradicted.
+  [FIGMA_BRIDGE.md → Token tiers](https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md#token-tiers).
+  It is not restated here: two texts of one rule is the drift this pack exists to
+  prevent, and until 0.59.0 this file named a tier model that sheleg-design's own bridge contradicted.
 - **Variants vs components:** variants = states/sizes of ONE object;
   different objects = different components. Every interactive component
   carries hover / active / disabled / loading / error variants — these are
