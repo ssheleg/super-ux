@@ -1,3 +1,29 @@
+# Figma-practices handoff, 2026-10-08
+
+Branch `feat/figma-practices` prepares super-ux 0.59.0: native annotations and a
+ready-for-dev status on every approved frame, a resize pass before the critique,
+Improve-mode capture into the surface's recorded file, the token tier model
+delegated to sheleg-design, Code Connect upkeep, and routing words for
+`ux-flows` and `copywriting`. Start with the
+[0.59.0 changelog section](../CHANGELOG.md) and the
+[verification ledger](evidence/verification.md) rows FP-1..FP-10.
+
+- Done: every item of the 2026-10-08 Figma study; `validate_figma_practices`
+  watched failing on 13 planted defects and on the `origin/main` text (35
+  refusals); `npm test` and every CI step green locally.
+- Open: review and merge, tag `v0.59.0`, npm publication, the umbrella pin in
+  `sshlg-skills/skills.json`. None is implied by this branch.
+- Depends on, outside this repo: sheleg-design's `FIGMA_BRIDGE.md` section
+  "Token tiers" comes from a parallel sheleg-design change. Three files here
+  link the file and name the heading; add the anchor once that section lands.
+- The umbrella's selector cannot route the new phrases yet: "add a screen",
+  "добавь экран", "макеты", "App Store description", "описание для App Store"
+  return no route on `sshlg-skills` `origin/main`. Its completeness fixture will
+  fail on the re-pin until `lib/triggers.js` gains them in the same change.
+- Next task: review the PR, then release per `CONTRIBUTING.md` → Releasing.
+
+---
+
 # Direction-before-frames handoff, 2026-10-07
 
 Branch `feat/direction-before-frames` prepares super-ux 0.58.0: `/sheleg-design`

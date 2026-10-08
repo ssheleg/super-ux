@@ -42,10 +42,11 @@ States table. That is the whole navigation model.
 ```
 1. Cover            file name · status · owner · last-updated (a component)
 2. Index            table: page → flow/feature, quick links
-3. Design system    tokens, primitives, semantic aliases, components (or a linked library)
+3. Design system    token variables (tiers per sheleg-design), components (or a linked library)
 4. FLW-01 · <name>  all frames for flow 1
 5. FLW-02 · <name>  …
 …
+…  Captured · <date>  shipped screens captured in Improve mode (evidence, never edited)
 N. Scratch          drafts / explorations (kept out of the working pages)
 ```
 
@@ -53,6 +54,14 @@ N. Scratch          drafts / explorations (kept out of the working pages)
   `FLW-ID` (or feature name) so it's findable from `flows.md`.
 - Drafts live on Scratch (or a separate file), never mixed into working
   pages — clutter slows load and confuses navigation.
+- A `Captured · <date>` page holds what shipped, captured into this file
+  before a redesign (`generate_figma_design` on the web; see Improve mode in
+  [figma-integration.md](figma-integration.md)). It is the before, kept as
+  captured; the after frames go on the flow's page.
+- An approved frame carries its annotation (scenario id, state, `PRN-NN`)
+  and, once handed off, a ready-for-dev status or the `Ready for dev`
+  section that stands in for one where the status could not be set
+  (design loop steps 5 and 7 in figma-integration.md).
 
 ## Frame naming (BP-093) — the backbone
 
@@ -71,10 +80,14 @@ N. Scratch          drafts / explorations (kept out of the working pages)
 - **Naming:** purpose, not appearance, and matching code — `button/primary`,
   `input/default`, `color/background/subtle`, `spacing/gap/md`. Slash `/`
   creates the nested groups.
-- **Variables = tokens, three tiers:** primitive → semantic alias →
-  component reference; grouped into collections (color / spacing / type);
-  modes for light/dark/density. Components reference semantic tokens, never
-  raw values.
+- **Variables = tokens:** components bind variables, never raw values;
+  collections group them (color / spacing / type); modes carry
+  light/dark/density. **The tier model** (how many tiers the token graph
+  has, and how one aliases another) **has one home:** sheleg-design's
+  [FIGMA_BRIDGE.md](https://github.com/ssheleg/sheleg-design-skill/blob/main/plugins/sheleg-design/skills/sheleg-design/FIGMA_BRIDGE.md),
+  section "Token tiers". It is not restated here: two texts of one rule is
+  the drift this pack exists to prevent, and until 0.59.0 this file named
+  a tier model that sheleg-design's own bridge contradicted.
 - **Variants vs components:** variants = states/sizes of ONE object;
   different objects = different components. Every interactive component
   carries hover / active / disabled / loading / error variants — these are
@@ -84,6 +97,12 @@ N. Scratch          drafts / explorations (kept out of the working pages)
   real layout code.
 - **Reuse the existing library** (`get_libraries` / `search_design_system`)
   before creating anything; fork only with a recorded reason.
+- **Core components are mapped to code with Code Connect.** Anything the
+  screens repeat (buttons, inputs, cards, nav items) gets a mapping to its
+  code component through `/figma-code-connect`. A change that alters a
+  mapped component's API (a prop, a variant, its import path) updates the
+  mapping in the same change; the procedure and the sources are in
+  [figma-integration.md](figma-integration.md) → Keeping Figma in sync.
 
 ## Layer hygiene (BP-099)
 
@@ -116,3 +135,8 @@ friction.
   references, so "built on the tokens" is checkable rather than assumed.
 - Page and frame names still match the current `flows.md`/`screens.md` IDs
   after any rename.
+- Every core component has a Code Connect mapping
+  (`get_code_connect_map`), and a component whose API changed in this
+  change has its mapping changed with it.
+- Every approved frame has its annotation and a dev status (or the stated
+  `Ready for dev` fallback), read back rather than assumed.

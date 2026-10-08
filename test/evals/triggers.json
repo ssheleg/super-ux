@@ -10,7 +10,9 @@
       "q08",
       "q09",
       "q10",
-      "q11"
+      "q11",
+      "q15",
+      "q17"
     ],
     "validation": [
       "q05",
@@ -18,7 +20,8 @@
       "q07",
       "q12",
       "q13",
-      "q14"
+      "q14",
+      "q16"
     ]
   },
   "queries": [
@@ -119,7 +122,27 @@
       "query": "Create an orchestration loop for an AI agent",
       "should_trigger": false,
       "why": "agent system construction"
+    },
+    {
+      "id": "q15",
+      "lang": "ru",
+      "query": "добавь экран онбординга с макетами в Figma",
+      "should_trigger": true,
+      "why": "ux-flows: a screen and its mockups (0.59.0 routing words)"
+    },
+    {
+      "id": "q16",
+      "lang": "en",
+      "query": "Write the App Store description for this app",
+      "should_trigger": true,
+      "why": "copywriting: a store listing (0.59.0 routing words)"
+    },
+    {
+      "id": "q17",
+      "lang": "en",
+      "query": "Add a git pre-commit hook that runs the linter",
+      "should_trigger": false,
+      "why": "a git hook is not a video hook (the 0.58.3 narrowing)"
     }
   ]
 }
-

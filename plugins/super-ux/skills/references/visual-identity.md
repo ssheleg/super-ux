@@ -140,8 +140,9 @@ Inside the `ux-flows` Design loop (see
 [figma-integration.md](figma-integration.md)), after the flow diagram and the
 screen/state table are agreed and **before** frames get drawn:
 
-- take the pack's tokens as the **Figma variable collections** (primitive →
-  semantic → component, per BP-095) instead of hand-picking colors per frame;
+- take the pack's tokens as the **Figma variable collections** (in the tier
+  model sheleg-design's `FIGMA_BRIDGE.md` → "Token tiers" sets; BP-095)
+  instead of hand-picking colors per frame;
   the pack's ready-made token CSS is the same source the code will use, so
   Figma and code start from one vocabulary. Creating them is a `use_figma`
   call (load `/figma-use` first); `get_variable_defs` reads back what a node

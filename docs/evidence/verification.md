@@ -8,6 +8,26 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-08 — Figma practices: annotations, ready for dev, resize, capture, tiers, Code Connect, v0.59.0
+
+From a 2026-10-08 read of Figma's MCP guidance and Plugin API; sources in `figma-integration.md` → Sources.
+
+| REQ | What ships | How it was confirmed | Confirmed |
+|---|---|---|---|
+| FP-1 | Design-loop step 5: one native annotation per frame with scenario id, state and `PRN-NN` | `validate_figma_practices` over the `origin/main` text: anchor refused; after the edit, `frame.annotations` removed from step 5, refused | **planted** for the text; **never** for the behaviour |
+| FP-2 | Step 7: scenario home and code path in the annotation, `devStatus = READY_FOR_DEV` read back, stated fallback (annotation line, `Ready for dev` section, `**Dev status:** annotation only`) | Plugin API typings shipped with the Figma MCP skill (`DevStatusMixin`: writable, directly under a page or section) and the DevStatus and node-properties pages, read 2026-10-08; `READY_FOR_DEV` replaced, refused (a first anchor on the bare word stayed GREEN because the word appears twice, and was tightened); fallback section removed, refused | **planted** for the text; **never** for a live write (no Figma file was touched) |
+| FP-3 | Resize each frame across `Axes: viewport` before the critique, `resize: NOT_RUN` when it cannot | structure-figma-file page, read 2026-10-08: "Resize the frame in Figma to check that it behaves as expected before generating code"; `resize: NOT_RUN` removed, refused | **planted** |
+| FP-4 | Improve mode captures with `generate_figma_design` into the recorded file on a `Captured · <date>` page; never a new file or drafts | code-to-canvas page, read 2026-10-08: the new-file default for a non-Design URL and the Full-seat rule quoted; page name and the new-file ban removed, each refused | **planted** |
+| FP-5 | No tier count for tokens in any shipped text; `figma-structure.md`, BP-095, `visual-identity.md` link sheleg-design's `FIGMA_BRIDGE.md` → "Token tiers" | the `origin/main` text: four restatements refused (BP-095 title and Why, `figma-structure.md`, `visual-identity.md`); "three tiers" planted back into `figma-structure.md` and "flat token model" into BP-095, each refused; five-sample self-test, BP-118 pricing tiers stays silent | **planted**; the anchor inside `FIGMA_BRIDGE.md` is not confirmed, the parallel sheleg-design change has not landed |
+| FP-6 | Core components mapped with `/figma-code-connect`; an API change updates the mapping in the same change; `Code Connect: none — <reason>` when absent | code-connect-integration page, read 2026-10-08: "When component APIs change in your codebase, update the corresponding Code Connect mappings"; the same-change sentence weakened, refused | **planted** |
+| FP-7 | `ux-flows` advertises "add a screen" / "добавь экран", "mockups" / "макеты"; Triggers within 300 characters; 948 of 1024, under the house auditor's 970 working limit (a first cut at 990 was refused by it, `DESC_HEADROOM`) | each phrase dropped, refused; a sentence planted before Triggers (312), refused; the umbrella's `advertised_check.js` (`origin/main`) run against this tree: all 56 routed triggers still advertised | **planted** |
+| FP-8 | `copywriting` advertises "App Store description" / "описание для App Store"; 827 of 1024 | phrase dropped, refused | **planted** |
+| FP-9 | No bare "hook" / «хук» trigger (narrowed in 0.58.3) | "video hook" planted back to "hook", refused | **planted** |
+| FP-10 | Trigger eval cases q15, q16 (positive) and q17 (a git hook, negative) | `evals_validate.py` and `--self-test` green; the cases are authored, not run | **never** for the behaviour |
+| Gate | The whole suite on this tree | `npm test` and each CI step run alone, exit codes read | **observed** |
+
+**Rows at `never`: 3, for model behaviour and a live Figma write that CI does not run.**
+
 ## 2026-10-08 — the hook trigger names video, v0.58.3
 
 | REQ | What ships | How it was confirmed | Confirmed |

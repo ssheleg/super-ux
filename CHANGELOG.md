@@ -1,3 +1,43 @@
+## 0.59.0 — a frame carries its ids into Dev Mode, and the token tiers have one home
+
+From a 2026-10-08 read of Figma's MCP guidance (structure your file, code to
+canvas, Code Connect) and the Plugin API. Every quoted rule now cites its page
+and the date it was read, in a new Sources section of `figma-integration.md`.
+
+- **Annotations.** At design-loop step 5 each frame gets a native Figma
+  annotation naming its scenario id, its state and the `PRN-NN` heuristics it
+  was built against, so the chain's ids reach Dev Mode with the frame.
+- **Ready for dev.** After the art-direction approval each frame's annotation
+  gains the scenario's home and the code path, and the frame is marked
+  `READY_FOR_DEV` through `use_figma`. The Plugin API declares `devStatus`
+  writable; the MCP's documentation does not say every plan and seat accepts
+  the write, so the property is read back, and a refusal falls back to a
+  stated convention (an annotation line and a `Ready for dev` section) that is
+  never reported as the status itself.
+- **Resize before the critique.** Each frame is resized across the screen's
+  declared `Axes: viewport` widths and the result is recorded in the critique.
+  The narrow-width check BP-134 runs on the build now runs on the frame first.
+- **Improve mode captures what ships.** `generate_figma_design` captures the
+  live web screens into the surface's recorded file, on a `Captured · <date>`
+  page, and never into a new file or drafts. Figma's own default is a new
+  file when the URL is not a Design file, so the URL is checked first.
+- **Token tiers are sheleg-design's.** `figma-structure.md`, BP-095 and
+  `visual-identity.md` restated a tier model that sheleg-design's
+  `FIGMA_BRIDGE.md` contradicted. All three now link that file's "Token tiers"
+  section and name no count.
+- **Code Connect upkeep.** Core components carry a Code Connect mapping made
+  with `/figma-code-connect`, and a change to a mapped component's API updates
+  the mapping in the same change.
+- **Routing words.** `ux-flows` advertises "add a screen" / "добавь экран" and
+  "mockups" / "макеты"; `copywriting` advertises "App Store description" /
+  "описание для App Store". Both trigger lists now start within the first 300
+  characters, because a host that cuts a long description loses what comes
+  last. Three trigger eval cases cover them, one of them a git hook that must
+  not route here.
+- **A validator guard for all of it.** `validate_figma_practices` holds the
+  anchors, refuses a token tier model stated in any shipped text, and refuses a
+  bare "hook" trigger. Each refusal was watched failing on a planted defect.
+
 ## 0.58.3 — copywriting answers "video hook", not every hook
 
 0.57.0 taught `copywriting` short-video hooks and advertised the bare trigger
