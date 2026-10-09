@@ -168,8 +168,9 @@ How far each pass goes, what it reads at each level, and which references it pul
    `retired` scenarios.
 2. **Batch.** Group scoped scenarios by feature, ~5–8 per batch. List the
    batches before starting so progress is visible.
-3. **Audit each batch.** For large scopes dispatch parallel subagents — one
-   batch per subagent, each returning per-scenario verdicts with evidence.
+3. **Audit each batch.** For large scopes use available subagents in parallel,
+   one batch each. Without delegation, audit the same batches sequentially;
+   either route returns per-scenario verdicts with the same evidence.
    **Three evidence tiers, and a verdict names which it stands on** — because
    a `file:line` proves the TEXT of an implementation, not that a user reaches
    it. Static conformance (file:line — the code says so), executable

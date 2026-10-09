@@ -1,3 +1,10 @@
+## 0.59.1 — inventories and audits work without delegation
+
+Brand inventory, scenario inventory and UX audit now use the same areas, batches
+and evidence requirements sequentially when the host has no subagent facility.
+Parallel work remains available where the host supports it; a Claude-specific
+Explore agent name is no longer a prerequisite.
+
 ## 0.59.0 — a frame carries its ids into Dev Mode, and the token tiers have one home
 
 From a 2026-10-08 read of Figma's MCP guidance (structure your file, code to

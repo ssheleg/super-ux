@@ -8,6 +8,15 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-09 — sequential host fallback, v0.59.1
+
+Candidate only: **NOT_RELEASED**. No client/provider run is claimed.
+
+| REQ | What changes | Evidence | Status |
+|---|---|---|---|
+| HC-4 | Brand/scenario inventory and UX audit retain coverage without subagents | `plugins/super-ux/skills/brand-voice/SKILL.md`, `ux-scenarios/SKILL.md`, `ux-audit/SKILL.md`: unavailable delegation selects sequential areas/batches | reviewed text; runtime NOT_RUN |
+| Gate | Repository checks | `npm test` | PASS, exit 0; structural 5,446 checks; brand 182 checks; display-copy 20 tests; UX 189 checks; installer 10 cases; audit regressions pass. Existing B022 warning remains. |
+
 ## 2026-10-08 — Figma practices: annotations, ready for dev, resize, capture, tiers, Code Connect, v0.59.0
 
 From a 2026-10-08 read of Figma's MCP guidance and Plugin API; sources in `figma-integration.md` → Sources.
@@ -657,3 +666,40 @@ Every `planted` row above names the exact defect that was introduced and
 reverted. The plant/revert transcript is the evidence; a row that says
 `planted` without naming what was planted is the failure this file exists to
 prevent.
+
+---
+
+## HC-4 host compatibility handoff — 2026-10-09
+
+Status: **NOT_RELEASED**. Candidate version `0.59.1` on
+`codex/host-compat-20261009`, based on `29acd2b`. This is a bounded documentation
+and skill-instruction change; no host configuration was modified.
+
+### Objective and completed work
+
+Brand inventory, scenario inventory and UX audit use available subagents for parallel work; unavailable delegation selects sequential areas or batches with the same coverage and evidence.
+Version manifests, changelog, README, skill card and the
+verification ledger above describe the same candidate.
+
+Shared task and contract context:
+[HC plan](https://github.com/ssheleg/sshlg-skills/blob/6415e3e/docs/evidence/host-compat/README.md),
+[primary-source research](https://github.com/ssheleg/sshlg-skills/blob/46f983f/docs/evidence/host-compat/research/README.md).
+The research distinguishes installer destinations from native host acceptance.
+
+### Checks actually run
+
+`npm test` exited 0: structural validation (5,446 checks), brand tests (182 checks), display-copy (20 tests), UX tests (189 checks), documentation lint, installer (10 cases) and audit regressions. Brand lint retained its existing B022 warning for an unregistered `claude --version` fact; no new error.
+`git diff --check` passed. The first structural run correctly rejected stale
+version receipts; the receipts were updated before the passing complete run.
+No new behavioral test was added for these reversible prose changes.
+Client/model/provider execution is **NOT_RUN**: local checks do not establish
+native loading or runtime acceptance. Umbrella routing checks belong to the
+integrating hub change and were not run from this owner repository.
+
+### Open work and exact next task
+
+The integrating reviewer should inspect the bounded skill diff and this
+candidate's check receipt, then follow `CONTRIBUTING.md` for review, merge and
+release. No tag, npm publication, installed-skill update or umbrella pin change
+is part of this branch. Parent hub integration must reference the reviewed owner
+commit and keep release/installation acceptance separate from these local checks.

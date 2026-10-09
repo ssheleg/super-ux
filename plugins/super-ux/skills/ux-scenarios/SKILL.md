@@ -103,8 +103,9 @@ Scenarios are designed here, not reverse-engineered.
 
 The base must cover *everything that exists*, then expose the gaps.
 
-1. Inventory sweep of the codebase (dispatch parallel Explore/general
-   subagents for large codebases, one area each): routes and screens;
+1. Inventory sweep of the codebase (use available subagents in parallel for
+   large codebases, one area each; without delegation, inspect those areas
+   sequentially with the same coverage): routes and screens;
    interactive elements (buttons, forms, dialogs, menus); state branches
    (loading / empty / error / success); error paths and what the user sees;
    onboarding and first-run logic; settings; multi-entity flows.
