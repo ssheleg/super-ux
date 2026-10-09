@@ -703,3 +703,47 @@ candidate's check receipt, then follow `CONTRIBUTING.md` for review, merge and
 release. No tag, npm publication, installed-skill update or umbrella pin change
 is part of this branch. Parent hub integration must reference the reviewed owner
 commit and keep release/installation acceptance separate from these local checks.
+
+---
+
+## HC-4 release receipt — 2026-10-10
+
+This receipt supersedes the candidate-only status above. PR #38 merged after
+required checks passed; the merge tree equals the independently reviewed tree.
+Tag `v0.59.1` and `origin/main` resolved to the source commit below at release.
+The release workflow passed validation, strict Claude plugin conformance,
+installer smoke and npm publication; no manual full-CI dispatch was used.
+
+Readback fetched the exact registry version and tarball without executing it,
+checked registry SHA512/SHA1, and compared every published file byte-for-byte
+with `git show <gitHead>:<path>`. The canonical manifest is SHA256 over UTF-8
+compact JSON (sorted keys) of path-sorted `{path, sha256, bytes}` file rows.
+The npm package is the installer distribution; native skill loading remains
+separate from this artifact check.
+
+```json
+{
+  "as_of": "2026-10-09T22:03:55.701388+00:00",
+  "package": "super-ux",
+  "version": "0.59.1",
+  "gitHead": "99e17ccbb00edbb4ccb68b6ac21586f219809e7e",
+  "registry": "https://registry.npmjs.org/super-ux/0.59.1",
+  "tarball": "https://registry.npmjs.org/super-ux/-/super-ux-0.59.1.tgz",
+  "integrity": "sha512-a6VUu3fHksIv8Qu4V/RZfyehjSxYwyFouTUThS92fjDsGoE6P/f1tmfu4MkTW8USLXBokjVe9izfDg6A5FeUvQ==",
+  "tarball_sha256": "502ae1d7294f0fba030dbf390d19b8514f377caf9b2af0387a67cef715fce488",
+  "all_published_files_equal_release_source": true,
+  "published_files": 32,
+  "canonical_manifest_sha256": "a56b9fcdf83b4b820a69082e0cc0d28f0a8aa22445d71237a1e92e6080232e5f",
+  "release_run": "37996865703",
+  "runtime_acceptance": "NOT_RUN",
+  "release_workflow_conclusion": "success"
+}
+```
+
+Public release: https://github.com/ssheleg/super-ux/releases/tag/v0.59.1
+Workflow: https://github.com/ssheleg/super-ux/actions/runs/37996865703
+
+Next task belongs to the hub integrator: update the family version/submodule
+pin, refresh authorized installations, and retain separate native acceptance
+status. No owner payload work remains for HC-4. This follow-up changes only
+the evidence ledger and requires no additional package release.
