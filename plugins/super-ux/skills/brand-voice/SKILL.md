@@ -75,8 +75,9 @@ Announce which one you are running.
    knows where the project keeps its text.
 5. **Inventory sweep** for `strings.md`: routes, screens, buttons, states,
    errors, empty states. Every string gets a row with its `file:line` and the
-   scenario it serves. Dispatch parallel Explore subagents for a large
-   codebase, one area each.
+   scenario it serves. For a large codebase, use available read-only subagents
+   in parallel, one area each; without delegation, inspect the same areas
+   sequentially and keep the same evidence requirements.
 6. **Ask which humanization pass this project wants**, and write the answer to
    `voice.md`'s `Humanization pass:` field. `own` is the default and the only one
    that reads this pack's registers and facts; `npx sshlg-skills humanizers` shows

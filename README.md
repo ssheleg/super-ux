@@ -118,6 +118,10 @@ Code, Cursor, Codex, OpenCode and others. This channel ships the skills only;
 the `/ux` commands come with the plugin, the always-on hard rule with the
 Cursor install.
 
+Inventory and audit workflows use available subagents for large scopes. On a
+host without delegation, they inspect the same areas and batches sequentially,
+with the same coverage and evidence requirements.
+
 ### Interactive (pick channels and agents)
 
 ```sh
