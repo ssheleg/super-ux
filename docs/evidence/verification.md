@@ -19,6 +19,45 @@ Candidate: written before the tag. Family round FAMILY-ROUND-1010 (REQ-7c, REQ-6
 | Gate | Repository checks | `npm test` | PASS, exit 0 in 93 s; structural 5,446 checks; brand 184 checks; display-copy 20 tests; UX 189 checks; `docs/ux` consistent; brand pack clean (no B022 warning); installer 10 cases; audit regressions all green |
 | REQ-6 | `release.yml` refuses a tag whose `git cat-file -t` is not `tag`, right after checkout | step "The tag must be annotated"; YAML parses; proven only by this release's run | never (a lightweight tag is not cut to test it) |
 
+### v0.59.2 release receipt — 2026-10-10
+
+This receipt supersedes the candidate status above. PR #40 merged after its
+checks passed (validate, house skill audit). `python3 test/release_preflight.py`
+printed `OK -- safe to tag v0.59.2` on `origin/main` at `c0996bc`. Tag `v0.59.2`
+is an annotated tag object (`git cat-file -t` → `tag`) on that commit, and the
+release run's new step printed `v0.59.2 is annotated` — the REQ-6 step has now
+run once on a real tag (passing side only). The run passed validate, release and
+publish; its registry step printed `OK: registry serves super-ux@0.59.2 (after 80s)`.
+
+Readback fetched the registry version and tarball without executing it, checked
+SHA512/SHA1, and compared every published file byte-for-byte with
+`git show <gitHead>:<path>`; canonical manifest as in the 0.59.1 receipt.
+
+```json
+{
+  "as_of": "2026-10-10T19:01:59.376488+00:00",
+  "package": "super-ux",
+  "version": "0.59.2",
+  "gitHead": "c0996bc30392c81d3a341252e50069a3b2d83b34",
+  "registry": "https://registry.npmjs.org/super-ux/0.59.2",
+  "tarball": "https://registry.npmjs.org/super-ux/-/super-ux-0.59.2.tgz",
+  "integrity": "sha512-K8KfBZofsKNr/iQRz8A2TFa8H7B2dwaMPx93Iv2TEserq5hyyEsi9zcRtgLuHjiFbsVwiDSyjVPIUcntE5vSKw==",
+  "tarball_sha256": "8560a14b77da1bdfa14d3a4d1d6b4dabfa461ca20914a1ae9508071ee0de1e64",
+  "all_published_files_equal_release_source": true,
+  "published_files": 32,
+  "canonical_manifest_sha256": "b3ca120f2201ba6a23c8c6095cb32c0a7afb684399ec86d73b7bc02bb7bdf9e2",
+  "release_run": "38077954541",
+  "runtime_acceptance": "NOT_RUN",
+  "release_workflow_conclusion": "success"
+}
+```
+
+Public release: https://github.com/ssheleg/super-ux/releases/tag/v0.59.2
+Workflow: https://github.com/ssheleg/super-ux/actions/runs/38077954541
+
+Next task belongs to the hub integrator: re-pin super-ux to v0.59.2. This
+follow-up changes only the evidence ledger and needs no package release.
+
 ## 2026-10-09 — sequential host fallback, v0.59.1
 
 Candidate only: **NOT_RELEASED**. No client/provider run is claimed.
