@@ -8,6 +8,17 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-10 — B022 line numbers and the annotated-tag gate, v0.59.2
+
+Candidate: written before the tag. Family round FAMILY-ROUND-1010 (REQ-7c, REQ-6).
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| REQ-7c | `B022` reports the line an unregistered literal first appears on (code literals, template-literal paragraphs, HTML controls) instead of 0 | `test/brand_lint_test.py` `b022_line_cases`: three plants — line forced back to 0; block-comment newlines dropped (lines read 4/6/10 for 6/8/12); HTML line pinned to 1 — each failed the fixture, restored green | **planted** |
+| REQ-7c | `claude --version` in `bin/super-ux.js` is retired, not registered: it was the `command` of the typed result for an absent CLI, never printed; now derived from the probe's argv like `run()` | `python3 docs/brand/lint.py` → `brand pack is clean` (before: `warn B022 bin/super-ux.js:303`, and before the line fix `:0`) | observed |
+| Gate | Repository checks | `npm test` | PASS, exit 0 in 93 s; structural 5,446 checks; brand 184 checks; display-copy 20 tests; UX 189 checks; `docs/ux` consistent; brand pack clean (no B022 warning); installer 10 cases; audit regressions all green |
+| REQ-6 | `release.yml` refuses a tag whose `git cat-file -t` is not `tag`, right after checkout | step "The tag must be annotated"; YAML parses; proven only by this release's run | never (a lightweight tag is not cut to test it) |
+
 ## 2026-10-09 — sequential host fallback, v0.59.1
 
 Candidate only: **NOT_RELEASED**. No client/provider run is claimed.

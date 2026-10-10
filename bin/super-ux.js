@@ -294,13 +294,17 @@ function printUpdateLine() {
 
 function installClaudePlugin() {
   console.log(`\n--- Claude Code plugin ---`);
-  const probe = spawnSync('claude', ['--version'], { stdio: 'ignore' });
+  // The probe's argv is the one source of its `command`, exactly as run()
+  // derives it: the typed result carries it, nothing prints it, so it is not
+  // interface copy and gets no strings.md row (brand-lint B022, retired).
+  const probeArgv = ['claude', '--version'];
+  const probe = spawnSync(probeArgv[0], probeArgv.slice(1), { stdio: 'ignore' });
   if (probe.error && probe.error.code === 'ENOENT') {
     console.log(`claude CLI not found. Run inside Claude Code instead:
   /plugin marketplace add ${REPO}
   /plugin install super-ux@super-ux`);
     return { status: 'unsupported', code: null, signal: null,
-             command: 'claude --version' };
+             command: probeArgv.join(' ') };
   }
   if (run('claude', ['plugin', 'marketplace', 'add', REPO]).status !== 'ok') {
     console.log('(marketplace may already be added, continuing)');

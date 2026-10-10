@@ -1,3 +1,24 @@
+## 0.59.2 — brand-lint names the line, and a release refuses a lightweight tag
+
+- **`B022` reports the line.** An unregistered literal was reported at line 0 —
+  `B022 bin/super-ux.js:0` for a string on line 303 — so the finding named a file
+  and left the search to the reader. Code literals now carry the line their first
+  character is on (template-literal paragraphs included), HTML controls the line
+  they open on. The comment scanner keeps a block comment's newlines so a stripped
+  comment cannot shift the count. Fixture `b022_line_cases` in
+  `test/brand_lint_test.py`; three plants (line 0 back, comment newlines dropped,
+  HTML line pinned) each turned it red.
+- **The probe string that fired it is retired, not registered.** `claude --version`
+  in `bin/super-ux.js` was the `command` field of the typed result returned when the
+  claude CLI is absent; nothing prints it. B022's doctrine is "agree it or retire
+  it", and a row in `strings.md` would register as interface copy a string no
+  reader sees, so the field is now derived from the probe's own argv, the way
+  `run()` derives every other `command`. `python3 docs/brand/lint.py` is clean.
+- **The release refuses a lightweight tag.** A step right after checkout in
+  `release.yml` fails unless `git cat-file -t <tag>` is `tag`. `git describe` and
+  `git submodule status` see annotated tags only; v0.59.1 was cut lightweight and
+  the hub read super-ux as its previous release.
+
 ## 0.59.1 — inventories and audits work without delegation
 
 Brand inventory, scenario inventory and UX audit now use the same areas, batches

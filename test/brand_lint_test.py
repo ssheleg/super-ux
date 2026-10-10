@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import datetime
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -487,6 +488,74 @@ def invisible_character_cases() -> None:
          pack, set(),
          project={"content/a.md": "﻿---\nsurface: short video\ntitle: Ship\n"
                                   "---\n\nShip your first release today.\n"})
+
+
+def b022_line_cases() -> None:
+    """B022 names the line an unregistered literal is on, not line 0.
+
+    Found 2026-10-10 on this pack's own installer: `B022 bin/super-ux.js:0`
+    for a string on line 303. A finding that names a file and not a line sends
+    the reader to search the file. Each case plants the literal at a known
+    line, behind the two things that could shift the count -- a multi-line
+    block comment the scanner strips, and a multi-line template literal the
+    extractor splits into paragraphs -- and an HTML control.
+    """
+    global checks
+    registry_row = (MARKER + "\n\n| Key | Text (primary) | Location | Scenario | Status |\n"
+                    "|---|---|---|---|---|\n"
+                    "| a.b | Publish now | {loc} | SCN-001 | agreed |\n")
+    js = (
+        "/* a block comment\n"
+        "   across three lines\n"
+        "   that the scanner strips */\n"
+        "const a = \"Publish now\";\n"          # line 4, registered
+        "function usage() {\n"
+        "  return `the tool that writes things down\n"   # line 6
+        "\n"
+        "Every run prints one line per file it wrote\n"   # line 8
+        "and one summary line at the end.\n"
+        "`;\n"
+        "}\n"
+        "const b = { command: 'claude --version' };\n"   # line 12
+    )
+    html = (
+        "<main>\n"
+        "  <p>Some prose.</p>\n"
+        "  <a href=\"/start\">Publish now</a>\n"
+        "  <label for=\"n\">\n"                          # line 4
+        "    Workspace name\n"
+        "  </label>\n"
+        "</main>\n"
+    )
+    for name, src, rel, expect in (
+        ("js: after a stripped block comment and inside a template", js, "src/a.js",
+         {"the tool that writes things down": 6,
+          "Every run prints one line per file it wrote and one summary line at the end.": 8,
+          "claude --version": 12}),
+        ("html: a control reports the line it opens on", html, "src/page.html",
+         {"Workspace name": 4}),
+    ):
+        checks += 1
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            brand = root / "docs" / "brand"
+            brand.mkdir(parents=True)
+            for f, body in MINIMAL.items():
+                (brand / f).write_text(body, encoding="utf-8")
+            (brand / "README.md").write_text(
+                MARKER + f"\n\nSources:\n  ui: {rel}\n", encoding="utf-8")
+            (brand / "strings.md").write_text(
+                registry_row.format(loc=f"{rel}:1"), encoding="utf-8")
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            (root / rel).write_text(src, encoding="utf-8")
+            got = {}
+            for f in brand_lint.run(brand):
+                if f.code == "B022":
+                    m = re.match(r'"(.*)" is in the code', f.message)
+                    got[m.group(1) if m else f.message] = (f.path, f.line)
+        want = {lit: (rel, line) for lit, line in expect.items()}
+        if got != want:
+            failures.append(f"B022 line: {name}: expected {want}, got {got}")
 
 
 def main() -> int:
@@ -1437,6 +1506,7 @@ def main() -> int:
     short_video_cases()
     instagram_caption_cases()
     invisible_character_cases()
+    b022_line_cases()
 
     fix_idempotent()
 

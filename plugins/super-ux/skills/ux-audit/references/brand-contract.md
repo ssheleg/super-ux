@@ -473,7 +473,7 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B012 | E | an entity or tier name spelled inconsistently |
 | B020 | E | one action carries two different names |
 | B021 | E | a registered string diverged from the code |
-| B022 | W | a code string or explicit HTML control/message has no registry row; ordinary marketing prose is outside the HTML candidate sweep |
+| B022 | W | a code string or explicit HTML control/message has no registry row, reported at the line it first appears on; ordinary marketing prose is outside the HTML candidate sweep |
 | B023 | E | a registry row points at a location that does not exist |
 | B024 | E | declared casing violated |
 | B025 | W | a button label names no outcome |
