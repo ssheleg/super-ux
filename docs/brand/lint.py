@@ -560,16 +560,38 @@ def code_literals(text: str) -> list[str]:
     Comments must already be stripped by the caller -- `_strip_comments` leaves
     literals untouched, which is what makes both patterns below safe to run.
     """
-    out: list[str] = [lit for _quote, lit in LITERAL_RE.findall(text)]
-    for block in TEMPLATE_RE.findall(text):
+    return [lit for lit, _line in code_literals_at(text)]
+
+
+def code_literals_at(text: str) -> list[tuple[str, int]]:
+    """`code_literals`, each with the 1-based line its first character is on.
+
+    B022 reported every unregistered literal at line 0 -- `bin/super-ux.js:0`
+    for a string on line 303 -- so the finding named a file and left the reader
+    to search it. The line is counted in the comment-stripped text, which
+    `_strip_comments` keeps line-for-line with the source (a block comment
+    leaves its newlines behind), so the number is the source's own.
+    """
+    def line_at(offset: int) -> int:
+        return text.count("\n", 0, offset) + 1
+
+    out: list[tuple[str, int]] = [
+        (m.group(2), line_at(m.start(2))) for m in LITERAL_RE.finditer(text)
+    ]
+    for m in TEMPLATE_RE.finditer(text):
+        block = m.group(1)
         if "\n" not in block:
             continue          # single-line backticks are already in `out`
+        cursor = 0
         for para in re.split(r"\n\s*\n", block):
+            at = block.find(para, cursor)
+            cursor = at + len(para)
             joined = " ".join(
                 line.strip() for line in para.splitlines() if line.strip()
             )
             if len(joined) >= 3:
-                out.append(joined)
+                lead = len(para) - len(para.lstrip())
+                out.append((joined, line_at(m.start(1) + at + lead)))
     return out
 
 # A template literal's interpolations split it into pieces, and the pieces are
@@ -742,10 +764,13 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
         body = read(target) or ""
         html = html_copy(body) if target.suffix.lower() in HTML_SUFFIXES else None
         source_copy = " ".join(html.blocks) if html is not None else body
-        literals = html.interface_texts if html is not None else [
-            lit for lit in code_literals(_strip_comments(body, target.suffix))
-            if _looks_like_copy(lit)
-        ]
+        located = list(zip(html.interface_texts, html.interface_lines)) \
+            if html is not None else [
+                (lit, line) for lit, line
+                in code_literals_at(_strip_comments(body, target.suffix))
+                if _looks_like_copy(lit)
+            ]
+        literals = [lit for lit, _line in located]
         if literals or html is not None:
             # The registry records what a reader sees, so the built page is the
             # authority whenever there is one. Source is the fallback and stays
@@ -781,10 +806,13 @@ def check_consistency(brand_dir: Path, sources: dict) -> list[Finding]:
                 swept.add(file_part)
                 known = {r["text"] for r in rows}
                 trimmed = {t.strip() for t in known}
-                for lit in dict.fromkeys(literals):   # one report per literal
+                first_line: dict[str, int] = {}
+                for lit, line in located:     # one report per literal, at its first line
+                    first_line.setdefault(lit, line)
+                for lit, line in first_line.items():
                     if lit not in known and lit.strip() not in trimmed:
                         findings.append(Finding(
-                            "B022", SEVERITY_WARN, f"{file_part}", 0,
+                            "B022", SEVERITY_WARN, f"{file_part}", line,
                             f"\"{lit}\" is in the code with no registry row -- "
                             f"agree it or retire it",
                         ))
@@ -927,6 +955,7 @@ class HTMLCopy(HTMLParser):
         self.last_anchor_end = None
         self.controls = []
         self.interface_texts = []
+        self.interface_lines = []   # parallel to interface_texts: the control's opening line
 
     @property
     def blocked(self):
@@ -939,7 +968,7 @@ class HTMLCopy(HTMLParser):
                       attrs.get("style", ""), re.I))
         if not hidden:
             if tag in self.CONTROLS or attrs.get("role", "").lower() in self.INTERFACE_ROLES:
-                self.controls.append((tag, len(self.stack), []))
+                self.controls.append((tag, len(self.stack), [], self.getpos()[0]))
             if tag == "br" or tag in self.BLOCK or re.fullmatch(r"h[1-6]", tag):
                 for control in self.controls:
                     control[2].append(" ")
@@ -978,6 +1007,7 @@ class HTMLCopy(HTMLParser):
                 text = " ".join("".join(control[2]).split())
                 if text:
                     self.interface_texts.append(text)
+                    self.interface_lines.append(control[3])
                 self.controls.remove(control)
         if tag == "a" and not self.blocked:
             self.last_anchor_end = len(self.parts)
@@ -1106,7 +1136,12 @@ def _strip_comments(text: str, suffix: str) -> str:
             continue
         if not hashed and text.startswith("/*", i):
             end = text.find("*/", i + 2)
-            i = n if end == -1 else end + 2
+            stop = n if end == -1 else end + 2
+            # Keep the comment's newlines: B022 reports a literal by its line
+            # in THIS text, so a stripped multi-line comment must not shift
+            # every line after it.
+            out.append("\n" * text.count("\n", i, stop))
+            i = stop
             continue
         out.append(ch)
         i += 1
