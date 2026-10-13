@@ -63,8 +63,11 @@ and both source linters byte-matched canonical files; archive removed on exit.
 Workflow job bodies compare byte-identical to base. No description/front-matter
 changed; copywriting adds a lazy marketing-only reference and its template.
 
-Final full owner gate and independent review: pending. No release/install/native/
-model verdict.
+Full owner `npm test` at `b8305c56df00d6e9bf1e7f5aea38cdbfea54ad51`: exit 0.
+Structural 5474, brand 201, UX 196, installer 10, all 41 audit files (including
+FW05's 18 controls) passed; display-copy tests and both dogfood linters completed.
+Brand dogfood retains one B074 advisory. Independent bounded review passed that
+same SHA; see the reviewer section below. No release/install/native/model verdict.
 
 ## Integration and next step
 
@@ -77,3 +80,27 @@ dispatch is not PR ruleset acceptance, per
 After the focused/full gates, obtain independent review, freeze exact head,
 promote once and merge normally only when genuine required checks pass. Version,
 publication, umbrella pins and installed/native behavior are separate work.
+
+## Independent review — 2026-10-13
+
+Codex `/root/fresh_research` reviewed frozen source
+`b8305c56df00d6e9bf1e7f5aea38cdbfea54ad51` against
+`18d8ebefca9b9facc9579d65fe8ef4009bd78b82`. Bounded PASS: no finding in the
+changed field admission, advisory migration, local voice-reference binding or
+lazy marketing-only instruction scope.
+
+Reviewer ran `python3 -B test/audit_regressions/fw05_journey_copy.py`: exit 0,
+18 controls. A separate isolated temporary-directory probe passed 31 controls:
+remove, placeholder and duplicate each of eight brief fields; remove the contract
+marker and verify B001 through the public brand runner; test empty, dash,
+placeholder, unknown and named journey owners; ensure an HTML-commented owner
+does not count. Unknowns stayed valid and missing ownership stayed advisory.
+All skill front matter compared byte-identical with the base; workflow job bodies
+also compared byte-identical. The NN/g primary article linked above was opened
+again on 2026-10-13 and supports the dated, duration-based interpretation rather
+than a current audience measurement.
+
+The review does not establish attribution truth, approved targets, assigned
+owners, model adherence or native host behavior. Owner aggregate testing remains
+a separate gate; it was not duplicated by the reviewer. Only this receipt was
+edited during review; the implementation remains at the named SHA.
