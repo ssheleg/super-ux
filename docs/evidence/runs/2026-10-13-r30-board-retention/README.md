@@ -36,3 +36,5 @@ zero errors and the existing B074 advisory (`brand.txt`). All34 npm dry-run payl
 files equal accepted base (`payload-parity.json`). This validates the retained
 controls, not every Markdown table grammar or native host behavior. Normal exact-head
 hosted admission runs the owner's current suite; local full aggregate not repeated.
+
+A later [parity hypothesis](parity-hypothesis.md) was disproved against the official GFM scanner and withdrawn before commit.
