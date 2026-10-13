@@ -28,3 +28,11 @@ run correctly refused the recorded5489 versus actual5490; `structural-first.txt`
 retains that failure. The measured fact is updated to5490, without changing the
 validator or removing the added check. This is documentation propagation, not a
 new production guard or a claim of broader parser support.
+
+Final focused replay at implementation e9061f7 is preserved in `process-final.json`:
+all six public-validator controls accepted with source file hashes. Structural
+validation exits0 at5490 checks (`structural-final.txt`); brand lint exits0 with
+zero errors and the existing B074 advisory (`brand.txt`). All34 npm dry-run payload
+files equal accepted base (`payload-parity.json`). This validates the retained
+controls, not every Markdown table grammar or native host behavior. Normal exact-head
+hosted admission runs the owner's current suite; local full aggregate not repeated.
