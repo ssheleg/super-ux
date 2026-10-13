@@ -735,6 +735,16 @@ def check_jobs(foundation: str, scenarios: str = "", flows: str = "",
                     f"{', '.join(JOB_FIELDS)}")
 
 
+def check_journey_owners(foundation: str) -> None:
+    """U086: absence is migration advice; unknown is an explicit unassigned owner."""
+    for sid, body in sorted(entry_blocks(foundation, "JRN").items()):
+        owners = re.findall(r"(?m)^[ \t]*(?:-[ \t]*)?\*\*Owner:\*\*[ \t]*(.*)$", body)
+        if len(owners) != 1 or _unfilled(owners[0]):
+            warn(f"[U086] foundation.md: {sid} needs one **Owner:** value — "
+                 "name the accountable role/person or write unknown; "
+                 "do not invent an assignment")
+
+
 WEB_SURFACE_FIELDS = ("Route", "Answers", "Indexable", "Without JS", "Entity")
 
 
@@ -1251,6 +1261,7 @@ def main() -> int:
     check_field_vocabulary(scenarios, foundation)
     check_status_enums(scenarios, foundation, screens, flows, vision)
     check_jobs(foundation, scenarios, flows, screens)
+    check_journey_owners(foundation)
     check_vision(ux, vision)
     check_web_surface(screens, flows)
     check_onboarding(flows, ux, project_root)

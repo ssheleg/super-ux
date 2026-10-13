@@ -10,6 +10,7 @@ it selects from is [voice-packs.md](voice-packs.md).
 ## Contents
 
 - [Files in the target project](#files-in-the-target-project)
+- [`copy-brief.md`](#copy-briefmd)
 - [The marker](#the-marker)
 - [Where the voice comes from](#where-the-voice-comes-from)
 - [`voice.md`](#voicemd)
@@ -37,11 +38,47 @@ docs/brand/
 ├── facts.md              # canonical numbers and proof, the only source
 ├── channels.md           # one record per surface: register, limits, bans
 ├── strings.md            # interface string registry -> file:line -> scenario
+├── copy-brief.md         # current marketing task inputs, added when needed
 ├── locales/
 │   └── <code>.md         # per-locale delta (en.md, ru.md, de.md, …)
 ├── README.md             # this map, project-side, plus the Sources: block
 └── lint.py               # the brand linter, seeded by the installer
 ```
+
+## `copy-brief.md`
+
+The current marketing writing task's input record, owned by `copywriting`.
+It is optional for existing packs until the next marketing writing task; other
+UX and interface-only tasks do not need to load or create it. Seed from the
+copywriting skill's template. Keep past briefs in Git history; a new task
+rechecks the current Surface and Action before reusing it.
+
+```markdown
+Contract: brand-contract v1
+Surface: unknown
+Action: unknown
+Reader: unknown
+Customer words: unknown
+Proof: unknown
+Success metric: unknown
+Constraints: unknown
+Voice reference: unknown
+```
+
+Each field occurs once and has a value. `unknown` is a supported unresolved
+input, not evidence, approval or a successful result. `Surface` identifies the
+channel/page; `Action` names its one ask; `Reader` traces a persona/job/stage;
+`Customer words` links source language and terminology; `Proof` links existing
+facts; `Success metric` names an observable outcome and only records a target
+when supplied; `Constraints` records supplied limits or explicit `none`.
+`Voice reference` is `voice.md#voice-references` (its filled Admired/Refused pair)
+or `unknown`; keep the voice's source rather than copying its text. Copywriting
+reports gaps and never changes voice/facts to make the brief look complete.
+
+`B074` advises migration when marketing sources have no brief. `B075` refuses a
+present brief with missing/empty/duplicate fields or a broken voice reference.
+It verifies structure and the local voice pointer, not whether a metric or
+assignment is true. Other provenance remains an agent review responsibility.
 
 ## The marker
 
@@ -506,6 +543,8 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B071 | W | locale parity below the declared threshold |
 | B072 | W | a locale row left identical to the primary |
 | B073 | E | a field overflows under the locale's coefficient |
+| B074 | W | marketing sources have no current copy brief; advisory migration |
+| B075 | E | present copy brief has missing, empty or duplicate inputs, or an unresolved voice reference |
 
 ---
 

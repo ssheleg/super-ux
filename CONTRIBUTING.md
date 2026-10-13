@@ -41,7 +41,9 @@ python3 test/sync_references.py
 python3 test/validate.py
 ```
 
-`validate.py` is the gate CI runs on every push and PR. It checks manifests
+`validate.py` is a gate CI runs nightly at 23:00 Europe/Warsaw and on
+deliberate frozen-PR `ready_for_review` promotion. Manual dispatch is diagnostic,
+not PR ruleset admission; opened/synchronize/push events do not run the suite. It checks manifests
 and the four-way version sync, skill/command/rule front-matter and the
 description canon, template presence, the shipped contract copies, that every
 asset the installer copies is covered by `package.json` `files[]`, that the

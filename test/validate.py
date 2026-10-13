@@ -931,7 +931,7 @@ def validate_voice_packs() -> None:
 
 BRAND_TEMPLATES = (
     "README.md", "voice.md", "terminology.md", "facts.md",
-    "channels.md", "strings.md", "locale.md",
+    "channels.md", "strings.md", "locale.md", "copy-brief.md",
 )
 
 

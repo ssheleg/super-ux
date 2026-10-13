@@ -81,7 +81,7 @@ STRING_KINDS = ("copy", "layout")
 
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
-WARNING_CODES = set("B003 B005 B007 B022 B025 B026 B031 B043 B044 B045 B046 B051 B053 B054 B060 B063 B064 B066 B071 B072".split())
+WARNING_CODES = set("B003 B005 B007 B022 B025 B026 B031 B043 B044 B045 B046 B051 B053 B054 B060 B063 B064 B066 B071 B072 B074".split())
 
 Finding = namedtuple("Finding", "code severity path line message")
 
@@ -2574,6 +2574,45 @@ def apply_fixes(brand_dir: Path, findings: list[Finding]) -> int:
     return rewritten
 
 
+COPY_BRIEF_FIELDS = ("Surface", "Action", "Reader", "Customer words", "Proof",
+                     "Success metric", "Constraints", "Voice reference")
+
+
+def check_copy_brief(brand_dir: Path, sources: dict) -> list[Finding]:
+    """B074/B075: one current marketing brief, with explicit unknowns permitted."""
+    path = brand_dir / "copy-brief.md"
+    if not path.exists():
+        return [Finding("B074", SEVERITY_WARN, "copy-brief.md", 0,
+                        "marketing sources have no current copy brief; seed one "
+                        "before the next writing task, retaining unknown inputs")] if sources.get("marketing") else []
+    text = read(path)
+    if text is None:
+        return [Finding("B075", SEVERITY_ERROR, "copy-brief.md", 0,
+                        "current copy brief cannot be read")]
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+    fields = {}
+    findings = []
+    for field in COPY_BRIEF_FIELDS:
+        values = re.findall(rf"(?m)^{re.escape(field)}:[ \t]*(.*)$", text)
+        if len(values) != 1 or unfilled(values[0]):
+            findings.append(Finding("B075", SEVERITY_ERROR, "copy-brief.md", 0,
+                                    f"needs one nonempty {field}: value; use unknown for an unresolved input"))
+        else:
+            fields[field] = values[0].strip()
+    ref = fields.get("Voice reference", "unknown")
+    if ref.lower() != "unknown":
+        voice = re.sub(r"<!--.*?-->", "", read(brand_dir / "voice.md") or "", flags=re.S)
+        section = re.search(r"(?ms)^## Voice references[ \t]*\n(.*?)(?=^## |\Z)", voice)
+        pair = [re.search(rf"(?m)^[ \t]*(?:-[ \t]*)?\*\*{field}:\*\*[ \t]*(.*)$", section[1] if section else "")
+                for field in ("Admired", "Refused")]
+        if (ref != "voice.md#voice-references" or not section
+                or any(not m or unfilled(m[1]) or m[1].strip().lower() == "unknown" for m in pair)):
+            findings.append(Finding("B075", SEVERITY_ERROR, "copy-brief.md", 0,
+                                    "Voice reference must be unknown or voice.md#voice-references "
+                                    "with a filled Admired/Refused pair in voice.md"))
+    return findings
+
+
 def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     """Every check, in order. `fix` is applied by the caller via apply_fixes."""
     sources = load_sources(brand_dir)
@@ -2584,6 +2623,7 @@ def run(brand_dir: Path, fix: bool = False) -> list[Finding]:
     findings.extend(check_consistency(brand_dir, sources))
     findings.extend(check_facts(brand_dir, sources))
     findings.extend(check_channels(brand_dir, sources))
+    findings.extend(check_copy_brief(brand_dir, sources))
     findings.extend(check_short_video(brand_dir, sources))
     findings.extend(check_bot_safety(brand_dir, sources))
     findings.extend(check_ai_tells(brand_dir, sources))

@@ -68,6 +68,7 @@ confirmed
 ## Customer journeys
 
 ### JRN-01: First install
+- **Owner:** unknown
 | Stage | Action | Touchpoint | Emotion | Pain | Opportunity |
 |---|---|---|---|---|---|
 | Discover | reads the README | GitHub / npm | 3 | unclear which channel is theirs | one Quick start per agent |
@@ -77,6 +78,7 @@ confirmed
 | Continue | runs `/ux` | agent | 5 | none | the entry point takes over |
 
 ### JRN-02: Refresh after a release
+- **Owner:** unknown
 | Stage | Action | Touchpoint | Emotion | Pain | Opportunity |
 |---|---|---|---|---|---|
 | Notice | sees a new version | npm / release | 3 | no signal in-product | version in `--help` |

@@ -39,7 +39,10 @@ MARKER = "Contract: brand-contract v1"
 
 TODAY = datetime.date.today().isoformat()
 
+COPY_BRIEF = (ROOT / "templates/brand/copy-brief.md").read_text()
+
 MINIMAL = {
+    "copy-brief.md": COPY_BRIEF,
     "README.md": MARKER + "\n\nSources:\n  ui: docs/brand/strings.md\n",
     "voice.md": (
         MARKER + "\n"
@@ -559,6 +562,21 @@ def b022_line_cases() -> None:
 
 
 def main() -> int:
+    legacy = {k: v for k, v in MINIMAL.items() if k != "copy-brief.md"}
+    case("B074 no marketing keeps existing pack quiet", legacy, set())
+    marketing = {**legacy, "README.md": MARKER + "\nSources:\n  marketing: content/page.md\n"}
+    case("B074 marketing absence is migration advice", marketing, {"B074"},
+         project={"content/page.md": "# A page\n"})
+    case("B075 seeded unknowns are valid structure", MINIMAL, set())
+    for field in brand_lint.COPY_BRIEF_FIELDS:
+        case("B075 missing " + field,
+             {**MINIMAL, "copy-brief.md": COPY_BRIEF.replace(field + ": unknown\n", "")}, {"B075"})
+    case("B075 empty cannot borrow next field", {**MINIMAL, "copy-brief.md": COPY_BRIEF.replace("Action: unknown", "Action: ")}, {"B075"})
+    case("B075 duplicate", {**MINIMAL, "copy-brief.md": COPY_BRIEF + "Action: purchase\n"}, {"B075"})
+    case("B075 placeholder", {**MINIMAL, "copy-brief.md": COPY_BRIEF.replace("Constraints: unknown", "Constraints: <limits>")}, {"B075"})
+    case("B075 voice pointer resolves", {**MINIMAL, "copy-brief.md": COPY_BRIEF.replace("Voice reference: unknown", "Voice reference: voice.md#voice-references")}, set())
+    case("B075 wrong voice pointer", {**MINIMAL, "copy-brief.md": COPY_BRIEF.replace("Voice reference: unknown", "Voice reference: elsewhere.md#voice-references")}, {"B075"})
+    case("B075 missing voice pair", {**MINIMAL, "voice.md": MINIMAL["voice.md"].replace("- **Refused:** an outage page that is cheerful about it", ""), "copy-brief.md": COPY_BRIEF.replace("Voice reference: unknown", "Voice reference: voice.md#voice-references")}, {"B007", "B075"})
     case("clean minimal base", MINIMAL, set())
     case("B009 refuses an empty declared source glob",
          {**MINIMAL, "README.md": MARKER + "\nSources:\n  marketing: absent/**/*.html\n"},

@@ -1183,6 +1183,15 @@ silent("the shipped foundation template lints clean",
        {f"U{n:03d}" for n in range(1, 100)})
 
 
+# FW05: a missing owner is advisory; unknown never fabricates an assignment.
+case("U086 missing journey owner", {"foundation.md": "### JRN-01: Map\n"}, warns={"U086"})
+case("U086 blank owner cannot borrow the next line", {"foundation.md": "### JRN-01: Map\n- **Owner:** \n| # | Stage |\n"}, warns={"U086"})
+case("U086 duplicate owner", {"foundation.md": "### JRN-01: Map\n- **Owner:** A\n- **Owner:** B\n"}, warns={"U086"})
+case("U086 placeholder owner", {"foundation.md": "### JRN-01: Map\n- **Owner:** <role>\n"}, warns={"U086"})
+silent("U086 explicit unknown", {"foundation.md": "### JRN-01: Map\n- **Owner:** unknown\n"}, {"U086"})
+silent("U086 named role", {"foundation.md": "### JRN-01: Map\n- **Owner:** support team\n"}, {"U086"})
+silent("U086 template comments are not journeys", {"foundation.md": (ROOT / "templates/foundation.md").read_text()}, {"U086"})
+
 if failures:
     print(f"FAIL ({len(failures)} of {checks} checks)")
     for f in failures:

@@ -22,20 +22,29 @@ deciding whether to keep reading. Every rule below follows from that.
 
 ## Before writing
 
-Four inputs, and none of them are optional:
+For the current marketing writing task, record `docs/brand/copy-brief.md`
+using the [brand contract](brand-contract.md#copy-briefmd). Reuse the current
+brief only when its surface and action still match the task. Copywriting owns
+this task record; it does not change voice, facts or approved targets.
 
-- **The one action** this surface is asking for.
-- **The reader**, from `foundation.md`: which persona, which job, which
-  stage of the journey.
-- **Their words**, from the customer-language section of the foundation and
-  from `terminology.md`. Copy that names the problem in the reader's words
-  outperforms copy that names it in the company's, and the gap is not close.
-- **The proof**, from `facts.md`. A claim with no row there does not get
-  written. It gets reported as a missing fact.
+The brief captures the action, reader and their words, proof, success metric,
+constraints, and the reference to the voice's Admired/Refused pair. Write
+`unknown` for unresolved inputs and report them at delivery. A missing metric
+is not zero; a missing constraint is not permission; no brief author invents a
+target, promise, fact or approval. Unknown proof never licenses a public claim.
+Keep source links rather than copying the voice or its examples into the brief.
 
 ## Page structure
 
 Above the fold: one headline, one subhead, one primary action.
+
+Front-load the answer. The frequently quoted reading estimate comes from
+[NN/g's 2008 analysis](https://www.nngroup.com/articles/how-little-do-users-read/)
+of visit duration: 28% was a hypothetical upper bound if all time were spent
+reading, with about 20% considered more realistic. It was not eye tracking or
+a measurement of this product's audience. Use it as historical rationale for
+scannable copy, never as a current conversion target or a universal quota.
+
 
 | Section | Job |
 |---|---|
