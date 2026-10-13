@@ -21,3 +21,21 @@ The final-tree process suite passed 4 controls: [focused-process.json](focused-p
 ## Full source gate and independent review
 
 At source `66abd28aa57cf870e711940456aae13728fc826e`, `npm test` exited 0 in 18.06 seconds: [full.json](full.json), [complete compressed output](full.log.gz). The owned temporary directory was removed and the disk stop did not fire. Independent coordinator review separately replayed 27 release controls and four actual-validator process cases at that source. This successor changes receipts only; the implementation and npm payload remain unchanged. Next: freeze the receipt successor, obtain normal genuine candidate checks and merge by exact head, then verify source and payload readback. No publication, installed state or universal R30 closure is claimed.
+
+---
+
+# Shared mechanism declaration correction, 2026-10-13
+
+Objective: make the copied helper declarations match the umbrella contract.
+`diverges` names differing module constants, not the extraction history.
+The copies differ on no constants. The extraction explanation remains an ordinary comment.
+
+Completed: comment-only correction; all nine Python ASTs equal their accepted bases.
+`shared-headers.json` binds the actual umbrella guard source and records nine baseline refusals,
+zero corrected refusals and five refusals after an undeclared constant plant in one release copy.
+The synthetic fixture contains only the nine scoped owner helpers; it is not a full hub validation.
+
+Checks and payload readback are in `shared-headers-local.json`. No release, installed change
+or runtime/model quality claim follows from this correction. Versions remain unchanged.
+Next: independent source review, one frozen candidate PR admission, normal merge after genuine
+checks, then umbrella pin reconciliation with merged payload readback.
