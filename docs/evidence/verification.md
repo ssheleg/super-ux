@@ -8,6 +8,17 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-13 — FW05, v0.59.3 candidate
+
+Source-only candidate receipt; publication and native/model behavior pending.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| FW05 | Journey Owner and lazy marketing brief | [FW05 receipt](runs/2026-10-13-fw05-journey-copy.md), source b8305c5 | planted and independently reviewed |
+| Source gate | Structural 5474, brand 201, UX 196, installer 10 and 41 audit files | full `npm test` at b8305c5, exit 0; brand B074 migration warning retained | observed on source candidate |
+| Packaging | Version/card/changelog consistency | `python3 test/validate.py` → 5476 checks, exit 0 | observed on candidate source |
+| Publication | Annotated tag, registry readback, parent pin and installed state | not performed in preparation | pending |
+
 ## 2026-10-10 — B022 line numbers and the annotated-tag gate, v0.59.2
 
 Candidate: written before the tag. Family round FAMILY-ROUND-1010 (REQ-7c, REQ-6).

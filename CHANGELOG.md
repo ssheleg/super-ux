@@ -1,4 +1,4 @@
-## Unreleased — accountable journeys and explicit copy inputs
+## 0.59.3 — accountable journeys and explicit copy inputs
 
 - Journeys record an Owner, with `unknown` supported. `U086` advises migration
   for missing/blank/duplicate owners without assigning anyone automatically.
@@ -7,7 +7,7 @@
   `B074` advises existing packs; `B075` checks present records. Unresolved values
   remain `unknown`; unrelated tasks do not load a brief.
 - Seeds and every per-skill contract copy are synchronized. Discovery descriptions
-  are unchanged. No version, installation, provider call or release changed.
+  are unchanged. No installation or provider operation was performed.
 - CI uses nightly runs and deliberate ready-for-review promotion, preserving jobs.
   [FW05 source receipt](docs/evidence/runs/2026-10-13-fw05-journey-copy.md).
 

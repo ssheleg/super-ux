@@ -1,3 +1,21 @@
+# FW05 release packaging — 2026-10-13
+
+Branch `release/fw05-0.59.3` prepares patch 0.59.3 from accepted source
+`c331b052c473adbd125cd3611ca28f73cfae1bc8` (PR42). Genuine validation run
+`38340377527` passed at candidate `077f9b84aa1edfe63c330f52f0395fa1c50ea6b8`
+before normal merge.
+Full source and independent checks passed at implementation `b8305c5`; see the
+[FW05 receipt](evidence/runs/2026-10-13-fw05-journey-copy.md). Registry and remote
+tags read 0.59.2 before this preparation. Only package/plugin/marketplace/card
+versions, changelog and release records change here.
+
+Packaging validator passed: `python3 test/validate.py`, 5476 checks, exit 0.
+Next: independent packaging diff review, then freeze the release PR for
+promotion and normal merge. Exact-source checks precede any annotated tag. No tag, publication, umbrella pin or installed
+update is implied. Unknown ownership/metrics remain unresolved, not verified.
+
+---
+
 # FW05 journey and copy contracts — 2026-10-13
 
 Branch `fix/fw05-journey-copy-contracts`, based on canonical `18d8ebe`, implements
