@@ -1,0 +1,36 @@
+{
+  "source_hashes": {
+    "test/validate.py": "a7b70e1544d903673a18775703c72e4ce35e78eb4031744cdd6722cea58a251c",
+    "test/owner_release.py": "1a79a87a5344d0755f885e48c1c828aadfdab0c53d64afbdad89667c641d4305"
+  },
+  "cases": [
+    {
+      "case": "healthy",
+      "returncode": 0,
+      "expected_diagnostic": null,
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5480 checks)\n"
+    },
+    {
+      "case": "ancestry removed",
+      "returncode": 1,
+      "expected_diagnostic": "release ancestry guard",
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nFAIL: docs/brand/facts.md: `repo validator checks` records '5480' and its own Source command returns '' -- `python3 test/validate.py | sed -n 's/^OK (\\([0-9]*\\) checks)$/\\1/p'`\nFAIL: .github/workflows/release.yml: release ancestry guard missing from a live run block\n2 failure(s) out of 5480 checks\n"
+    },
+    {
+      "case": "shallow",
+      "returncode": 1,
+      "expected_diagnostic": "release full-history checkout",
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nFAIL: docs/brand/facts.md: `repo validator checks` records '5480' and its own Source command returns '' -- `python3 test/validate.py | sed -n 's/^OK (\\([0-9]*\\) checks)$/\\1/p'`\nFAIL: .github/workflows/release.yml: release full-history checkout missing before ancestry guard\n2 failure(s) out of 5480 checks\n"
+    },
+    {
+      "case": "quoted full depth",
+      "returncode": 0,
+      "expected_diagnostic": null,
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5480 checks)\n"
+    }
+  ]
+}

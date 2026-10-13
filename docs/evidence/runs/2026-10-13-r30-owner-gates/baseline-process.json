@@ -1,0 +1,14 @@
+[
+  {
+    "source": "f0261f68c1a7222508bd984dc7bac63805dbb76b",
+    "case": "ancestry removed",
+    "returncode": 0,
+    "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5476 checks)\n"
+  },
+  {
+    "source": "f0261f68c1a7222508bd984dc7bac63805dbb76b",
+    "case": "shallow",
+    "returncode": 0,
+    "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5476 checks)\n"
+  }
+]
