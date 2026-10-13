@@ -1,3 +1,15 @@
+# Current state — super-ux 0.59.3 published
+
+[Published readback and bounded closures](evidence/runs/2026-10-13-fw00-published/README.md)
+record the accepted journey/copy contracts and resolve stale B-025/B-026 statuses.
+The earlier candidate entries below remain historical. Unknown ownership and
+metrics remain unknown; no model or installed acceptance is claimed.
+
+Next: normal docs-only admission after focused checks and peer review, then hub
+pin/readback reconciliation. No new version or release is required by these docs.
+
+---
+
 # FW05 release packaging — 2026-10-13
 
 Branch `release/fw05-0.59.3` prepares patch 0.59.3 from accepted source

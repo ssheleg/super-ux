@@ -8,6 +8,13 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-13 — FW05 published, FW00 dispositions
+
+[Published readback](runs/2026-10-13-fw00-published/README.md) supersedes the
+historical candidate publication status below: all four release jobs succeeded
+and all 33 npm files matched release source. B-025/B-026 close only for their
+source/published contracts; native/model outcomes and installed state are separate.
+
 ## 2026-10-13 — FW05, v0.59.3 candidate
 
 Source-only candidate receipt; publication and native/model behavior pending.
