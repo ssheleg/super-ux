@@ -17,3 +17,7 @@ This candidate is source-only. Focused final-tree controls, independent review a
 ## Focused observation before freeze
 
 The final-tree process suite passed 4 controls: [focused-process.json](focused-process.json). Exact implementation and test bytes are [source-hashes.json](source-hashes.json). The shared release suite passed 27 controls. Independent source review and the full owner gate remain separate next steps.
+
+## Full source gate and independent review
+
+At source `66abd28aa57cf870e711940456aae13728fc826e`, `npm test` exited 0 in 18.06 seconds: [full.json](full.json), [complete compressed output](full.log.gz). The owned temporary directory was removed and the disk stop did not fire. Independent coordinator review separately replayed 27 release controls and four actual-validator process cases at that source. This successor changes receipts only; the implementation and npm payload remain unchanged. Next: freeze the receipt successor, obtain normal genuine candidate checks and merge by exact head, then verify source and payload readback. No publication, installed state or universal R30 closure is claimed.

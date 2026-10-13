@@ -1,0 +1,13 @@
+{
+  "owner": "ux-r30",
+  "source": "66abd28aa57cf870e711940456aae13728fc826e",
+  "command": "npm test",
+  "returncode": 0,
+  "disk_stop": false,
+  "elapsed_seconds": 18.06,
+  "free_before": 1381826560,
+  "free_after": 1403658240,
+  "log": "/tmp/r30-full-ux-r30.log",
+  "temporary_root": "/var/folders/3r/yrdx_c051cv22q3r3k0ylvdm0000gn/T/r30-gate-ux-r30-dsizl7tg",
+  "owned_temporary_removed": true
+}
