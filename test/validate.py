@@ -2610,6 +2610,11 @@ def main() -> int:
                   "decides from, so the one field that dates it may not lag. Bump it in "
                   "the same change as the manifests.")
 
+    from owner_release import check as inspect_release
+    release_errors = []
+    inspect_release(ROOT, release_errors.append)
+    check(not release_errors, "\n".join(release_errors))
+
     check_routed_triggers_still_advertised()
 
     if failures:

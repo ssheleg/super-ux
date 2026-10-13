@@ -1,0 +1,6 @@
+{
+  "command": "python3 test/validate.py",
+  "returncode": 0,
+  "validator_sha256": "a7b70e1544d903673a18775703c72e4ce35e78eb4031744cdd6722cea58a251c",
+  "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5480 checks)\n"
+}
