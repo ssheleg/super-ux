@@ -15,6 +15,7 @@ Owned by the `brand-voice` skill. Written by `copywriting`. Checked by
 | `terminology.md` | our words, banned words, entity and tier names |
 | `facts.md` | canonical numbers and proof — the only source of a figure |
 | `channels.md` | one record per surface: register, limits, bans |
+| `copy-brief.md` | current marketing task inputs; added on the next writing task |
 | `strings.md` | interface string registry → `file:line` → scenario |
 | `locales/<code>.md` | per-locale delta |
 

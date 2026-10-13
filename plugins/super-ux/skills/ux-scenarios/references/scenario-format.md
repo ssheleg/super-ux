@@ -271,11 +271,17 @@ One journey per persona × job that matters:
 
 ```markdown
 ### JRN-01: <persona> — <job> (JTBD-01)
+- **Owner:** unknown
 | # | Stage | User action | Touchpoint | Emotion (1-5) | Pain | Opportunity |
 |---|-------|------------|------------|---------------|------|-------------|
 | 1 | Discover | ... | landing page | 3 | ... | ... |
 ```
 
+- **Owner:** the accountable role/person for this map and its opportunities;
+  `unknown` means unassigned, not approved or complete. An opportunity can name
+  its own owner in its cell; otherwise it inherits the map owner. Never infer an
+  assignment from authorship. `U086` warns on a missing, blank or duplicate owner
+  so existing maps can migrate without inventing facts.
 - Stages cover the END-TO-END experience (before, during, after the product).
 - Opportunity priority = Frequency × Severity × Solvability (note the score
   when known).
@@ -969,5 +975,6 @@ here — the meaning of a rule never lives only in its source.
 | U083 | W | a flow named for onboarding or first run declares no `Onboarding:` — the budget cannot be counted |
 | U084 | W | a flow counts onboarding screens and names no `First value:` — the count is against a destination nobody wrote down |
 | U085 | E | `Art direction: approved` cites no critique, or cites a local path that does not resolve — the look was approved on frames nobody is shown to have looked at |
+| U086 | W | journey has no single nonempty `Owner`; record a role/person or `unknown`, never infer ownership |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |

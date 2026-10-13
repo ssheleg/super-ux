@@ -139,6 +139,8 @@ Newest last.
 | 2026-08-31 | `B-033` — `validate_front_matter_is_yaml` over all 30 shipped front-matter blocks, ported from the sibling that paid for the class twice, with the fail-closed and empty-walk guards and a permanent self-test; v0.52.3 | no — a single-row close, and the port is the finding: the sibling's two failures were already the design |
 | 2026-08-31 | Wave-3 family-audit close (SUX-02/04/05) — per-skill `compatibility:` front matter ×7 (yaml.safe_load-proven, plant caught), `$schema` in both manifests (the resolving spellings), and the eval suite executed: 28 blind trigger probes 14/14 on two models, 12/12 scenario lines, receipts and Method in `test/evals/RESULTS.md`; `B-033` filed for the missing YAML front-matter gate; v0.52.2 | yes — twice. (1) A concurrent session cut v0.52.1 from this working tree while this run's SUX-02/05 edits sat uncommitted in it: they shipped inside that release with no CHANGELOG line, and the guarded files it wrote (`CHANGELOG.md`, `package.json`, both manifests, `test/validate.py`) were written while THIS run held the only live lease (`SUX-W3`) — the fs lease is advisory for a session that never asks. The 0.52.2 entry documents the stowaways; the coordination miss is recorded here rather than smoothed over. (2) The eval run was killed mid-flight by an account spend limit and re-executed clean after reset — the first attempt produced zero result files, so nothing partial leaked into the recorded rows |
 
+| 2026-10-13 | FW05 B-025/B-026: explicit unknown owners and lazy marketing brief; source checks, no model eval | yes — missing fields were still reproducible; source reading corrected the historical percentage claim from measured reading to an estimate from visit duration. Existing-project migration remains advisory. |
+
 **Prune, 2026-08-31 (v0.52.0, board close-out).** All five checked against the three retirement
 triggers; nothing retired, nothing added, so the list stands at five against a
 cap of ten. **#3 fired and passed:** before the widened dash check was written,
@@ -749,3 +751,15 @@ of the four fixes that would have failed the build on the original commit.
 **What this run confirms about the graph.** C-03 was closed by building it, and
 it earned its place on the first pass by finding defect 1 — which four
 gates, a full acceptance and a human read had all passed over.
+
+
+## 2026-10-13 — FW05 keeps missing information visible
+
+Standing #7: reproduced the missing Owner and brief checks before editing.
+Standing #3: pristine seed controls pass; unknowns are supported values and
+commented journey examples do not become live entries. Standing #6: the added
+fields have code readers and a seed-to-reader parity control. A voice reference
+must resolve within the cited section, not merely match words elsewhere. The
+historical NN/g percentage in B-026 came from a visit-duration estimate, not eye
+tracking or this audience; the source paragraph now says so. No standing rule
+was retired on reconstructed or unobserved run history.

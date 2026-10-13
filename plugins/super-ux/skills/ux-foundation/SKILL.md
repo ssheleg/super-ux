@@ -35,7 +35,8 @@ chain and say so, never drop it silently.
   the four forces: push, pull, anxiety, habit.
 - **Journeys** cover the end-to-end experience (before, during, after the
   product), one row per stage: action, touchpoint, emotion (1–5), pain,
-  opportunity. Score opportunities Frequency × Severity × Solvability — and
+  opportunity. Record the map Owner (or `unknown`) under the format contract;
+  writing the map does not assign its author. Score opportunities Frequency × Severity × Solvability — and
   each factor carries its SOURCE and SCALE, or the value is `unknown`; a factor
   nobody has measured is never a number invented to fill the cell, and emotion
   (1–5) likewise records who reported it (owner belief vs an observed session),

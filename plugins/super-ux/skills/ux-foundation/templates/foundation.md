@@ -23,6 +23,7 @@ data/observation, recognizable by a real user. -->
 ## Customer journeys
 
 <!-- ### JRN-01: <persona> — <job> (JTBD-01)
+- **Owner:** unknown
 | # | Stage | User action | Touchpoint | Emotion (1-5) | Pain | Opportunity |
 |---|-------|------------|------------|---------------|------|-------------|
 -->

@@ -83,6 +83,9 @@ who chose the setting.
 
 1. Name the surface. It must exist in `channels.md`; if it does not, that is
    a `brand-voice` decision, not an improvisation here.
+   For marketing work only, read `marketing-copy.md` → Before writing and
+   seed/update the current brief from `templates/brand/copy-brief.md`. Keep
+   unresolved inputs `unknown`; no extra brief load for interface-only work.
 2. Apply the register: the axes from `voice.md`, plus that surface's deltas.
    **Deltas move axes; they never cross the invariants.**
 3. Write. Every claim traces to `facts.md`. Every product term comes from

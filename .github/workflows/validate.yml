@@ -1,8 +1,13 @@
 name: validate
 
+# Nightly by default; deliberate frozen-candidate promotion is the exception.
 on:
-  push:
+  schedule:
+    - cron: '0 23 * * *'
+      timezone: Europe/Warsaw
+  workflow_dispatch:
   pull_request:
+    types: [ready_for_review]
   # Callable, so `release.yml` gates a publish on THIS suite instead of a
   # copy of it. The negative self-tests live here as steps; running them
   # from the release workflow any other way means a second home per plant.

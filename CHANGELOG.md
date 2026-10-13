@@ -1,3 +1,16 @@
+## Unreleased — accountable journeys and explicit copy inputs
+
+- Journeys record an Owner, with `unknown` supported. `U086` advises migration
+  for missing/blank/duplicate owners without assigning anyone automatically.
+- Marketing writing uses a current `copy-brief.md` with success metric,
+  constraints and a reference to the voice pair alongside the original inputs.
+  `B074` advises existing packs; `B075` checks present records. Unresolved values
+  remain `unknown`; unrelated tasks do not load a brief.
+- Seeds and every per-skill contract copy are synchronized. Discovery descriptions
+  are unchanged. No version, installation, provider call or release changed.
+- CI uses nightly runs and deliberate ready-for-review promotion, preserving jobs.
+  [FW05 source receipt](docs/evidence/runs/2026-10-13-fw05-journey-copy.md).
+
 ## 0.59.2 — brand-lint names the line, and a release refuses a lightweight tag
 
 - **`B022` reports the line.** An unregistered literal was reported at line 0 —

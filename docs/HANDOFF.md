@@ -1,3 +1,19 @@
+# FW05 journey and copy contracts — 2026-10-13
+
+Branch `fix/fw05-journey-copy-contracts`, based on canonical `18d8ebe`, implements
+B-025/B-026. Start with the [FW05 receipt](evidence/runs/2026-10-13-fw05-journey-copy.md).
+The map Owner may be `unknown`; missing old fields are advisory. A marketing
+brief is loaded only for a marketing writing task, never for unrelated work.
+The brief's shape is checked, not the truth of its targets or evidence.
+
+Full owner gate and independent bounded review passed at `b8305c5`; see receipt.
+Next: freeze [PR42](https://github.com/ssheleg/super-ux/pull/42) for one deliberate
+promotion and normal merge after required checks pass. The coordinator owns normal integration, version,
+release, parent pins and installed/native acceptance; none follows from fixtures.
+No agent/model behavioral eval was run by this change.
+
+---
+
 # Figma-practices handoff, 2026-10-08
 
 Branch `feat/figma-practices` prepares super-ux 0.59.0: native annotations and a

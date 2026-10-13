@@ -21,6 +21,10 @@ locale policy. Missing terms or facts are reported, never invented. This pass
 owns product text and `strings.md` rows (`Status: proposed`); claim coordinated
 files before editing. A file living in `docs/brand/` does not forbid the edit.
 
+For marketing writing only, use the copywriting skill’s `marketing-copy.md`
+→ Before writing contract for the current brief; keep unknown inputs explicit.
+Other tasks do not load this brief.
+
 ## Rules that hold in every voice
 
 - **No decorative full stop in headings or labels**, even when inline markup
