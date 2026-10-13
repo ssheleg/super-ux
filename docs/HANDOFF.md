@@ -1,3 +1,13 @@
+# Current follow-up — retained board controls
+
+[Owner process packet](evidence/runs/2026-10-13-r30-board-retention/README.md)
+adds existing duplicate-id and width checks to the repository's actual audit gate.
+No production parser or payload changes. Next: exact-source focused replay and
+independent review, then normal candidate admission; broader parser grammar remains
+outside this bounded persistence correction.
+
+---
+
 # Current state — super-ux 0.59.3 published
 
 [Published readback and bounded closures](evidence/runs/2026-10-13-fw00-published/README.md)
