@@ -1,0 +1,7 @@
+{
+  "base": "f974e7f212ddf2482569ab8399091f5d8336c31c",
+  "files": 34,
+  "all_payload_bytes_equal_base": true,
+  "command": "npm pack --dry-run --json --ignore-scripts",
+  "exit_code": 0
+}

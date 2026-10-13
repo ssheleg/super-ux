@@ -1,0 +1,51 @@
+{
+  "source_hashes": {
+    "test/validate.py": "a7b70e1544d903673a18775703c72e4ce35e78eb4031744cdd6722cea58a251c",
+    "test/owner_release.py": "4a0a4b5e7f757c00eec245b8f8165c87a10007e356311d1123b87c0a753202c3"
+  },
+  "cases": [
+    {
+      "case": "healthy",
+      "returncode": 0,
+      "expected_diagnostic": null,
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5489 checks)\n"
+    },
+    {
+      "case": "duplicate board id",
+      "returncode": 1,
+      "expected_diagnostic": "docs/evidence/backlog.md: B-033 appears 2 times",
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nFAIL: docs/evidence/backlog.md: B-033 appears 2 times -- a register whose ids are not unique cannot be cited, because 'closed in B-033' resolves to more than one row\nFAIL: docs/brand/facts.md: `repo validator checks` records '5489' and its own Source command returns '' -- `python3 test/validate.py | sed -n 's/^OK (\\([0-9]*\\) checks)$/\\1/p'`\n2 failure(s) out of 5491 checks\n"
+    },
+    {
+      "case": "extra board cell",
+      "returncode": 1,
+      "expected_diagnostic": "its header declares -- an unescaped",
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nFAIL: docs/evidence/backlog.md:15: B-033 has 6 cells against the 5 its header declares -- an unescaped `|` inside a cell splits the row before the backticks are read, and every column after it shifts\nFAIL: docs/brand/facts.md: `repo validator checks` records '5489' and its own Source command returns '' -- `python3 test/validate.py | sed -n 's/^OK (\\([0-9]*\\) checks)$/\\1/p'`\n2 failure(s) out of 5489 checks\n"
+    },
+    {
+      "case": "ancestry removed",
+      "returncode": 1,
+      "expected_diagnostic": "release ancestry guard",
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nFAIL: docs/brand/facts.md: `repo validator checks` records '5489' and its own Source command returns '' -- `python3 test/validate.py | sed -n 's/^OK (\\([0-9]*\\) checks)$/\\1/p'`\nFAIL: .github/workflows/release.yml: release ancestry guard missing from a live run block\n2 failure(s) out of 5489 checks\n"
+    },
+    {
+      "case": "shallow",
+      "returncode": 1,
+      "expected_diagnostic": "release full-history checkout",
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nFAIL: docs/brand/facts.md: `repo validator checks` records '5489' and its own Source command returns '' -- `python3 test/validate.py | sed -n 's/^OK (\\([0-9]*\\) checks)$/\\1/p'`\nFAIL: .github/workflows/release.yml: release full-history checkout missing before ancestry guard\n2 failure(s) out of 5489 checks\n"
+    },
+    {
+      "case": "quoted full depth",
+      "returncode": 0,
+      "expected_diagnostic": null,
+      "accepted": true,
+      "output": "  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` \u2014 the vercel-labs/skills agent registry is an external list, and no command in this repository returns it\n  unlooked: routed triggers \u2014 no sshlg-skills umbrella above this checkout\nOK (5489 checks)\n"
+    }
+  ],
+  "test_file_sha256_at_execution": "68ef9bf2d90201f4ef6664654147d369d9b769f19b41db0745e9969d6cce674a"
+}

@@ -1,0 +1,4 @@
+  unlooked: docs/brand/facts.md `agents reachable via the skills CLI` — the vercel-labs/skills agent registry is an external list, and no command in this repository returns it
+  unlooked: routed triggers — no sshlg-skills umbrella above this checkout
+FAIL: docs/brand/facts.md: `repo validator checks` records '5490' and its own Source command returns '5493' -- `python3 test/validate.py | sed -n 's/^OK (\([0-9]*\) checks)$/\1/p'`
+1 failure(s) out of 5493 checks

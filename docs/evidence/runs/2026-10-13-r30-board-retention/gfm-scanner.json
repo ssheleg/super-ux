@@ -1,0 +1,7 @@
+{
+  "source": "https://github.com/github/cmark-gfm/blob/27d942c8b0a62d192f616e5bf3578f4b6a89e180/extensions/ext_scanners.c",
+  "sha256": "449e5bff8031b213ae43b353900b5b3f11f0123a36379ef634f7ed5fe05b4b6a",
+  "compile_exit": 0,
+  "run_exit": 0,
+  "output": "0 4\n1 11\n2 12\n3 13\n4 14\n"
+}
