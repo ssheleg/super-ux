@@ -1,3 +1,21 @@
+## 0.60.0 — a rendered screen is checked in WebKit (Safari) first
+
+- New shared contract `references/browser-engine.md`: Safari through
+  `safaridriver`, Playwright `webkit` (`--browser webkit`,
+  `npx playwright install webkit`), Safari Web Inspector, and
+  `open -a Safari <url>` on macOS rather than the system default browser.
+  Chromium is a stated fallback for a task that needs Chrome itself (a Chrome-only
+  API, Lighthouse, a CDP trace, the chrome-devtools MCP), on Chrome Dev, with a
+  temporary profile and every started process closed. A screen checked only in
+  Chromium is reported as exactly that.
+- `ux-audit`: a RUNTIME browser check runs in WebKit first and names its engine;
+  the live pass walks scenarios in WebKit first; the capture record gains `engine`.
+- `funnel-research.md`: the funnel walk uses Playwright `webkit` or Safari first;
+  `chrome-devtools` / `claude-in-chrome` only as a stated fallback.
+- Per-skill copies synchronized (`ux-audit`, `ux-flows`, `ux-foundation`). Discovery
+  descriptions unchanged. New regression `test/audit_regressions/safari-first.py`
+  with drop mutations; text integrity only, no model eval.
+
 ## 0.59.3 — accountable journeys and explicit copy inputs
 
 - Journeys record an Owner, with `unknown` supported. `U086` advises migration

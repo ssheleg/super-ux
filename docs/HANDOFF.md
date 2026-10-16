@@ -1,3 +1,20 @@
+# Current follow-up — WebKit (Safari) first, 0.60.0 candidate (2026-10-16)
+
+Branch `docs/safari-first` (family iteration ITER-1016, REQ R15): new shared contract
+`plugins/super-ux/skills/references/browser-engine.md` (WebKit first, Chromium as a
+stated fallback, a Chromium-only check reported as exactly that). `ux-audit` links it
+from the RUNTIME tier and the live pass and adds `engine` to the capture record;
+`funnel-research.md` walks funnels in WebKit first. Copies synced with
+`python3 test/sync_references.py`. Version 0.59.3 → 0.60.0; ledger section; facts row
+`repo validator checks` re-measured at 5502. Regression
+`test/audit_regressions/safari-first.py` (watched failing 5 of 5 first). Gate:
+`npm test` exit 0. ux-audit body 4435 tokens (cl100k_base), 309 lines.
+
+Next task: review the draft PR; the coordinator owns preflight, the annotated tag,
+publication and the umbrella pin.
+
+---
+
 # Current follow-up — retained board controls
 
 [Owner process packet](evidence/runs/2026-10-13-r30-board-retention/README.md)
