@@ -45,8 +45,11 @@ because BP-116 is checked against it and cannot be checked without it.
 
 **Who does the clicking, and where that stops.** The walk is mechanical until it
 is not, so the method names the split rather than leaving it to whoever reads it.
-A browser tool — `chrome-devtools` or `claude-in-chrome`, whichever the session
-has — does the part that is mechanical: open the ad's destination, follow the
+A browser tool does the part that is mechanical — WebKit first
+([browser-engine.md](browser-engine.md)): Playwright's `webkit`, which logs the
+redirect chain and the network requests, or Safari through `safaridriver`; a
+Chrome tool (`chrome-devtools`, `claude-in-chrome`) only as a stated fallback
+when the session has no WebKit route: open the ad's destination, follow the
 redirect chain, and capture four things per funnel, because they are the ones a
 screenshot loses.
 

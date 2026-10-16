@@ -8,6 +8,16 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-16 — WebKit (Safari) first for rendered checks, v0.60.0 candidate
+
+Source-only candidate, family iteration ITER-1016 (REQ R15); publication pending.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| R15 | `references/browser-engine.md`; `ux-audit` RUNTIME tier and live pass, `funnel-research.md` walk put WebKit first, Chromium as a stated fallback | `test/audit_regressions/safari-first.py` — 5 checks, watched failing 5 of 5 before the text existed; drop mutations refused; per-skill copies byte-identical | planted — text integrity only |
+| Agent behaviour | Whether an agent actually opens Safari first | no agent run observed | never |
+| Publication | Annotated tag, registry readback, parent pin and installed state | not performed in preparation | pending |
+
 ## 2026-10-13 — FW05 published, FW00 dispositions
 
 [Published readback](runs/2026-10-13-fw00-published/README.md) supersedes the

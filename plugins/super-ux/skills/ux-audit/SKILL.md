@@ -190,7 +190,9 @@ How far each pass goes, what it reads at each level, and which references it pul
    - the expected result observably occurs (RUNTIME).
    A RUNTIME criterion **PASSes only with a test, a browser check, or a
    verified runtime receipt** — absent one it is **BLOCKED (unverified)**, never
-   a PASS off a `file:line`, and never invented when no browser is available. A
+   a PASS off a `file:line`, and never invented when no browser is available.
+   A browser check runs in WebKit (Safari) first and names its engine
+   ([browser-engine.md](references/browser-engine.md)). A
    STATIC criterion PASSes on its `file:line` with the proof type named.
    Any gap → PARTIAL (or FAIL if the flow is missing/broken) with a finding
    `[AUD-YYYY-MM-DD-NN] (severity) description -> suggested fix`.
@@ -273,7 +275,9 @@ style gate.
 If the project has a runnable dev server and browser tooling is available,
 replay the top scenarios live after the static pass: walk the steps as the
 user, screenshot or transcribe what actually renders, and attach observed
-evidence to the verdicts. Live evidence overrides static evidence when they
+evidence to the verdicts. Walk them in WebKit first — Safari through
+`safaridriver` or Playwright's `webkit`; Chromium only as a stated fallback
+([browser-engine.md](references/browser-engine.md)). Live evidence overrides static evidence when they
 disagree. Off by default; offer it when the tooling is present — and offer it
 **by default, unasked,** for brand and flagship surfaces: `surface_class:
 flagship` or `ad` in the director record or the task brief, or, with no
@@ -282,7 +286,7 @@ class recorded, a landing, onboarding, paywall or store screen.
 On a screen with a Figma frame, the live pass also compares the two
 pictures. Capture the build **in the frame's state, viewport and theme**,
 with the capture record sheleg-design's `VISUAL_REVIEW.md` requires
-(revision, route, state, viewport, theme, motion, captured-at, source), and
+(revision, route, state, viewport, theme, motion, captured-at, source, engine), and
 `get_screenshot` the frame. A difference a user would see is a
 **`visual-drift`** finding, written as region → defect → fix:
 `[AUD-…] (major) visual-drift SCR-03/empty @ 375·dark — illustration area →
