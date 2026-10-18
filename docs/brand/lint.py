@@ -2037,6 +2037,75 @@ def dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding
     return findings
 
 
+# AT-06's hard layer, owner-decided 2026-10-18: newly authored text carries no
+# em dash (U+2014) in any language. B062 above judges the dash's ROLE; this
+# judges the glyph B062 leaves alone. It never reports a sentence B062
+# already reports, so one dash is one finding.
+EM_DASH = "—"
+EM_DASH_RANGE_RE = re.compile(rf"\d\s*{EM_DASH}\s*\d")
+
+
+def em_dash_findings(code: str, path: str, text: str, strict: bool) -> list[Finding]:
+    """The em dash the rhetorical check cannot see, and the Russian dash it allows.
+
+    Three cases, each one the B062 branches pass over in silence:
+
+    - a range written with an em dash, in any language: an error, because a
+      range takes an en dash (U+2013) and a rewrite never costs anything;
+    - an em dash opening a line where the locale has no dialogue dash: an
+      error, because there it is decoration, not the speech convention;
+    - a lone dash, in any spelling, where the locale has a grammatical dash:
+      a warning. The copula (AT-06-E1) is allowed only where no rewrite reads
+      naturally, and only the writer can judge that, so the linter asks and
+      never blocks on grammar it cannot parse.
+    """
+    findings: list[Finding] = []
+    raw = prose_only(text)
+    # Length-preserving like the B062 normaliser, so quotes come from `raw`.
+    cells = TABLE_CELL_DASH_RE.sub(r"\1 \2", raw)  # AT-06-E4
+    body = normalise_dash_spelling(raw)
+    if DASH not in body:
+        return findings
+
+    def line_of(sentence: str) -> int:
+        at = body.find(sentence[:40])
+        return body.count("\n", 0, at) + 1 if at >= 0 else 0
+
+    for sentence, cell, original in zip(sentences(body), sentences(cells), sentences(raw)):
+        if DASH not in sentence:
+            continue
+        line = line_of(sentence)
+        if EM_DASH_RANGE_RE.search(cell):
+            findings.append(Finding(
+                code, SEVERITY_ERROR, path, line,
+                f"an em dash joins a range; write the range with an en dash "
+                f'(U+2013) or the word "to": "{_around(sentence, original)}"',
+            ))
+            continue
+        speech = DASH_SPEECH_RE.match(sentence)
+        if strict:
+            # B062 reports every other bare dash in this locale.
+            if speech and cell.lstrip().startswith(EM_DASH):
+                findings.append(Finding(
+                    code, SEVERITY_ERROR, path, line,
+                    f"an em dash opens the line, and this locale has no dialogue "
+                    f'dash; drop it or use a list: "{_around(sentence, original)}"',
+                ))
+            continue
+        if speech:  # AT-06-E3
+            continue
+        bare = sentence.count(DASH) - len(DASH_RANGE_RE.findall(sentence))
+        if bare <= 0 or bare >= 2 or DASH_CONJ_RE.search(sentence):
+            continue  # a range, or B062's own error
+        findings.append(Finding(
+            code, SEVERITY_WARN, path, line,
+            f"a dash in new text is allowed only where the grammar needs it "
+            f"(AT-06-E1) and no rewrite reads naturally; otherwise use a full "
+            f'stop, a comma, a colon or brackets: "{_around(sentence, original)}"',
+        ))
+    return findings
+
+
 def markdown_title(text: str) -> str:
     """Read common inline heading markup as the displayed label."""
     text = re.sub(r"!?\[([^\]]+)\]\([^)]*\)", r"\1", text)
@@ -2197,10 +2266,11 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
 
 
 def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
-    """B060-B063 -- machine-drafting markers, and the one absolute ban.
+    """B060-B063 and B067 -- machine-drafting markers, and the absolute bans.
 
     B060 counts vocabulary markers, B061 bans levity where the user is
-    losing something, B062 is AT-06 (the rhetorical dash) and B063 is AT-07
+    losing something, B062 is AT-06 (the rhetorical dash), B067 is AT-06's
+    hard layer (the em dash glyph in new text) and B063 is AT-07
     (a title that ends in a full stop) outside the string registry, which
     B026 already covers. The grades and the reasoning are in
     `references/ai-tells.md`; this file carries only the provable subset.
@@ -2231,12 +2301,15 @@ def check_ai_tells(brand_dir: Path, sources: dict) -> list[Finding]:
             text = f"{fields.get('title', '')}\n{body}"
             strict = not grammatical_dash_language(text, primary)
             findings.extend(dash_findings("B062", path, body, strict))
+            # B067 -- the em dash glyph B062 does not judge (AT-06, hard layer).
+            findings.extend(em_dash_findings("B067", path, body, strict))
 
     for row in registry(brand_dir):
         if row["kind"] == "layout":
             continue
         strict = not grammatical_dash_language(row["text"], primary)
         findings.extend(dash_findings("B062", row["location"], row["text"], strict))
+        findings.extend(em_dash_findings("B067", row["location"], row["text"], strict))
 
     # B063 -- AT-07 outside the registry: document titles and the headings
     # inside them. B026 owns the same rule for `strings.md`, and the two are

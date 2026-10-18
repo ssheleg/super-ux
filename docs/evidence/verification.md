@@ -8,6 +8,16 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-18: no em dash in new text, v0.61.0 candidate
+
+Owner decision relayed by the operator on 2026-10-18. Source candidate; publication follows.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| EMD-1 | `B067`: an em dash joining a range errors, an em dash opening a line in a locale with no dialogue dash errors, a lone dash in a locale with a grammatical one warns; never beside `B062` | `test/brand_lint_test.py` five `B067` fixtures plus the changed `AT-06-E1`; `em_dash_findings` stubbed to return nothing turned 5 of 206 checks red, restored green | **planted** |
+| EMD-2 | `ai-tells.md` AT-06 is a hard ban with two layers; `copywriting` Non-negotiable; `brand-voice` invariant seed; hard rule and Cursor rule | `python3 test/validate.py` exit 0 (hard-rule copies identical, contract copies synced, `AT-06-E*` fixtures named) | observed on candidate source |
+| Agent behaviour | Whether an agent stops writing em dashes | no agent run observed | never |
+
 ## 2026-10-16 — WebKit (Safari) first for rendered checks, v0.60.0 candidate
 
 Source-only candidate, family iteration ITER-1016 (REQ R15); publication pending.

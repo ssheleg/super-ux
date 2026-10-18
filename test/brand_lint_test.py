@@ -485,7 +485,9 @@ def invisible_character_cases() -> None:
         failures.append("invisible_chars: a narrow space in English went unreported")
     case("AT-16-E6: the dash and the quotation marks are never this check's business",
          pack, set(),
-         project=doc("Москва — столица России. Сезон 2020–2024 закрыт. "
+         # Direct speech (AT-06-E3) keeps an em dash here that B067 leaves
+         # alone too, so the set proves B066 silent on the dash itself.
+         project=doc("— Готово, — сказал он. Сезон 2020–2024 закрыт. "
                      "Он сказал «готово» и ушёл."))
     case("AT-16-E7: a byte-order mark opening a file is its encoding signature",
          pack, set(),
@@ -1225,10 +1227,14 @@ def main() -> int:
         {"B062"},
         project=page("One thing matters — speed."),
     )
+    # AT-06-E1 is never a B062 error. Since 2026-10-18 (owner decision, the
+    # em dash in new text) B067 warns on it, because the copula dash is
+    # allowed only where no rewrite reads naturally and only the writer can
+    # judge that. The set below proves the two: B067 arrives, B062 does not.
     case(
-        "AT-06-E1: the Russian copula is grammar, not a tell",
+        "AT-06-E1: the Russian copula is grammar, never a B062 error; B067 asks",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
-        set(),
+        {"B067"},
         project=page("Москва — столица России."),
     )
     case(
@@ -1241,7 +1247,39 @@ def main() -> int:
         "AT-06-E2: a numeric range is arithmetic, not a tell",
         {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
         set(),
-        project=page("The window runs 2020—2024 without a gap."),
+        project=page("The window runs 2020\u20132024 without a gap."),
+    )
+    # B067 -- AT-06's hard layer: the em dash glyph in new text. Each fixture
+    # sits where B062 is silent, so only B067 can produce the code.
+    case(
+        "B067: an em dash joining a range is the glyph the rule bans",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B067"},
+        project=page("The window runs 2020\u20142024 without a gap."),
+    )
+    case(
+        "B067: an em dash joining a range in Russian, where strict is off",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B067"},
+        project=page("\u0421\u0435\u0437\u043e\u043d 2020\u20142024 \u0437\u0430\u043a\u0440\u044b\u0442."),
+    )
+    case(
+        "B067: an em dash opening a line where the locale has no dialogue dash",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B067"},
+        project=page("\u2014 Ship it today."),
+    )
+    case(
+        "B067: an en dash standing for the Russian copula is asked about too",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B067"},
+        project=page("\u041c\u043e\u0441\u043a\u0432\u0430 \u2013 \u0441\u0442\u043e\u043b\u0438\u0446\u0430 \u0420\u043e\u0441\u0441\u0438\u0438."),
+    )
+    case(
+        "B067 is never a second finding for a dash B062 already reports",
+        {**MINIMAL, "README.md": marketing_sources, "channels.md": hero},
+        {"B062"},
+        project=page("\u042d\u0442\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u2014 \u0438 \u0431\u044b\u0441\u0442\u0440\u043e."),
     )
     # B064 -- three branches, one code, and each fixture is written in the
     # only state where its own branch can fire: absent, present-and-illegal,

@@ -538,6 +538,7 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B063 | W | AT-07, a document title, Markdown ATX heading or HTML heading fragment ends in a full stop |
 | B065 | E | a registry row carries a `Kind` the contract does not declare |
 | B066 | W | AT-16, an invisible or look-alike-space character in a declared source file, outside the numbered exemptions; it reports and never rewrites, and it never examines a dash or a quotation mark |
+| B067 | E/W | AT-06's hard layer, the em dash (U+2014) in newly authored text (owner decision 2026-10-18): an em dash joining a range errors (write an en dash); an em dash opening a line where the locale has no dialogue dash errors; a lone dash in a locale with a grammatical dash warns, because the copula is allowed only where no rewrite reads naturally. Never a second finding for a sentence `B062` reports |
 | B064 | W/E | the humanization pass: absent field warns that the default `on` applies unrecorded; an out-of-enum value errors; `off` with no `Humanization declined:` reason errors |
 | B070 | E | a declared locale has no locale file |
 | B071 | W | locale parity below the declared threshold |

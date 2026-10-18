@@ -1,3 +1,24 @@
+## 0.61.0 (2026-10-18): no em dash in new text
+
+Owner decision, 2026-10-18: text an agent writes carries no em dash (U+2014), in
+any language, and no substitute for one. The family hub carries the same rule as
+an always-on line for every host; this release makes product text agree with it.
+
+- `ai-tells.md` AT-06 is now a hard ban, not a frequency target. The dash rule has
+  two layers: the glyph (no em dash in newly authored text) and the role (the
+  rhetorical dash is banned in every spelling; the grammatical Russian dash is
+  allowed only where no rewrite reads naturally). Ranges take an en dash.
+- New lint code `B067` (`brand_lint.py`, seeded `docs/brand/lint.py`): an em dash
+  joining a range errors; an em dash opening a line where the locale has no
+  dialogue dash errors; a lone dash in a locale with a grammatical one warns, so
+  the writer decides whether the grammar needs it. Never a second finding beside
+  `B062`. Five fixtures, each watched failing with `B067` stubbed out.
+- `copywriting`: the em dash is a Non-negotiable and the one exception to the
+  advisory humanization pass; the status-line examples no longer use a dash.
+  `brand-voice` seeds the invariant into `voice.md`; the brand hard rule
+  (`templates/claude-rule.md` and its embedded copies) and the Cursor rule say so.
+- Contract copies synchronized with `python3 test/sync_references.py`.
+
 ## 0.60.0 — a rendered screen is checked in WebKit (Safari) first
 
 - New shared contract `references/browser-engine.md`: Safari through
