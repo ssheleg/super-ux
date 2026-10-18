@@ -48,14 +48,16 @@
   notification and accessible name. Search `strings.md` before naming one.
 - **No humor, exclamation marks or emoji** on error, destructive confirm,
   billing or paywall surfaces, in any voice.
-- **No rhetorical dash, and no full stop after a title.** A dash standing in
-  for a full stop, a comma or a colon is the loudest machine-drafting marker
-  the pack has, and a heading, button, menu item or page title is a name
-  rather than a statement. The dash a language requires stays: the Russian
-  copula, numeric ranges, direct speech. Choose the replacement from the
-  meaning, because a comma, a colon and a full stop state three different
-  relationships and find-and-replace picks the wrong one. `B062` and `B063`
-  catch what a machine can prove; the rest is in the skill's `ai-tells.md`.
+- **No em dash in new text, no rhetorical dash, and no full stop after a
+  title.** Text you write carries no em dash (U+2014) in any language (owner
+  decision, 2026-10-18), and no dash in any spelling stands in for a full
+  stop, a comma or a colon. A heading, button, menu item or page title is a
+  name rather than a statement. The dash Russian grammar needs (the copula,
+  direct speech) stays only where no rewrite reads naturally; a range takes
+  an en dash. Choose the replacement from the meaning, because a comma, a
+  colon and a full stop state three different relationships and
+  find-and-replace picks the wrong one. `B062`, `B063` and `B067` catch what
+  a machine can prove; the rest is in the skill's `ai-tells.md`.
 - Run `python3 docs/brand/lint.py` after any text change and before calling
   work done. It must exit 0 — an error blocks and a warning is advice, which
   is the same policy the UX linter has; `--strict` makes warnings block too.

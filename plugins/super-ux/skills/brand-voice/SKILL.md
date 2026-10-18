@@ -100,6 +100,11 @@ The pack is a starting position; this is where it becomes the product's own.
   pack.
 - **Failure mode.** Copy the pack's into `voice.md` so the audit can look for
   it by name.
+- **The em dash invariant.** Seed `voice.md`'s invariants with "no em dash
+  (U+2014) in new text, in any language" (owner decision, 2026-10-18). It is
+  not a voice choice a pack can relax: every pack inherits it, and only the
+  grammatical Russian dash where no rewrite reads naturally survives
+  ([ai-tells.md](references/ai-tells.md) AT-06, `B062`, `B067`).
 
 Present section by section for approval. Approved moves `draft` →
 `validated`.

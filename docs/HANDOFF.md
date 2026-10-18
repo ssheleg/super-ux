@@ -1,3 +1,20 @@
+# Current follow-up: no em dash in new text, 0.61.0 (2026-10-18)
+
+Owner decision relayed by the operator on 2026-10-18: the em dash (U+2014) is not
+written in any text for people, in any language; the grammatical Russian dash only
+where no rewrite reads naturally. Branch `feat/no-em-dash`. `ai-tells.md` AT-06 is a
+hard ban with two layers; new code `B067` in `brand_lint.py`; `copywriting`
+Non-negotiable; `brand-voice` seeds the invariant; hard rule and Cursor rule updated.
+Gates run alone, each exit 0: `test/validate.py` (5507), `test/brand_lint_test.py`
+(206), `test/ux_lint_test.py` (196), `docs/brand/lint.py`, `docs/ux/lint.py`,
+`npm run test:audit`, `test/installer_test.js`, `test/evals_validate.py`,
+`test/display_copy_test.py`, `test/social_preview.py`. Planted deletion of `B067`:
+5 fixtures red.
+
+Next task: none in this repository; the hub pins 0.61.0 and ships the always-on rule.
+
+---
+
 # Current follow-up — WebKit (Safari) first, 0.60.0 candidate (2026-10-16)
 
 Branch `docs/safari-first` (family iteration ITER-1016, REQ R15): new shared contract

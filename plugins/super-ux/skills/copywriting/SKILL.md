@@ -71,8 +71,8 @@ the date. `B064` checks all three states.
 or immediately after it:
 
 ```
-Humanization: on — own pass, 7 markers at 2 densities, 4 addressed, 11% changed
-Humanization: off — declined 2026-08-30, wording fixed by counsel
+Humanization: on (own pass): 7 markers at 2 densities, 4 addressed, 11% changed
+Humanization: off (declined 2026-08-30): wording fixed by counsel
 ```
 
 The line is not decoration. A pass that runs invisibly is indistinguishable
@@ -145,7 +145,8 @@ guards govern the pass wherever it runs, and they are not optional:
   writing in a second language, and a writer is not a defect to be edited into
   fluency they did not ask for. The humanization pass is ADVISORY throughout:
   `B060` warns, it does not error. `ai-tells.md` carries the measurement and
-  what it binds.
+  what it binds. **The one exception is the em dash** (AT-06): it is a hard
+  ban on text you write, never a count, and it is listed under Non-negotiables.
 - **A quote, a registered term, and an explicit `off` never force a rewrite.** A
   marker inside a quotation is the source's word; a term in `terminology.md` is
   meant to recur; and `Humanization: off` (with its reason) preserves the text
@@ -167,6 +168,14 @@ guards govern the pass wherever it runs, and they are not optional:
 
 ## Non-negotiables
 
+- **No em dash (U+2014) in text you write, in any language** (owner decision,
+  2026-10-18). Not a frequency target: one is an error to fix before delivery,
+  and no substitute stands in for it (`--`, an en dash or a spaced hyphen doing
+  a dash's job). Use a full stop, a comma, a colon or brackets, or rewrite the
+  sentence. The rare exception is a dash Russian grammar needs where no rewrite
+  reads naturally. Quotations, code, commands, paths and historical records keep
+  theirs. `B062` and `B067` check what a machine can prove; the rest is
+  [ai-tells.md](references/ai-tells.md) AT-06.
 - **No decorative full stop in headings or labels**, including nested HTML,
   formatted Markdown and staccato fragments such as “Your agents. Your tools.”
   Read the rendered role, not merely a flat copy export. Keep real questions,

@@ -16,8 +16,8 @@ destroys meaning while improving rhythm.
 - [What "human" is not](#what-human-is-not)
 
 
-Used by the `Humanize` mode of `copywriting` and by `B060`, `B062`, `B063`
-and `B066` in `brand_lint.py`. Voice, once the generic is gone, comes from
+Used by the `Humanize` mode of `copywriting` and by `B060`, `B062`, `B063`,
+`B066` and `B067` in `brand_lint.py`. Voice, once the generic is gone, comes from
 [voice-packs.md](voice-packs.md) via the project's `voice.md`.
 
 Every marker carries an id. A rule set that cannot be enumerated cannot have
@@ -64,7 +64,7 @@ policy**, not an AI-tell: a word the brand forbids is the brand's decision, in
 | AT-03 | Uniform sentence length | S1 | judgement |
 | AT-04 | Identical paragraph shape | S1 | judgement |
 | AT-05 | Vagueness where a fact belongs | S1 | `B030` from the other side |
-| AT-06 | The rhetorical dash | S1 | `B062` |
+| AT-06 | The em dash and the rhetorical dash (a hard ban, not a count) | S1 | `B062`, `B067` |
 | AT-07 | A title that ends in a full stop | S1 | `B026`, `B063` |
 | AT-08 | The rule-of-three habit | S2 | judgement |
 | AT-09 | False balance | S2 | judgement |
@@ -120,13 +120,22 @@ Replace with the real figure from `facts.md`, or say plainly that you do not
 have one. Honest absence beats confident vagueness, and it is also the
 `B030` rule from the other side.
 
-### AT-06. The rhetorical dash, S1
+### AT-06. The em dash and the rhetorical dash, S1, a hard ban
 
-A dash standing in for a full stop, a comma or a colon, in any of its
-spellings -- em dash, en dash, or a hyphen with a space each side. See
-[the dash rule in full](#the-dash-rule-in-full), because the distinction
-between the rhetorical dash and the grammatical one is the whole rule, and
-deleting dashes without it produces worse text than leaving them alone.
+**Newly authored text carries no em dash (U+2014), in any language** (owner
+decision, 2026-10-18). This marker is not advisory and not a density target:
+one instance in text you wrote is a defect to fix before delivery. The same
+rule is always on in every host the family writes to, so it binds chat
+answers, messages, mail, reports and handoffs as well as product copy.
+
+The rhetorical dash is banned in all of its spellings: an em dash, an en dash,
+`--`, or a hyphen with a space each side, wherever it stands in for a full
+stop, a comma or a colon. Rewrite with one of those marks or brackets, or
+restructure the sentence. The rare exception is a dash Russian grammar
+requires where no rewrite reads naturally. The character stays only inside an
+exact quotation, code, a command, a path or a historical record. See
+[the dash rule in full](#the-dash-rule-in-full): choosing the replacement is
+the work, and a find-and-replace picks the wrong mark.
 
 ### AT-07. A title that ends in a full stop, S1
 
@@ -262,17 +271,25 @@ someone typed on purpose, is not reported; a literal character is.
 
 ## The dash rule in full
 
-The dash is banned where it is **rhetorical** and kept where it is
-**grammatical**. That distinction is the rule. A pass that strips every dash
-produces ungrammatical Russian, and a pass that keeps them all produces the
-tone this file exists to remove.
+Two layers, and the first one is absolute.
+
+**The glyph.** Newly authored text carries no em dash (U+2014) in any
+language (owner decision, 2026-10-18). Existing text you are not rewriting,
+exact quotations, code, commands, paths and historical records keep theirs.
+
+**The role.** Under that, the dash is banned where it is **rhetorical** and
+allowed where it is **grammatical** and unavoidable. A pass that strips every
+dash produces ungrammatical Russian, and a pass that keeps them produces the
+tone this file exists to remove. So the Russian dash survives only where the
+grammar needs it and no rewrite reads naturally; where a colon, a comma or a
+reordered clause reads as well, the rewrite wins.
 
 **The rule is about the mark's role, not its spelling.** An em dash, an en
 dash and a hyphen with a space each side are the same mark doing the same
 job, so exchanging one for another changes nothing the rule cares about.
 This is the likeliest way a draft appears to be fixed and is not: a
 find-and-replace can reach the glyph and cannot reach the habit. Measured on
-trycomp.ai, 2026-08-30 -- twenty rhetorical dashes on one page and not one em
+trycomp.ai, 2026-08-30: twenty rhetorical dashes on one page and not one em
 dash among them, every one written as a spaced hyphen
 (`docs/research/landings/trycomp.md`).
 
@@ -286,8 +303,9 @@ a mark for:
 | "He left — it was too late" | a full stop | "He left. It was too late" |
 | "The result — which nobody predicted — was…" | brackets or commas | "The result, which nobody predicted, was…" |
 
-**Grammatical, and kept.** The language requires the mark, and removing it is
-an error rather than a style choice:
+**Grammatical, and allowed only where unavoidable.** The language requires the
+mark, so the linter never errors on it; whether a rewrite reads as naturally is
+the writer's call, made each time rather than assumed:
 
 Each carries an id, because an exemption is a promise the code has to keep and
 an unnumbered promise cannot have coverage computed over it. `AT-06-E1` was
@@ -298,11 +316,19 @@ disagreed and only this file said so.
 - **`AT-06-E1`** The Russian and Ukrainian copula, where the verb is absent by
   rule: «Москва — столица». English has no equivalent, which is why a global
   ban reads as reasonable in English and breaks Russian on the first line.
-- **`AT-06-E2`** Numeric and page ranges: «2020—2024», «с. 15—20».
+  Never a `B062` error; `B067` warns on it, because the copula is allowed only
+  where no rewrite («Столица России: Москва», «Москва стала столицей») reads
+  as naturally.
+- **`AT-06-E2`** Numeric and page ranges, written with an en dash (U+2013):
+  «2020–2024», «с. 15–20». A range is never rhetorical, but an em dash joining
+  one is the glyph the first layer bans, so `B067` errors on «2020—2024» and
+  is silent on the en dash.
 - **`AT-06-E3`** Direct speech in the Russian convention: «— Привет, — сказал
   он».
 - **`AT-06-E4`** A dash alone in a table cell, standing for "no value". It is a
   glyph doing the job of an empty string, not punctuation joining two clauses.
+  In a new table write an en dash or "n/a"; the linter leaves an existing
+  cell alone.
 
 Every one of them has a fixture asserting **silence**, named after its id, and
 `validate_ai_tell_coverage` refuses an exemption without one. A positive
@@ -329,9 +355,12 @@ dash followed by a coordinating conjunction, which is always a comma's job,
 and paired dashes bracketing an aside inside one sentence. In a locale with no grammatical
 dash, it errors on every dash that is not a range or direct speech, which is
 the rule stated above. In a locale that has one, it cannot separate the
-copula from the rhetorical remainder without a parser, so it reports the
-density and leaves the judgement here. A check that claimed to know the
-difference would be asserting what it has not measured.
+copula from the rhetorical remainder without a parser. `B067` covers the
+glyph those branches pass over: it errors on an em dash joining a range and
+on an em dash opening a line where the locale has no dialogue dash, and it
+warns on every lone dash in a locale with a grammatical one, so the writer
+decides each time whether the grammar needs it. A check that claimed to know
+the difference would be asserting what it has not measured.
 
 ## Density threshold
 

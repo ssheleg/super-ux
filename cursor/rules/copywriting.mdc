@@ -54,9 +54,14 @@ Could this sentence sit unchanged on a competitor's page? Then it says
 nothing. Rewrite it until it could not.
 
 Machine-made tells to strip: tricolons that add nothing, "seamless /
-effortless / unlock / elevate / robust", em-dash cadence in every paragraph,
-"it's not just X, it's Y", hedges stacked two deep, and a closing sentence
-that summarizes what was just said.
+effortless / unlock / elevate / robust", "it's not just X, it's Y", hedges
+stacked two deep, and a closing sentence that summarizes what was just said.
+
+**No em dash (U+2014) in text you write, in any language** (owner decision,
+2026-10-18). A hard ban, not a count: no substitute either (`--`, an en dash
+or a spaced hyphen doing a dash's job). Use a full stop, a comma, a colon or
+brackets, or rewrite. The rare exception is a dash Russian grammar needs where
+no rewrite reads naturally; quotations, code, commands and paths keep theirs.
 
 ## Short video
 

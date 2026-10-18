@@ -40,6 +40,8 @@ Promise:      <one line, checkable against a row in facts.md>
 What survives translation. Breaking one of these is a finding on any surface,
 in any locale.
 
+- No em dash (U+2014) in new text, in any language; the grammatical Russian
+  dash only where no rewrite reads naturally (owner decision, 2026-10-18)
 - <e.g. never hedges>
 - <e.g. never claims a number that is not in facts.md>
 
