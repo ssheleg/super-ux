@@ -95,7 +95,7 @@ def check_agent_lists() -> None:
                         "TRAINING_AGENTS separately")
     elif set(retrieval) & set(training):
         failures.append("B050: an agent is listed as both retrieval and "
-                        "training -- the two decisions must stay separate")
+                        "training: the two decisions must stay separate")
 
 
 def case(name: str, files: dict, expect: set, project: dict | None = None) -> None:
@@ -1116,6 +1116,20 @@ def main() -> int:
                         "OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot",
                         "Claude-User", "PerplexityBot", "Perplexity-User"))
                 + "Allow: /\n", set())
+    # Three forms a careless parser misses. A UTF-8 BOM before the first line
+    # must not hide that line's group.
+    robots_case("B050 a robots.txt that starts with a BOM",
+                "\ufeffUser-agent: OAI-SearchBot\nDisallow: /\n", {"B050"})
+    # Google's matcher keeps the leading [A-Za-z_-] run of a product token,
+    # so a version suffix still names the agent.
+    robots_case("B050 a token with a version suffix names the agent",
+                "User-agent: OAI-SearchBot/1.0\nDisallow: /\n", {"B050"})
+    # Google ignores a trailing `*` and reads `$` as the end of the path, so
+    # `/*$` and `*` shut the whole site as `/` does.
+    robots_case("B050 Disallow /*$ is a whole-site block",
+                "User-agent: Claude-User\nDisallow: /*$\n", {"B050"})
+    robots_case("B050 Disallow * is a whole-site block",
+                "User-agent: PerplexityBot\nDisallow: *\n", {"B050"})
     robots_case("B050 a partial disallow is not a block",
                 "User-agent: OAI-SearchBot\nDisallow: /admin/\n", set())
     robots_case("B050 an equal-length Allow wins over Disallow (RFC 9309)",

@@ -1817,13 +1817,20 @@ RETRIEVAL_AGENTS = (
 # Search" (https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers);
 # CCBot builds Common Crawl's open archive (https://commoncrawl.org/ccbot).
 TRAINING_AGENTS = ("GPTBot", "ClaudeBot", "CCBot", "Google-Extended")
-FULL_PATHS = ("/", "/*")
+# Whole-site paths, read the way Google's matcher reads them: a trailing `*`
+# is ignored and `$` anchors the end, so `/*`, `/*$` and a bare `*` shut the
+# whole site exactly as `/` does. Google's reading, not RFC 9309's octet count,
+# decides `Disallow: /*` against `Allow: /` (an equal-length tie, Allow wins).
+FULL_PATHS = ("/", "/*", "/*$", "*")
 
 
 def robots_groups(text: str) -> list[tuple[list[str], list[tuple[str, str]]]]:
     """RFC 9309 groups: consecutive `User-agent` lines share the rules after
     them, and a `User-agent` line after a rule opens a new group. Tokens are
-    lower-cased, because product tokens match case-insensitively."""
+    lower-cased, because product tokens match case-insensitively, and cut to
+    their leading [a-z_-] run, as Google's matcher does, so `OAI-SearchBot/1.0`
+    still names OAI-SearchBot. A UTF-8 BOM before the first line is dropped."""
+    text = text.lstrip("\ufeff")
     groups: list[tuple[list[str], list[tuple[str, str]]]] = []
     agents: list[str] = []
     rules: list[tuple[str, str]] = []
@@ -1837,7 +1844,8 @@ def robots_groups(text: str) -> list[tuple[list[str], list[tuple[str, str]]]]:
             if rules:
                 groups.append((agents, rules))
                 agents, rules = [], []
-            agents.append(value.lower())
+            token = re.match(r"\*|[a-z_-]*", value.lower()).group(0)
+            agents.append(token or value.lower())
         elif agents:
             rules.append((key, value))
     if agents:
@@ -2225,8 +2233,8 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
                 findings.append(Finding(
                     "B050", SEVERITY_ERROR, path, 0,
                     f"channels.md declares AI search a target while the "
-                    f"retrieval agent(s) {', '.join(blocks)} are blocked here "
-                    f"-- an answer engine cannot cite a page it may not fetch. "
+                    f"retrieval agent(s) {', '.join(blocks)} are blocked here. "
+                    f"An answer engine cannot cite a page it may not fetch. "
                     f"Training crawlers ({', '.join(TRAINING_AGENTS)}) are a "
                     f"separate decision and are not judged here",
                 ))

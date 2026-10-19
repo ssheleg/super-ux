@@ -480,10 +480,14 @@ grep -oiE '.{0,80}(free|trial|no fee|cancel anytime|% off|discount).{0,80}' /tmp
 python3 - <<'PY'
 import re, pathlib
 html = pathlib.Path('/tmp/page.html').read_text(errors='ignore')
-facts = pathlib.Path('docs/brand/facts.md').read_text(errors='ignore').lower()
-pat = r'(?:[Ww]orks with|[Ii]ntegrates with|[Cc]ompatible with|[Cc]onnects to) ([A-Z][\w.+-]*)'
+facts = pathlib.Path('docs/brand/facts.md').read_text(errors='ignore')
+# Only the acceptance section counts: a name elsewhere in facts.md proves nothing.
+m = re.search(r'^#+ *Proof that is not a number.*?(?=^#+ |\Z)', facts, re.M | re.S)
+proof = (m.group(0) if m else '').lower()
+pat = (r'(?:[Ww]orks with|[Ii]ntegrates with|[Cc]ompatible with|[Cc]onnects to) '
+       r'([A-Z][\w+-]*(?: [A-Z][\w+-]*)*)')
 for name in sorted(set(re.findall(pat, html))):
-    if name.lower() not in facts:
+    if not re.search(r'(?<![\w-])' + re.escape(name.lower()) + r'(?![\w-])', proof):
         print('no acceptance row:', name)
 PY
 
