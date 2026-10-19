@@ -482,12 +482,18 @@ import re, pathlib
 html = pathlib.Path('/tmp/page.html').read_text(errors='ignore')
 facts = pathlib.Path('docs/brand/facts.md').read_text(errors='ignore')
 # Only the acceptance section counts: a name elsewhere in facts.md proves nothing.
-m = re.search(r'^#+ *Proof that is not a number.*?(?=^#+ |\Z)', facts, re.M | re.S)
+# The section ends at the next heading of the same or a higher level only.
+h = re.search(r'^(#+) *Proof that is not a number', facts, re.M)
+m = h and re.search(r'^#+ *Proof that is not a number.*?(?=^#{1,%d} |\Z)' % len(h.group(1)),
+                    facts, re.M | re.S)
 proof = (m.group(0) if m else '').lower()
 pat = (r'(?:[Ww]orks with|[Ii]ntegrates with|[Cc]ompatible with|[Cc]onnects to) '
        r'([A-Z][\w+-]*(?: [A-Z][\w+-]*)*)')
+has = lambda n: re.search(r'(?<![\w-])' + re.escape(n.lower()) + r'(?![\w-])', proof)
 for name in sorted(set(re.findall(pat, html))):
-    if not re.search(r'(?<![\w-])' + re.escape(name.lower()) + r'(?![\w-])', proof):
+    # A capitalised word after the name ("Stripe In minutes") is not part of
+    # it: the first word alone is tried before the name is reported.
+    if not has(name) and not has(name.split()[0]):
         print('no acceptance row:', name)
 PY
 

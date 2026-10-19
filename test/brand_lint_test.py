@@ -1130,6 +1130,14 @@ def main() -> int:
                 "User-agent: Claude-User\nDisallow: /*$\n", {"B050"})
     robots_case("B050 Disallow * is a whole-site block",
                 "User-agent: PerplexityBot\nDisallow: *\n", {"B050"})
+    # A value that only STARTS with `*` is not the wildcard group: Google
+    # treats `*` as global only when it stands alone.
+    robots_case("B050 a token starting with * is not the wildcard group",
+                "User-agent: *bot\nDisallow: /\n", set())
+    # The longer rule wins: `/*$` (3 octets) outranks `Allow: /` (1).
+    robots_case("B050 Disallow /*$ outranks Allow /",
+                "User-agent: OAI-SearchBot\nDisallow: /*$\nAllow: /\n",
+                {"B050"})
     robots_case("B050 a partial disallow is not a block",
                 "User-agent: OAI-SearchBot\nDisallow: /admin/\n", set())
     robots_case("B050 an equal-length Allow wins over Disallow (RFC 9309)",

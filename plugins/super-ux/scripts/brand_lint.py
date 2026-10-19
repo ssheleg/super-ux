@@ -1817,11 +1817,12 @@ RETRIEVAL_AGENTS = (
 # Search" (https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers);
 # CCBot builds Common Crawl's open archive (https://commoncrawl.org/ccbot).
 TRAINING_AGENTS = ("GPTBot", "ClaudeBot", "CCBot", "Google-Extended")
-# Whole-site paths, read the way Google's matcher reads them: a trailing `*`
-# is ignored and `$` anchors the end, so `/*`, `/*$` and a bare `*` shut the
-# whole site exactly as `/` does. Google's reading, not RFC 9309's octet count,
-# decides `Disallow: /*` against `Allow: /` (an equal-length tie, Allow wins).
-FULL_PATHS = ("/", "/*", "/*$", "*")
+# Whole-site paths and their rule length. Google's matcher ignores a trailing
+# `*` (so `/*` and a bare `*` weigh what `/` weighs) and reads `$` as the end
+# of the path; the longer rule wins and Allow wins a tie (RFC 9309 2.2.2).
+# So `Disallow: /*` against `Allow: /` is a tie Allow wins, while
+# `Disallow: /*$` (3 octets) outranks `Allow: /`.
+FULL_PATHS = {"/": 1, "/*": 1, "*": 1, "/*$": 3}
 
 
 def robots_groups(text: str) -> list[tuple[list[str], list[tuple[str, str]]]]:
@@ -1844,7 +1845,7 @@ def robots_groups(text: str) -> list[tuple[list[str], list[tuple[str, str]]]]:
             if rules:
                 groups.append((agents, rules))
                 agents, rules = [], []
-            token = re.match(r"\*|[a-z_-]*", value.lower()).group(0)
+            token = re.match(r"\*(?=\s|$)|[a-z_-]*", value.lower()).group(0)
             agents.append(token or value.lower())
         elif agents:
             rules.append((key, value))
@@ -1861,9 +1862,11 @@ def robots_blocks(text: str, token: str) -> bool:
     own = [r for a, r in groups if token.lower() in a]
     rules = [rule for rs in (own or [r for a, r in groups if "*" in a])
              for rule in rs]
-    disallowed = any(k == "disallow" and v in FULL_PATHS for k, v in rules)
-    allowed = any(k == "allow" and v in FULL_PATHS for k, v in rules)
-    return disallowed and not allowed
+    def longest(kind: str) -> int:
+        return max((FULL_PATHS[v] for k, v in rules
+                    if k == kind and v in FULL_PATHS), default=0)
+    disallow, allow = longest("disallow"), longest("allow")
+    return disallow > 0 and disallow > allow
 
 FILLER_OPENERS = (
     "in today's digital landscape", "in the ever-evolving world",
