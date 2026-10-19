@@ -527,7 +527,7 @@ codes). Unknown warning codes fail with usage/exit 2. Errors always block.
 | B044 | W | a short-video hook fails the filter: it scores WEAK, carries a dealbreaker (a "stop scrolling" opener, a video preamble, a greeting, a hashtag, an emoji), or its on-screen text runs past ten words. A filter, not a predictor: AUC 0.83 at catching a bad hook, 0.56 at picking a winner; a hook in a non-Latin script gets only the hashtag and emoji dealbreakers |
 | B045 | W | a caption's first line runs past the surface's `fold`, opens with a hashtag or a mention, or spends the window on a hashtag |
 | B046 | W | a caption on a `one ask` surface makes no ask, or more than one |
-| B050 | E | AI search declared a target while a crawler is blocked |
+| B050 | E | AI search declared a target while a retrieval agent (OAI-SearchBot, ChatGPT-User, Claude-SearchBot, Claude-User, PerplexityBot, Perplexity-User) is blocked, by its own group or by `*`; a training-crawler block is never reported |
 | B051 | W | a token REPEATS unnaturally on one rendered page (advisory: ≥5x and >4%, min 40 words, registered terms exempt) — Google's spam policy is manipulative repetition, not a fixed percentage; no claim about citation likelihood |
 | B052 | E | a filler opener |
 | B053 | W | no named author where the surface needs one |

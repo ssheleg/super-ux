@@ -6,8 +6,9 @@ shipping whether it holds. The two are different jobs: a page can survive
 every one of the seven sweeps sentence by sentence and still fail, because
 nothing in a sweep asks whether the argument is complete.
 
-Everything below was extracted from teardowns of live pages rather than from
-preference. Where a rule carries an example, the example is verbatim from a
+LP-01..LP-20 were extracted from teardowns of live pages rather than from
+preference; LP-21..LP-24 rest on published regulator and platform policy,
+cited in each rule (see [Where the evidence came from](#where-the-evidence-came-from)). Where a rule carries an example, the example is verbatim from a
 page that shipped, with the site and the date it was read. Where three
 independent pages made the same mistake, that is said, because a defect three
 teams reached on their own is a defect the next team will reach too.
@@ -15,12 +16,13 @@ teams reached on their own is a defect the next team will reach too.
 ## Contents
 
 - [Before the first line](#before-the-first-line)
-- [The twenty](#the-twenty)
+- [The twenty-four](#the-twenty-four)
 - [The offer](#the-offer)
 - [Awareness, and the shape it demands](#awareness-and-the-shape-it-demands)
 - [The proof ladder](#the-proof-ladder)
 - [The action, and the risk beside it](#the-action-and-the-risk-beside-it)
 - [The page as a machine](#the-page-as-a-machine)
+- [The promise outside the page](#the-promise-outside-the-page)
 - [The readiness check](#the-readiness-check)
 - [Where the evidence came from](#where-the-evidence-came-from)
 
@@ -36,7 +38,7 @@ their job, the words they use, the proof from `facts.md`, and where they came
 from. A page that cannot answer the fifth is a homepage, and it should be
 built as one.
 
-## The twenty
+## The twenty-four
 
 | id | Rule | Fails as |
 |---|---|---|
@@ -60,6 +62,10 @@ built as one.
 | LP-18 | Appearance animation never holds the only copy of content | an empty screen that measures as shipped |
 | LP-19 | One section advances one argument | a section that advances neither |
 | LP-20 | The page states the price or states why it does not | a trust argument with a hole in it |
+| LP-21 | Every offer condition sits next to the claim it limits | a free offer that costs money in the footer |
+| LP-22 | The page leads with the problem and names AI only where it changes the outcome | a mechanism sold as a benefit |
+| LP-23 | A "works with X" claim waits for a measured acceptance test | an integration promise nobody ran |
+| LP-24 | The page has one job, and a creative is judged by the step it leads to | a campaign that wins clicks and loses customers |
 
 ## The offer
 
@@ -354,6 +360,74 @@ competitor for exactly that: `Pricing is not publicly listed and requires a
 sales call` (2026-08-30). A page that breaks its own stated principle spends
 the principle.
 
+## The promise outside the page
+
+A landing page is the second half of a promise an ad, a post or a search
+result already made. These four rules hold the two halves together.
+
+### LP-21. Every offer condition sits next to the claim it limits
+
+"Free", "no fee", "free shipping", a trial, "cancel anytime", a discount:
+each carries a condition (a threshold, a duration, what renews and at what
+price), and the condition sits in the same sentence as the claim or the
+line directly under it. A condition that lives only in the footer or the
+terms is a claim the page made and then took back where the reader was not
+looking.
+
+The ad and the page state the same condition in the same words. Record the
+condition once in `facts.md` under Required disclaimers, attached to its
+claim, and quote it from there on both surfaces, so a change to the offer
+is one edit rather than a hunt.
+
+Sources: the FTC's disclosure guidance says to "place the disclosure as
+close as possible to the triggering claim"
+([.com Disclosures](https://www.ftc.gov/business-guidance/resources/com-disclosures-how-make-effective-disclosures-digital-advertising));
+Google Ads' misrepresentation policy lists "inconsistencies between the ad
+and the landing page/app" and offers that are not easily found from the
+destination ([policy](https://support.google.com/adspolicy/answer/6020955)).
+
+### LP-22. The page leads with the problem and names AI only where it changes the outcome
+
+The opening states the reader's problem and the evidence that it gets
+solved (LP-01, LP-05). "AI-powered" is a mechanism, and a mechanism earns
+its place on the page only where it changes what the reader gets: a result
+they could not get before, or one faster or cheaper by an amount with a row
+in `facts.md`.
+
+The test is a deletion. Remove "AI" from the sentence; if the promise reads
+the same, the word was decoration, and decoration in this position reads as
+AI-washing. Claiming AI the product does not use, or more than it does, is a
+claim a regulator reads as objective and expects substantiated
+([FTC, "Keep your AI claims in check"](https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check)).
+
+### LP-23. A "works with X" claim waits for a measured acceptance test
+
+A compatibility claim, an integration list or a strip of partner logos is an
+objective claim about another product, and that product changes without
+asking. It ships only after an acceptance test ran against X and passed,
+recorded in `facts.md` under Proof that is not a number: the claim, who ran
+it, a `Source` naming the version of X, what was exercised and the result,
+and a `Review by` date. An integration that is planned is described as
+planned. This is `B030`'s rule for numbers applied to a claim no number
+carries, and the FTC's: advertisers need "a reasonable basis for
+advertising claims before they are disseminated"
+([substantiation policy](https://www.ftc.gov/legal-library/browse/ftc-policy-statement-regarding-advertising-substantiation)).
+
+### LP-24. The page has one job, and a creative is judged by the step it leads to
+
+The page exists for one next step, and every primary action resolves to it.
+LP-13 keeps one label; this rule keeps one destination. Secondary links
+(documentation, pricing) may exist, but none competes with the step.
+
+Judge each ad creative by the rate at which its visitors take that step in
+its qualified form (a trial started with a verified address, a demo booked
+and attended, a first paid use), not by click-through rate. A creative that
+wins the click with a promise the page does not keep raises the click rate
+and lowers the step rate, and a campaign read on clicks scales exactly that
+creative. The step is wired as an event before traffic is bought (BP-212;
+the event mechanics are the sheleg-dev `ad-tracking` skill's), so each
+creative's step rate can be read per creative.
+
 ## The readiness check
 
 Run against the built page, not the draft. Every line here is a command with
@@ -396,12 +470,41 @@ grep -oE '[0-9][0-9,.]*(k|K|M|%|\+)?' /tmp/page.html | sort | uniq -c | sort -rn
 
 # LP-20. The price is stated, or the reason is.
 grep -icE '\$[0-9]|per month|/mo|pricing' /tmp/page.html
+
+# LP-21. Every offer claim carries its condition. Read each line: a claim
+#   with no threshold, duration or renewal term beside it is the defect.
+#   Run the same command on the ad copy and compare the two outputs.
+grep -oiE '.{0,80}(free|trial|no fee|cancel anytime|% off|discount).{0,80}' /tmp/page.html
+
+# LP-23. Every "works with X" names a facts.md row. A printed name is the defect.
+python3 - <<'PY'
+import re, pathlib
+html = pathlib.Path('/tmp/page.html').read_text(errors='ignore')
+facts = pathlib.Path('docs/brand/facts.md').read_text(errors='ignore').lower()
+pat = r'(?:[Ww]orks with|[Ii]ntegrates with|[Cc]ompatible with|[Cc]onnects to) ([A-Z][\w.+-]*)'
+for name in sorted(set(re.findall(pat, html))):
+    if name.lower() not in facts:
+        print('no acceptance row:', name)
+PY
+
+# LP-24. One job, one destination. Read the list: two destinations for the
+#   primary action is the defect.
+python3 - <<'PY'
+import re, collections, pathlib
+html = pathlib.Path('/tmp/page.html').read_text(errors='ignore')
+hrefs = re.findall(r'<a\b[^>]*href="([^"#]+)"[^>]*>', html)
+cta = [h for h in hrefs if re.search(r'sign|trial|demo|start|buy|checkout|get', h, re.I)]
+for href, n in collections.Counter(cta).most_common(10):
+    print(f'{n:3}  {href}')
+PY
 ```
 
 What no command can decide, and a person therefore must: LP-01 and LP-03,
 because the substitution test needs a competitor's page beside yours; LP-06,
 because only the traffic source says which row applies; and LP-09, because
-whether the proof matches the claim is a reading, not a count.
+whether the proof matches the claim is a reading, not a count. LP-22 is a
+reading too: the deletion test needs a person to say whether the promise
+changed.
 
 ## Where the evidence came from
 
@@ -416,6 +519,11 @@ here is evidence about consumer pages. And three pages is enough to notice a
 repeated defect, which is why the repeats are named as such and the
 single-page observations are attributed to their one page rather than
 generalised.
+
+LP-21..LP-24 come from a different base: the regulator and platform
+policies cited in each rule, and field reports reviewed on 2026-10-19 that
+are not public and are therefore not quoted. They carry no teardown example
+yet, which makes them the first rules a new teardown should test.
 
 Where a later teardown contradicts a rule above, the rule changes and the new
 evidence is cited beside the old. A playbook that only accumulates is a

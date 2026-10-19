@@ -14,6 +14,7 @@ person who said it.
 - [A number travels with its anchors](#a-number-travels-with-its-anchors)
 - [Single source is a flag, not a fact](#single-source-is-a-flag-not-a-fact)
 - [No data stays a hypothesis](#no-data-stays-a-hypothesis)
+- [Synthetic respondents are hypotheses](#synthetic-respondents-are-hypotheses)
 - [Promotion is append-only](#promotion-is-append-only)
 
 ## The four classes
@@ -88,6 +89,24 @@ citation that would settle it), and moves on. Inventing an `observation` to
 fill a gap — or citing a source that says something adjacent — is the one
 corruption this ledger cannot recover from, because every later inference
 inherits it.
+
+## Synthetic respondents are hypotheses
+
+A synthetic persona, an LLM "digital twin" of a segment, a simulated
+interview or a model answering a survey as a user is **never evidence** for a
+persona, journey or scenario decision. Its output is not an `observation`
+(nobody did anything) and not a `citation` (no source said it). At most it
+writes a `hypothesis` row whose `confirm-by:` names the real-user
+observation or the real data that would settle it, and it is promoted only
+by those rows, never by a second model agreeing with the first.
+
+Nielsen Norman Group's guidance says the same: "Do not use synthetic-user
+research as a replacement for real-user research", and treat what it
+produces "as hypotheses that need testing"
+([Rosala and Moran, 2024](https://www.nngroup.com/articles/synthetic-users/)).
+The reason it matters here more than elsewhere: a model's answer sounds like
+a participant, so it is the input most likely to be filed in the wrong
+class, and every inference built on it inherits that class.
 
 ## Promotion is append-only
 

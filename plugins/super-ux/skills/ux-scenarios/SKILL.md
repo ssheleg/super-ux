@@ -85,6 +85,10 @@ Scenarios are designed here, not reverse-engineered.
    path, empty state, visible loading, destructive-action confirmation,
    returning-user variant) and the per-product checklist (first-run
    onboarding through multi-entity flows) from the format contract.
+   Only real users and real data decide a persona or a scenario: a synthetic
+   persona, an LLM "digital twin" or a simulated session is a hypothesis to
+   test, never evidence (ux-foundation's `research-evidence.md` owns the
+   rule).
 3. All entries start as `Status: draft`, `Coverage: none yet`,
    `Product: unobserved`. The last one is the outcome state and it stays
    `unobserved` until a signal from the world arrives — shipping the scenario
@@ -185,7 +189,9 @@ one task per scenario — a task that needs two goals is two tasks. Where the
 scenario has alt or error paths, they become the stress tasks.
 
 What comes back is graded against the same base: a task nobody completes is
-a finding against its scenario, not against the participant.
+a finding against its scenario, not against the participant. Participants
+are real people; a model answering as a persona is not one, and its
+completions are not results.
 
 ## Definition of done
 

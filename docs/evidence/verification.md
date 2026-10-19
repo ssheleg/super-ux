@@ -8,6 +8,19 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-19: retrieval crawlers, landing promises, Copylot sweep, v0.62.0 candidate
+
+Source candidate on branch `feat/seo-landing-copylot`; publication follows review.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| SEO-1 | `B050` reports a block of a retrieval agent only; a training-token block is never reported | `test/brand_lint_test.py` fifteen `B050` cases plus the disjoint-list check. Red first: 11 failures on the unchanged linter (the `GPTBot` case got `B050`, the `OAI-SearchBot` case got nothing). Plants in `brand_lint.py`, each restored: `OAI-SearchBot` dropped from the list turned 2 cases red; a group reset on every `User-agent` line turned the shared-group case red; the `*` fallback removed turned the wildcard case red; the `Allow` precedence removed turned the RFC 9309 case red; token-side case folding removed turned 9 red including the case-insensitive case; `GPTBot` added to the retrieval list turned 4 red including the disjoint check | **planted** |
+| SEO-2 | `seo-aeo-safety.md`: crawler policy as two decisions, technical floor pointing at seo-aeo-audit's brief, no FAQ/HowTo rich-result advice, keyword stuffing stated as `B051` enforces it | vendor pages read 2026-10-19 (OpenAI, Anthropic, Perplexity, Google, Common Crawl, Search Central changelog); four byte-identical copies kept by `validate.py`: a line appended to the copywriting copy turned it red ("has drifted"), restored green | **planted** |
+| SEO-3 | `landing-pages.md` LP-21..LP-24 with readiness commands | `validate.py` id-set coverage: the `### LP-23.` heading renamed turned it red twice (row without section, readiness check naming an undefined id), restored green | **planted** |
+| SEO-4 | `copywriting` runs `copylot.check` when present and states the fallback | text only; the Copylot schema read in this session lists `format: instagram-caption` and no `web` register, which is why the fallback is written | never |
+| SEO-5 | Synthetic respondents are hypotheses; quarterly fresh-user walk | text only, `validate.py` exit 0 on the synced copies | never |
+| Agent behaviour | Whether an agent follows LP-21..24, the Copylot sweep or the walk | no agent run observed | never |
+
 ## 2026-10-18: no em dash in new text, v0.61.0 candidate
 
 Owner decision relayed by the operator on 2026-10-18. Source candidate; publication follows.

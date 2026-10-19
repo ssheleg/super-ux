@@ -83,6 +83,21 @@ voice_humanization_declined = _VOICE.replace(
 )
 
 
+def check_agent_lists() -> None:
+    """B050's two lists stay disjoint: a token in both would make one robots
+    group decide two policies, which is the confusion v0.62.0 removed."""
+    global checks
+    checks += 1
+    retrieval = getattr(brand_lint, "RETRIEVAL_AGENTS", None)
+    training = getattr(brand_lint, "TRAINING_AGENTS", None)
+    if not retrieval or not training:
+        failures.append("B050: brand_lint.py must name RETRIEVAL_AGENTS and "
+                        "TRAINING_AGENTS separately")
+    elif set(retrieval) & set(training):
+        failures.append("B050: an agent is listed as both retrieval and "
+                        "training -- the two decisions must stay separate")
+
+
 def case(name: str, files: dict, expect: set, project: dict | None = None) -> None:
     """Write a temp pack and compare the codes returned.
 
@@ -1060,16 +1075,59 @@ def main() -> int:
         "```\n"
     )
 
-    case(
-        "AI search declared a target while the crawlers are blocked",
-        {**MINIMAL, "README.md": ai_sources, "channels.md": blog},
-        {"B050"},
-        project={
-            "public/robots.txt": "User-agent: GPTBot\nDisallow: /\n",
-            "content/a.md": "---\nsurface: blog\nauthor: R. Iyer\n"
-            "title: Post\n---\n\nA short post.\n",
-        },
-    )
+    # B050 is about RETRIEVAL agents, the ones that fetch a page to answer or
+    # cite it. A training crawler (GPTBot, ClaudeBot, CCBot, Google-Extended)
+    # blocked is a separate decision with no effect on AI search, so it is
+    # never an error. Each fixture is written so only one branch can fire:
+    # the training-only cases carry no retrieval token and no wildcard block.
+    post = ("---\nsurface: blog\nauthor: R. Iyer\n"
+            "title: Post\n---\n\nA short post.\n")
+    ai_pack = {**MINIMAL, "README.md": ai_sources, "channels.md": blog}
+
+    def robots_case(name, robots, expect):
+        case(name, ai_pack, expect,
+             project={"public/robots.txt": robots, "content/a.md": post})
+
+    robots_case("B050 a training crawler blocked with AI search a target is "
+                "not an error", "User-agent: GPTBot\nDisallow: /\n", set())
+    robots_case("B050 every training token blocked is still not an error",
+                "User-agent: GPTBot\nDisallow: /\n\nUser-agent: ClaudeBot\n"
+                "Disallow: /\n\nUser-agent: CCBot\nDisallow: /\n\n"
+                "User-agent: Google-Extended\nDisallow: /\n", set())
+    robots_case("B050 OAI-SearchBot blocked with AI search a target",
+                "User-agent: OAI-SearchBot\nDisallow: /\n", {"B050"})
+    for token in ("ChatGPT-User", "Claude-SearchBot", "Claude-User",
+                  "PerplexityBot", "Perplexity-User"):
+        robots_case(f"B050 retrieval agent {token} blocked",
+                    f"User-agent: {token}\nDisallow: /\n", {"B050"})
+    robots_case("B050 a retrieval token matches case-insensitively",
+                "user-agent: claude-searchbot\ndisallow: /\n", {"B050"})
+    # The retrieval token is listed FIRST in a shared group, so a parser that
+    # keeps only the last User-agent line of a group cannot see it.
+    robots_case("B050 a retrieval token inside a shared group",
+                "User-agent: OAI-SearchBot\nUser-agent: GPTBot\nDisallow: /\n",
+                {"B050"})
+    # RFC 9309: a crawler with no group of its own obeys the `*` group.
+    robots_case("B050 a wildcard block reaches every retrieval agent",
+                "User-agent: *\nDisallow: /\n", {"B050"})
+    robots_case("B050 a wildcard block with every retrieval agent let in",
+                "User-agent: *\nDisallow: /\n\n" + "".join(
+                    f"User-agent: {t}\n" for t in (
+                        "OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot",
+                        "Claude-User", "PerplexityBot", "Perplexity-User"))
+                + "Allow: /\n", set())
+    robots_case("B050 a partial disallow is not a block",
+                "User-agent: OAI-SearchBot\nDisallow: /admin/\n", set())
+    robots_case("B050 an equal-length Allow wins over Disallow (RFC 9309)",
+                "User-agent: PerplexityBot\nDisallow: /\nAllow: /\n", set())
+    case("B050 no AI-search target, retrieval agent blocked",
+         {**MINIMAL, "README.md": ai_sources,
+          "channels.md": blog.replace("AI search: target\n", "")},
+         set(),
+         project={"public/robots.txt": "User-agent: OAI-SearchBot\n"
+                  "Disallow: /\n", "content/a.md": post})
+
+    check_agent_lists()
     case(
         "keyword repeated past one percent of the document",
         {**MINIMAL, "README.md": ai_sources, "channels.md": blog},

@@ -66,7 +66,8 @@ chain and say so, never drop it silently.
   citation, inference and hypothesis are separate classes; contradictory
   participants stay linked; a number travels with unit, entity, population
   and date; and what has no data stays a hypothesis — there is no quota of
-  evidence.
+  evidence. A synthetic persona or an LLM "digital twin" is never evidence:
+  its output is a hypothesis until real users or real data confirm it.
 - **The ledger is local, and it is not a new route.** It lives at
   `docs/ux/research-ledger.md`, beside the foundation it feeds — research
   synthesis is a step INSIDE foundation work, never a separate pipeline. A
