@@ -1794,7 +1794,79 @@ def _ios_keywords(path: str, fields: dict, raw: str) -> list[Finding]:
     return findings
 
 
-AI_AGENTS = ("GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended")
+# B050 judges RETRIEVAL agents only: the ones that fetch a page to show, cite
+# or answer from it. Blocking one while AI search is a declared target is the
+# contradiction. Each purpose is the vendor's own wording, read 2026-10-19:
+#   OAI-SearchBot  "surface websites in search results in ChatGPT's search
+#                  features"; ChatGPT-User  user-initiated fetches
+#                  (https://developers.openai.com/api/docs/bots)
+#   Claude-SearchBot  indexes content for search; Claude-User  retrieves a
+#                  page in response to a user query
+#                  (https://support.claude.com/en/articles/8896518)
+#   PerplexityBot  "surface and link websites in search results on
+#                  Perplexity"; Perplexity-User  fetches for a user's question
+#                  (https://docs.perplexity.ai/guides/bots)
+RETRIEVAL_AGENTS = (
+    "OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User",
+    "PerplexityBot", "Perplexity-User",
+)
+# TRAINING and dataset tokens: blocking them is a separate decision with no
+# effect on AI search, so B050 never reports them. GPTBot and ClaudeBot are
+# the vendors' training crawlers (same pages); Google-Extended controls Gemini
+# training and grounding and "does not impact a site's inclusion in Google
+# Search" (https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers);
+# CCBot builds Common Crawl's open archive (https://commoncrawl.org/ccbot).
+TRAINING_AGENTS = ("GPTBot", "ClaudeBot", "CCBot", "Google-Extended")
+# Whole-site paths and their rule length. Google's matcher ignores a trailing
+# `*` (so `/*` and a bare `*` weigh what `/` weighs) and reads `$` as the end
+# of the path; the longer rule wins and Allow wins a tie (RFC 9309 2.2.2).
+# So `Disallow: /*` against `Allow: /` is a tie Allow wins, while
+# `Disallow: /*$` (3 octets) outranks `Allow: /`.
+FULL_PATHS = {"/": 1, "/*": 1, "*": 1, "/*$": 3}
+
+
+def robots_groups(text: str) -> list[tuple[list[str], list[tuple[str, str]]]]:
+    """RFC 9309 groups: consecutive `User-agent` lines share the rules after
+    them, and a `User-agent` line after a rule opens a new group. Tokens are
+    lower-cased, because product tokens match case-insensitively, and cut to
+    their leading [a-z_-] run, as Google's matcher does, so `OAI-SearchBot/1.0`
+    still names OAI-SearchBot. A UTF-8 BOM before the first line is dropped."""
+    text = text.lstrip("\ufeff")
+    groups: list[tuple[list[str], list[tuple[str, str]]]] = []
+    agents: list[str] = []
+    rules: list[tuple[str, str]] = []
+    for raw in text.splitlines():
+        line = raw.split("#", 1)[0].strip()
+        m = re.match(r"^(user-agent|allow|disallow)\s*:\s*(.*?)\s*$", line, re.I)
+        if not m:
+            continue
+        key, value = m.group(1).lower(), m.group(2)
+        if key == "user-agent":
+            if rules:
+                groups.append((agents, rules))
+                agents, rules = [], []
+            token = re.match(r"\*(?=\s|$)|[a-z_-]*", value.lower()).group(0)
+            agents.append(token or value.lower())
+        elif agents:
+            rules.append((key, value))
+    if agents:
+        groups.append((agents, rules))
+    return groups
+
+
+def robots_blocks(text: str, token: str) -> bool:
+    """True when robots.txt shuts `token` out of the whole site. The agent
+    obeys the groups naming it, or the `*` groups when none does; an
+    equal-length `Allow` beats `Disallow` (RFC 9309 section 2.2.2)."""
+    groups = robots_groups(text)
+    own = [r for a, r in groups if token.lower() in a]
+    rules = [rule for rs in (own or [r for a, r in groups if "*" in a])
+             for rule in rs]
+    def longest(kind: str) -> int:
+        return max((FULL_PATHS[v] for k, v in rules
+                    if k == kind and v in FULL_PATHS), default=0)
+    disallow, allow = longest("disallow"), longest("allow")
+    return disallow > 0 and disallow > allow
 
 FILLER_OPENERS = (
     "in today's digital landscape", "in the ever-evolving world",
@@ -2159,21 +2231,15 @@ def check_bot_safety(brand_dir: Path, sources: dict) -> list[Finding]:
             (p, {}, "") for p in sources["robots"]
         ]:
             robots = read(brand_dir.parent.parent / path) or ""
-            blocks = []
-            agent = None
-            for line in robots.splitlines():
-                head = re.match(r"^User-agent:\s*(.+?)\s*$", line, re.I)
-                if head:
-                    agent = head.group(1).strip()
-                elif re.match(r"^Disallow:\s*/\s*$", line, re.I) and agent:
-                    if agent in AI_AGENTS:
-                        blocks.append(agent)
+            blocks = [t for t in RETRIEVAL_AGENTS if robots_blocks(robots, t)]
             if blocks:
                 findings.append(Finding(
                     "B050", SEVERITY_ERROR, path, 0,
-                    f"channels.md declares AI search a target while "
-                    f"{', '.join(blocks)} is blocked here -- content quality "
-                    f"is irrelevant to a crawler that never arrives",
+                    f"channels.md declares AI search a target while the "
+                    f"retrieval agent(s) {', '.join(blocks)} are blocked here. "
+                    f"An answer engine cannot cite a page it may not fetch. "
+                    f"Training crawlers ({', '.join(TRAINING_AGENTS)}) are a "
+                    f"separate decision and are not judged here",
                 ))
 
     records = surfaces(brand_dir)

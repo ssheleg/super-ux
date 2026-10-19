@@ -6,7 +6,10 @@ the start; what stays in the SKILL is the loop that walks it.
 
 ## Contents
 
-- [Audit depth levels — how far each pass goes](#audit-depth-levels--how-far-each-pass-goes)
+- [Depths and their passes](#depths-and-their-passes)
+- [The quarterly fresh-user walk](#the-quarterly-fresh-user-walk)
+
+## Depths and their passes
 
 | Depth | Passes run |
 |---|---|
@@ -72,3 +75,29 @@ Passes:
    scenarios, journey stages without scenarios, jobs without stories, unused
    personas, screens not used by any flow, flows referencing missing
    `SCR-IDs`, screen states without Figma frames (when Figma enabled).
+
+## The quarterly fresh-user walk
+
+Outside every depth, once a quarter and on no request, someone walks the
+product as a stranger. Every pass above compares the code with a record;
+none of them enters the product the way a new customer does, and the defects
+that live between surfaces only show on that path: the ad's promise against
+the landing page, the store listing against the paywall, a payment method
+the team never uses.
+
+1. **Start clean.** Reinstall the app or create a new account, with no
+   cached session, no team flag and no internal build.
+2. **Enter where a customer enters**: the live ad or the landing page a
+   real visitor reaches, not a deep link the team bookmarked.
+3. **Go to paid use** through signup, onboarding and checkout, with a real
+   payment method (refund it afterwards); a sandbox card skips the
+   provider's real checks, so it does not count. When an agent drives the
+   walk, a person completes the payment step.
+4. **Use the smallest screen the product supports.**
+5. **Record what broke** with the date, device, build and entry point, each
+   as a finding against the scenario whose Expected result did not hold, or
+   as a missing scenario when no entry covers the path.
+
+The walk is a practice, not a gate: no check here can prove it happened, so
+the report says when it last ran and an audit older than a quarter without
+one says so.

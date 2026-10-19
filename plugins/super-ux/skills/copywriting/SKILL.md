@@ -209,6 +209,16 @@ guards govern the pass wherever it runs, and they are not optional:
   Run the resolved script with `--fail-on B063` when title punctuation is a
   required gate (or `--strict` for all warnings). An older script that rejects
   the flag needs an update, not a retry that quietly drops the gate.
+- **Copylot sweep, beside the linter, never instead of it.** Gate on the tool
+  in the session, not on config: when a `copylot.check` tool is present, run
+  it on each public text you wrote with the text's `locale`, the project's
+  saved voice as `voiceRef` when `copylot.voices.list` has one, and the
+  `register` and `format` its schema offers. The target is `register: web`
+  with `format: web-page` for a page; until the schema lists them, use
+  `register: marketing` (`ad` or `store` on those surfaces), omit `format`,
+  and say the web-page pack was not available. Report the report id and
+  address or reject each finding: they are advice, like `B060`. With no
+  tool, print `Copylot: not connected, brand_lint only` and continue.
 - Report scanned surfaces, remaining warnings and the exact command/exit code.
   Exit zero with advisory warnings is not a clean review. Inspect the rendered
   copy and generators; a source-only check cannot see external CSS or runtime text.

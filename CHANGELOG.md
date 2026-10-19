@@ -1,3 +1,44 @@
+## 0.62.0 (2026-10-19): retrieval crawlers, the audit's brief, landing promises, Copylot sweep
+
+- **`B050` judges retrieval agents only.** The AI-search contradiction is a block
+  of `OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`, `Claude-User`,
+  `PerplexityBot` or `Perplexity-User` while `channels.md` declares AI search a
+  target. Training and dataset tokens (`GPTBot`, `ClaudeBot`, `CCBot`,
+  `Google-Extended`) are a separate decision and are never reported; before
+  this release a `GPTBot` block was an error and an `OAI-SearchBot` block was
+  invisible. robots.txt is read in RFC 9309 groups: shared `User-agent` lines,
+  the `*` fallback for an agent with no group of its own, case-insensitive
+  tokens, and an equal-length `Allow: /` beating `Disallow: /`. Each purpose is
+  cited from the vendor's own crawler page in the code and the contract.
+  Fifteen new fixtures, each defect planted in the linter and watched red.
+- **`seo-aeo-safety.md`:** a "Crawler policy: two decisions" section with the
+  vendor table; the technical floor replaced by a pointer to seo-aeo-audit's
+  brief mode (`references/build-time.md`, ships with seo-aeo-audit 0.28); no
+  `FAQPage`/`HowTo` markup for rich results (Google's changelog: HowTo removed
+  in 2023, FAQ rich results gone from 7 May 2026); the keyword-stuffing text now
+  states what `B051` enforces (pages of 40 or more words, a word repeated 5 or
+  more times above a 4% share, registered terms exempt, advisory) instead of
+  the retired 1% rule; Claude's row in the engine table reflects web search.
+- **`landing-pages.md` LP-21..LP-24:** an offer condition next to its claim and
+  the same in the ad; lead with the problem and name AI only where it changes
+  the outcome; a "works with X" claim waits for a measured acceptance test in
+  `facts.md`; one job per page and creatives judged by the qualified-step rate,
+  not CTR. Readiness-check commands for LP-21, LP-23 and LP-24; LP-22 stays a
+  reading. Each rule cites the regulator or platform policy it rests on.
+- **`copywriting`:** runs `copylot.check` beside the brand linter when the tool
+  is in the session (target `register: web`, `format: web-page`; until
+  Copylot's schema lists them, `marketing` and no format, said out loud) and
+  prints a fallback line when it is absent.
+- **Synthetic respondents are hypotheses:** `research-evidence.md`,
+  `ux-foundation` and `ux-scenarios` say a synthetic persona or LLM "digital
+  twin" is never evidence for a persona or scenario decision (cited: Nielsen
+  Norman Group, 2024). `audit-depth.md` adds the quarterly fresh-user walk:
+  clean install or new account, from the ad or landing page to paid use with a
+  real payment method, on the smallest supported screen, findings recorded
+  against scenarios.
+- Contract copies synchronized with `python3 test/sync_references.py`; seeded
+  `docs/brand/lint.py` re-copied. Discovery descriptions unchanged.
+
 ## 0.61.0 (2026-10-18): no em dash in new text
 
 Owner decision, 2026-10-18: text an agent writes carries no em dash (U+2014), in

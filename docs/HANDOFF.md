@@ -1,3 +1,24 @@
+# Current follow-up: retrieval crawlers, landing promises, Copylot sweep, 0.62.0 (2026-10-19)
+
+Branch `feat/seo-landing-copylot` (FEED-SEO-1019 wave 2, member super-ux). `B050`
+now judges retrieval agents only, read in RFC 9309 groups; `seo-aeo-safety.md`
+carries the crawler policy as two decisions and points its technical floor at
+seo-aeo-audit's brief mode (0.28); `landing-pages.md` adds LP-21..LP-24;
+`copywriting` runs `copylot.check` beside the brand linter with a stated
+fallback; synthetic respondents are hypotheses (`research-evidence.md`,
+`ux-foundation`, `ux-scenarios`); `audit-depth.md` adds the quarterly fresh-user
+walk. Evidence: [verification ledger](evidence/verification.md), section
+2026-10-19. Gate: `npm test` run alone, exit 0.
+
+Open: the seo-aeo-audit `references/build-time.md` link resolves only once
+seo-aeo-audit 0.28 merges; Copylot's `web` register and `web-page` format do not
+exist yet, so the copywriting sweep runs its documented fallback until they ship.
+
+Next task: review and merge the PR; the coordinator owns preflight, tag,
+publication and the hub pin.
+
+---
+
 # Current follow-up: no em dash in new text, 0.61.0 (2026-10-18)
 
 Owner decision relayed by the operator on 2026-10-18: the em dash (U+2014) is not
