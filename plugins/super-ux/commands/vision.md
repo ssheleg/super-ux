@@ -1,5 +1,5 @@
 ---
-description: Write the product vision (docs/ux/vision.md) and install the alignment rule into this project's instruction file
+description: Write docs/ux/vision.md and install the vision-alignment rule
 argument-hint: "[optional: what the product is, in one line]"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: ux-foundation
-description: Use when defining or revising WHO the users are and WHY they use the product - personas, Jobs to Be Done, customer journey maps, user stories with acceptance criteria. A journey covers the end-to-end experience including what happens after the first session - where a user comes back, where user retention is won, and where churn actually starts. Maintains docs/ux/foundation.md, the WHY layer that UX scenarios trace to. Triggers - "jtbd" / "джобы", "customer journey" / "карта пути", "user story" / "юзер стори", "personas" / "персоны", "who is this for", "user retention" / "ретеншн", "churn" / "отток", new product discovery.
+description: 'Use when defining who the users are and why they use the product (personas, Jobs to Be Done, journeys, user stories, retention and churn), kept in docs/ux/foundation.md. Triggers: "jtbd" / "джобы", "customer journey" / "карта пути", "personas" / "персоны", "user retention" / "ретеншн", "churn" / "отток". Not for flows or screens (ux-flows).'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install. The Figma on/off choice recorded in step 5 needs no tooling of its own - the Figma MCP matters downstream, in ux-flows.
 license: MIT
 ---
@@ -24,6 +24,12 @@ and trace to these IDs — the full chain gives every scenario its context.
 **The chain's opt-out is spoken:** an operator saying **"no scenarios"** /
 **«без сценариев»** declines the scenario-first route — proceed without the
 chain and say so, never drop it silently.
+
+## Triggers
+
+The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
+
+"jtbd" / "джобы", "customer journey" / "карта пути", "user story" / "юзер стори", "personas" / "персоны", "who is this for", "user retention" / "ретеншн", "churn" / "отток", new product discovery.
 
 ## Quality bars (non-negotiable)
 

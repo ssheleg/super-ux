@@ -1,6 +1,6 @@
 ---
 name: ux-flows
-description: Use when designing or improving HOW users move through the product - user flows, a screen and its states, wireframes, Figma mockups, task analysis, heuristic UX evaluation and redesign proposals. Triggers - "user flow" / "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты", "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "paywall" / "пейволл", "funnel" / "воронка", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow". A paid-acquisition funnel is one of these flows - its step chain, branches and paywall step, read against reference screens from the same category. Maintains docs/ux/flows.md between foundation (stories) and scenarios. Visual system and Figma variables belong to sheleg-design.
+description: 'Use when designing or improving how users move through a product (flows, screen states, wireframes, Figma mockups, funnels, paywalls). Triggers: "user flow" / "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты", "funnel" / "воронка", "paywall" / "пейволл". Not for the visual system (sheleg-design). Refusal phrase "no scenarios" / «без сценариев».'
 compatibility: Any agent with file read/write - flow diagrams are mermaid text and need no renderer. Optional MCPs are used only when present in the session - Figma for mockups, Refero/Mobbin/Lazyweb for reference screens; absent, the skill proceeds without them and says so. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only.
 license: MIT
 ---
@@ -83,6 +83,12 @@ billing (dunning, BP-122) and the paid handoff (install → identify →
 entitlement restore, with every failure branch, BP-124..126) are flows of
 this product as well. Each money flow uses its checklist row from
 [practice-selection.md](references/practice-selection.md) step 3.
+
+## Triggers
+
+The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
+
+"user flow" / "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты", "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "paywall" / "пейволл", "funnel" / "воронка", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow".
 
 ## Choosing a workflow
 

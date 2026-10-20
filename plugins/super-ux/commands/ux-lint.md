@@ -1,5 +1,5 @@
 ---
-description: Lint docs/ux for integrity and drift — missing Figma frames, unresolved SCR/story traces, orphans, built screens without coverage, index desync, broken links
+description: Lint docs/ux for broken traces, orphans, missing frames and drift
 argument-hint: "[--strict]"
 ---
 

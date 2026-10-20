@@ -1,5 +1,5 @@
 ---
-description: Install the scenario-first hard rule into this project's CLAUDE.md and create the docs/ux/ skeleton
+description: Install the scenario-first hard rule and the docs/ux/ skeleton
 ---
 
 Install the super-ux hard rule into this project. Idempotent — safe to run

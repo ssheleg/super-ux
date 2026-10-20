@@ -1,5 +1,5 @@
 ---
-description: Update the UX chain after a change to user-facing behavior (same-change rule), or validate a new feature idea against the foundation, flows, and scenarios
+description: Update the UX chain after a user-facing change, or test a feature idea against it
 argument-hint: "[change or feature description]"
 ---
 

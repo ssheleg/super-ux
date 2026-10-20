@@ -1,5 +1,5 @@
 ---
-description: Design, reverse-engineer, update, or improve user flows — task analysis, mermaid flow diagrams, screen states, wireframes, Figma mockups, heuristic UX evaluation
+description: Design, reverse-engineer or improve user flows, screen states and mockups
 argument-hint: '[story/feature to design | "improve" | what changed]'
 ---
 

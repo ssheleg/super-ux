@@ -1,3 +1,21 @@
+## 0.63.0 (2026-10-20): short descriptions, triggers in the body
+
+- **Every skill description is a router of 279 to 393 characters** (was 332 to
+  948). The operator's Claude Code skill listing measured 29,995 of about
+  30,000 characters for 134 skills, and 81 skills showed no description at
+  all; a plugin skill cannot be hidden, so length is the only lever. Each
+  description is one "Use when" sentence, four to six English and Russian
+  triggers, one "Not for" boundary naming the sibling, and the refusal
+  phrase where the route has one. Total for the seven skills: 4,426 to 2,436.
+- **Every removed trigger phrase moved verbatim into a `## Triggers` section**
+  of its SKILL.md body, so the family routing hook's words still appear in the
+  skill's own text.
+- **Commands carry one short sentence each** (60 to 89 characters, was 99 to
+  224; total 2,424 to 1,116).
+- **`validate.py` holds the budget:** a skill description over 500 characters
+  or without a "Not for" boundary fails, a command description over 120 fails,
+  and the trigger-position check reads `Triggers:` as well as `Triggers - `.
+
 ## 0.62.0 (2026-10-19): retrieval crawlers, the audit's brief, landing promises, Copylot sweep
 
 - **`B050` judges retrieval agents only.** The AI-search contradiction is a block

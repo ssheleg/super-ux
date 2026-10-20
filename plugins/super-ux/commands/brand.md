@@ -1,5 +1,5 @@
 ---
-description: Single entry point for the verbal identity — status across voice, terminology, facts, channels, strings and locales, then a menu of applicable actions (init, calibrate, update, validate, write, audit)
+description: Single entry point for the verbal identity, status first, then the next action
 ---
 
 Single entry point for the brand layer. The user is NOT expected to know the
