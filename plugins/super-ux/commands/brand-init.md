@@ -1,5 +1,5 @@
 ---
-description: Initialize the brand pack — read the foundation and existing copy, propose a voice pack with reasoning, seed docs/brand/, and sweep the interface into the string registry
+description: Seed docs/brand/ with a proposed voice pack and sweep interface strings into the registry
 ---
 
 Run the `brand-voice` skill in **Init** mode.

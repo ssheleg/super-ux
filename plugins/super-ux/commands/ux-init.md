@@ -1,5 +1,5 @@
 ---
-description: Initialize the full UX chain for this project — the vision (optional), then foundation (personas, JTBD, journeys, stories), flows, screens and scenarios derived from it
+description: Initialize the full UX chain for this project, from vision to scenarios
 ---
 
 Initialize the UX chain, WHAT-IT-IS → WHY → HOW → WHAT-IT-DOES:

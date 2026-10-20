@@ -1,6 +1,6 @@
 ---
 name: vision
-description: Use when a project needs the layer ABOVE personas and jobs - what the product IS, why it exists, and what it refuses to become. Writes docs/ux/vision.md in nine layers (essence, core idea, system behaviour, user role, principles, anti-vision, horizon, the one sentence, and the alignment test) and installs a vision-alignment rule into the project's own instruction file so later features get checked against it. Triggers - "vision" / "видение", "product vision" / "продуктовое видение", "what is this product about", "define product direction", "write a vision", new project with no direction, a feature that feels off-strategy.
+description: 'Use when a project needs its product vision (what it is, why it exists, what it refuses to become), written to docs/ux/vision.md with an alignment rule. Triggers: "vision" / "видение", "product vision" / "продуктовое видение", "define product direction". Not for personas or jobs (ux-foundation).'
 compatibility: Any agent with file read/write - the skill writes markdown and edits the project's own instruction file. The closing lint step (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install; without python3, skip the lint and say so.
 license: MIT
 ---
@@ -32,6 +32,12 @@ flows → scenarios → audit.** Each layer traces up to the one above it. The
 chain has a spoken opt-out: the operator declines it by saying
 **"no scenarios"** / **«без сценариев»** — proceed without those layers and
 say so.
+
+## Triggers
+
+The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
+
+"vision" / "видение", "product vision" / "продуктовое видение", "what is this product about", "define product direction", "write a vision", new project with no direction, a feature that feels off-strategy.
 
 ## Step 0 — read the project, not its README
 

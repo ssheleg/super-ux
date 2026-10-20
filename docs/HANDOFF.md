@@ -1,3 +1,19 @@
+# Current follow-up: short descriptions, 0.63.0 (2026-10-20)
+
+Branch `desc-budget-1020`. All seven skill descriptions cut to 279 to 393
+characters (4,426 to 2,436 in total) and the fifteen command descriptions to one
+sentence (2,424 to 1,116), because the operator's skill listing was full and 81
+skills showed no description. Removed trigger phrases live verbatim under
+`## Triggers` in each SKILL.md body. `validate.py` now fails a description over
+500 characters, one without "Not for", and a command over 120. Descriptions are
+single-quoted YAML so `Triggers:` can use a colon instead of a spaced hyphen
+(the no-dash rule). Evidence: [verification ledger](evidence/verification.md),
+section 2026-10-20. Gate: `npm test` alone, exit 0.
+
+Next task: none here; the hub re-pins 0.63.0 in its own change.
+
+---
+
 # Current follow-up: retrieval crawlers, landing promises, Copylot sweep, 0.62.0 (2026-10-19)
 
 Branch `feat/seo-landing-copylot` (FEED-SEO-1019 wave 2, member super-ux). `B050`

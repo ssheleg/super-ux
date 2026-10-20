@@ -1,5 +1,5 @@
 ---
-description: Run the brand linter over docs/brand/ and the declared sources — contract, terminology, string consistency, facts, channel limits, bot safety, AI markers and locales
+description: Lint docs/brand/ and its declared sources for voice, term, fact and string drift
 ---
 
 Run the deterministic half of the brand check:

@@ -1,5 +1,5 @@
 ---
-description: Build or update the UX foundation — personas, Jobs to Be Done, customer journeys, user stories (the WHY layer scenarios trace to)
+description: Build or update personas, jobs, journeys and stories in docs/ux/foundation.md
 argument-hint: "[what changed or what to explore]"
 ---
 

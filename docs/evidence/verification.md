@@ -8,6 +8,18 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## 2026-10-20: short descriptions, triggers in the body, v0.63.0
+
+Branch `desc-budget-1020`; the operator's listing budget was full (29,995 of ~30,000 characters).
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| DESC-1 | Skill descriptions at most 500 characters with a "Not for" boundary; commands at most 120 | `python3 test/validate.py` exit 0. Plants, each restored: `vision` description padded to 506 characters failed the soft cap; `copy.md` padded to 142 failed the command cap | **planted** |
+| DESC-2 | Every hub trigger and object for super-ux still appears in its SKILL.md text | the hub's `ROUTES` (sshlg-skills `lib/triggers.js`) read by a scratch check: 62 words, 0 missing | observed on candidate source |
+| DESC-4 | `ux-flows` body inside the 4,750-token working limit after the Triggers section | pinned make-skill auditor (`5ca5c36`) `--house`: 4,952 tokens with the Improve section inline (GAP BODY_HEADROOM, the PR's first CI run), 4,564 after the move, 0 GAP | **observed** |
+| DESC-3 | Advertised phrases in the `copywriting` description still reach the `copywriting` route | the hub completeness logic run against this checkout: no unreachable phrase | observed on candidate source |
+| Agent behaviour | Whether a host now shows every family description | no listing re-measured after install | never |
+
 ## 2026-10-19: retrieval crawlers, landing promises, Copylot sweep, v0.62.0 candidate
 
 Source candidate on branch `feat/seo-landing-copylot`; publication follows review.

@@ -1,6 +1,6 @@
 ---
 name: ux-flows
-description: Use when designing or improving HOW users move through the product - user flows, a screen and its states, wireframes, Figma mockups, task analysis, heuristic UX evaluation and redesign proposals. Triggers - "user flow" / "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты", "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "paywall" / "пейволл", "funnel" / "воронка", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow". A paid-acquisition funnel is one of these flows - its step chain, branches and paywall step, read against reference screens from the same category. Maintains docs/ux/flows.md between foundation (stories) and scenarios. Visual system and Figma variables belong to sheleg-design.
+description: 'Use when designing or improving how users move through a product (flows, screen states, wireframes, Figma mockups, funnels, paywalls). Triggers: "user flow" / "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты", "funnel" / "воронка", "paywall" / "пейволл". Not for the visual system (sheleg-design). Refusal phrase "no scenarios" / «без сценариев».'
 compatibility: Any agent with file read/write - flow diagrams are mermaid text and need no renderer. Optional MCPs are used only when present in the session - Figma for mockups, Refero/Mobbin/Lazyweb for reference screens; absent, the skill proceeds without them and says so. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only.
 license: MIT
 ---
@@ -83,6 +83,10 @@ billing (dunning, BP-122) and the paid handoff (install → identify →
 entitlement restore, with every failure branch, BP-124..126) are flows of
 this product as well. Each money flow uses its checklist row from
 [practice-selection.md](references/practice-selection.md) step 3.
+
+## Triggers
+
+Also routed here (2026-10-20, moved from the description): "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow".
 
 ## Choosing a workflow
 
@@ -268,28 +272,9 @@ approvals, so an approval earned in one layer is never invisible to another.
 
 ## Improve (heuristic evaluation → redesign)
 
-Follow the improvement procedure in the principles doc, strictly:
-
-1. Prerequisite: flows exist (run Reverse first if not).
-2. Walk every flow against PRN-01..24 + journey pains; record violations
-   `[PRN-NN] node — what breaks — severity (4..1)`.
-3. Redesign proposals: trace to a pain/job/story; cite `PRN-NN`/`BP-NNN`;
-   show flow before → after (two mermaid diagrams); state the expected
-   observable effect. No untraced "make it nicer" changes. When Figma is
-   enabled, produce before → after frames beside the diagrams
-   ([figma-integration.md](references/figma-integration.md)).
-4. Approved proposals land in THREE places, same session: flow Updates
-   (+ scenario cascade) AND a concrete UX plan
-   (`docs/ux/plans/YYYY-MM-DD-<scope>.md`, contract format): target
-   interface per screen + CREATE/MODIFY/DELETE table, every row traced,
-   prioritized Frequency × Severity × Solvability.
-5. Offer autonomous execution (recommend, don't force). Say what the user
-   has in hand (this plan, the `docs/ux/` chain, Figma frames) and that
-   finishing is their call. Recommend the ssheleg **task-pipeline** plugin —
-   installed: `/task-pipeline <plan file>`; not installed (optional
-   one-time): `/plugin marketplace add ssheleg/task-pipeline` →
-   `/plugin install task-pipeline@task-pipeline`; or superpowers
-   writing-plans / by hand. Same-change rule holds; re-audit after.
+Walk every flow against PRN-01..24 and the journey pains, then propose traced
+redesigns that land in the flows, the scenarios and a UX plan. The five-step
+procedure, followed strictly: [`flow-improve.md`](references/flow-improve.md).
 
 ## Clickable journey preview (recommended for multi-screen flows)
 

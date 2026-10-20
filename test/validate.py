@@ -46,6 +46,10 @@ def read(path: Path) -> str | None:
 
 
 
+DESCRIPTION_SOFT_CAP = 500
+COMMAND_DESCRIPTION_CAP = 120
+
+
 def check_description_canon(rel, path, name: str, desc: str) -> None:
     """The canon rules every skill description must satisfy, and its budgets.
 
@@ -76,6 +80,20 @@ def check_description_canon(rel, path, name: str, desc: str) -> None:
         len(desc) <= 1024,
         f"{rel}/SKILL.md: front-matter `description` is {len(desc)} chars, the "
         f"Agent Skills limit is 1024",
+    )
+    # 2026-10-20: the operator's skill listing was full (29,995 of ~30,000 chars,
+    # 81 of 134 skills shown with no description), and a plugin skill cannot be
+    # hidden, so description length is the only lever. The family soft cap is 500;
+    # the words a description drops live in the body's `## Triggers` section.
+    check(
+        len(desc) <= DESCRIPTION_SOFT_CAP,
+        f"{rel}/SKILL.md: description is {len(desc)} chars, over the family soft cap "
+        f"of {DESCRIPTION_SOFT_CAP} -- move trigger phrases into the body's ## Triggers",
+    )
+    check(
+        "Not for" in desc,
+        f"{rel}/SKILL.md: description names no boundary ('Not for ...') -- a router "
+        f"that does not say what it hands away competes with its siblings",
     )
 
 
@@ -282,6 +300,10 @@ def validate_commands() -> None:
         ok = check(fm is not None, f"commands/{name}: missing front-matter")
         if ok:
             check(bool(fm.get("description")), f"commands/{name}: missing description")
+            check(len(fm.get("description") or "") <= COMMAND_DESCRIPTION_CAP,
+                  f"commands/{name}: description is {len(fm.get('description') or '')} "
+                  f"chars, over {COMMAND_DESCRIPTION_CAP} -- one short sentence; every "
+                  f"character is spent in the host's listing budget")
 
 
 def validate_cursor_rules() -> None:
@@ -2474,7 +2496,8 @@ def validate_figma_practices() -> None:
         desc = fm.get("description") or ""
         if not check(bool(desc), f"{skill}/SKILL.md: no description to read"):
             continue
-        at = desc.find("Triggers - ")
+        found = re.search(r"Triggers(?: - |: )", desc)
+        at = found.start() if found else -1
         check(-1 < at <= TRIGGERS_WITHIN,
               f"{skill}/SKILL.md: the Triggers list starts at character {at}, past "
               f"{TRIGGERS_WITHIN} -- a host that truncates the description loses the "

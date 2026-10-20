@@ -1,5 +1,5 @@
 ---
-description: Single entry point for all UX work — status across every layer (vision, foundation, flows, screens, scenarios, audits, brand), then a menu of applicable actions (init, design, update, validate, audit, write copy, plan fixes)
+description: Single entry point for all UX work, status across every layer, then the next action
 ---
 
 Single entry point for super-ux. The user is NOT expected to know the

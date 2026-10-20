@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: Use when writing, rewriting or editing any text a user will read — interface strings, buttons, errors, empty states, landing and pricing pages, app store listings, blog posts, changelogs, social posts and captions, short-video scripts and their hooks, ads, lifecycle email. Triggers - "write copy" / "напиши текст", "App Store description" / "описание для App Store", "store listing" / "описание в сторе", "rewrite this" / "перепиши", "headline" / "заголовок", "CTA" / "кнопка", "microcopy" / "микрокопия", "error text" / "текст ошибки", "this sounds like AI" / "звучит как нейросеть", "post for X" / "пост в твиттер", "reel script" / "сценарий рилса", "video hook" / "хук ролика", "build a landing page" / "сделай лендинг" (the copy for it; the visual layer is sheleg-design's). For defining the voice itself, see brand-voice.
+description: 'Use when writing or editing any text a user reads (UI strings, errors, landings, store listings, posts, video scripts, ads, email). Triggers: "write copy" / "напиши текст", "App Store description" / "описание для App Store", "microcopy" / "микрокопия", "video hook" / "хук ролика". Not for defining the voice (brand-voice) or the look (sheleg-design). Refusal phrase "no brand" / «без бренда».'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
@@ -33,6 +33,12 @@ Both live under `docs/brand/`, but the directory is not the owner — the file
 is. Writing a `strings.md` row is this skill's job and needs no extra approval
 for its LOCATION; a coordinated run claims the file before editing, and voice
 and facts stay untouched in the same pass.
+
+## Triggers
+
+The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
+
+"write copy" / "напиши текст", "App Store description" / "описание для App Store", "store listing" / "описание в сторе", "rewrite this" / "перепиши", "headline" / "заголовок", "CTA" / "кнопка", "microcopy" / "микрокопия", "error text" / "текст ошибки", "this sounds like AI" / "звучит как нейросеть", "post for X" / "пост в твиттер", "reel script" / "сценарий рилса", "video hook" / "хук ролика", "build a landing page" / "сделай лендинг" (the copy for it; the visual layer is sheleg-design's).
 
 ## References
 

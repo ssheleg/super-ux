@@ -1,5 +1,5 @@
 ---
-description: Write, edit, adapt or humanize copy for a named surface — interface strings, landing and pricing pages, blog, changelog, social posts, store listings, ads, lifecycle email — in the product's recorded voice
+description: Write or edit copy for a named surface in the recorded voice
 ---
 
 Run the `copywriting` skill.

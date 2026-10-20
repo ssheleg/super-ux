@@ -1,5 +1,5 @@
 ---
-description: Recalibrate the brand pack after positioning, personas, pricing or naming changed — propagate the change through terminology, strings and every locale in the same edit
+description: Carry a positioning, pricing or naming change through the whole brand pack
 ---
 
 Run the `brand-voice` skill in **Update** mode.

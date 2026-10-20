@@ -1,5 +1,5 @@
 ---
-description: Diagnose docs/ux against the current contract — mixed or stale contract versions, unmarked artifacts, files the tooling cannot find, audits with no base
+description: Diagnose docs/ux against the current contract and name what the tooling cannot read
 argument-hint: "[path] [--fix] [--brief]"
 ---
 

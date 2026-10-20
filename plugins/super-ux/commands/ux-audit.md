@@ -1,5 +1,5 @@
 ---
-description: Audit the codebase against scenarios and flows in batches (with full JTBD/story context); depths quick/standard/deep add heuristic, practice, and coverage passes
+description: Audit the codebase against scenarios and flows at quick, standard or deep depth
 argument-hint: "[all | feature:<name> | SCN-010..SCN-020 | coverage | practices | heuristics | copy | benchmark:<competitor>] [quick|deep]"
 ---
 

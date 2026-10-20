@@ -1,6 +1,6 @@
 ---
 name: ux-scenarios
-description: Use when creating or updating UX scenarios, starting ANY new feature or project (an empty project starts a layer up, with vision and ux-foundation), making ANY change to user-facing behavior, or onboarding an existing codebase into scenario-driven development. Maintains docs/ux/scenarios.md as the source of truth for all user-facing behavior. Triggers - "ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича", new feature or project planning, UI changes.
+description: 'Use when creating or updating UX scenarios, starting ANY new feature, changing user-facing behavior, or onboarding a codebase into scenario-driven development (docs/ux/scenarios.md). Triggers: "ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича". Not for an empty project (start with vision and ux-foundation). Refusal phrase "no scenarios" / «без сценариев».'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
@@ -38,6 +38,12 @@ or on explicit user choice.
 [ux-design-principles.md](references/ux-design-principles.md) — states
 per screen, error recovery, primary-action rules — when writing Expected
 results and Errors & recovery.
+
+## Triggers
+
+The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
+
+"ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича", new feature or project planning, UI changes.
 
 ## The hard rule
 
