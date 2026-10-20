@@ -10,6 +10,10 @@
 - **Every removed trigger phrase moved verbatim into a `## Triggers` section**
   of its SKILL.md body, so the family routing hook's words still appear in the
   skill's own text.
+- **`ux-flows` Improve procedure moved to `references/flow-improve.md`**, text
+  unchanged apart from link paths, so the body stays inside the house audit's
+  4,750-token working limit with the new `## Triggers` section (4,712 tokens
+  before, 4,564 after).
 - **Commands carry one short sentence each** (60 to 89 characters, was 99 to
   224; total 2,424 to 1,116).
 - **`validate.py` holds the budget:** a skill description over 500 characters

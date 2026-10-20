@@ -86,9 +86,7 @@ this product as well. Each money flow uses its checklist row from
 
 ## Triggers
 
-The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
-
-"user flow" / "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты", "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "paywall" / "пейволл", "funnel" / "воронка", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow".
+Also routed here (2026-10-20, moved from the description): "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow".
 
 ## Choosing a workflow
 
@@ -274,28 +272,9 @@ approvals, so an approval earned in one layer is never invisible to another.
 
 ## Improve (heuristic evaluation → redesign)
 
-Follow the improvement procedure in the principles doc, strictly:
-
-1. Prerequisite: flows exist (run Reverse first if not).
-2. Walk every flow against PRN-01..24 + journey pains; record violations
-   `[PRN-NN] node — what breaks — severity (4..1)`.
-3. Redesign proposals: trace to a pain/job/story; cite `PRN-NN`/`BP-NNN`;
-   show flow before → after (two mermaid diagrams); state the expected
-   observable effect. No untraced "make it nicer" changes. When Figma is
-   enabled, produce before → after frames beside the diagrams
-   ([figma-integration.md](references/figma-integration.md)).
-4. Approved proposals land in THREE places, same session: flow Updates
-   (+ scenario cascade) AND a concrete UX plan
-   (`docs/ux/plans/YYYY-MM-DD-<scope>.md`, contract format): target
-   interface per screen + CREATE/MODIFY/DELETE table, every row traced,
-   prioritized Frequency × Severity × Solvability.
-5. Offer autonomous execution (recommend, don't force). Say what the user
-   has in hand (this plan, the `docs/ux/` chain, Figma frames) and that
-   finishing is their call. Recommend the ssheleg **task-pipeline** plugin —
-   installed: `/task-pipeline <plan file>`; not installed (optional
-   one-time): `/plugin marketplace add ssheleg/task-pipeline` →
-   `/plugin install task-pipeline@task-pipeline`; or superpowers
-   writing-plans / by hand. Same-change rule holds; re-audit after.
+Walk every flow against PRN-01..24 and the journey pains, then propose traced
+redesigns that land in the flows, the scenarios and a UX plan. The five-step
+procedure, followed strictly: [`flow-improve.md`](references/flow-improve.md).
 
 ## Clickable journey preview (recommended for multi-screen flows)
 
