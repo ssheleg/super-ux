@@ -2112,3 +2112,28 @@ practice on the product's own numbers.
 - **Tags:** personalization, friction-reduction, paywall, onboarding, retention
 - **Source:** [GPB25] p. 23
 - **Checked:** 2026-10-22
+
+### Portfolios: the bundle and the operating model behind it (BP-246..247)
+
+Two practices for a company that runs more than one subscription, from the
+market pages of the same GP Bullhound report (`[GPB25]`). The bundling figure
+is the report's own summary of third-party trackers it lists without method;
+the portfolio model is an investor's analogy with no figure at all. Both
+justify the shape of the practice, and the product's own cohorts decide
+whether it pays.
+
+#### BP-246: Bundle the subscriptions a user already combines, at one price below the sum
+- **Do:** where the company, or a partner, sells two or more subscriptions that the same people pay for together, offer them as one subscription at one price below the sum of its parts, and state its contents and price in one sentence. Show the bundle where a user has already proved the need for a second product (at that product's paywall, or on the account screen of someone paying for both), not as a first offer to a new visitor. The bundle is one more plan, so it passes BP-243's test: it is for a segment whose value differs in kind. Check it by comparing the churn of bundle subscribers with single-product subscribers of the same acquisition cohort and the same tenure, or against a holdout that is never shown the bundle, because people who choose a bundle were already the ones least likely to leave.
+- **Why:** the report states "Bundling slashes churn by up to 50%", that services offered together "retained users more effectively", and that consumers "value the ability to pay less, and access more" [GPB25 p. 19]; platforms now bundle gaming, cloud, shopping and phone plans "to deepen utility and reduce cancellations" [GPB25 p. 19]. The report does not separate the bundle's effect from who chooses one, so "up to half" is the ceiling of a comparison, not the lift to plan on.
+- **Apply when:** the company runs or partners on two or more subscriptions, a plan lineup is being designed across products, or a multi-product account's billing screen is being designed.
+- **Tags:** pricing, retention, revenue, subscription-app
+- **Source:** [GPB25] p. 19
+- **Checked:** 2026-10-22
+
+#### BP-247: Run a portfolio as one account, and judge retention by the portfolio as well as by each product
+- **Do:** when one company runs several consumer subscription products, give them one account and one payment method, so moving to a sibling product costs no new sign-up; when a user leaves one product, the single save offer (BP-123) may be the sibling that serves the same job, never a grid of every other app, and never a step in front of the cancel. Measure two retention lines per cohort: each product's own, and the portfolio's (the share of the cohort still paying for any product). Check it by reporting both lines side by side, and by refusing to read a healthy portfolio line as permission to ignore one product's falling line, because the product with the falling line is what the portfolio is spending marketing on.
+- **Why:** the report describes multi-product "CSS Conglomerates" whose core assets are engineering and marketing teams, insight into demand and "rapid prototyping and testing of ideas", and says they "require a different mental model" because they will never have a single brand's retention profile [GPB25 p. 26]. Its analogy is a drinks company that owns tens of brands: "Consumer churn is expected and ok", because the distribution and marketing engine can convince the customer "to try something else in their portfolio" [GPB25 p. 26]. The same page records the investor's two concerns about the model, "retention and reliance on paid marketing" [GPB25 p. 26], which is why the product line stays on the report beside the portfolio line.
+- **Apply when:** the company runs or plans two or more consumer subscription products, a cancel flow is designed on one of them, or the team is deciding whether to launch another product or deepen an existing one.
+- **Tags:** retention, cancel, revenue, analytics, subscription-app
+- **Source:** [GPB25] p. 26
+- **Checked:** 2026-10-22

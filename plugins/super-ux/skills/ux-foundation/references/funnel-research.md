@@ -223,7 +223,7 @@ worth running. This section names them, the band an investor reads each one
 against, and the two cuts that keep an average from lying. The source is GP
 Bullhound's *Consumer Subscription Software* (October 2025), cited by page as
 `[GPB25 p. N]`; the practice catalog (`best-practices.md`) carries the
-screen-level decisions from the same report, BP-242..245.
+screen-level decisions from the same report, BP-242..247.
 
 **Read the bands as investor expectations, not laws.** They come from an
 advisory firm's view of what separates good subscription businesses from great
@@ -305,6 +305,49 @@ most of the churn comes from.
 
 **Output:** the four-state retention table and the local/tourist rule, both
 dated, and LTV stated per cohort.
+
+### AI answers as an acquisition channel
+
+Search is moving from a page of links to an answer. The report puts the share
+of searches that now end with no click at 40%, and cites a projection that AI
+search traffic passes traditional search by 2028 [GPB25 p. 21]; both figures
+are third-party (it names the Wall Street Journal and Semrush), not its own
+measurement. The growth lead of a large freemium platform describes what that
+does to attribution: people rarely click through from an LLM's answer, so its
+effect is hard to measure, yet the answer builds awareness that converts later
+through ordinary search or the app stores [GPB25 p. 39]. A funnel read only by
+last-click referrer therefore credits that demand to branded search, direct
+traffic or the store, and the channel that created it reads as zero.
+
+**Count LLM referrals as a channel of their own.** Three readings, kept apart:
+
+1. **The referrer row.** Sessions and sign-ups whose referrer is an AI
+   assistant get their own row in the acquisition breakdown, one per
+   assistant, never folded into organic search or direct. One row per
+   assistant, because each model favours different sources and what works for
+   one may not work for another [GPB25 p. 50], and because people use several
+   search engines and assistants in parallel [GPB25 p. 49]. This row is a
+   floor: an assistant that passes no referrer never appears in it.
+2. **The self-report.** The "How did you hear about us?" question (BP-043)
+   offers an AI assistant as an answer. Its share beside the referrer row
+   shows how much of the channel arrived later through another door.
+3. **The organic share.** AI answers are organic exposure, so they sit inside
+   the organic share band above. A falling search click count beside a rising
+   self-reported AI share is a channel moving, not demand falling; read the two
+   together before cutting either.
+
+The other half is not a funnel reading: whether the product is cited at all,
+and from which sources. The report shows answer engines drawing on sources
+well beyond a company's own pages (encyclopedias, news, blogs, comparison
+portals, forums and video) [GPB25 p. 22], and its expert advises auditing
+regularly where each model pulls its references from [GPB25 p. 50]. That audit
+of public surfaces belongs to the **seo-aeo-audit** skill (its answer-engine
+track for citation sources, and its measurement reference for how AI referrals
+reach analytics); this method only counts what the audit's work brings in.
+
+**Output:** the acquisition breakdown with one dated row per AI assistant, the
+self-reported AI share beside it, and the date of the last seo-aeo-audit run on
+the public surfaces.
 
 ## What this method cannot do
 

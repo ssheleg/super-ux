@@ -1,3 +1,11 @@
+## v0.66.0: M2 wave 3, portfolios, creators and LLM referrals from GP Bullhound (2026-10-22)
+
+- **Objective.** Milestone M2 wave 3 (G5, G9, the attribution half of G7, R1, R4) from GP Bullhound's *Consumer Subscription Software* (October 2025), every figure checked on its page with `pdftotext`.
+- **Done.** BP-246..247 (bundles across a portfolio; the portfolio as one account with two retention lines), routed in `practice-selection.md`; `funnel-research.md` *AI answers as an acquisition channel* (LLM referrals as their own channel, R4), routed from the `analytics: yes` row, with the citation-source audit named as the seo-aeo-audit skill's; `ux-flows` money moments state the *Your own numbers* metric and band a subscription-surface change targets (R1); `channel-playbooks.md` *Creators and ambassadors* (G9). Copies synced; counts in README, `product-frameworks.md`, `docs/brand/facts.md` and the graph label moved to 247. Branch `feat/m2-wave3`, local commit, not pushed; no version bump.
+- **Decision.** `product-frameworks.md` gains no framework: it holds models that decide which question is asked, and the portfolio model is an operating model whose screen consequences fit BP-247. Only its catalog count moved.
+- **Open.** No gate reads R1 or R4; both are text a design review applies.
+- **Next task.** After merge: tag `v0.66.0`, watch the release run, then the sshlg-skills pin bump. M2 is then complete here; the next work comes from the board and the operator's planning.
+
 ## v0.65.0: M2 wave 1, subscription growth from GP Bullhound (2026-10-22)
 
 - **Objective.** Milestone M2 wave 1 (G1, G2, G3, G4, G6, G10, R3): strengthen the subscription guidance from GP Bullhound's *Consumer Subscription Software* (October 2025), every figure cited by page.

@@ -47,7 +47,7 @@ The phrases that route to this skill, in English and Russian. The description ke
 | [ui-copy.md](references/ui-copy.md) | any string inside the product |
 | [marketing-copy.md](references/marketing-copy.md) | pages, long form, the seven sweeps, grounding |
 | [landing-pages.md](references/landing-pages.md) | assembling a landing page: the offer, awareness, proof, the action |
-| [channel-playbooks.md](references/channel-playbooks.md) | a social, blog, changelog, ads or email surface |
+| [channel-playbooks.md](references/channel-playbooks.md) | a social, blog, changelog, ads or email surface, or a creator or ambassador program |
 | [video-script.md](references/video-script.md) | a reel, short, TikTok or video ad: angle, structure, timing, shot list, gates |
 | [hooks.md](references/hooks.md) | the first three seconds: the triple, 26 formulas, 40 templates, the `B044` filter |
 | [research-outliers.md](references/research-outliers.md) | before a video: which videos beat their own account |
