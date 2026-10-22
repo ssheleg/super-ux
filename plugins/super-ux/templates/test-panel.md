@@ -8,6 +8,8 @@ research ledger supports it, `hypothesis` when it is a reasoned guess filling co
 Revision: <date> · confirmed by the operator: <yes/no> · foundation: `docs/ux/foundation.md`
 
 Every portrait keeps these eight lines, in this form, so `design_gate.py panel` can read them.
+The `retention` line opens with `local` or `tourist`, and the panel carries at least two of
+each (see the note at the end).
 
 ## P-01 <short name>
 
@@ -17,7 +19,7 @@ Every portrait keeps these eight lines, in this form, so `design_gate.py panel` 
 - **features**: <the features they actually use, by name>
 - **scenarios**: <two to four composite chains across features, by SCR- id: SCR-03 → SCR-07>
 - **activation**: <steps to first value, and the step they are likely to drop at>
-- **retention**: <trigger → action → reward → what brings them back, and what makes them leave>
+- **retention**: local | tourist: <trigger → action → reward → what brings them back, and what makes them leave>
 - **needs**: <device and engine, locale, text size, accessibility, connection>
 
 ## P-02 <short name>
@@ -33,4 +35,10 @@ Every portrait keeps these eight lines, in this form, so `design_gate.py panel` 
 
 <!-- … through P-10. Spread the ten across the foundation's personas, the activation stages
 (new, activating, active, at risk, returning), and the needs that change a screen: small
-phone, large text, keyboard only, a second locale, a slow connection. -->
+phone, large text, keyboard only, a second locale, a slow connection.
+
+Locals and tourists: at least two portraits are locals (high engagement, enter their data or
+connect sources, arrived through a friend, build the product into their routine) and at least
+two are tourists (low engagement, enter little, arrived through an ad or a discount, try many
+services). Locals are who the product's lifetime value rests on; tourists are most of its churn.
+Source: GP Bullhound, Consumer Subscription Software, October 2025, p. 71. -->

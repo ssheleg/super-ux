@@ -8,6 +8,17 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.65.0 (2026-10-22)
+
+Branch `feat/m2-subscription-growth`; source is GP Bullhound, *Consumer Subscription Software* (October 2025), read page by page with `pdftotext`.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| G1 | Unit economics with bands in `funnel-research.md` | every band compared with its page (pp. 65, 66, 67); text only | never |
+| G2 | Four cohort states and locals/tourists in `funnel-research.md` | compared with pp. 39 and 71; text only | never |
+| G3, G4, G6, G10 | BP-242..245 with source `[GPB25]` | `python3 test/validate.py` charged the new entries: the README, facts row and graph label still at 241 failed it until moved to 245 | **observed** |
+| R3 | At least two locals and two tourists per test panel | template text only; no gate counts them yet | never |
+
 ## Release candidate: v0.64.0 (2026-10-22)
 
 the test panel, and a voice checker named by its tools

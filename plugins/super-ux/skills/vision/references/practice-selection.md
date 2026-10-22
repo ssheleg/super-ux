@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..241 — behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..245: behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -13,7 +13,8 @@ generated-default tells BP-169..172, interface state and platform surfaces
 BP-173..179, information architecture BP-180..181, verbal identity BP-182..206,
 developer products BP-207..210, funnel wiring BP-211..215, product
 dashboards BP-216..227, the long SaaS landing BP-228..234, long
-time-to-value products BP-235..241;
+time-to-value products BP-235..241, subscription design from investor
+benchmarks BP-242..245;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -70,7 +71,7 @@ has them, which is every product with an interface.
 | voice | BP-060..065 |
 | ai-chat | BP-063..066 |
 | money ≠ none | BP-067..074 |
-| subscription / hybrid | + BP-016..030 (paywalls), BP-031..039 (retention/lifecycle) |
+| subscription / hybrid | + BP-016..030 (paywalls), BP-031..039 (retention/lifecycle), BP-242, BP-243 (the trial's three decisions, one simple plan) |
 | freemium / hybrid | + BP-024..027, BP-073, BP-074, BP-147..151 (the loop the free tier feeds) |
 | app-store | BP-075, BP-076 |
 | paid-ads | BP-043, BP-077, BP-078 |
@@ -78,7 +79,7 @@ has them, which is every product with an interface.
 | purchase surface: web checkout or web2app | + BP-127, BP-128 (storefront rules, billing duties), BP-212..215 (stand-up order, the three decisions on collected data, sourced legal text, the access ladder) |
 | purchase surface: web2app | + BP-124..126, BP-129 (funnel, handoff, deferred deep link, whole-chain measurement) |
 | analytics: yes | BP-040..048, BP-139, BP-140 |
-| personalization ≠ none | BP-143, BP-144, BP-211 (what the branch may vary, and its default) |
+| personalization ≠ none | BP-143, BP-144, BP-211 (what the branch may vary, and its default), BP-245 (adapt the moment, not the price) |
 | the funnel stores anything about a person | BP-213, BP-214 — and this row has no "no" branch on a funnel with a quiz or a checkout |
 | engagement mechanics ≠ none | BP-141, BP-142, BP-032 |
 
@@ -92,10 +93,10 @@ the Step-2 sets:
 
 | Artifact | Checklist |
 |---|---|
-| Onboarding flow | BP-002..015, BP-069, BP-072, BP-077; PRN-11, PRN-12 |
+| Onboarding flow | BP-002..015, BP-069, BP-072, BP-077, BP-244; PRN-11, PRN-12 |
 | Paywall flow | BP-016..023, BP-028..030, BP-069, BP-070; PRN-08; honesty anti-pattern (principles doc) |
 | Upgrade-at-limit flow | BP-024..026, BP-073, BP-074 |
-| Trial start/end | BP-070, BP-071, BP-072, BP-019 (trial anxiety) |
+| Trial start/end | BP-070, BP-071, BP-072, BP-019 (trial anxiety), BP-242 |
 | Cancel / winback flow | BP-017, BP-027, BP-035, BP-123; PRN-03 |
 | Rating prompt flow | BP-076; PRN-16 |
 | Forms / checkout | BP-050, BP-055..057, BP-119, BP-120, BP-143, BP-156; PRN-05, PRN-09 |
@@ -112,13 +113,15 @@ the Step-2 sets:
 | Developer landing (API, SDK, CLI, MCP) | BP-207, BP-208, BP-117, BP-116; PRN-08 |
 | Capability / per-feature page | BP-210, BP-208, BP-194..197; PRN-23 |
 | First-run or setup checklist | BP-209, BP-004, BP-012, BP-206 |
-| Pricing page (web) | BP-118, BP-022, BP-073; PRN-08 |
+| Pricing page (web) | BP-118, BP-243, BP-022, BP-073; PRN-08 |
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
 | Web2app funnel + paid handoff | BP-124..129, BP-211..215, BP-030, BP-078; PRN-01, PRN-09 |
 | Quiz / survey-driven offer | BP-211, BP-002, BP-010, BP-029, BP-143; PRN-02, PRN-12 |
 | Post-payment access delivery | BP-215, BP-125, BP-126, BP-121; PRN-01, PRN-09 |
 | Reading a funnel market before designing one | `funnel-research.md` FR-01..FR-07, then BP-001 |
+| Reading your own subscription economics and cohorts | `funnel-research.md` *Your own numbers*, then BP-040..042 |
+| Result or outcome screen | BP-244, BP-041; PRN-24 (positive framing never jokes about a loss) |
 | Navigation / IA | BP-049, BP-051..053, BP-173, BP-180, BP-181; PRN-06, PRN-14 |
 | Any user-visible string | BP-182, BP-185, BP-189; PRN-22 |
 | Error, empty or loading state | BP-186, BP-187, BP-188; PRN-24 |
