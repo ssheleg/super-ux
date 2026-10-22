@@ -8,6 +8,12 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.64.0 (2026-10-22)
+
+the test panel, and a voice checker named by its tools
+
+Evidence: `npm test` exit 0 on the candidate tree before the PR; the PR CI run and the tag release run are named in docs/HANDOFF.md.
+
 ## 2026-10-20: short descriptions, triggers in the body, v0.63.0
 
 Branch `desc-budget-1020`; the operator's listing budget was full (29,995 of ~30,000 characters).

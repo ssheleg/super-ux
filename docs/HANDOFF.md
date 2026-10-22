@@ -1,3 +1,9 @@
+## v0.64.0: the test panel, and a voice checker named by its tools (2026-10-22)
+
+- **Objective.** The operator's design-review gate (2026-10-22) needs a ten-portrait test panel; super-ux owns its format. Remove a private product name from `copywriting`.
+- **Done.** `templates/test-panel.md` (synced into `ux-foundation`), the *The test panel* section, the generic voice-checker wording; version 0.64.0.
+- **Next task.** After merge: tag `v0.64.0`, watch the release run; task-pipeline 1.100.0 ships the design-tester that reads this panel; then the sshlg-skills pin bump.
+
 # Current follow-up: short descriptions, 0.63.0 (2026-10-20)
 
 Branch `desc-budget-1020`. All seven skill descriptions cut to 279 to 393

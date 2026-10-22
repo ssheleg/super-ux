@@ -182,6 +182,20 @@ Given new knowledge (user feedback, analytics, pivot, new segment):
 3. Cascade check: which scenarios trace to the changed IDs? List them and
    hand the list to `ux-scenarios` (Update) in the same session.
 
+## The test panel
+
+When a project changes an interface through task-pipeline, its design-tester walks a
+**test panel**: `docs/ux/test-panel.md`, ten portraits from
+[`templates/test-panel.md`](templates/test-panel.md). Build it from the foundation: one
+portrait per persona first, then fill to ten across activation stages (new, activating,
+active, at risk, returning) and the needs that change a screen (small phone, large text,
+keyboard only, a second locale, a slow connection). Each portrait carries its features,
+two to four composite scenarios by `SCR-` id, its activation funnel and its retention loop,
+and a basis line: `evidence RE-NN` or `hypothesis`. The panel is a test instrument: the
+quality bar above still holds, so a hypothesis portrait decides what to test, never what to
+build. The operator confirms the panel once; a product change revises it. Its gate is
+task-pipeline's `design_gate.py panel docs/ux/test-panel.md`.
+
 ## Validate
 
 1. **Integrity:** IDs sequential/unique; every story traces to a job; every
