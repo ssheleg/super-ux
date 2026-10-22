@@ -1,3 +1,10 @@
+## Unreleased
+
+- `test/family_gate.py`, the family's canonical member gate (hub B-108, B-109): the board
+  parses (every row as wide as its header, no id twice) and `release.yml` keeps the tag-ancestry
+  check (`fetch-depth: 0`, `git merge-base --is-ancestor`), each watched failing on a plant by
+  `--self-test`. Wired into `npm test`; a byte-for-byte copy of the hub's `member-gate/family_gate.py`.
+
 ## 0.66.0 (2026-10-22): portfolios, creators and LLM referrals from GP Bullhound (2025)
 
 - **Two practices for a portfolio, BP-246..247** (source key `[GPB25]`): bundle the subscriptions a user already combines, at one price below the sum, judged against a same-cohort comparison or a holdout because bundle takers self-select (the report's "up to 50%" lower churn is a ceiling, p. 19); run a portfolio as one account, offer a sibling product as the single save offer, and report each product's retention beside the portfolio's (p. 26). Routed in `practice-selection.md` (a new plan-lineup row and the cancel/winback row); the catalog holds 247 practices.
