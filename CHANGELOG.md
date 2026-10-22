@@ -1,3 +1,8 @@
+## 0.64.0 (2026-10-22): the test panel, and a voice checker named by its tools
+
+- **The test panel** (`templates/test-panel.md`, `ux-foundation` → *The test panel*): ten portraits the task-pipeline design-tester walks through the scenarios before and after a build, each with its basis (evidence or hypothesis), situation, goals, features, composite scenarios by SCR- id, activation funnel, retention loop and needs. A test instrument: it decides what to test, never what to build. Its gate is task-pipeline's `design_gate.py panel`.
+- **`copywriting`** describes the optional tone-of-voice checker by its tools instead of a private product name.
+
 ## 0.63.0 (2026-10-20): short descriptions, triggers in the body
 
 - **Every skill description is a router of 279 to 393 characters** (was 332 to
