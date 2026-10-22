@@ -1,9 +1,9 @@
-## Unreleased: M2 wave 1, subscription growth from GP Bullhound (2026-10-22)
+## v0.65.0: M2 wave 1, subscription growth from GP Bullhound (2026-10-22)
 
 - **Objective.** Milestone M2 wave 1 (G1, G2, G3, G4, G6, G10, R3): strengthen the subscription guidance from GP Bullhound's *Consumer Subscription Software* (October 2025), every figure cited by page.
 - **Done.** `funnel-research.md` *Your own numbers* (unit economics with bands, four cohort states, locals and tourists); BP-242..245 with source key `[GPB25]`, routed in `practice-selection.md`; the test panel's locals/tourists rule in `templates/test-panel.md` and `ux-foundation`; copies synced; counts in README, `product-frameworks.md`, `docs/brand/facts.md` and the graph label moved to 245. Branch `feat/m2-subscription-growth`, local commit, not pushed.
-- **Open.** No reader checks the locals/tourists rule yet: task-pipeline's `design_gate.py panel` reads the `retention` line and does not count `local` and `tourist`.
-- **Next task.** The coordinator reviews, pushes and releases the minor; waves 2 and 3 (G5, G7, G8, G9, R1, R2, R4) follow in their owning repositories.
+- **Open.** task-pipeline 1.101.0's `design_gate.py panel` is the reader of the locals/tourists rule (released after this one).
+- **Next task.** After merge: tag `v0.65.0`, watch the release run, then the sshlg-skills pin bump; M2 wave 3 here (G5 bundles and the portfolio model, G9 creator programs, the attribution half of G7, R1 and R4).
 
 ## v0.64.0: the test panel, and a voice checker named by its tools (2026-10-22)
 

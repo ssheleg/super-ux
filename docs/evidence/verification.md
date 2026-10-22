@@ -8,7 +8,7 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
-## Unreleased: M2 wave 1, subscription growth (2026-10-22)
+## Release candidate: v0.65.0 (2026-10-22)
 
 Branch `feat/m2-subscription-growth`; source is GP Bullhound, *Consumer Subscription Software* (October 2025), read page by page with `pdftotext`.
 
