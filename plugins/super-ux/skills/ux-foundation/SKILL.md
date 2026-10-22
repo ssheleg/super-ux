@@ -189,7 +189,11 @@ When a project changes an interface through task-pipeline, its design-tester wal
 [`templates/test-panel.md`](templates/test-panel.md). Build it from the foundation: one
 portrait per persona first, then fill to ten across activation stages (new, activating,
 active, at risk, returning) and the needs that change a screen (small phone, large text,
-keyboard only, a second locale, a slow connection). Each portrait carries its features,
+keyboard only, a second locale, a slow connection). At least two portraits are **locals**
+(high engagement, connected data, arrived through a friend) and at least two are **tourists**
+(low engagement, arrived through an ad or a discount), marked at the start of the retention
+line: lifetime value rests on the first, churn comes mostly from the second (the split is in
+[`references/funnel-research.md`](references/funnel-research.md), *Your own numbers*). Each portrait carries its features,
 two to four composite scenarios by `SCR-` id, its activation funnel and its retention loop,
 and a basis line: `evidence RE-NN` or `hypothesis`. The panel is a test instrument: the
 quality bar above still holds, so a hypothesis portrait decides what to test, never what to

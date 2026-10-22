@@ -114,6 +114,12 @@ interface motion (animations.dev, Sonner/Vaul build notes); **[WIG]** = Web
 Interface Guidelines (Vercel Labs, maintained rule set); **[GDPR]** =
 Regulation (EU) 2016/679, cited by article; **[FFox26]** = *How to vibe-code
 web2app funnels* (FunnelFox, 2026) — a **vendor** practitioner guide.
+**[GPB25]** = *Consumer Subscription Software* (GP Bullhound Global Insights,
+October 2025), cited by page as `[GPB25 p. N]`. It is an advisory firm's
+report: its benchmark bands are investor expectations, and its case figures
+are what company executives reported in interviews, without method or
+sample. They justify a practice's shape, never the size of the lift a product
+should expect.
 
 Figures from `[CRO26]`/`[W2A26]`/`[CSq]`/`[HTTPArchive]` are industry
 aggregates, not laws: they justify the *shape* of a practice, and the
@@ -2064,3 +2070,45 @@ corpus of them can and cannot tell you — is `funnel-research.md`.
 - **Tags:** web2app, handoff, auth, trust, error-recovery
 - **Source:** [FFox26]/[W2A26]
 - **Checked:** 2026-08-14
+
+### Subscription design from investor benchmarks (BP-242..245)
+
+Four practices from GP Bullhound's 2025 report on consumer subscription
+software. Its benchmark bands (LTV/CAC, CAC payback, first-period retention,
+free-to-paid, organic share) and its cohort model live in `funnel-research.md`,
+*Your own numbers*, because they read a funnel rather than design a screen.
+These four are the screen-level decisions the report's interviews describe.
+Each figure below is company-reported, so each entry says how to check the
+practice on the product's own numbers.
+
+#### BP-242: A trial is three decisions: its length, when the card is taken, where the upgrade is asked
+- **Do:** set the trial's length from the time the product takes to deliver its first value (the activation metric, BP-040), not from a round number; decide whether the card is taken at trial start and say so before the form (BP-070, BP-119); and place upgrade prompts at the decision points where a user reaches for a paid capability, not on a timer (BP-074). Keep the base product useful without a subscription and put the differentiated features behind the paywall. Check it by naming all three decisions, each with its reason, in the trial's brief, and by judging a length test on trial-to-paid and first renewal together, never on trial starts alone.
+- **Why:** a connected-hardware subscription shortened its free trial from twelve months to six, captured the card at trial start and positioned upgrades at key decision points, and reports that this "significantly improved conversion into paid tiers" [GPB25 p. 37]. The report gives no figure for the lift. The mechanism is the one BP-070 measures: a trial longer than the time to value only delays the decision, and a card taken at the start turns the trial's end into a default rather than a second sale.
+- **Apply when:** designing, shortening or re-testing any free trial.
+- **Tags:** paywall, pricing, conversion, testing, subscription-app
+- **Source:** [GPB25] p. 37/[RC25]
+- **Checked:** 2026-10-22
+
+#### BP-243: One plan for everyone, because every extra structure is a growth cost
+- **Do:** default to one subscription that every buyer can take, and add a second plan only for a segment whose value differs in kind, not in degree; treat BP-118's three tiers as a ceiling, not a target. When products merge or a lineup grows by accretion, collapse it to that shape instead of keeping each legacy model. Check it by writing one sentence per plan that says who it is for: the sentences must not overlap, a support agent must be able to explain the lineup without a table, and the team must be able to name the one number the lineup is optimised for.
+- **Why:** a home-exchange membership that merged eight acquired competitors, some subscription-based and some transaction-based, found the mix "confused our members and even made it hard for us internally to know exactly what we were optimizing for"; after moving to one subscription for everyone plus one premium plan it was "much easier to sell, easier to explain, and a lot more efficient" ("Complexity kills growth") [GPB25 p. 41]. Every extra plan is one more decision for the buyer (BP-019) and one more branch in every flow, scenario and test.
+- **Apply when:** designing a plan lineup, merging products or price books, or reviewing a lineup that grew one plan at a time.
+- **Tags:** pricing, friction-reduction, conversion, subscription-app
+- **Source:** [GPB25] p. 41
+- **Checked:** 2026-10-22
+
+#### BP-244: Lead the user to the aha moment through a win, and frame every outcome from what went right
+- **Do:** arrange the first sessions so an early success comes before a hard task; write every outcome screen to open with what went right, including after a failure, while still stating the failure plainly; and offer feedback features (reviews, analysis, reports) at the moment the user is most receptive, which is after a win. Check it by splitting retention by first-session outcome (BP-042), and by testing the outcome screen's framing against use of the feature it leads to and the subscriptions attributed to that feature.
+- **Why:** a game platform measured user retention 10% higher after a win than after a loss, and 80% of its game reviews happened after wins; adjusting the game-over flow to emphasise positive moments, even in losses, led to a 25% increase in reviews and a 20% increase in subscriptions tied to the feature [GPB25 p. 40]. Confidence gained early is what carries a new user across the threshold BP-041 describes, and a review shown after a loss is read as a list of mistakes.
+- **Apply when:** onboarding, result and outcome screens, and any product in which a user can fail at the core task.
+- **Tags:** activation, onboarding, retention, feedback, conversion
+- **Source:** [GPB25] p. 40
+- **Checked:** 2026-10-22
+
+#### BP-245: Make the AI invisible: adapt the paywall, the trigger and the onboarding per user
+- **Do:** use a model to choose, per user, the moment and form of what the product already has (when the paywall appears, which subscription trigger fires, which onboarding steps are skipped, which defaults are preset) rather than shipping an "AI feature" the user must learn. Keep plan and price identical across users (BP-211) and the adaptation visible and correctable (BP-144). Check it by giving every adaptive surface a fixed fallback and a holdout arm, and by judging it on drop-off, retention and LTV against the holdout, never on how often the AI was used.
+- **Why:** the report names invisible AI "the most impactful": the most successful integrations "won't feel like 'features'" and reduce friction through smart defaults, adaptive interfaces and contextual automation, and "subscription triggers, paywalls, churn prevention, and feature gating can now be dynamically personalized", which helps "maximize LTV and retention while minimizing drop-off from friction or poor timing" [GPB25 p. 23]. The report publishes no measured effect, so the size of the gain is the holdout's to show.
+- **Apply when:** the product profile's personalization is rule-based or model-driven, or a team proposes an AI feature whose job is to remove a step.
+- **Tags:** personalization, friction-reduction, paywall, onboarding, retention
+- **Source:** [GPB25] p. 23
+- **Checked:** 2026-10-22

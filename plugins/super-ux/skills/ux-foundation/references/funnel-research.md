@@ -26,6 +26,7 @@ proven result, and BP-001 is the discipline that keeps it that way.
 - [FR-06 — Stop before copying](#fr-06--stop-before-copying)
 - [FR-07 — Land the findings where the chain reads them](#fr-07--land-the-findings-where-the-chain-reads-them)
 - [The shape the corpus keeps producing](#the-shape-the-corpus-keeps-producing)
+- [Your own numbers: subscription economics and cohorts](#your-own-numbers-subscription-economics-and-cohorts)
 - [What this method cannot do](#what-this-method-cannot-do)
 
 ## FR-01 — Collect the funnels
@@ -213,6 +214,98 @@ its honest empty state, never a staged personalization over answers nobody
 gave. An instant local result renders without a timer. A step that exists in
 the build and not in the record is the drift the chain exists to prevent.
 
+## Your own numbers: subscription economics and cohorts
+
+Everything above reads other people's funnels, and the last section below says
+what that cannot see: retention, renewals and payback sit behind the paywall.
+Once your own funnel runs, those are the numbers that decide whether it was
+worth running. This section names them, the band an investor reads each one
+against, and the two cuts that keep an average from lying. The source is GP
+Bullhound's *Consumer Subscription Software* (October 2025), cited by page as
+`[GPB25 p. N]`; the practice catalog (`best-practices.md`) carries the
+screen-level decisions from the same report, BP-242..245.
+
+**Read the bands as investor expectations, not laws.** They come from an
+advisory firm's view of what separates good subscription businesses from great
+ones, the report itself notes that the organic share depends heavily on
+company size [GPB25 p. 65], and your own trend overrules them the moment you have one.
+
+### The unit economics, and the band each is read against
+
+| Metric | How it is computed | Weak | Strong |
+|---|---|---|---|
+| LTV/CAC | lifetime value divided by acquisition cost | under 3x | 6x [GPB25 p. 65] |
+| CAC payback | CAC ÷ (ARPU × gross margin), in months [GPB25 p. 67] | | under 3 months, "critical to counter the high churn of initial users" [GPB25 p. 66] |
+| First-period annual retention | the share of a sign-up cohort still paying after its first pay period, typically month 3, 6 or 12 [GPB25 p. 66] | under 30% | over 60% [GPB25 p. 65] |
+| Annual cohort renewal | the share of each annual cohort that renews | | exceptional businesses "renew 60%+ of each annual cohort and 40% of Year 2" [GPB25 p. 66] |
+| Free-to-paid conversion | users who start free and become paying, over users who started free | under 2% | 10%+ [GPB25 p. 65] |
+| Organic share of acquisition | users from organic channels over all new users | under 20% | over 50% [GPB25 p. 65]; "50%+ ... is generally considered great" [GPB25 p. 66] |
+
+The formulas the report uses [GPB25 p. 67]: **LTV** = ARPU × gross margin ÷
+churn rate (equivalently, the average customer's lifetime in months or years ×
+ARPU × gross margin [GPB25 p. 66]); **CAC** = sales and marketing spend ÷ new
+customers, counting users from free and paid channels alike; **gross churn** =
+customers lost in the period ÷ customers at its start; **net churn** = (customers
+lost minus customers gained, including reactivated ones) ÷ customers at its start.
+
+**Why first-period retention is the gate.** Subscription products typically lose
+between 20% and 70% of first-time sign-ups after the first pay or trial period
+[GPB25 p. 66]. Retention after that period is the evidence that users found the
+value, and it is why CAC payback has to be short: a cohort that loses most of
+itself at the first renewal must have paid back before it.
+
+**Output:** each metric measured on your own cohorts, dated, with the band
+beside it. A metric under its weak bound is the first problem to work on,
+whatever the funnel looks like. A figure you publish goes through
+`docs/brand/facts.md` like any other.
+
+### Four cohort states, and two kinds of user
+
+**Four states.** Track retention separately for **new**, **current**,
+**reactivated** and **resurrected** users, the cohort model one large freemium
+platform adopted from earlier consumer-app practice and runs beside free-to-trial,
+trial-to-paid, renewal and ARPU as one full-funnel view [GPB25 p. 39]. The
+report names the states without defining their windows. Write yours down
+before the first chart: new (first active period), current (active now and in
+the previous period), reactivated (back after a short gap) and resurrected
+(back after a long one), each gap a fixed number of days. A blended retention
+curve hides which of the four moved.
+
+**Locals and tourists.** The LTV formula assumes every user churns at the same
+even rate and ignores upsells and re-subscriptions, so it discounts the
+**locals** who stay for life and overweights the high churn of the **tourists**
+[GPB25 p. 71]. The report's two profiles:
+
+| | Tourists | Locals |
+|---|---|---|
+| Engagement | low | high |
+| Data | do not enter data | connect data sources |
+| How they arrived | through an ad | through a friend |
+| Behaviour | try many services, sign up through discounts | build the service into their life |
+
+How to use the split [GPB25 p. 71]:
+
+1. **Divide users by engagement**, using signals the product already records:
+   comments, photos, shares, posting, connected data sources, logins, and
+   automatic renewals from the app stores. Write the rule down, so the split is
+   recomputable.
+2. **Compute LTV per cohort**, estimating the lifetime value of the locals
+   separately, rather than one average over both.
+3. **Optimise acquisition for locals.** Judge a channel by the long-term usage
+   of the users it brings, not only by its sign-ups and its return on ad spend
+   (ROAS), because a channel that buys tourists cheaply can win on ROAS and lose
+   on renewals.
+4. **Report the average LTV** where CAC payback needs it, with the locals'
+   value beside it.
+
+The design side of the same split: the test panel (`ux-foundation`, *The test
+panel*) carries at least two locals and two tourists among its ten portraits,
+so a design review walks both the user the product is built around and the one
+most of the churn comes from.
+
+**Output:** the four-state retention table and the local/tourist rule, both
+dated, and LTV stated per cohort.
+
 ## What this method cannot do
 
 Stated so the output is not read as more than it is.
@@ -223,7 +316,8 @@ Stated so the output is not read as more than it is.
   experiment that produced it is not published.
 - **It cannot see anything behind the paywall.** Retention, refund rate, dunning
   recovery and support load are the numbers that decide whether the funnel was
-  worth running, and none of them is visible from the funnel.
+  worth running, and none of them is visible from the funnel: your own are read
+  as *Your own numbers* describes.
 - **It goes stale.** Live ads rotate, prices move, and the corpus describes the
   week it was built. Date it.
 - **It is not a substitute for the foundation.** A market read tells you what the

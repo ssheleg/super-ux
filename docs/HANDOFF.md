@@ -1,3 +1,10 @@
+## Unreleased: M2 wave 1, subscription growth from GP Bullhound (2026-10-22)
+
+- **Objective.** Milestone M2 wave 1 (G1, G2, G3, G4, G6, G10, R3): strengthen the subscription guidance from GP Bullhound's *Consumer Subscription Software* (October 2025), every figure cited by page.
+- **Done.** `funnel-research.md` *Your own numbers* (unit economics with bands, four cohort states, locals and tourists); BP-242..245 with source key `[GPB25]`, routed in `practice-selection.md`; the test panel's locals/tourists rule in `templates/test-panel.md` and `ux-foundation`; copies synced; counts in README, `product-frameworks.md`, `docs/brand/facts.md` and the graph label moved to 245. Branch `feat/m2-subscription-growth`, local commit, not pushed.
+- **Open.** No reader checks the locals/tourists rule yet: task-pipeline's `design_gate.py panel` reads the `retention` line and does not count `local` and `tourist`.
+- **Next task.** The coordinator reviews, pushes and releases the minor; waves 2 and 3 (G5, G7, G8, G9, R1, R2, R4) follow in their owning repositories.
+
 ## v0.64.0: the test panel, and a voice checker named by its tools (2026-10-22)
 
 - **Objective.** The operator's design-review gate (2026-10-22) needs a ten-portrait test panel; super-ux owns its format. Remove a private product name from `copywriting`.
