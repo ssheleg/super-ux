@@ -19,9 +19,7 @@ Exit 0 green, 1 a defect, 2 a self-test whose plant was not caught. Standard lib
 """
 import os
 import re
-import shutil
 import sys
-import tempfile
 
 BOARD = os.path.join("docs", "evidence", "backlog.md")
 RELEASE = os.path.join(".github", "workflows", "release.yml")
@@ -38,12 +36,18 @@ def cells(line):
     return re.split(r"(?<!\\)\|", body)
 
 
-def board_problems(root):
-    path = os.path.join(root, BOARD)
+def read(root, rel):
+    path = os.path.join(root, rel)
     if not os.path.exists(path):
-        return [], "no %s; nothing to parse" % BOARD
+        return None
     with open(path, encoding="utf-8") as fh:
-        lines = fh.read().split("\n")
+        return fh.read()
+
+
+def board_problems(text):
+    if text is None:
+        return [], "no %s; nothing to parse" % BOARD
+    lines = text.split("\n")
     out, seen, width, in_fence = [], {}, None, False
     for n, line in enumerate(lines, 1):
         if line.lstrip().startswith("```"):
@@ -70,12 +74,10 @@ def board_problems(root):
     return out, "%d row ids read" % len(seen)
 
 
-def release_problems(root):
-    path = os.path.join(root, RELEASE)
-    if not os.path.exists(path):
+def release_problems(text):
+    if text is None:
         return [], "no %s; nothing to check" % RELEASE
-    with open(path, encoding="utf-8") as fh:
-        text = "\n".join(l for l in fh.read().split("\n") if not l.lstrip().startswith("#"))
+    text = "\n".join(l for l in text.split("\n") if not l.lstrip().startswith("#"))
     out = []
     if not re.search(r"fetch-depth:\s*0\b", text):
         out.append("%s: no `fetch-depth: 0`, so the tag's ancestry cannot be read" % RELEASE)
@@ -84,10 +86,10 @@ def release_problems(root):
     return out, "ancestry guard present" if not out else ""
 
 
-def check(root):
+def check(board, release):
     problems, notes = [], []
-    for fn in (board_problems, release_problems):
-        p, note = fn(root)
+    for fn, text in ((board_problems, board), (release_problems, release)):
+        p, note = fn(text)
         problems += p
         if note:
             notes.append(note)
@@ -95,44 +97,39 @@ def check(root):
 
 
 def self_test(root):
-    caught = 0
+    """Plant each defect in an in-memory copy of this repository's own files; no file is written."""
+    board, release = read(root, BOARD) or "", read(root, RELEASE)
+    good_release = release if release and not release_problems(release)[0] else (
+        "jobs:\n  release:\n    steps:\n      - uses: actions/checkout@v4\n        with:\n"
+        "          fetch-depth: 0\n      - run: git merge-base --is-ancestor \"$TAG\" origin/main\n")
     plants = [
-        ("a bare pipe shifts a row", BOARD,
-         "\n| id | Row | Status |\n|---|---|---|\n| PLANT-1 | a | b | open |\n"),
-        ("an id appears twice", BOARD,
-         "\n| id | Row | Status |\n|---|---|---|\n| PLANT-2 | a | open |\n| PLANT-2 | b | open |\n"),
-        ("the ancestry check is gone", RELEASE, None),
+        ("a bare pipe shifts a row",
+         board + "\n| id | Row | Status |\n|---|---|---|\n| PLANT-1 | a | b | open |\n", good_release),
+        ("an id appears twice",
+         board + "\n| id | Row | Status |\n|---|---|---|\n| PLANT-2 | a | open |\n| PLANT-2 | b | open |\n", good_release),
+        ("the ancestry check is gone", board,
+         "jobs:\n  release:\n    steps:\n      - uses: actions/checkout@v4\n"),
     ]
-    for name, rel, text in plants:
-        with tempfile.TemporaryDirectory() as tmp:
-            for sub in (BOARD, RELEASE):
-                src = os.path.join(root, sub)
-                if os.path.exists(src):
-                    os.makedirs(os.path.dirname(os.path.join(tmp, sub)), exist_ok=True)
-                    shutil.copy(src, os.path.join(tmp, sub))
-            target = os.path.join(tmp, rel)
-            os.makedirs(os.path.dirname(target), exist_ok=True)
-            if text is not None:
-                with open(target, "a", encoding="utf-8") as fh:
-                    fh.write(text)
-            else:
-                with open(target, "w", encoding="utf-8") as fh:
-                    fh.write("on: push\njobs:\n  release:\n    steps:\n      - uses: actions/checkout@v4\n")
-            problems, _ = check(tmp)
-            if problems:
-                caught += 1
-                print("  caught  %s: %s" % (name, problems[-1]))
-            else:
-                print("  MISSED  %s" % name)
+    caught = 0
+    for name, b, r in plants:
+        problems, _ = check(b, r)
+        if problems:
+            caught += 1
+            print("  caught  %s: %s" % (name, problems[-1]))
+        else:
+            print("  MISSED  %s" % name)
+    clean, _ = check(board, good_release)
+    if clean:
+        print("  MISSED  the unplanted board reads clean: %s" % clean[0])
     print("family_gate self-test: %d of %d plants caught" % (caught, len(plants)))
-    return 0 if caught == len(plants) else 2
+    return 0 if caught == len(plants) and not clean else 2
 
 
 def main(argv):
     root = os.getcwd()
     if "--self-test" in argv:
         return self_test(root)
-    problems, notes = check(root)
+    problems, notes = check(read(root, BOARD), read(root, RELEASE))
     for p in problems:
         print("FAIL  " + p)
     print("family_gate: %s (%s)" % ("FAIL" if problems else "OK", "; ".join(notes)))
