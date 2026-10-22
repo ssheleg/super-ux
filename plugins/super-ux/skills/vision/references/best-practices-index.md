@@ -10,10 +10,10 @@ then open only those entries. The selection protocol
 *mandatory* to consider; this only makes finding them cheap.
 
 
-**245 practices, 84 tags in use.**
+**247 practices, 84 tags in use.**
 
 
-64 carry a `Checked` review date; 181 predate the field. Ages are deliberately not written here -- they would change daily and make this generated file look permanently stale. Run `bp_index.py --stale [months]` for the report.
+66 carry a `Checked` review date; 181 predate the field. Ages are deliberately not written here -- they would change daily and make this generated file look permanently stale. Run `bp_index.py --stale [months]` for the report.
 
 
 ## Contents
@@ -27,7 +27,7 @@ then open only those entries. The selection protocol
 - **`activation`** — BP-003, BP-004, BP-040, BP-041, BP-042, BP-071, BP-072, BP-216, BP-235, BP-238, BP-129, BP-148, BP-152, BP-188, BP-209, BP-244
 - **`aeo`** — BP-194, BP-195, BP-196, BP-197, BP-210
 - **`ai-chat`** — BP-060, BP-061, BP-063, BP-066
-- **`analytics`** — BP-039, BP-040, BP-041, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-048, BP-072, BP-129, BP-139, BP-140, BP-149, BP-151, BP-212
+- **`analytics`** — BP-039, BP-040, BP-041, BP-042, BP-043, BP-044, BP-045, BP-046, BP-047, BP-048, BP-072, BP-129, BP-139, BP-140, BP-149, BP-151, BP-212, BP-247
 - **`anchoring`** — BP-022, BP-118
 - **`android`** — BP-053, BP-127, BP-201
 - **`aso`** — BP-201, BP-205
@@ -35,7 +35,7 @@ then open only those entries. The selection protocol
 - **`auth`** — BP-229, BP-153, BP-154, BP-155, BP-215
 - **`billing`** — BP-122, BP-128
 - **`brand-voice`** — BP-182, BP-183, BP-184, BP-185
-- **`cancel`** — BP-123
+- **`cancel`** — BP-123, BP-247
 - **`channel-physics`** — BP-184, BP-198, BP-199, BP-200
 - **`checkout`** — BP-055, BP-056, BP-057, BP-120, BP-121, BP-128, BP-212
 - **`color`** — BP-081, BP-082, BP-083, BP-084, BP-218, BP-172, BP-176
@@ -82,20 +82,20 @@ then open only those entries. The selection protocol
 - **`performance`** — BP-058, BP-065, BP-224, BP-239, BP-132, BP-133, BP-157, BP-158, BP-167, BP-179
 - **`personalization`** — BP-004, BP-007, BP-009, BP-010, BP-029, BP-048, BP-126, BP-143, BP-144, BP-211, BP-245
 - **`post-paywall`** — BP-004
-- **`pricing`** — BP-017, BP-020, BP-022, BP-023, BP-028, BP-030, BP-067, BP-068, BP-070, BP-073, BP-078, BP-118, BP-119, BP-120, BP-233, BP-127, BP-211, BP-242, BP-243
+- **`pricing`** — BP-017, BP-020, BP-022, BP-023, BP-028, BP-030, BP-067, BP-068, BP-070, BP-073, BP-078, BP-118, BP-119, BP-120, BP-233, BP-127, BP-211, BP-242, BP-243, BP-246
 - **`push`** — BP-013, BP-036, BP-037, BP-038
 - **`readability`** — BP-079, BP-080, BP-081, BP-084, BP-085, BP-086, BP-087, BP-088, BP-089, BP-090, BP-170, BP-177, BP-180, BP-181, BP-196, BP-197, BP-208
 - **`referral`** — BP-148, BP-150, BP-151
 - **`responsive`** — BP-241, BP-134, BP-135, BP-164, BP-172, BP-178, BP-208
-- **`retention`** — BP-004, BP-027, BP-031, BP-032, BP-033, BP-034, BP-035, BP-038, BP-048, BP-071, BP-072, BP-076, BP-122, BP-123, BP-216, BP-233, BP-236, BP-237, BP-141, BP-142, BP-150, BP-175, BP-244, BP-245
-- **`revenue`** — BP-020, BP-022, BP-028, BP-030, BP-035, BP-039, BP-067, BP-068, BP-077, BP-078, BP-118, BP-122, BP-236, BP-124, BP-127, BP-128, BP-147, BP-149, BP-151
+- **`retention`** — BP-004, BP-027, BP-031, BP-032, BP-033, BP-034, BP-035, BP-038, BP-048, BP-071, BP-072, BP-076, BP-122, BP-123, BP-216, BP-233, BP-236, BP-237, BP-141, BP-142, BP-150, BP-175, BP-244, BP-245, BP-246, BP-247
+- **`revenue`** — BP-020, BP-022, BP-028, BP-030, BP-035, BP-039, BP-067, BP-068, BP-077, BP-078, BP-118, BP-122, BP-236, BP-124, BP-127, BP-128, BP-147, BP-149, BP-151, BP-246, BP-247
 - **`reward`** — BP-032, BP-141, BP-150
 - **`scarcity`** — BP-018, BP-024, BP-026, BP-073
 - **`segmentation`** — BP-017, BP-023, BP-042, BP-045, BP-046, BP-047, BP-048, BP-068, BP-144
 - **`selection`** — BP-103, BP-104, BP-105
 - **`seo`** — BP-190, BP-193, BP-194, BP-195, BP-196, BP-197, BP-205, BP-210
 - **`social-proof`** — BP-005, BP-006, BP-016, BP-075, BP-117, BP-231
-- **`subscription-app`** — BP-001, BP-016, BP-022, BP-067, BP-068, BP-069, BP-070, BP-078, BP-124, BP-125, BP-242, BP-243
+- **`subscription-app`** — BP-001, BP-016, BP-022, BP-067, BP-068, BP-069, BP-070, BP-078, BP-124, BP-125, BP-242, BP-243, BP-246, BP-247
 - **`testing`** — BP-001, BP-003, BP-011, BP-039, BP-044, BP-046, BP-047, BP-070, BP-212, BP-242
 - **`trend-governance`** — BP-145, BP-146
 - **`trust`** — BP-006, BP-009, BP-013, BP-015, BP-016, BP-019, BP-020, BP-021, BP-053, BP-059, BP-060, BP-061, BP-064, BP-066, BP-073, BP-076, BP-077, BP-080, BP-082, BP-083, BP-089, BP-116, BP-120, BP-123, BP-232, BP-237, BP-240, BP-125, BP-128, BP-131, BP-136, BP-137, BP-138, BP-144, BP-146, BP-150, BP-151, BP-153, BP-154, BP-169, BP-170, BP-173, BP-174, BP-175, BP-177, BP-182, BP-183, BP-186, BP-187, BP-190, BP-192, BP-193, BP-194, BP-200, BP-204, BP-206, BP-207, BP-211, BP-213, BP-214, BP-215
@@ -355,3 +355,5 @@ then open only those entries. The selection protocol
 - **BP-243** — One plan for everyone, because every extra structure is a growth cost
 - **BP-244** — Lead the user to the aha moment through a win, and frame every outcome from what went right
 - **BP-245** — Make the AI invisible: adapt the paywall, the trigger and the onboarding per user
+- **BP-246** — Bundle the subscriptions a user already combines, at one price below the sum
+- **BP-247** — Run a portfolio as one account, and judge retention by the portfolio as well as by each product

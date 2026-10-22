@@ -1,7 +1,7 @@
 # Practice Selection Protocol
 
 The deterministic bridge between the catalogs
-([best-practices.md](best-practices.md) BP-001..245: behavioral BP-001..078,
+([best-practices.md](best-practices.md) BP-001..247: behavioral BP-001..078,
 visual craft BP-079..090, Figma structure BP-091..100, components & controls
 BP-101..115, web funnels BP-116..123, web2app BP-124..129, motion
 BP-130..132, weight & responsiveness BP-133..135, accessibility in practice
@@ -14,7 +14,7 @@ BP-173..179, information architecture BP-180..181, verbal identity BP-182..206,
 developer products BP-207..210, funnel wiring BP-211..215, product
 dashboards BP-216..227, the long SaaS landing BP-228..234, long
 time-to-value products BP-235..241, subscription design from investor
-benchmarks BP-242..245;
+benchmarks BP-242..245, portfolios and bundles BP-246..247;
 [ux-design-principles.md](ux-design-principles.md) PRN-01..24)
 and the two
 functions that consume them: **design** (`ux-flows`, `ux-scenarios`) and
@@ -78,7 +78,7 @@ has them, which is every product with an interface.
 | web-direct / both, money ≠ none | BP-116..123 (landing → pricing → checkout → billing → cancel) |
 | purchase surface: web checkout or web2app | + BP-127, BP-128 (storefront rules, billing duties), BP-212..215 (stand-up order, the three decisions on collected data, sourced legal text, the access ladder) |
 | purchase surface: web2app | + BP-124..126, BP-129 (funnel, handoff, deferred deep link, whole-chain measurement) |
-| analytics: yes | BP-040..048, BP-139, BP-140 |
+| analytics: yes | BP-040..048, BP-139, BP-140; `funnel-research.md` *AI answers as an acquisition channel* (LLM referrals counted as a channel of their own) |
 | personalization ≠ none | BP-143, BP-144, BP-211 (what the branch may vary, and its default), BP-245 (adapt the moment, not the price) |
 | the funnel stores anything about a person | BP-213, BP-214 — and this row has no "no" branch on a funnel with a quiz or a checkout |
 | engagement mechanics ≠ none | BP-141, BP-142, BP-032 |
@@ -97,7 +97,7 @@ the Step-2 sets:
 | Paywall flow | BP-016..023, BP-028..030, BP-069, BP-070; PRN-08; honesty anti-pattern (principles doc) |
 | Upgrade-at-limit flow | BP-024..026, BP-073, BP-074 |
 | Trial start/end | BP-070, BP-071, BP-072, BP-019 (trial anxiety), BP-242 |
-| Cancel / winback flow | BP-017, BP-027, BP-035, BP-123; PRN-03 |
+| Cancel / winback flow | BP-017, BP-027, BP-035, BP-123, BP-247 (a sibling product as the one save offer, on a portfolio); PRN-03 |
 | Rating prompt flow | BP-076; PRN-16 |
 | Forms / checkout | BP-050, BP-055..057, BP-119, BP-120, BP-143, BP-156; PRN-05, PRN-09 |
 | Sign-up / sign-in / password | BP-119, BP-153..156; PRN-05, PRN-09 |
@@ -114,6 +114,7 @@ the Step-2 sets:
 | Capability / per-feature page | BP-210, BP-208, BP-194..197; PRN-23 |
 | First-run or setup checklist | BP-209, BP-004, BP-012, BP-206 |
 | Pricing page (web) | BP-118, BP-243, BP-022, BP-073; PRN-08 |
+| Plan lineup across two or more products (bundle, portfolio) | BP-246, BP-247, BP-243, BP-118 |
 | Abandonment recovery | BP-121, BP-017, BP-035; PRN-09 |
 | Dunning / failed payment | BP-122, BP-128; PRN-01, PRN-09 |
 | Web2app funnel + paid handoff | BP-124..129, BP-211..215, BP-030, BP-078; PRN-01, PRN-09 |

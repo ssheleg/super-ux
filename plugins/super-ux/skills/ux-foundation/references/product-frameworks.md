@@ -1,8 +1,8 @@
 # Product frameworks: which one answers this question, and where it lies
 
-The practice catalog holds 245 tactical rules with sources. This file holds
+The practice catalog holds 247 tactical rules with sources. This file holds
 the layer above them: the named models that decide **which** question is being
-asked, in what order, and against what. A team with 245 practices and no model
+asked, in what order, and against what. A team with 247 practices and no model
 applies whichever one it read most recently.
 
 Every framework below carries the same four parts, and the third is the one

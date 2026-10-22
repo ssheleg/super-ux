@@ -83,6 +83,11 @@ billing (dunning, BP-122) and the paid handoff (install → identify →
 entitlement restore, with every failure branch, BP-124..126) are flows of
 this product as well. Each money flow uses its checklist row from
 [practice-selection.md](references/practice-selection.md) step 3.
+**A change to a paywall, trial, pricing or cancel flow names its number:** its
+brief (with no brief, the head of the flow's compliance table) states which
+*Your own numbers* metric in `funnel-research.md` it moves and the band it
+targets, and the change is judged on that metric against that band, never on
+the screen's own tap rate.
 
 ## Triggers
 

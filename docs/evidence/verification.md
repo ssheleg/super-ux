@@ -8,6 +8,18 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Unreleased: M2 wave 3 (2026-10-22)
+
+Branch `feat/m2-wave3`; source is GP Bullhound, *Consumer Subscription Software* (October 2025), pages 19, 21, 22, 26, 29, 39, 42, 43, 44, 49 and 50 read one by one with `pdftotext`.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| G5 | BP-246..247 with source `[GPB25]` | every quotation compared with pp. 19 and 26; `python3 test/validate.py` with the facts row put back to 245 and the selection header span put back to BP-001..245 failed on both, then passed restored | **planted** |
+| G7 (attribution) | *AI answers as an acquisition channel* in `funnel-research.md` | compared with pp. 21, 22, 39, 49 and 50; text only | never |
+| G9 | *Creators and ambassadors* in `channel-playbooks.md` | compared with pp. 29, 39, 42, 43 and 44; text only | never |
+| R1 | A subscription-surface change names its metric and band (`ux-flows`, money moments) | text only; no gate reads a brief | never |
+| R4 | LLM referrals counted as a channel; citation audit named as seo-aeo-audit's | text only, routed from the `analytics: yes` row | never |
+
 ## Release candidate: v0.65.0 (2026-10-22)
 
 Branch `feat/m2-subscription-growth`; source is GP Bullhound, *Consumer Subscription Software* (October 2025), read page by page with `pdftotext`.

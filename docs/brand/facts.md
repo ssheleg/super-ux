@@ -53,10 +53,10 @@ worth more than a row a loop skips while claiming to check everything.
 | skills shipped | 7 | `ls plugins/super-ux/skills \| grep -v references \| wc -l \| tr -d ' '` | 2026-08-20 | 2026-11-20 | yes |
 | commands shipped | 15 | `ls plugins/super-ux/commands/*.md \| wc -l \| tr -d ' '` | 2026-08-20 | 2026-11-20 | yes |
 | Cursor rules shipped | 8 | `ls cursor/rules/*.mdc \| wc -l \| tr -d ' '` | 2026-08-20 | 2026-11-20 | yes |
-| practices in the catalog | 245 | `grep -c '^#### BP-' plugins/super-ux/skills/references/best-practices.md` | 2026-10-22 | 2027-01-20 | yes |
+| practices in the catalog | 247 | `grep -c '^#### BP-' plugins/super-ux/skills/references/best-practices.md` | 2026-10-22 | 2027-01-20 | yes |
 | design heuristics | 24 | `grep -c '^\| PRN-' plugins/super-ux/skills/references/ux-design-principles.md` | 2026-08-20 | 2026-11-20 | yes |
 | brand-lint checks | 49 | `grep -o '"B[0-9]\{3\}"' plugins/super-ux/scripts/brand_lint.py \| sort -u \| wc -l \| tr -d ' '` | 2026-10-18 | 2027-01-18 | yes |
-| repo validator checks | 5628 | `python3 test/validate.py \| sed -n 's/^OK (\([0-9]*\) checks)$/\1/p'` | 2026-10-22 | 2027-01-20 | no |
+| repo validator checks | 5664 | `python3 test/validate.py \| sed -n 's/^OK (\([0-9]*\) checks)$/\1/p'` | 2026-10-22 | 2027-01-20 | no |
 | agents reachable via the skills CLI | 70+ | not recomputable here: the vercel-labs/skills agent registry is an external list, and no command in this repository returns it | 2026-08-20 | 2026-11-20 | yes |
 
 `Public: no` marks figures that exist and must never be quoted — internal

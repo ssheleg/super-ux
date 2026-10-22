@@ -19,6 +19,7 @@ nobody can tell which half is safe to revisit when a platform changes.
 - [Changelog](#changelog)
 - [Ads](#ads)
 - [Lifecycle email](#lifecycle-email)
+- [Creators and ambassadors](#creators-and-ambassadors)
 
 
 Store listings have their own file: [store-copy.md](store-copy.md).
@@ -310,3 +311,50 @@ study first is [research-outliers.md](research-outliers.md).
   plain words rather than legal ones.
 - Preheader text is copy, not overflow. Left unwritten, the client shows the
   first sentence of the body, which is rarely what you would have chosen.
+
+## Creators and ambassadors
+
+*Physics checked 2026-10-22.*
+
+The source is GP Bullhound's *Consumer Subscription Software* (October 2025),
+cited by page as `[GPB25 p. N]`. Every case figure in it is what a company's
+executive reported in an interview, without method or sample: it justifies
+the shape of a program, never the result to expect.
+
+- A creator program is priced and briefed per market, not once. A
+  home-exchange membership tailors its influencer strategy market by market,
+  and reports that a million-follower influencer in India costs a fraction of
+  one in the U.S. [GPB25 p. 42]. Write one brief per market, in that market's
+  locale (`localization.md`), with its own budget line.
+- Members who tell their own story beat reach. The same company works mostly
+  with micro-influencers, many of them genuine members, "which makes their
+  content authentic", and wants "members who can tell real stories" rather
+  than the largest name [GPB25 p. 42]. The brief therefore hands the creator
+  the facts (each from `facts.md`), the claims they may not make and the one
+  action to ask for, never a script to read: the story is theirs, and a read
+  script is the first thing an audience notices.
+- Name the cohort the content is for. A large freemium platform names YouTube its
+  second-largest growth driver after word of mouth, and invests in the
+  creators there, with spotlighting and revenue-sharing affiliate terms, to
+  acquire, re-engage and resurrect users [GPB25 p. 39]. Those are three of the four
+  cohort states in `funnel-research.md`, and each wants a different ask: a
+  first try, a comeback, a reason to return after a long gap.
+- A public figure only when their values match the product's. The report's
+  ambassadors who work are "deeply engaged with the product" and "ideally
+  identify with the target user base" [GPB25 p. 29]. A walking-rewards app
+  whose ambassador is a well-known athlete reports better retention, a lower
+  acquisition cost through stronger ad creatives, and press in over 100
+  outlets [GPB25 pp. 43, 44], and its founder's advice is to choose "someone
+  who genuinely aligns with your values and vision" [GPB25 p. 44]. Before
+  signing, write down how the figure uses the product and which value they
+  share with the target user; a figure who would not use it is an ad buy, and
+  is briefed and judged as one.
+- The affiliation is disclosed inside the content, with the platform's
+  paid-partnership label where one exists. A revenue share or a free
+  subscription is a material connection under the FTC Endorsement Guides
+  (16 CFR Part 255), and an audience that finds it later discounts everything
+  the creator said.
+- Judge a creator by the users they bring and keep, not by views: the locals
+  and tourists split in `funnel-research.md` applies to creators exactly as it
+  does to ad channels, and a creator whose sign-ups churn at the first renewal
+  bought tourists.
