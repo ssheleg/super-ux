@@ -1,3 +1,10 @@
+## v0.66.1: the family member gate (2026-10-24)
+
+- **Done.** the family member gate: the family member gate (`test/family_gate.py`, with its shared-mechanism
+  declaration) and the documentation merged since v0.66.0, released.
+- **Next task.** After merge: tag `v0.66.1`, watch the release, then the sshlg-skills pin bump; then
+  the highest open board row.
+
 ## v0.66.0: M2 wave 3, portfolios, creators and LLM referrals from GP Bullhound (2026-10-22)
 
 - **Objective.** Milestone M2 wave 3 (G5, G9, the attribution half of G7, R1, R4) from GP Bullhound's *Consumer Subscription Software* (October 2025), every figure checked on its page with `pdftotext`.

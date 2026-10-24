@@ -1,4 +1,4 @@
-## Unreleased
+## 0.66.1 (2026-10-24): the family member gate
 
 - `test/family_gate.py`, the family's canonical member gate (hub B-108, B-109): the board
   parses (every row as wide as its header, no id twice) and `release.yml` keeps the tag-ancestry
