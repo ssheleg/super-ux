@@ -8,6 +8,11 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.66.1: M2 wave 3 (2026-10-24)
+
+the family member gate. Evidence: the repository gate exits 0 on the candidate tree; the PR CI run
+and the tag release run are named in docs/HANDOFF.md.
+
 ## Release candidate: v0.66.0: M2 wave 3 (2026-10-22)
 
 Branch `feat/m2-wave3`; source is GP Bullhound, *Consumer Subscription Software* (October 2025), pages 19, 21, 22, 26, 29, 39, 42, 43, 44, 49 and 50 read one by one with `pdftotext`.
