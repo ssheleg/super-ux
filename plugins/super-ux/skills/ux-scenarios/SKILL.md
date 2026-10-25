@@ -1,6 +1,6 @@
 ---
 name: ux-scenarios
-description: 'Use when creating or updating UX scenarios, starting ANY new feature, changing user-facing behavior, or onboarding a codebase into scenario-driven development (docs/ux/scenarios.md). Triggers: "ux scenarios" / "сценарии использования", "use cases", "new feature" / "новая фича". Not for an empty project (start with vision and ux-foundation). Refusal phrase "no scenarios" / «без сценариев».'
+description: 'Use when starting a new feature, changing user-facing behavior, or moving a codebase to scenario-driven development (docs/ux/scenarios.md). Triggers: "ux scenarios" / "сценарии использования", "новая фича". Not for an empty project (vision first). Refusal phrase "no scenarios" / «без сценариев».'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---

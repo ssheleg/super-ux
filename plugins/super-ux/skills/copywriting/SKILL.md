@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: 'Use when writing or editing any text a user reads (UI strings, errors, landings, store listings, posts, video scripts, ads, email). Triggers: "write copy" / "напиши текст", "App Store description" / "описание для App Store", "microcopy" / "микрокопия", "video hook" / "хук ролика". Not for defining the voice (brand-voice) or the look (sheleg-design). Refusal phrase "no brand" / «без бренда».'
+description: 'Use when writing text a user reads: UI strings, landings, store listings, posts, ads, email. Triggers: "напиши текст", "App Store description" / "описание для App Store", "video hook" / "хук ролика". Not for the voice (brand-voice) or look (sheleg-design). Refusal phrase "no brand" / «без бренда».'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---

@@ -1,6 +1,6 @@
 ---
 name: ux-foundation
-description: 'Use when defining who the users are and why they use the product (personas, Jobs to Be Done, journeys, user stories, retention and churn), kept in docs/ux/foundation.md. Triggers: "jtbd" / "джобы", "customer journey" / "карта пути", "personas" / "персоны", "user retention" / "ретеншн", "churn" / "отток". Not for flows or screens (ux-flows).'
+description: 'Use when defining who the users are and why they come (docs/ux/foundation.md): personas, JTBD, journeys, user stories, retention, churn. Triggers: "jtbd" / "джобы", "customer journey" / "карта пути", "персоны", "ретеншн", "отток". Not for flows or screens (ux-flows).'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install. The Figma on/off choice recorded in step 5 needs no tooling of its own - the Figma MCP matters downstream, in ux-flows.
 license: MIT
 ---

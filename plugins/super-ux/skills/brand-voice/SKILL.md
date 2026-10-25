@@ -1,6 +1,6 @@
 ---
 name: brand-voice
-description: 'Use when defining, calibrating or checking how a product speaks (tone of voice, terminology, canonical facts, per-surface register, locales). Triggers: "tone of voice" / "тон оф войс", "brand voice" / "голос бренда", "brandbook" / "брендбук", "our terminology" / "наша терминология". Not for writing the text itself (copywriting). Refusal phrase "no brand" / «без бренда».'
+description: 'Use when defining or checking how a product speaks: tone of voice, terminology, canonical facts, register. Triggers: "tone of voice" / "тон оф войс", "brand voice" / "голос бренда", "брендбук", "наша терминология". Not for writing the text (copywriting). Refusal phrase "no brand" / «без бренда».'
 compatibility: Any agent with file read/write. The consistency check (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
