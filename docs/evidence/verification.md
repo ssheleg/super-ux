@@ -8,6 +8,11 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.66.2: descriptions within a 300-character budget (2026-10-25)
+
+descriptions within a 300-character budget. Evidence: the repository gate exits 0 on the candidate tree; the PR CI run
+and the tag release run are named in docs/HANDOFF.md.
+
 ## Release candidate: v0.66.1: M2 wave 3 (2026-10-24)
 
 the family member gate. Evidence: the repository gate exits 0 on the candidate tree; the PR CI run

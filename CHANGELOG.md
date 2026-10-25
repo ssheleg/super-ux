@@ -1,3 +1,14 @@
+## 0.66.2 (2026-10-25): descriptions within a 300-character budget
+
+- **Descriptions within a 300-character budget** (hub board row B-255 (a)): Claude Code lists every
+  skill's description in one ~30,000-character budget, and on the operator's machine the listing
+  stood at 51,178, so less-used skills lost their descriptions. Measured the hub's way (whitespace
+  collapsed, front matter only): brand-voice 374 to 298, copywriting 395 to 300, ux-flows 365 to 292,
+  ux-foundation 344 to 269, ux-scenarios 393 to 298; ux-audit (281) and vision (298) unchanged. Each
+  keeps its "Use when", Russian triggers, "Not for" boundary and refusal phrase; the dropped words
+  are in each skill's `## Triggers`, which gains "user flow" / "юзер флоу", "funnel" / "воронка" and
+  "paywall" / "пейволл" for ux-flows.
+
 ## 0.66.1 (2026-10-24): the family member gate
 
 - `test/family_gate.py`, the family's canonical member gate (hub B-108, B-109): the board
