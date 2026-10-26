@@ -27,89 +27,15 @@ stamps — and log the deletion as one line under *Retired*.
    `python3 docs/brand/lint.py … | tail -3; echo exit=$?` printed `exit=0`
    while nine errors scrolled past. Two stamps, two catches. Kept.
 
-3. **(2026-08-10)** **A new check runs against the seeded template before it
-   runs against anything else.** `CONTRIBUTING.md` requires a freshly seeded
-   project to lint clean from the first second, and a check written against
-   real content will not notice it broke that. The vision emptiness check
-   errored on the pristine `templates/vision.md`, because `read()` strips the
-   HTML comments the template is made of. *(Retire when the validator seeds a
-   project and lints it, or after five stamps with no recurrence.)* — **fired
-   on v0.33.0, one stamp after it was written:** B007 warned on every freshly
-   seeded pack, because a seeded `voice.md` legitimately has no references
-   yet. The fix was to gate the check on `Status` leaving `draft`, not to
-   soften the promise. Two checks written, one caught. Kept, and the cold
-   clock resets here.
+3. **(2026-08-10)** **A new check runs against the seeded template before it runs against anything else.** *(Retire when the validator seeds a project and lints it, or after five stamps with no recurrence.)* story: retro/2026-Q4.md sha256:823ccafc2eb8
 
-4. **(2026-08-10)** **An artifact added to stop drift needs its own answer to
-   "what would notice if this fell behind?"** A harness, a registry, a matrix,
-   a checklist — each can drift, and "someone remembering" is not an answer.
-   Where the artifact is a set, give its members ids first: a rule set that
-   cannot be enumerated cannot have coverage computed over it. *(Retire when a
-   coverage gate exists for every generated or hand-kept set in the repo, or
-   after five stamps with no recurrence.)* — **fired on 2026-08-19 (SU-01), on
-   the ratchet itself:** `test/floors.json` had held floors for
-   `ux_lint_test.py` and `brand_lint_test.py` since v0.36.1 and `check_floor`
-   was called for `validate.py` alone, so two of the three recorded floors were
-   decoration and a deleted fixture would have dropped either count in silence.
-   Both harnesses now read their own floor, watched refusing against a planted
-   9999. Kept — the trigger it names is not met while `SU-03` shows a layer
-   (`JTBD-NN`) whose ids no rule can even enumerate.
-   **Fired again on 2026-08-19 (SU-02), on a set nobody had counted as a set:**
-   the status enums existed twice — once in `scenario-format.md` and once in
-   `ux_lint.py` — and had already drifted, the contract declaring five screen
-   statuses against a matcher listing four, so a `blocked` screen read as having
-   no status and `U021` stopped applying to it. Nothing could have noticed.
-   `validate_status_enums_match_contract` is the answer, and it reads the linter's
-   side with `ast` rather than restating it, so it does not become the third copy.
+4. **(2026-08-10)** **An artifact added to stop drift needs its own answer to "what would notice if this fell behind?"** *(Retire when a coverage gate exists for every generated or hand-kept set in the repo, or after five stamps with no recurrence.)* story: retro/2026-Q4.md sha256:3c3bc731ce00
 
-5. **(2026-08-14)** **A fixture that asserts a set of codes proves the code
-   arrived, not which branch produced it.** Where two branches of one check emit
-   the same code, deleting either leaves the suite green and the plant reports
-   nothing. Both of this run's misses were this: an English fixture for the
-   dash-before-conjunction branch stayed green when that branch was deleted,
-   because the strict branch emitted `B062` by another path; and a fenced-block
-   fixture stayed green when the fence stripper was deleted, because the
-   inline-code stripper removed the same dash. **The fix is to write the fixture
-   in the conditions where only the branch under test can fire** — Russian for
-   the conjunction case, since strict is off there; a lone backtick inside the
-   fence for the other, since that defeats the inline pass. *(Retire when the
-   harness asserts which branch fired rather than which code arrived, or after
-   five stamps with no recurrence.)*
-   **Held on 2026-08-19 (SU-02) by design rather than by recurrence.** `U068` has
-   two branches emitting one code — a code citation offered as an outcome signal,
-   and an audit verdict offered as one — so it was built as three disjoint `if`s
-   rather than an `elif` chain, and each fixture is written where only its own
-   branch can fire: the citation cases leave nothing but paths, so the verdict
-   guard is false there; the verdict case leaves prose, so the citation guard is.
-   Both plants landed on exactly their own cases, four then one. What the plants
-   also caught was the opposite failure — a check narrower than its message: the
-   citation branch went CLEAN against `bin/super-ux.js:235-296`, the range form
-   this pack's own chain writes, and again against two citations separated by a
-   comma. Kept, and the cold clock resets here.
+5. **(2026-08-14)** **A fixture that asserts a set of codes proves the code arrived, not which branch produced it.** *(Retire when the harness asserts which branch fired rather than which code arrived, or after five stamps with no recurrence.)* story: retro/2026-Q4.md sha256:add02f6d3679
 
-6. **(2026-08-30)** **A field, option or exemption added to a template or a
-   contract is read by code in the same change, or it is not added.** Three
-   occurrences now, and the third was found only because the second opened the
-   file. `AT-06` listed a table-cell exemption `B062` never implemented.
-   `Humanization pass:` lived in `templates/brand/voice.md` and nowhere else:
-   not in `brand-contract.md`, not in this pack's own `voice.md`, read by no
-   code, for releases. Both looked exactly like a working feature to anyone
-   reading the artifact that declared them. `validate_brand_contract_fields`
-   closes one direction only — a field the linter reads must be one the
-   contract defines — and there is no arrow from a declared field to a reader.
-   *(Retire when a gate enumerates template and contract fields and requires a
-   reader for each, or after five stamps with no recurrence.)*
+6. **(2026-08-30)** **A field, option or exemption added to a template or a contract is read by code in the same change, or it is not added.** *(Retire when a gate enumerates template and contract fields and requires a reader for each, or after five stamps with no recurrence.)* story: retro/2026-Q4.md sha256:57c5a7debf8e
 
-7. **(2026-08-31)** **Reproduce a board row before fixing it.** Plant the
-   defect it describes and read what comes back. Two of the eleven rows closed
-   on 2026-08-31 were false: `B-021` asked for a check that already existed and
-   nearly shipped a duplicate, and `B-019` described a defect four probes could
-   not reproduce. Both were caught by planting first and neither would have been
-   caught by reading the row. A row is a claim about the repository at the
-   moment it was written, and it ages like any other claim; priority makes a
-   stale one actively expensive, because it is picked first. *(Retire when a
-   gate can decide whether an open row is still true — which needs the row's
-   own text to be executable — or after five stamps with no recurrence.)*
+7. **(2026-08-31)** **Reproduce a board row before fixing it.** *(Retire when a gate can decide whether an open row is still true — which needs the row's own text to be executable — or after five stamps with no recurrence.)* story: retro/2026-Q4.md sha256:c5dcf7e26da3
 
 ## Retired
 
@@ -117,73 +43,25 @@ stamps — and log the deletion as one line under *Retired*.
 
 ## Run stamps
 
-Newest last.
+Rotated out: 7 oldest run stamps, verbatim in retro/2026-Q4.md sha256:0d6a6c92a747
+
+Moved out: 4 loose paragraphs, verbatim in retro/2026-Q4.md sha256:2d4bb77a42b7
 
 | Date | Task | Diverged? |
 |---|---|---|
-| 2026-08-05 | Tier-1 audit findings → BP-147..156, audit scope section, catalog validator; v0.27.0 → v0.27.1 | yes — see below |
-| 2026-08-05 | Carry-over ledger closed → BP-157..179, PRN-17..21, three optional contract fields, prototype step, catalog index; v0.28.0 | no |
-| 2026-08-05 | Contract doctor + the audit's four unclaimed findings; v0.29.0 | no |
-| 2026-08-05 | Verbal identity layer, carry-over ledger to zero, code graph; v0.30.0 → v0.30.1 | yes — see below |
-| 2026-08-05 | Verbal identity layer — brand-contract v1, brand-voice + copywriting, brand_lint.py, BP-182..205, PRN-22..24; v0.30.0 | yes — see below |
-| 2026-08-10 | Structural audit of 0.31.0 → 22 findings closed, three composition gates, dogfood chain + brand pack; v0.32.0 | yes — see below |
-| 2026-08-10 | Web surface in the contract, four routing rows, composite briefs, B007 + B026, ux_lint fixture harness; v0.33.0 | yes — see below |
 | 2026-08-10 | B-010 + B-002 — UX linter codes U001..U054, 43 fixtures, coverage gate, run-instruction gate; v0.34.0 | yes — see below |
 | 2026-08-12 | Reference sweep for flows in `ux-flows` (Refero, Mobbin, Lazyweb), gated on tools not config; v0.35.0 → v0.35.1 | yes — see below |
 | 2026-08-14 | The rhetorical dash and the full-stopped title become `B062`/`B063`; markers get ids `AT-01..15`; doctrine prose swept; dogfood wired into CI; v0.39.0 | yes — see below |
 | 2026-08-19 | SU-01 (manifesto M-17) — `U060..U065` give the requirement layer the observable it demands; the pack's own 15 scenarios cite their code; both harness floors become readable | no — single-row close; the one plant that missed is recorded in the ledger |
 | 2026-08-19 | SU-02 (manifesto M-21) — `Product: unobserved / observed / contradicted` as a state no audit can promote; `U066..U070`; the field vocabulary settled on the long spelling; the live screens enum drift closed | no — single-row close; two plant misses recorded in the ledger |
-| 2026-08-30 | Wave-2 family-audit close (SUX-01/06/07/08/11) — templates mirrored into the plugin and each seeding skill by `sync_references.py`, `validate_shipped_templates` + `validate_shipped_paths` gate the class, `/ux-audit` scope surface completed, three descriptions stop over-claiming; v0.50.0 | yes — standing instruction #4 fired on the floor itself: `floors.json` held 3667 against a pre-change suite of 4111, un-raised since SU-04; raised to the measured 4174. R-70 is a `never` (three homes of one enum, no comparator) filed as `B-030` rather than left off the ledger |
-| 2026-08-30 | `B062` judges the dash's role rather than its glyph; the table-cell exemption `AT-06` promised gets implemented; `landing-pages.md` gives `copywriting` the assembly layer it lacked (`LP-01..LP-20`); humanization becomes a default with `B064` and a status in four places; `onboarding.md`, `internal-screens.md` and `product-frameworks.md` add `ON-`, `IS-` and `PF-`; one coverage gate over four id sets; v0.52.0 | yes — two divergences: a doctrine exemption sixteen days unimplemented (`B-031`), and the bytecode cache defeating a planted defect |
-| 2026-08-31 | Board close-out — all eleven open rows closed with a mechanism and a watched plant each: `Kind: copy \| layout` in the string registry, `U076`/`U077`/`U078`, `B065`, `cited_entries_date`, three contract-parity gates, `test/evals/`, and a refreshed code graph with `validate_graph_claims` over what its labels assert; v0.52.0 | yes — two rows were not what the board said, and the refreshed graph asserted a number nobody computed |
-| 2026-08-31 | `B-033` — `validate_front_matter_is_yaml` over all 30 shipped front-matter blocks, ported from the sibling that paid for the class twice, with the fail-closed and empty-walk guards and a permanent self-test; v0.52.3 | no — a single-row close, and the port is the finding: the sibling's two failures were already the design |
-| 2026-08-31 | Wave-3 family-audit close (SUX-02/04/05) — per-skill `compatibility:` front matter ×7 (yaml.safe_load-proven, plant caught), `$schema` in both manifests (the resolving spellings), and the eval suite executed: 28 blind trigger probes 14/14 on two models, 12/12 scenario lines, receipts and Method in `test/evals/RESULTS.md`; `B-033` filed for the missing YAML front-matter gate; v0.52.2 | yes — twice. (1) A concurrent session cut v0.52.1 from this working tree while this run's SUX-02/05 edits sat uncommitted in it: they shipped inside that release with no CHANGELOG line, and the guarded files it wrote (`CHANGELOG.md`, `package.json`, both manifests, `test/validate.py`) were written while THIS run held the only live lease (`SUX-W3`) — the fs lease is advisory for a session that never asks. The 0.52.2 entry documents the stowaways; the coordination miss is recorded here rather than smoothed over. (2) The eval run was killed mid-flight by an account spend limit and re-executed clean after reset — the first attempt produced zero result files, so nothing partial leaked into the recorded rows |
+| 2026-08-30 | Wave-2 family-audit close (SUX-01/06/07/08/11) — templates mirrored into the plugin and each seeding skill by `sync_… | yes — standing instruction #4 fired on the floor itself: `floors.json` held 3667 against a pre-change suite of 4111,… · moved: retro/2026-Q4.md sha256:7b5e2ab2b60d |
+| 2026-08-30 | `B062` judges the dash's role rather than its glyph; the table-cell exemption `AT-06` promised gets implemented; `la… | yes — two divergences: a doctrine exemption sixteen days unimplemented (`B-031`), and the bytecode cache defeating a… · moved: retro/2026-Q4.md sha256:4001f2288eaa |
+| 2026-08-31 | Board close-out — all eleven open rows closed with a mechanism and a watched plant each: `Kind: copy \| layout` in the string regis… | yes — two rows were not what the board said, and the refreshed graph asserted a number nobody computed · moved: retro/2026-Q4.md sha256:492c51547df5 |
+| 2026-08-31 | `B-033` — `validate_front_matter_is_yaml` over all 30 shipped front-matter blocks, ported from the sibling that paid for the clas… | no — a single-row close, and the port is the finding: the sibling's two failures were already the design · moved: retro/2026-Q4.md sha256:bd39d93addf0 |
+| 2026-08-31 | Wave-3 family-audit close (SUX-02/04/05) — per-skill `compatibility:` front matter ×7 (yaml.safe_load-proven, plant… | yes — twice. (1) A concurrent session cut v0.52.1 from this working tree while this run's SUX-02/05 edits sat uncomm… · moved: retro/2026-Q4.md sha256:2077b1501666 |
 
 | 2026-10-13 | FW05 B-025/B-026, prepared for v0.59.3: explicit unknown owners and lazy marketing brief; source checks, no model eval | yes — missing fields were still reproducible; source reading corrected the historical percentage claim from measured reading to an estimate from visit duration. Existing-project migration remains advisory. |
 | 2026-10-19 | FEED-SEO-1019 wave 2, v0.62.0 candidate: `B050` retrieval-only, crawler policy and brief pointer, LP-21..LP-24, Copylot sweep, synthetic respondents, fresh-user walk | yes: standing #7 fired. The requirement said `B050` errored on a training block and missed retrieval agents; planting both fixtures first reproduced it (11 red). It also found the old parser kept only the last `User-agent` of a group and ignored `*`, which the requirement had not named. Standing #5 shaped the fixtures: the shared-group case lists the retrieval token first, so only group parsing can fire it |
-
-**Prune, 2026-08-31 (v0.52.0, board close-out).** All five checked against the three retirement
-triggers; nothing retired, nothing added, so the list stands at five against a
-cap of ten. **#3 fired and passed:** before the widened dash check was written,
-`templates/brand/*.md` and `docs/brand/*.md` were both measured for the newly
-banned spelling and both returned zero, so a freshly seeded project still lints
-clean from the first second; the seeded `docs/brand/lint.py` was re-copied from
-its source and run, and `validate_seeded_scripts` compared the bytes. **#4 fired
-twice and shaped the work rather than commenting on it:** the twenty playbook
-rules were given ids and `validate_landing_coverage` before the prose was
-accepted as finished, and the citations to `docs/research/landings/` got a gate
-instead of a `never` row in the ledger, which is the trade this instruction
-exists to force. **#5 fired hardest** and decided the shape of every new
-fixture, recorded in this run's entry. **#2 held:** all five gates were run
-alone and their own exit codes read, printed beside each verdict, and no
-pipeline stood between a gate and its status; it is four stamps since it last
-caught anything, one short of its cold trigger, so it is kept and watched.
-**#1 fires at the tag** in this same run. **One added (#6)**, from the third
-occurrence of a declared-but-unread field, so the list stands at six against a
-cap of ten. The bytecode finding is deliberately **not** added: it became a
-mechanical check in the same change, which is retirement trigger one, and a
-standing instruction that is already a gate is the list filling with things
-nobody needs to remember. **Re-checked at the close-out:** #1 fires at the tag,
-#2 held across roughly forty gate runs with every exit code read alone, #3 fired
-again on `U076` — which went silent on the very template it was written for until
-placeholders stopped counting as content — #4 shaped four of the eleven closures,
-and #5 decided the isolation pair for `Kind`. **One added (#7)**, so the list
-stands at seven against a cap of ten.
-
-**Prune, 2026-08-14.** All four checked against the three retirement triggers.
-**#2 fired hardest and fired on this run's own hands:** the first plant harness
-read `python3 test/brand_lint_test.py 2>&1 | head -4; echo "exit=$?"`, printed
-`exit=0`, and a `FAIL:` line scrolled past inside it. Three stamps, three
-catches. **#3 fired** and passed: the new checks were run against a freshly
-seeded `templates/brand/` pack before anything else, and it linted clean. **#4
-fired twice** — the `AT-` ids were given precisely so coverage could be computed
-and nothing computes it (`B-017`), and the dogfood linters turned out never to
-have been in CI, which is why `docs/brand/lint.py` sat red on `B030` with a
-three-count-stale `facts.md` and nothing said so. **#1 did not fire**; no tag
-was cut in this run, and it is one stamp old on that count. Nothing retired,
-**one added (#5)**, so the list stands at five against a cap of ten.
-
----
 
 ## 2026-08-31 — the board was not a description of the code
 
