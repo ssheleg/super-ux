@@ -1,3 +1,14 @@
+## v0.66.3: route misses in Triggers, ux-scenarios names its subject first (2026-10-27)
+
+- **Done.** Hub board row B-267 (super-ux part): ux-flows' `## Triggers` gains "users drop off" /
+  «пользователи отваливаются», "referral program" / «реферальная программа» and "A/B test" /
+  «a/b тест» (body 4,744 of 4,750 tokens, `audit_skill.py --house`). Hub board row B-285
+  (super-ux part): the ux-scenarios description opens "Use when writing UX scenarios
+  (docs/ux/scenarios.md): ..." so its subject sits inside Hermes' 57 visible characters; 295
+  characters. Gate: `npm test`.
+- **Next task.** After merge: tag `v0.66.3`, watch the release, then the hub adds route rows with
+  fixtures (B-267) and bumps the pin.
+
 ## Unreleased: the retro floor within its budget (2026-10-26)
 
 - **Done.** `docs/evidence/retro.md`'s floor (read at every task-pipeline run's stage 0) fell from
