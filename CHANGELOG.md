@@ -1,3 +1,15 @@
+## 0.66.3 (2026-10-27): route misses in Triggers, ux-scenarios names its subject first
+
+- **Route misses join ux-flows' `## Triggers`** (hub board row B-267): "users drop off" /
+  «пользователи отваливаются», "referral program" / «реферальная программа» and "A/B test" /
+  «a/b тест». ux-flows owns them by its own text: funnels and their steps are its flows, the
+  growth-loop and referral rows of `practice-selection.md` (BP-147..151) are read in its step 3,
+  and every A/B variant needs the mockup this skill draws. Body 4,744 of 4,750 tokens.
+- **ux-scenarios names its subject within the first 57 characters** (hub board row B-285; Hermes
+  shows only that many): the head was "Use when starting a new feature, changing user-facing beh"
+  and is now "Use when writing UX scenarios (docs/ux/scenarios.md): a n". 295 characters (hub
+  measure); triggers, boundary and refusal phrase unchanged.
+
 ## 0.66.2 (2026-10-25): descriptions within a 300-character budget
 
 - **Descriptions within a 300-character budget** (hub board row B-255 (a)): Claude Code lists every

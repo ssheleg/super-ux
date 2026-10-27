@@ -93,6 +93,8 @@ the screen's own tap rate.
 
 Also routed here (2026-10-20, moved from the description): "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow", "user flow" / "юзер флоу", "funnel" / "воронка", "paywall" / "пейволл".
 
+Also routed here (2026-10-27, hub B-267): "users drop off" / "пользователи отваливаются", "referral program" / "реферальная программа", "A/B test" / "a/b тест".
+
 ## Choosing a workflow
 
 | Situation | Workflow |
