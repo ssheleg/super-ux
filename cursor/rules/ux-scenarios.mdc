@@ -8,7 +8,7 @@ alwaysApply: false
 `docs/ux/scenarios.md` describes everything the user can do, see, and hit —
 every feature, button, state, error, result. Keep it true.
 
-## File structure (ux-contract v4)
+## File structure (ux-contract v5; a v4 chain stays valid)
 
 Title, then header comment, then: **Index** table
 (`| ID | Title | Feature | Persona | Traces | Status | Last audit |`),
@@ -28,7 +28,10 @@ when none exist), `UI elements` (every button/field/link/dialog/toast involved �
 this is what audits check), `States covered` (loading|empty|error|success),
 `Errors & recovery` (each failure: what the user sees, how they recover),
 `Status` (draft|validated|implemented|retired), `Coverage` (file:line or
-`none yet`).
+`none yet`). Under v5, `Channel` (human|agent|both; absent reads human): an
+agent step is `A-NN -> tool -> observable response`, the scenario cites the
+`CAP-NN` it exercises, and `UI elements` is required on the human channel
+only.
 
 Rules: IDs `SCN-NNN`, sequential, never reused; retired entries are kept,
 never deleted. Lifecycle: draft → validated (human approval) → implemented

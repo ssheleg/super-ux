@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | Pack | `super-ux` |
-| Version | `0.66.3` |
+| Version | `0.67.0` |
 | Skills | `vision`, `ux-foundation`, `ux-flows`, `ux-scenarios`, `ux-audit`, `brand-voice`, `copywriting` |
 | License | MIT |
 | Source | https://github.com/ssheleg/super-ux |
@@ -14,7 +14,8 @@
 
 Decide what a user-facing interface must do and how its words sound: vision,
 personas and jobs, flows, screens, scenarios, evidence-backed audits and the
-brand contract. Visual style belongs to `sheleg-design`; provider integrations
+brand contract. Under contract v5 (opt-in) also what people and agents can do:
+actors, capabilities, channels and why a person is needed. Visual style belongs to `sheleg-design`; provider integrations
 and backend mechanics stay outside this pack.
 
 ## Inputs and outputs

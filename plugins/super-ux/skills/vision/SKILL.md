@@ -101,6 +101,9 @@ dashboard" is not behaviour; "surfaces contradictions between sources" is.
 **4. The user's role.** What the user becomes when using it. Not "the user
 clicks" — the user *directs*, *judges*, *decides*. If the user's role is
 indistinguishable from operating any other tool, the vision is not yet specific.
+Say which work the person keeps and which their agent or an automation does
+for them: in an AI-native product the person directs, decides at the gates
+and handles the exceptions, and the rest is reachable without a screen.
 
 **5. Principles.** Three to five, each in the form *we do X, not Y*, where Y is
 something a reasonable team would actually choose. A principle with no rejected
@@ -116,7 +119,9 @@ roadmap. Roadmaps belong in the tracker and go stale in a quarter.
 **8. The one sentence.** If someone remembers exactly one thing, this is it.
 
 **9. The alignment test.** Three to five questions any proposed feature must
-pass. These are what the rule in step 4 will actually run.
+pass. These are what the rule in step 4 will actually run. Include one for
+agents: *can an agent do this without a screen, and if a person must, which
+gate or serving reason says so?* (the contract's v5 section, AN-1 and AN-4).
 
 ## Step 3 — validate before you ship it
 

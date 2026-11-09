@@ -1869,6 +1869,12 @@ DOC_ENUM_DECL_RE = re.compile(
     r"^- `([\w.-]+\.md)` \*\*(\w+)\*\* — `([^`]+)`", re.MULTILINE
 )
 
+# The v5 fields' enums, in the contract's opt-in section. A colon, not a dash,
+# separates the field from its values: new text carries no em dash.
+V5_ENUM_DECL_RE = re.compile(
+    r"^- `(CAP|A|P|SCN|SCR)-N+` \*\*([^*]+)\*\* \(v5\): `([^`]+)`", re.MULTILINE
+)
+
 # The layers the contract declares to have NO status. Read from the contract's
 # own sentence rather than restated, so deleting the sentence fails the check
 # that depends on it.
@@ -1944,6 +1950,27 @@ def validate_status_enums_match_contract() -> None:
             f"{sorted(matched.get(key) or [])} and scenario-format.md declares "
             f"{sorted(declared.get(key) or [])} — one side moved alone, and a "
             f"value only the contract knows about reads as no value at all",
+        )
+
+    # --- The v5 enums: declared in the contract's opt-in section --------------
+    # Same parity, separate table: they bind only a chain that declares v5, so
+    # they are warnings there (U088) rather than U070's errors everywhere.
+    v5_declared = {
+        (prefix, field.strip()): {v.strip() for v in values.split("|") if v.strip()}
+        for prefix, field, values in V5_ENUM_DECL_RE.findall(contract)
+    }
+    v5_matched = {
+        key: set(values) for key, values in (literals.get("V5_ENUMS") or {}).items()
+    }
+    check(bool(v5_declared), "scenario-format.md declares no v5 enum in the form "
+                             "`- `CAP-NN` **Gate** (v5): `a | b``")
+    check(bool(v5_matched), "ux_lint.py: V5_ENUMS is not a readable literal")
+    for key in sorted(set(v5_declared) | set(v5_matched)):
+        check(
+            v5_matched.get(key) == v5_declared.get(key),
+            f"{key[0]} {key[1]} (v5): ux_lint.py matches "
+            f"{sorted(v5_matched.get(key) or [])} and scenario-format.md declares "
+            f"{sorted(v5_declared.get(key) or [])}; one side moved alone",
         )
 
     # --- The document-level layers, and the two declared to have none ---------

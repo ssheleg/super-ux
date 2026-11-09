@@ -10,7 +10,7 @@ alwaysApply: false
 stories (ST-NNN)**. IDs sequential, never reused; dropped entries kept, not
 deleted.
 
-## Formats (ux-contract v4)
+## Formats (ux-contract v5; a v4 chain stays valid)
 
 - **Persona `P-NN`:** 1–3 sentences, grounded in data/observation,
   recognizable by a real user.
@@ -26,6 +26,14 @@ deleted.
   <benefit>` + Traces (JTBD, JRN/stage) + Given/When/Then acceptance
   criteria + priority (must|should|could) + status
   (proposed|validated|delivered|dropped). Quality bar: INVEST.
+- **v5 (opt-in; new projects):** persona `Agent use: none|some|most` with
+  evidence; actors `A-NN` under `## Actors` (`Kind: agent|system`, `Acts
+  for: P-NN`, `Grant`); a journey `Performed by` column; and
+  `docs/ux/capabilities.md`, one `CAP-NN` per must/should story with
+  `Traces, Actors, Agent excluded, Roles, Gate, Tools, Emits, Data,
+  Automation, Human surface, Since, Status`. A person enters at a gate
+  (`body|approval|legal`) or for a serving reason, each with evidence;
+  everything else stays reachable by agents.
 
 ## Workflows
 

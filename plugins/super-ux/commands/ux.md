@@ -15,9 +15,10 @@ get done with the product's UX?" — with a few examples in everyday words
 works", "make a fix plan"). Never ask the user to choose between skills or
 layers — that vocabulary is internal.
 
-**If the task involves designing or improving the interface** (routes 1, 3,
-4), and the foundation's Design tooling section hasn't recorded a Figma
-choice yet, ask one more plain question: "Design the interface visually in
+**When the task designs the first human surface** (actions 4 and 5; under
+contract v5 a capability no person sees needs no screen and no Figma), and
+the foundation's Design tooling section hasn't recorded a Figma choice yet,
+ask one more plain question: "Design the interface visually in
 Figma as we go, or text-only? (Figma is the default.)" Record the answer in
 `foundation.md` → Design tooling. If Figma is chosen and the Figma MCP isn't
 connected, recommend connecting it and proceed text-only until it is (see
@@ -61,6 +62,7 @@ Routing table (user's words → action from the menu below):
 | "what are we even building", "product vision", "where is this going" / "видение", "что мы вообще строим", "куда идём" | 1 |
 | "new feature", "I want to add X" / "новая фича", "хочу добавить X" | 7 (validate idea vs chain — and vs the anti-vision if `vision.md` exists) then 4/6 for the new parts |
 | "the UX is bad", "clunky", improve, redesign / "UX плохой", "неудобно" | 5 (Improve) |
+| "agents should be able to do it", "AI-native", "API for agents", "every function for agents" / "доступно агентам", "агенты должны уметь", "API для агентов" | 3 (capabilities: actors and `CAP-NN` rows in `capabilities.md`, contract v5), then 4 for the human lanes only; the agent surface itself is built with agent-stack |
 | "check everything works", audit, "run the scenarios" / "проверь что всё работает", "прогони по сценариям" | 8 |
 | "what is missing", gaps, coverage / "чего не хватает" | 9 |
 | "what do best practices say" / "как лучше по практикам" | 10 |
@@ -95,7 +97,10 @@ become), **brand-voice** and **copywriting** (how it speaks). A user who says
   absent and the product has user-facing text, that is a gap, not a
   non-issue.
 - `docs/ux/foundation.md`? If yes: counts of personas / JTBD / journeys /
-  stories by status.
+  stories by status, and actors when the chain is on v5.
+- `docs/ux/capabilities.md` (contract v5)? If yes: capabilities by status,
+  must/should stories with no capability, and screens fronting nothing. On a
+  v4 chain it is absent by design; the doctor offers the migration.
 - `docs/ux/flows.md`? If yes: flow count, `inferred` vs confirmed, stories
   without flows.
 - `docs/ux/screens.md`? If yes: screen count by status
@@ -155,7 +160,9 @@ user pick (multiple allowed). Full catalog:
 2. **Build the WHY layer** — `ux-foundation` Init (interview or reverse) —
    when foundation is missing/empty.
 3. **Update foundation** — `ux-foundation` Update — when user knowledge
-   changed.
+   changed, or to design the capabilities layer (contract v5): actors, one
+   `CAP-NN` per must/should story, gates and why a person is needed, before
+   any flow.
 4. **Design flows & screens** — `ux-flows` Design/Reverse — when stories
    exist without flows, or an existing product has no `flows.md`; registers
    every screen and state in `screens.md` (and its Figma frames when Figma

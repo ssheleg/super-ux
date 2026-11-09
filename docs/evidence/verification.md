@@ -8,6 +8,22 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.67.0: contract v5, agents and capabilities (2026-11-09)
+
+Branch `feat/ai-native-1109`, packet P-SU of the hub run `2026-11-09-ai-native`. Every
+`planted` below was a mutation applied to the working tree, run, watched red, and reverted.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| P-SU-1 | Contract v5 section (AN-1, AN-4), copies synced; AN-2 and AN-6 in `system-map.md`; AN-5 in `ux-design-principles.md` | `python3 test/sync_references.py`, then `python3 test/validate.py` (copies byte-equal, Contents anchors resolve) | never (text) |
+| P-SU-2 | v5 templates, new `capabilities.md` and `agent-panel.md`, `blocked` in the screens template | `python3 plugins/super-ux/scripts/ux_lint.py templates`: only U076 (the seed vision) | never (text) |
+| P-SU-3 | U087..U095, v5 only, warnings; U050 not raised under v5 with no `screens.md` | `python3 test/ux_lint_test.py`: OK (237 checks); each code planted both ways. Mutations: `check_v5` disabled (19 checks red), the U050 guard removed (1 red), `min` marker read as `max` (1 red), the U090 branch disabled (1 red) | **planted** |
+| P-SU-3 | A v4 chain stays green under `--strict` | `python3 plugins/super-ux/scripts/ux_lint.py test/fixtures/contract-v4 --strict` exit 0; the same planted v5 defects in an unmarked tree and in a tree whose lowest marker is v4 stay silent | **planted** |
+| P-SU-3 | `V5_ENUMS` matches the contract's v5 declarations | `legal` removed from the contract's Gate line: `validate.py` failed on `CAP Gate (v5)`, then passed restored | **planted** |
+| P-SU-4 | Doctor `CURRENT = 5`, v4 supported with the migration named | `test/ux_lint_test.py` doctor checks on both fixtures (v4: migration and no problem; v5: `contract v5`, no migration) | never |
+| P-SU-5 | Skills, `/ux`, `/ux-init`, the hard rule (template and `/ux-rule` byte-equal) | `validate_hard_rule_copies` and `validate_hard_rule_anchors` green; ux-foundation description 267 to 264 characters | never (text) |
+| P-SU-6 | 0.67.0 in the four version places and `SKILL-CARD.md` | `validate_manifests` green | never |
+
 ## Release candidate: v0.66.3: route misses in Triggers, ux-scenarios names its subject first (2026-10-27)
 
 route misses in Triggers, ux-scenarios names its subject first. Evidence: the repository gate exits 0 on the candidate tree; the PR CI run

@@ -184,8 +184,9 @@ Installed into your project's `CLAUDE.md` (and as the always-on Cursor rule):
   Code that diverges from a screen's record, or a stale Figma link, is drift
   the audit flags.
 - Any new feature or project **starts** with the chain: which job, which
-  journey stage, which story, then flows, screens, and scenarios, validated
-  against the existing base and approved.
+  journey stage, which story, which capability and who performs it (a person,
+  an agent, an automation), then flows, screens, and scenarios for the human
+  lanes, validated against the existing base and approved.
 - **Do not write interface code until that workflow is done.** Chain designed
   and approved, and (Figma on, the default) the UI mocked up with every screen
   linked to its frame. Building UI before this is the mistake super-ux exists
@@ -253,13 +254,13 @@ to is a skill nobody runs.
 | `/vision` `/ux-init` `/ux-foundation` `/ux-flows` `/ux-update` `/ux-audit` `/ux-rule` `/ux-lint` `/ux-doctor` · `/brand` `/brand-init` `/brand-update` `/brand-lint` `/copy` | Direct controls for when you know exactly what you want; `/ux-rule` installs both hard rules and seeds `lint.py` + `doctor.py`; `/brand-init` seeds `docs/brand/` and its linter |
 | `docs/ux/lint.py` + `/ux-lint` | The deterministic half: missing Figma frames, a screen with no states or no render axes, a built state with no story, more than one onboarding screen before the first value with no reason on file, art direction approved with no critique cited, unresolved SCR/story traces, orphans, built screens without coverage, index desync, ID gaps, broken links. Stdlib-only, exit 1 on problems, so wire it into CI and drift can't merge |
 | `cursor/rules/*.mdc` | The same methodology for Cursor: one always-on hard rule + seven agent-requested rules (vision, foundation, flows, scenarios, audit, brand voice, copywriting) |
-| `templates/` | Seeds for `docs/ux/`: the vision skeleton, foundation, flows, screens, scenario base, the folder README, and the audit-report skeleton. Both hard-rule snippets live here as their single source, `claude-rule.md` (scenario-first) and `vision-rule.md` (vision alignment), and the validator fails if a command's embedded copy drifts from them. Seeds for `docs/brand/`: voice, terminology, facts, channels, the string registry, a locale delta, and its folder README. The tree is mirrored into `plugins/super-ux/templates/` (and the seeds each skill names into that skill's own directory) by `test/sync_references.py`, so installed channels carry the seeds their texts point at; the validator refuses drift between the copies |
+| `templates/` | Seeds for `docs/ux/`: the vision skeleton, foundation, capabilities, flows, screens, scenario base, the agent test panel, the folder README, and the audit-report skeleton. Both hard-rule snippets live here as their single source, `claude-rule.md` (scenario-first) and `vision-rule.md` (vision alignment), and the validator fails if a command's embedded copy drifts from them. Seeds for `docs/brand/`: voice, terminology, facts, channels, the string registry, a locale delta, and its folder README. The tree is mirrored into `plugins/super-ux/templates/` (and the seeds each skill names into that skill's own directory) by `test/sync_references.py`, so installed channels carry the seeds their texts point at; the validator refuses drift between the copies |
 
 The contracts every skill reads:
 
 | Reference | Holds |
 |---|---|
-| [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md) | **The contract (ux-contract v4).** File layout, every field name, stable IDs (`P` `JTBD` `JRN` `ST` `FLW` `SCR` `SCN`), completeness checklists, the `draft → validated → implemented` lifecycle, audit verdicts and severities, the UX-plan format |
+| [scenario-format.md](plugins/super-ux/skills/references/scenario-format.md) | **The contract (ux-contract v5; v4 chains stay valid).** File layout, every field name, stable IDs (`P` `A` `JTBD` `JRN` `ST` `CAP` `FLW` `SCR` `SCN`), the opt-in v5 layer for agents (actors, capabilities, channels, why a person is needed), completeness checklists, the `draft → validated → implemented` lifecycle, audit verdicts and severities, the UX-plan format |
 | [system-map.md](plugins/super-ux/skills/references/system-map.md) | The whole system on one page: pipeline, files, skills, companions, and the four sync rules; every skill points here |
 | [ux_doctor.py](plugins/super-ux/scripts/ux_doctor.py) | Contract doctor. It reports mixed or stale contract versions across a project's artifacts, files the tooling cannot find under their contract names, and audits produced against a base that is not there. `/ux-lint` checks a chain against itself; this checks it against the contract. Installed as `docs/ux/doctor.py`, read-only unless `--fix` |
 | [best-practices-index.md](plugins/super-ux/skills/references/best-practices-index.md) | Generated tag index over the catalog: tag → ids, id → title. Read it to decide which entries to open; regenerated by `plugins/super-ux/scripts/bp_index.py` and checked for drift by the validator |

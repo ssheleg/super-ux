@@ -1,6 +1,6 @@
 ---
 name: ux-foundation
-description: 'Use when defining who the users are and why they come (docs/ux/foundation.md): personas, JTBD, journeys, user stories, retention, churn. Triggers: "jtbd" / "джобы", "customer journey" / "карта пути", "персоны", "ретеншн", "отток". Not for flows or screens (ux-flows).'
+description: 'Use when defining who uses a product and why (docs/ux/foundation.md): personas, actors, JTBD, journeys, stories, capabilities, churn. Triggers: "jtbd" / "джобы", "customer journey" / "карта пути", "персоны", "ретеншн", "отток". Not for flows or screens (ux-flows).'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install. The Figma on/off choice recorded in step 5 needs no tooling of its own - the Figma MCP matters downstream, in ux-flows.
 license: MIT
 ---
@@ -8,8 +8,8 @@ license: MIT
 # ux-foundation — The WHY Layer
 
 > Part of **super-ux** — see [system-map.md](references/system-map.md)
-> for the whole pipeline (foundation → flows → screens → scenarios → audits
-> → plans) and the four sync rules. After changes, run the linter
+> for the whole pipeline (foundation → capabilities → flows → screens →
+> scenarios → audits → plans) and the four sync rules. After changes, run the linter
 > (`python3 docs/ux/lint.py`).
 
 
@@ -19,7 +19,8 @@ journeys → User stories.** Scenarios (`ux-scenarios` skill) are built on top
 and trace to these IDs — the full chain gives every scenario its context.
 
 **Format contract:** [scenario-format.md](references/scenario-format.md)
-(ux-contract v4). Never deviate from ID schemes or field names.
+(ux-contract v5; a v4 chain stays valid until it opts in). Never deviate
+from ID schemes or field names.
 
 **The chain's opt-out is spoken:** an operator saying **"no scenarios"** /
 **«без сценариев»** declines the scenario-first route — proceed without the
@@ -128,7 +129,8 @@ One question at a time; user's answers are the data:
 4. Derive user stories from journey pains and job outcomes; write
    acceptance criteria; prioritize must/should/could against the job's
    success metric.
-5. Record **Design tooling** when design work is about to start: the Figma
+5. Record **Design tooling** when the first human surface is about to be
+   designed (never for a capability no person sees): the Figma
    on/off choice (default on), the product's Figma folder, and **one file
    per surface the product has** — App, Web, ASO — the fields this file
    owns. One URL for everything is how the store art and the site end up
@@ -151,6 +153,38 @@ One question at a time; user's answers are the data:
    of this product too (BP-116..129).
 8. Present layer by layer for approval; mark unvalidated guesses as
    assumptions with a risk note.
+
+## Capabilities (contract v5)
+
+Under contract v5 (new projects start there; a v4 chain opts in on its first
+capability task, as `docs/ux/doctor.py` says) this skill also owns the layer
+between the stories and the flows. Field rules: the contract's *Contract v5:
+agents and capabilities* in [scenario-format.md](references/scenario-format.md).
+
+1. **Actors.** List who else performs the work under `## Actors`: an agent
+   acting for a persona, an automation, an outside system (`A-NN`, `Kind`,
+   `Acts for`, `Grant`). Give each persona `Agent use: none | some | most`
+   with its evidence, and each journey stage its `Performed by`.
+2. **Stories → capabilities.** Seed `docs/ux/capabilities.md` from
+   `templates/capabilities.md`; every must/should story gets a `CAP-NN`, one
+   row per effect set (a refund is its own row beside a cancellation), filled
+   in the contract's order. `none` is an answer; a blank is not.
+3. **Parity first (AN-1).** An agent can do what a person can, acting and
+   being notified, unless the row names why not: `presence`, `legal`, or
+   `debt (B-nnn)` with its board row.
+4. **Why a person (AN-4).** A person enters at a gate (`body`, `approval`,
+   `legal`) or for a serving reason (`oversight`, `exception-queue`, `trust`,
+   `presence`, `audience`, `manual`, `taste`), each with its evidence. A
+   persona with `Agent use: none` keeps a whole human path. No gate, no
+   reason and a determinable trigger: an automation (AN-6).
+5. **The agent panel.** When the agent surface will be tested, seed
+   `docs/ux/agent-panel.md` from `templates/agent-panel.md`: five agents, each
+   with its grant and the scenarios it walks.
+6. **Hand off.** The contract the agents and the interface call is
+   agent-stack's (`agent-surface.md`,
+   <https://raw.githubusercontent.com/ssheleg/agent-stack/main/plugins/agent-stack/skills/agent-interop/references/agent-surface.md>);
+   flows and screens for the human lanes go to `ux-flows`, agent-channel
+   scenarios to `ux-scenarios`.
 
 ## Init (reverse) — existing product
 
@@ -209,7 +243,7 @@ task-pipeline's `design_gate.py panel docs/ux/test-panel.md`.
    all layers filled.
 3. **Coverage:** every persona has ≥1 job; every job has ≥1 journey and ≥1
    story; every must/should story has ≥1 scenario in scenarios.md (or is
-   explicitly awaiting one).
+   explicitly awaiting one) and, under v5, ≥1 capability (`U089`).
 4. Report as a checklist with per-item fixes; apply approved fixes.
 
 ## Definition of done
@@ -219,7 +253,7 @@ task-pipeline's `design_gate.py panel docs/ux/test-panel.md`.
 - Cascading updates identified and handed downstream (`ux-flows` for
   affected flows, `ux-scenarios` for affected scenarios) — the chain never
   silently drifts.
-- Next layer offered: stories ready → `ux-flows` turns them into user flows
-  before any UI work.
+- Next layer offered: stories ready → capabilities (v5) → `ux-flows` turns
+  them into user flows for the human lanes before any UI work.
 
 **What else is in `references/`.** This skill names 8 contract(s) directly; `references/` holds 14, because a contract this skill names links others and the whole closure ships inside the skill — the skills CLI installs one directory and a sibling's file would arrive dangling. Open the ones named here; the rest are reached from them, by name, when a contract sends you.

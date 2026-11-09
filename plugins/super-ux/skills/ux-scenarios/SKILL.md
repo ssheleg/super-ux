@@ -18,7 +18,7 @@ is the source of truth for everything the user can do, see, and hit — every
 feature, every button, every state, every error, every result.
 
 **Format contract:** [scenario-format.md](references/scenario-format.md)
-(ux-contract v4). Read it before writing or editing scenarios. Never deviate
+(ux-contract v5; a v4 chain stays valid). Read it before writing or editing scenarios. Never deviate
 from its field names, ID rules, statuses, or checklists.
 
 **The WHY and HOW layers:** when `docs/ux/foundation.md` exists (personas,
@@ -33,6 +33,17 @@ written use-case style: user action -> observable system response. If the
 upper layers are missing on a non-trivial product, recommend `ux-foundation`
 → `ux-flows` first; proceed in v1 mode (no Traces) only for tiny projects
 or on explicit user choice.
+
+**Agent-channel scenarios (contract v5).** A scenario declares `Channel:
+human | agent | both`; an absent field reads `human`. An agent step is
+`A-NN -> tool -> observable response`, and the response names the typed
+error, the gate handoff (the `human_steps` a person receives) or the
+idempotent retry the step relies on; `UI elements` belong to the human
+channel only. An agent-channel scenario cites the `CAP-NN` it exercises in
+`Traces`: it is that capability's acceptance test, written beside the
+contract (`U091`). A `must` story whose persona has `Agent use: none` keeps a
+human-channel scenario (`U095`). Write one agent-channel scenario per
+agent-reachable `must` story, with its happy path, its refusal and its gate.
 
 **Design taste:** apply
 [ux-design-principles.md](references/ux-design-principles.md) — states

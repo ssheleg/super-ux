@@ -1,14 +1,27 @@
 # UX Foundation
 
-<!-- Managed with super-ux (ux-contract v4). The WHY layer: personas, jobs
-to be done, customer journeys, user stories. Update when the understanding
-of users changes; scenarios in scenarios.md trace to the IDs defined here. -->
+<!-- Managed with super-ux (ux-contract v5). The WHY layer: personas, actors,
+jobs to be done, customer journeys, user stories. Update when the understanding
+of users changes; capabilities.md and scenarios.md trace to the IDs defined
+here. -->
 
 ## Personas
 
 <!-- ### P-01: <name>
 1-3 sentences: who they are, what they know, what they want. Grounded in
-data/observation, recognizable by a real user. -->
+data/observation, recognizable by a real user.
+- **Agent use:** none | some | most (<evidence: RE-NN, the brief, an interview>)
+-->
+
+## Actors
+
+<!-- The non-human performers: agents acting for a persona, automations and
+outside systems. People stay in Personas.
+### A-01: <name>
+- **Kind:** agent | system
+- **Acts for:** P-01
+- **Grant:** <the scope it holds; never wider than its principal's role>
+-->
 
 ## Jobs to Be Done
 
@@ -24,8 +37,9 @@ data/observation, recognizable by a real user. -->
 
 <!-- ### JRN-01: <persona> — <job> (JTBD-01)
 - **Owner:** unknown
-| # | Stage | User action | Touchpoint | Emotion (1-5) | Pain | Opportunity |
-|---|-------|------------|------------|---------------|------|-------------|
+| # | Stage | User action | Performed by | Touchpoint | Emotion (1-5) | Pain | Opportunity |
+|---|-------|------------|--------------|------------|---------------|------|-------------|
+Performed by: the P- and A- ids that do this stage.
 -->
 
 ## Monetization

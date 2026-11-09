@@ -14,7 +14,7 @@ reused. Any interface change updates `screens.md` (and the Figma frame when
 enabled) in the same change — a screen whose code diverges from its record
 is `drifted`.
 
-## Flow entry (ux-contract v4)
+## Flow entry (ux-contract v5; a v4 chain stays valid)
 
 Fields: `Traces` (story/job IDs), `Goal` (observable end state), `Entry
 points` (ALL of them), `Success exit`, `Task analysis` (numbered
@@ -29,7 +29,10 @@ Story | Behavior |` — a row per default/loading/empty/error/offline/
 long-content/keyboard-up/first-run state that applies), `Axes`
 (viewport; theme; text; locale — or the Design system default),
 `Wireframe`, `Coverage` (file:line), `Scenarios`, `Resources`, `Status`
-(designed|blocked|built|drifted|retired). A flow that onboards records
+(designed|blocked|built|drifted|retired); under v5 also `Fronts` (the
+`CAP-NN` it fronts, or none) and `Why human` (a serving reason with
+evidence), because flows and screens are drawn for the human lanes only.
+A flow that onboards records
 `Onboarding:` and `First value:`; the budget is one screen before the first
 value unless the director record says why.
 
