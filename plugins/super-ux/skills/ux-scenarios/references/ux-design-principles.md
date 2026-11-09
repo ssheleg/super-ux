@@ -9,9 +9,10 @@ audits cite its principle IDs. This is the "taste" layer — formats live in
 ## Contents
 
 - [The pipeline (any product)](#the-pipeline-any-product)
-- [Task analysis (method for step 3)](#task-analysis-method-for-step-3)
-- [Flow design rules (method for step 3, continued)](#flow-design-rules-method-for-step-3-continued)
-- [Screen & interaction rules (method for steps 4–7)](#screen--interaction-rules-method-for-steps-47)
+- [Task analysis (method for step 5)](#task-analysis-method-for-step-5)
+- [Flow design rules (method for step 5, continued)](#flow-design-rules-method-for-step-5-continued)
+- [Screen & interaction rules (method for steps 6 to 9)](#screen--interaction-rules-method-for-steps-6-to-9)
+- [The attention budget (AN-5)](#the-attention-budget-an-5)
 - [Heuristics checklist (Nielsen's ten: PRN-01 – PRN-10)](#heuristics-checklist-nielsens-ten-prn-01--prn-10)
 - [Cognitive principles (PRN-11..PRN-16)](#cognitive-principles-prn-11prn-16)
 - [Motivation principles (PRN-17..PRN-21)](#motivation-principles-prn-17prn-21)
@@ -24,22 +25,32 @@ audits cite its principle IDs. This is the "taste" layer — formats live in
 ## The pipeline (any product)
 
 ```
-1. RESEARCH      personas, JTBD, journeys        -> foundation.md   (WHY)
+1. RESEARCH      personas, actors, JTBD, journeys -> foundation.md  (WHY)
 2. DEFINE        user stories + acceptance       -> foundation.md   (WHAT FOR)
-3. STRUCTURE     task analysis -> user flows     -> flows.md        (HOW)
-4. MAP           screens + states registry       -> screens.md      (UI MAP)
-5. SPECIFY       scenarios: action -> response,  -> scenarios.md    (WHAT EXACTLY)
-                 alt & error paths (use cases)
-6. VISUALIZE     style pack first, then wireframes  -> optional, per screen
+3. CAPABILITIES  stories -> CAP rows: who        -> capabilities.md (WHAT PEOPLE AND
+                 performs it, gate, why a person                     AGENTS CAN DO)
+4. CONTRACT      the agent surface both the UI   -> the contract    (ONE CONTRACT)
+                 and the agents call                source (agent-stack)
+5. STRUCTURE     task analysis -> user flows,    -> flows.md        (HOW)
+                 human lanes only
+6. MAP           screens + states registry       -> screens.md      (UI MAP)
+7. SPECIFY       scenarios: action -> response,  -> scenarios.md    (WHAT EXACTLY)
+                 alt & error paths, every channel
+8. VISUALIZE     style pack first, then wireframes  -> optional, per screen
                  / storyboards / Figma mockups
                  (frames named SCR-NN/<Screen>/<state>)
-7. BUILD UI      only now
-8. VERIFY        audits -> prioritized fix plans -> audits/, plans/
+9. BUILD UI      only now
+10. VERIFY       audits -> prioritized fix plans -> audits/, plans/
 ```
 
-**Forward mode** (new product/feature): run 1→7 in order. Never design a
+Steps 3 and 4 are contract v5 (opt-in; new projects start there): jobs →
+capabilities → contract → flows and screens for the human lanes. A v4 chain
+runs 1, 2, then 5 to 10, as it always has.
+
+**Forward mode** (new product/feature): run 1→9 in order. Never design a
 screen before its flow exists; never draw a flow for a story that traces to
-no job.
+no job; under v5, never draw a screen for a capability no person needs to
+see.
 
 **Backwards mode** (existing product): fill the same artifacts in reverse —
 inventory the UI → reconstruct flows from code → derive scenarios → infer
@@ -47,7 +58,7 @@ stories/jobs → then judge the existing UX against what the chain SHOULD be.
 Every reverse-engineered entry is tagged `inferred` until a human confirms.
 The gaps between "is" and "should" become the improvement backlog.
 
-## Task analysis (method for step 3)
+## Task analysis (method for step 5)
 
 1. Take one user story. Name the goal as the user states it.
 2. Decompose into the minimal sequence of user-visible micro-steps needed to
@@ -58,7 +69,7 @@ The gaps between "is" and "should" become the improvement backlog.
 4. Mark the step where the user first receives real value — the flow must
    reach it as early as possible (aha is engineered, not hoped for).
 
-## Flow design rules (method for step 3, continued)
+## Flow design rules (method for step 5, continued)
 
 - One flow = one user goal (one story or a tight story cluster).
 - Every decision point is an explicit branch — no implicit "the user
@@ -70,7 +81,7 @@ The gaps between "is" and "should" become the improvement backlog.
 - Count steps on the happy path; challenge every step above five.
 - Every screen node declares its states: loading / empty / error / success.
 
-## Screen & interaction rules (method for steps 4–7)
+## Screen & interaction rules (method for steps 6 to 9)
 
 - Every user action gets visible feedback within the same screen.
 - Destructive actions: confirmation AND undo where feasible; undo beats
@@ -100,6 +111,19 @@ The gaps between "is" and "should" become the improvement backlog.
   in `screens.md`, picked with the **sheleg-design** companion when it's
   available — see [visual-identity.md](visual-identity.md). Inventing a look
   per screen is visual drift.
+
+## The attention budget (AN-5)
+
+A person's surface shows **decisions, exceptions and outcomes first**; the
+payload an agent receives sits behind a details step. Under v5 most work runs
+through agents and automations, so a screen that mirrors an agent payload
+(every field, every event, every intermediate state) drowns the one person
+the screen exists for. That holds under `oversight` too: an overview of what
+agents did leads with what needs a decision and what went wrong, and the
+full record is one step away, never the first thing shown. A screen that
+mirrors an agent payload is a design-review finding. Messages count as
+surfaces: a digest or a push carries the decision or the outcome, not the
+log. This is AN-5 of the family's AI-native canon, and this file is its home.
 
 ## Heuristics checklist (Nielsen's ten: PRN-01 – PRN-10)
 

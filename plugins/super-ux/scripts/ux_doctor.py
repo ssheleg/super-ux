@@ -21,7 +21,11 @@ import re
 import sys
 from pathlib import Path
 
-CURRENT = 4
+CURRENT = 5
+# The oldest contract still read as current work rather than as debt. v5 is
+# opt-in (agents and capabilities), so a v4 chain is supported, not behind:
+# the doctor names the migration and counts no problem for it.
+SUPPORTED = 4
 
 # What each contract version introduced, so a report can say what is missing
 # rather than only that something is old.
@@ -29,7 +33,18 @@ HISTORY = {
     2: "`Traces:` on every scenario + traceability rules; `foundation.md` (personas, JTBD, journeys, stories)",
     3: "scenarios become use cases (`user action -> system response`), `Alt paths`, `Traces` includes `FLW-NN`; `flows.md`; `plans/`",
     4: "`screens.md` — one `SCR-NN` entry per screen with per-state Figma frames; flows reference screens by id instead of respecifying them",
+    5: "agents and capabilities, opt-in: actors (`A-NN`) and `Agent use` in `foundation.md`, `capabilities.md` (`CAP-NN`), `Channel` on scenarios, `Fronts` and `Why human` on screens, `agent-panel.md`",
 }
+
+# The v4 -> v5 step, named so a v4 chain is told what opting in costs. Nothing
+# else is required: every v5 lint rule is a warning, and only under the marker.
+V5_MIGRATION = (
+    "v4 -> v5 is opt-in, best taken on the first capability task: add "
+    "`## Actors` (`A-NN`) and `Agent use` to foundation.md, write "
+    "capabilities.md with one `CAP-NN` per must/should story, add `Channel` "
+    "to scenarios and `Fronts` with `Why human` to screens, then change every "
+    "header marker to `ux-contract v5`. Nothing else is required."
+)
 
 # Additive since v4 — absence is not a version problem, but it is worth naming.
 ADDITIVE = [
@@ -39,6 +54,8 @@ ADDITIVE = [
 ]
 
 ARTIFACTS = ["vision.md", "foundation.md", "flows.md", "screens.md", "scenarios.md"]
+# v5 files: their markers count, and their absence is reported only on v5.
+V5_ARTIFACTS = ["capabilities.md", "agent-panel.md"]
 
 # `screens.md` format 2 (0.58.0): the screen matrix — a state list and render
 # axes per screen, a frame for every declared state, a story per state once
@@ -82,6 +99,7 @@ def marker(path: Path) -> int | None:
 def diagnose(ux: Path) -> dict:
     present = {a: (ux / a).exists() for a in ARTIFACTS}
     markers = {a: marker(ux / a) for a in ARTIFACTS if present[a]}
+    markers.update({a: marker(ux / a) for a in V5_ARTIFACTS if (ux / a).exists()})
     known = [v for v in markers.values() if v is not None]
 
     misnamed = {
@@ -135,9 +153,13 @@ def report(ux: Path, d: dict) -> int:
     elif eff is None:
         problems += 1
         print("  NO CONTRACT MARKER on any artifact — the chain is unmanaged.")
-    elif eff < CURRENT:
+    elif eff < SUPPORTED:
         problems += 1
         print(f"  BEHIND: contract v{eff}, current v{CURRENT}")
+    elif eff < CURRENT:
+        print(f"  contract v{eff}, supported; current v{CURRENT} is opt-in")
+    else:
+        print(f"  contract v{eff}")
 
     if unmarked and not d["mixed"]:
         problems += 1
@@ -153,6 +175,8 @@ def report(ux: Path, d: dict) -> int:
         print(f"  MISNAMED: {wrong} -> {right}  (the tooling looks for the contract name and finds nothing)")
 
     missing_core = [a for a, ok in d["present"].items() if not ok]
+    if eff is not None and eff >= 5 and "capabilities.md" not in markers:
+        missing_core.append("capabilities.md")
     if missing_core:
         print(f"  ABSENT: {', '.join(missing_core)}")
 
@@ -170,7 +194,15 @@ def report(ux: Path, d: dict) -> int:
     if d.get("screens_format") == 1:
         print(f"  migration offered: {SCREENS_MIGRATION}")
 
-    print("  OK — on the current contract" if problems == 0 else f"  {problems} problem(s)")
+    if eff == 4 and not d["mixed"]:
+        print(f"  migration offered: {V5_MIGRATION}")
+
+    if problems:
+        print(f"  {problems} problem(s)")
+    elif eff is not None and eff < CURRENT:
+        print("  OK: on a supported contract")
+    else:
+        print("  OK: on the current contract")
     return problems
 
 

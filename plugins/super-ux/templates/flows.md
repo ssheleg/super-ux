@@ -1,7 +1,7 @@
 # User Flows
 
-<!-- Managed with super-ux (ux-contract v4). The HOW layer: task analysis
-and user flows. Flows reference screens by SCR-ID (full specs live in
+<!-- Managed with super-ux (ux-contract v5). The HOW layer: task analysis
+and user flows for the human lanes. Flows reference screens by SCR-ID (full specs live in
 screens.md). Scenarios in scenarios.md trace to FLW-IDs and must cover every
 node and edge. -->
 

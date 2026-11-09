@@ -19,7 +19,7 @@ state handled, every error honest. Output: a versioned report in
 `docs/ux/audits/` plus updated audit statuses in the base.
 
 **Format contract:** [scenario-format.md](references/scenario-format.md)
-(ux-contract v4) — report structure, verdicts (PASS / PARTIAL / FAIL /
+(ux-contract v5): report structure, verdicts (PASS / PARTIAL / FAIL /
 BLOCKED), severities.
 
 **Preconditions are computed AFTER the scope, one per pass — never a blanket
@@ -198,7 +198,13 @@ How far each pass goes, what it reads at each level, and which references it pul
    verified runtime receipt** — absent one it is **BLOCKED (unverified)**, never
    a PASS off a `file:line`, and never invented when no browser is available.
    A browser check runs in WebKit (Safari) first and names its engine
-   ([browser-engine.md](references/browser-engine.md)). A
+   ([browser-engine.md](references/browser-engine.md)). On an agent-channel
+   scenario (contract v5) the runtime receipt is a recorded MCP or CLI call
+   through a real client: the request, the typed response, and the state read
+   back. The static pass there also checks the one-contract proxy (AN-3,
+   <https://raw.githubusercontent.com/ssheleg/agent-stack/main/plugins/agent-stack/skills/agent-interop/references/agent-surface.md>):
+   every operation the frontend invokes is
+   on the agent surface or marked `internal` with a reason. A
    STATIC criterion PASSes on its `file:line` with the proof type named.
    Any gap → PARTIAL (or FAIL if the flow is missing/broken) with a finding
    `[AUD-YYYY-MM-DD-NN] (severity) description -> suggested fix`.

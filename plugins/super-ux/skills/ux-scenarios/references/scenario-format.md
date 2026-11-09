@@ -1,10 +1,16 @@
-# UX Contract (v4): Vision, Foundation, Flows, Screens, Scenarios, Audits
+# UX Contract (v5): Vision, Foundation, Capabilities, Flows, Screens, Scenarios, Audits
 
 This is THE contract for `docs/ux/` in a target project. The `vision`,
 `ux-foundation`, `ux-flows`, `ux-scenarios`, and `ux-audit` skills — and the
 Cursor rules — follow it. Do not deviate from field names, ID schemes, statuses, or
 verdicts; tooling and audits key off them. The design reasoning behind the
 formats lives in [ux-design-principles.md](ux-design-principles.md).
+
+**v5 is opt-in.** Everything v5 adds (actors, capabilities, channels, why a
+person is needed) lives in
+[Contract v5: agents and capabilities](#contract-v5-agents-and-capabilities)
+and binds only a chain whose files declare `ux-contract v5`. A v4 chain stays
+valid and its lint result does not move.
 
 ## Contents
 
@@ -17,6 +23,7 @@ formats lives in [ux-design-principles.md](ux-design-principles.md).
 - [`docs/ux/flows.md`](#docsuxflowsmd)
 - [`docs/ux/screens.md` — the UI map](#docsuxscreensmd--the-ui-map)
 - [`docs/ux/scenarios.md`](#docsuxscenariosmd)
+- [Contract v5: agents and capabilities](#contract-v5-agents-and-capabilities)
 - [Audit report — `docs/ux/audits/YYYY-MM-DD[-scope].md`](#audit-report--docsuxauditsyyyy-mm-dd-scopemd)
 - [UX plan — `docs/ux/plans/YYYY-MM-DD-<scope>.md`](#ux-plan--docsuxplansyyyy-mm-dd-scopemd)
 - [Linter codes — what `docs/ux/lint.py` can say](#linter-codes--what-docsuxlintpy-can-say)
@@ -27,7 +34,9 @@ formats lives in [ux-design-principles.md](ux-design-principles.md).
 ```
 docs/ux/
 ├── vision.md                 # WHAT IT IS: essence, core idea, principles, anti-vision, alignment test (optional layer)
-├── foundation.md             # WHY: personas, JTBD, journeys, user stories, monetization, design tooling
+├── foundation.md             # WHY: personas, actors (v5), JTBD, journeys, user stories, monetization, design tooling
+├── capabilities.md           # v5: what people and agents can do, one CAP-NN per effect set
+├── agent-panel.md            # v5, optional: the agents an agent-tester walks the scenarios as
 ├── flows.md                  # HOW: task analysis + user flows (mermaid), referencing screens
 ├── screens.md                # UI MAP: every screen + state with Figma frame, wireframe, coverage, resources
 ├── scenarios.md              # WHAT: use-case scenarios (source of truth for behavior)
@@ -39,8 +48,10 @@ docs/ux/
 ```
 
 The chain: **Personas → Jobs (JTBD) → Journeys → User stories → Flows →
-Screens → Scenarios → Audits → Fix plans.** Every layer traces to the one
-above it. `screens.md` is the canonical **design map**: the single record of
+Screens → Scenarios → Audits → Fix plans.** Under v5 a capabilities layer
+sits between the stories and the flows, and flows and screens are drawn for
+the human lanes only (the order is the system map's AN-2). Every layer traces
+to the one above it. `screens.md` is the canonical **design map**: the single record of
 every screen and every state, each with its Figma frame link, wireframe,
 code coverage, and related UX/UI resources; flows reference screens by ID
 instead of duplicating their specs. `foundation.md`, `flows.md`, and
@@ -118,7 +129,9 @@ state of its own. A `Status` on either is `U075`.
 
 This list is the ONE home of every enum `docs/ux/lint.py` matches on, and
 `validate_status_enums_match_contract` compares it against the linter's own table
-and fails when either side moves alone. It exists because they had already
+and fails when either side moves alone. The v5 fields' enums are the one
+exception, declared in *Contract v5* below under the same parity check, because
+they bind only a v5 chain. It exists because they had already
 drifted: this contract declared five screen statuses — `blocked` among them, with
 a paragraph of rules of its own — while the linter matched four, so a `blocked`
 screen read as having **no** status and every rule keyed on one stopped applying
@@ -245,7 +258,7 @@ vision. A contradiction is a finding to raise, not to smooth over.
 
 ## `docs/ux/foundation.md`
 
-Header comment: `<!-- Managed with super-ux (ux-contract v4). The WHY layer:
+Header comment: `<!-- Managed with super-ux (ux-contract v5). The WHY layer:
 update when the understanding of users changes. -->`
 
 ### 1. Personas
@@ -383,7 +396,7 @@ deleted.
 
 ## `docs/ux/flows.md`
 
-Header comment: `<!-- Managed with super-ux (ux-contract v4). The HOW layer:
+Header comment: `<!-- Managed with super-ux (ux-contract v5). The HOW layer:
 task analysis and user flows scenarios trace to. -->`
 
 One entry per user goal (one story or a tight story cluster):
@@ -465,7 +478,7 @@ Flow rules (from the principles doc, enforced by validation and audits):
 ## `docs/ux/screens.md` — the UI map
 
 The canonical record of every screen and state, with all linked UX/UI
-resources. Header comment: `<!-- Managed with super-ux (ux-contract v4). The
+resources. Header comment: `<!-- Managed with super-ux (ux-contract v5). The
 design map: every screen and state with its Figma frame, wireframe, code
 coverage, and resources. Update in the same change as any interface change;
 when Figma is enabled, update the frame too. -->`
@@ -596,7 +609,7 @@ Rules:
 
 Ordered structure:
 
-1. **Header comment:** `<!-- Managed with super-ux (ux-contract v4). Update
+1. **Header comment:** `<!-- Managed with super-ux (ux-contract v5). Update
    in the same change as any user-facing behavior change. -->`
 2. **Index** — one row per scenario:
 
@@ -723,6 +736,208 @@ coherence with the first session; and, when money is taken on the web,
 the funnel steps (landing, pricing, signup, checkout with the total price
 shown, abandonment recovery, failed payment) plus — for web2app — the paid
 handoff and each of its failure branches.
+
+## Contract v5: agents and capabilities
+
+Products are now used by agents as well as people. v5 records who performs a
+story (a person, an agent acting for one, an automation), the capabilities the
+story needs, and why a person is needed wherever a screen exists. It is the
+home of two rules of the family's AI-native canon, **AN-1** and **AN-4**; the
+canon index with all ten rules and their homes is agent-stack's
+`agent-surface.md`
+(<https://raw.githubusercontent.com/ssheleg/agent-stack/main/plugins/agent-stack/skills/agent-interop/references/agent-surface.md>).
+
+**Opt-in, by marker.** A chain is on v5 when its files' header comments carry
+`ux-contract v5`, the marker `docs/ux/doctor.py` reads. The lowest marker
+decides, so one v5 file seeded into a v4 chain does not switch it over. A v4
+chain keeps its `v4` headers, stays valid, and lints exactly as before;
+`doctor.py` names the migration (add actors, capabilities and channels;
+nothing else is required), best taken on the project's first capability task.
+New projects start on v5: the seeded templates carry the marker.
+
+### AN-1: parity by story
+
+Every `must`/`should` story a person can complete, an agent can complete
+through a documented surface (MCP preferred; a CLI with machine output or an
+HTTP API accepted), **acting and being notified** (`Emits`). Parity is by
+story, not by endpoint: a few thoughtful tools serve many screens. The
+exceptions are named per capability in `Agent excluded`, never per product.
+
+### AN-4: why a person, two scales
+
+A person appears in a capability for one of two kinds of reason, and every
+value cites its evidence: a `JTBD-`, `ST-` or `RE-` id, a policy id, a
+recorded decision, or the typed error that routes work to a queue. **No
+product-level waiver exists.**
+
+- **Gate** (blocking: the contract returns a typed refusal and the agent hands
+  the step to a person): `body` (sign-in, one-time code, consent screen,
+  payment or top-up, typed secret, org-admin consent), `approval` (a decision
+  recorded as a person's, or an effect over a policy limit; on an internal
+  product only with a recorded operator decision, otherwise the agent's
+  delegated act), `legal` (the law requires a person: an automated decision
+  with significant effect, KYC, an e-signature). A threshold cites a policy
+  id, never a price literal, so a price change does not move a gate silently.
+- **Serving reason** (a screen beside the agent path, never in its way):
+  `oversight` (a person reviews what agents and automations did),
+  `exception-queue` (the work an agent could not finish), `trust` (a first
+  run or a high-stakes step a person wants to see), `presence` (the person's
+  body or device: camera, location, a notification on their phone),
+  `audience` (people who use no agent: a persona with `Agent use: none`),
+  `manual` (a person chooses to do it by hand), `taste` (picking between
+  variants, in trial mode only).
+
+How a gate is refused on the wire (the typed error, `human_steps`, MCP
+`input_required`) is AN-7, agent-stack's; this contract only records which
+gate applies.
+
+### Actors: `A-NN` in `foundation.md`
+
+Personas are people; actors are the non-human performers, in their own list
+under `## Actors`:
+
+```markdown
+## Actors
+
+### A-01: Owner's coding agent
+- **Kind:** agent | system
+- **Acts for:** P-01
+- **Grant:** <the scope it holds, e.g. billing:write on the owner's workspace, revocable>
+```
+
+`Kind: agent` is a model acting for a principal; `Kind: system` is an
+automation or an outside service. An agent's grant never exceeds its
+principal's role.
+
+Two more foundation fields: a persona carries **`Agent use: none | some |
+most`** with its evidence (`- **Agent use:** none (RE-03)`), and a journey
+table gains a **`Performed by`** column holding `P-` and `A-` ids. The
+journey's `Owner:` is unchanged: it names who is accountable for the map, not
+who performs a stage.
+
+### `docs/ux/capabilities.md`: one `CAP-NN` per effect set
+
+Between the stories and the flows. Header comment: `<!-- Managed with
+super-ux (ux-contract v5). What people and agents can do: one CAP-NN per
+effect set. -->`, then an Index table and one entry per capability, its
+fields in this order:
+
+```markdown
+### CAP-07: Cancel a subscription
+- **Traces:** ST-012
+- **Actors:** human, agent
+- **Agent excluded:** none
+- **Roles:** owner, billing-admin
+- **Gate:** none
+- **Tools:** billing_subscription_cancel
+- **Emits:** subscription.cancelled
+- **Data:** payment
+- **Automation:** none
+- **Human surface:** SCR-09; Why human: manual (JTBD-03, RE-04)
+- **Since:** v1
+- **Status:** specified
+```
+
+- **Traces:** the stories it serves. Every `must`/`should` story has one
+  (`U089`).
+- **Actors:** who performs it, any of `human`, `agent`, `automation`.
+- **Agent excluded:** `none` while `agent` is an actor. Without `agent`, the
+  reason with evidence: `presence (camera on the device, RE-02)`, `legal
+  (Art. 22, policy POL-04)`, or `debt (B-123)`, which is parity owed, listed
+  and on the board, never hidden (`U092`).
+- **Roles:** the principal roles allowed to invoke it (tenancy and
+  entitlements live here, by role or plan, never by a price).
+- **Gate:** `none | body | approval | legal`, with its evidence (`U093`).
+- **Tools:** the tool ids an agent calls, as the contract source names them.
+  A capability with `agent` among its actors has at least one (`U090`).
+- **Emits:** the events or notifications an agent can subscribe to, or
+  `none`.
+- **Data:** the most sensitive class it touches, `public | internal |
+  personal | payment | secret`.
+- **Automation:** `none`, or its trigger, schedule and kill switch. A
+  capability with no gate, no serving reason and a determinable trigger is an
+  automation by default (the system map's AN-6).
+- **Human surface:** `none`, or the `SCR-` ids that front it and `Why human:`
+  with a serving reason and its evidence.
+- **Since:** the contract version that introduced it.
+- **Status:** `proposed | specified | exposed | deprecated | retired`. A
+  deprecated capability names its sunset date and its replacement; a tool is
+  never renamed.
+
+One row is one effect set: a refund is its own capability beside the
+cancellation, because its gate differs. Effect classes, idempotency and
+limits are not repeated here; the contract source declares them and the
+snapshot is what a lint of the surface reads. How that surface is built
+(contract source and snapshot, the gate protocol, credentials, discovery) is
+agent-stack's `agent-surface.md`; how an agent is proven to complete a story
+through it is agent-stack's `operability.md`
+(<https://raw.githubusercontent.com/ssheleg/agent-stack/main/plugins/agent-stack/skills/agent-evals/references/operability.md>).
+Neither is restated here.
+
+A capability found while designing a later layer (a flow, a screen, the
+contract) flows back into this file in the same change. A function that
+exists only behind a screen is a defect: a UI-only function.
+
+### Scenarios: `Channel`
+
+A scenario declares **`Channel: agent | human | both`**. An absent field
+reads as `human`, the scenario every v4 chain already wrote.
+
+- An agent step is `A-NN -> tool -> observable response`, the response
+  including the typed errors, the gate handoff and the idempotent retry the
+  scenario relies on.
+- An `agent` or `both` scenario cites the capability it exercises in
+  `Traces` (`U091`): it is that capability's acceptance test, written beside
+  the contract.
+- `UI elements` is required on the human channel only.
+- A persona with `Agent use: none` keeps a human-channel scenario for every
+  `must` story it reaches (`U095`): the audience decides the human path's
+  size, not the canon.
+
+### Screens: `Fronts` and `Why human`
+
+A v5 screen names the capabilities it fronts and why a person is there:
+
+```markdown
+- **Fronts:** CAP-07, CAP-08
+- **Why human:** exception-queue (CAP-08 refusals route here, policy POL-02)
+```
+
+`Fronts: none` is a value (a landing page fronts no capability); a missing
+field is `U094`. The reason comes from the serving-reason enum with its
+evidence (`U093`). A screen exists where a person is needed; everything else
+an agent can do through the capability alone. The attention budget for what
+the screen shows is AN-5, in `ux-design-principles.md`.
+
+### `docs/ux/agent-panel.md`: the agent test panel
+
+Beside the human `test-panel.md`, and separate from it on purpose: the human
+panel is read by fixed lines and stays untouched. Five agents walk the
+agent-channel scenarios: a full-grant agent, a narrowly delegated agent, an
+automation with no conversation, a cheap model, and an adversarial agent fed
+injected content. Each carries its grant, its model class and the scenarios
+it walks by `SCN-` id. `ux-foundation` seeds it from its agent-panel template.
+task-pipeline's agent-tester reads it.
+
+### The v5 enums
+
+Declared here for a v5 chain; `validate_status_enums_match_contract` compares
+them with the linter's `V5_ENUMS`.
+
+- `CAP-NN` **Actors** (v5): `human | agent | automation`
+- `CAP-NN` **Agent excluded** (v5): `presence | legal | debt`
+- `CAP-NN` **Gate** (v5): `none | body | approval | legal`
+- `CAP-NN` **Data** (v5): `public | internal | personal | payment | secret`
+- `CAP-NN` **Status** (v5): `proposed | specified | exposed | deprecated | retired`
+- `A-NN` **Kind** (v5): `agent | system`
+- `P-NN` **Agent use** (v5): `none | some | most`
+- `SCN-NNN` **Channel** (v5): `agent | human | both`
+- `SCR-NN` **Why human** (v5): `oversight | exception-queue | trust | presence | audience | manual | taste`
+
+A value outside its enum is `U088`. Every v5 code (`U087`..`U095`) is a
+warning, and none runs on a v4 chain. Under v5 a chain with no `screens.md`
+is not asked the web-surfaces question (`U050`): a product may have no human
+surface at all.
 
 ## Audit report — `docs/ux/audits/YYYY-MM-DD[-scope].md`
 
@@ -923,6 +1138,7 @@ each emitted code to have a fixture in `test/ux_lint_test.py` **and** a row
 here — the meaning of a rule never lives only in its source.
 
 **E** fails the run (exit 1). **W** is reported and passes unless `--strict`.
+**(v5)** runs only on a chain that declares `ux-contract v5`.
 
 | Code | | What it means |
 |---|---|---|
@@ -976,5 +1192,14 @@ here — the meaning of a rule never lives only in its source.
 | U084 | W | a flow counts onboarding screens and names no `First value:` — the count is against a destination nobody wrote down |
 | U085 | E | `Art direction: approved` cites no critique, or cites a local path that does not resolve — the look was approved on frames nobody is shown to have looked at |
 | U086 | W | journey has no single nonempty `Owner`; record a role/person or `unknown`, never infer ownership |
+| U087 | W (v5) | a capability is missing one of its twelve fields; `none` is a value, an absent field is not |
+| U088 | W (v5) | a v5 field holds a value outside its enum (CAP `Actors`, `Agent excluded`, `Gate`, `Data`, `Status`; actor `Kind`; persona `Agent use`; scenario `Channel`; a serving reason) |
+| U089 | W (v5) | a `must`/`should` story has no capability tracing to it: parity by story (AN-1), checked structurally |
+| U090 | W (v5) | a capability names `agent` among its actors and lists no `Tools` |
+| U091 | W (v5) | an `agent`- or `both`-channel scenario cites no `CAP-` in its traces |
+| U092 | W (v5) | a capability leaves agents out and names no `Agent excluded` reason with evidence, or records `debt` with no board row |
+| U093 | W (v5) | a gate other than `none`, or a serving reason, cites no evidence beside it |
+| U094 | W (v5) | a screen has no `Fronts` or no `Why human`, or fronts a capability `capabilities.md` does not define |
+| U095 | W (v5) | a persona with `Agent use: none` has a `must` story served only by agent-channel scenarios |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |

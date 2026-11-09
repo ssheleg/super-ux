@@ -199,6 +199,11 @@ guards govern the pass wherever it runs, and they are not optional:
 - **One action, one name.** Before naming an action, search `strings.md` for
   it. A second name for an existing action is a defect, not a synonym.
 - **Never quote a number that is not in `facts.md`.**
+- **Agent-facing text is not product copy.** A tool description, a schema
+  field and an error body an agent reads follow agent-stack's agent-harness
+  `tools.md`, not this pack. The `human_steps` an agent hands a person at a
+  gate are product copy: write them here, in the voice and the principal's
+  locale.
 
 ## Definition of done
 

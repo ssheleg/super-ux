@@ -1192,6 +1192,273 @@ silent("U086 explicit unknown", {"foundation.md": "### JRN-01: Map\n- **Owner:**
 silent("U086 named role", {"foundation.md": "### JRN-01: Map\n- **Owner:** support team\n"}, {"U086"})
 silent("U086 template comments are not journeys", {"foundation.md": (ROOT / "templates/foundation.md").read_text()}, {"U086"})
 
+# --- Contract v5: agents and capabilities (U087..U095), opt-in --------------
+#
+# v5 rules run only when the chain declares `ux-contract v5`, and the LOWEST
+# marker decides. Each code is planted both ways; the opt-in itself is proven
+# three ways: a v4 tree carrying v5-shaped defects stays silent, a v4 chain
+# with one v5 file stays on v4, and the on-disk v4 fixture exits 0 under
+# --strict while its v5 twin is clean too.
+
+V5_MARK = "<!-- Managed with super-ux (ux-contract v5). -->\n"
+
+
+def lint5(files: dict, drop: tuple = (), marker: bool = True,
+          strict: bool = False) -> tuple[set, set, int]:
+    """Lint a v5 tree: the foundation carries the marker unless told not to."""
+    tree = {**MINIMAL, **files}
+    for rel in drop:
+        tree.pop(rel, None)
+    if marker:
+        tree["foundation.md"] = V5_MARK + tree.get("foundation.md", "# Foundation\n")
+    with tempfile.TemporaryDirectory() as tmp:
+        ux = Path(tmp) / "docs" / "ux"
+        ux.mkdir(parents=True)
+        for rel, body in tree.items():
+            (ux / rel).write_text(body, encoding="utf-8")
+        ux_lint.ERRORS.clear()
+        ux_lint.WARNS.clear()
+        argv, stdout = sys.argv, sys.stdout
+        sys.argv = ["ux_lint.py", str(ux)] + (["--strict"] if strict else [])
+        sys.stdout = io.StringIO()
+        try:
+            rc = ux_lint.main()
+        finally:
+            sys.argv, sys.stdout = argv, stdout
+        return ({c for m in ux_lint.ERRORS for c in CODE_RE.findall(m)},
+                {c for m in ux_lint.WARNS for c in CODE_RE.findall(m)}, rc)
+
+
+def case5(name: str, files: dict, warns: set, drop: tuple = ()) -> None:
+    global checks
+    checks += 1
+    _, got_w, _ = lint5(files, drop)
+    if not warns <= got_w:
+        failures.append(f"{name}: expected warning(s) {sorted(warns - got_w)}, got {sorted(got_w)}")
+
+
+def silent5(name: str, files: dict, codes: set, drop: tuple = (),
+            marker: bool = True) -> None:
+    global checks
+    checks += 1
+    got_e, got_w, _ = lint5(files, drop, marker)
+    fired = (got_e | got_w) & codes
+    if fired:
+        failures.append(f"{name}: expected silence on {sorted(fired)}, they fired")
+
+
+CAP_ROW = ("### CAP-01: Cancel a subscription\n"
+           "- **Traces:** ST-001\n"
+           "- **Actors:** human, agent\n"
+           "- **Agent excluded:** none\n"
+           "- **Roles:** owner\n"
+           "- **Gate:** none\n"
+           "- **Tools:** billing_subscription_cancel\n"
+           "- **Emits:** subscription.cancelled\n"
+           "- **Data:** payment\n"
+           "- **Automation:** none\n"
+           "- **Human surface:** SCR-01; Why human: manual (JTBD-01, RE-04)\n"
+           "- **Since:** v1\n"
+           "- **Status:** specified\n")
+
+
+def caps(row: str = CAP_ROW) -> str:
+    return ("# Capabilities\n\n## Index\n\n| ID | Capability | Status |\n|---|---|---|\n"
+            "| CAP-01 | Cancel a subscription | specified |\n\n## Capabilities\n\n" + row)
+
+
+MUST = ("### ST-001: cancel\n- **Story:** As P-01, I want to cancel, so that I stop paying.\n"
+        "- **Traces:** JTBD-01\n- **Acceptance criteria:**\n"
+        "  - Given a plan, when I cancel, then billing stops.\n"
+        "- **Priority:** must\n- **Status:** validated\n")
+FOUND5 = "# Foundation\n\n## User stories\n\n" + MUST
+SCN_AGENT = ("# Scenarios\n\n| ID | Title |\n|---|---|\n| SCN-001 | cancel |\n\n"
+             "### SCN-001: cancel by agent\n- **Persona:** P-01\n"
+             "- **Traces:** ST-001, CAP-01\n- **Channel:** agent\n"
+             "- **Steps:**\n  1. A-01 -> billing_subscription_cancel -> typed result\n"
+             "- **Expected result:** the subscription is cancelled\n- **Status:** draft\n")
+SCR_V5 = ("- **Purpose:** p\n- **Fronts:** CAP-01\n"
+          "- **Why human:** manual (JTBD-01, RE-04)\n- **Status:** designed\n")
+
+case5("U087 a capability row missing a field",
+      {"capabilities.md": caps(CAP_ROW.replace("- **Tools:** billing_subscription_cancel\n", ""))},
+      {"U087"})
+silent5("U087 clean on the full row", {"capabilities.md": caps()}, {"U087"})
+
+case5("U088 a gate outside its enum",
+      {"capabilities.md": caps(CAP_ROW.replace("**Gate:** none", "**Gate:** maybe"))},
+      {"U088"})
+case5("U088 a channel outside its enum",
+      {"scenarios.md": SCN_AGENT.replace("**Channel:** agent", "**Channel:** robot")},
+      {"U088"})
+case5("U088 an Agent use outside its enum",
+      {"foundation.md": "# Foundation\n\n### P-01: owner\n- **Agent use:** lots\n"},
+      {"U088"})
+case5("U088 an actor Kind outside its enum",
+      {"foundation.md": "# Foundation\n\n## Actors\n\n### A-01: mail importer\n- **Kind:** bot\n"},
+      {"U088"})
+case5("U088 a serving reason outside its enum",
+      {"screens.md": screens(SCR_V5.replace("manual (JTBD-01, RE-04)", "vibes (RE-04)"))},
+      {"U088"})
+silent5("U088 clean on legal values",
+        {"capabilities.md": caps(), "scenarios.md": SCN_AGENT,
+         "screens.md": screens(SCR_V5),
+         "foundation.md": FOUND5 + "\n### P-01: owner\n- **Agent use:** most (RE-01)\n"
+                          "\n## Actors\n\n### A-01: owner's agent\n- **Kind:** agent\n"},
+        {"U088"})
+
+case5("U089 a must story no capability traces to",
+      {"foundation.md": FOUND5, "capabilities.md": caps(CAP_ROW.replace(
+          "**Traces:** ST-001", "**Traces:** ST-002"))},
+      {"U089"})
+case5("U089 fires with no capabilities.md at all",
+      {"foundation.md": FOUND5}, {"U089"})
+silent5("U089 clean when a capability traces to the story",
+        {"foundation.md": FOUND5, "capabilities.md": caps()}, {"U089"})
+
+case5("U090 an agent capability with no tools",
+      {"capabilities.md": caps(CAP_ROW.replace(
+          "**Tools:** billing_subscription_cancel", "**Tools:** none"))},
+      {"U090"})
+silent5("U090 clean when the agent capability names its tool",
+        {"capabilities.md": caps()}, {"U090"})
+silent5("U090 silent when no agent is an actor",
+        {"capabilities.md": caps(CAP_ROW.replace("human, agent", "human").replace(
+            "**Tools:** billing_subscription_cancel", "**Tools:** none").replace(
+            "**Agent excluded:** none", "**Agent excluded:** presence (camera, RE-02)"))},
+        {"U090"})
+
+case5("U091 an agent-channel scenario citing no capability",
+      {"scenarios.md": SCN_AGENT.replace("ST-001, CAP-01", "ST-001")}, {"U091"})
+silent5("U091 clean when the scenario cites its capability",
+        {"scenarios.md": SCN_AGENT}, {"U091"})
+silent5("U091 silent on a human-channel scenario",
+        {"scenarios.md": SCN_AGENT.replace("ST-001, CAP-01", "ST-001").replace(
+            "**Channel:** agent", "**Channel:** human")}, {"U091"})
+
+HUMAN_ONLY = CAP_ROW.replace("human, agent", "human")
+case5("U092 a human-only capability naming no exclusion",
+      {"capabilities.md": caps(HUMAN_ONLY)}, {"U092"})
+case5("U092 parity debt with no board row",
+      {"capabilities.md": caps(HUMAN_ONLY.replace(
+          "**Agent excluded:** none", "**Agent excluded:** debt (later)"))}, {"U092"})
+case5("U092 an exclusion with no evidence",
+      {"capabilities.md": caps(HUMAN_ONLY.replace(
+          "**Agent excluded:** none", "**Agent excluded:** presence"))}, {"U092"})
+silent5("U092 clean on an evidenced exclusion",
+        {"capabilities.md": caps(HUMAN_ONLY.replace(
+            "**Agent excluded:** none", "**Agent excluded:** presence (camera on the device, RE-02)"))},
+        {"U092"})
+silent5("U092 clean on debt with its board row",
+        {"capabilities.md": caps(HUMAN_ONLY.replace(
+            "**Agent excluded:** none", "**Agent excluded:** debt (B-012)"))}, {"U092"})
+
+case5("U093 a gate with no evidence",
+      {"capabilities.md": caps(CAP_ROW.replace("**Gate:** none", "**Gate:** approval"))},
+      {"U093"})
+case5("U093 a screen's serving reason with no evidence",
+      {"screens.md": screens(SCR_V5.replace("manual (JTBD-01, RE-04)", "oversight"))},
+      {"U093"})
+silent5("U093 clean on an evidenced gate and reason",
+        {"capabilities.md": caps(CAP_ROW.replace(
+            "**Gate:** none", "**Gate:** approval (refund policy POL-02, over its limit)")),
+         "screens.md": screens(SCR_V5)},
+        {"U093"})
+
+case5("U094 a v5 screen with neither Fronts nor Why human",
+      {"screens.md": screens("- **Purpose:** p\n- **Status:** designed\n")}, {"U094"})
+case5("U094 a screen fronting a capability that does not exist",
+      {"capabilities.md": caps(), "screens.md": screens(SCR_V5.replace("CAP-01", "CAP-07"))},
+      {"U094"})
+silent5("U094 clean when the screen fronts a capability and says why",
+        {"capabilities.md": caps(), "screens.md": screens(SCR_V5)}, {"U094"})
+silent5("U094 silent on a retired screen",
+        {"screens.md": screens("- **Purpose:** p\n- **Status:** retired\n")}, {"U094"})
+
+PERSONA_NONE = ("# Foundation\n\n### P-01: retiree\n- **Agent use:** none (RE-03)\n\n"
+                "### JTBD-01: stop paying\n- **Personas:** P-01\n\n## User stories\n\n" + MUST)
+case5("U095 a no-agent persona whose must story has only agent scenarios",
+      {"foundation.md": PERSONA_NONE, "scenarios.md": SCN_AGENT}, {"U095"})
+silent5("U095 clean when a human-channel scenario serves the story",
+        {"foundation.md": PERSONA_NONE,
+         "scenarios.md": SCN_AGENT.replace("| SCN-001 | cancel |", "| SCN-001 | cancel |\n| SCN-002 | cancel |")
+         + "\n### SCN-002: cancel by hand\n- **Traces:** ST-001\n- **Channel:** human\n"
+           "- **Expected result:** cancelled\n- **Status:** draft\n"},
+        {"U095"})
+silent5("U095 silent when the persona uses agents",
+        {"foundation.md": PERSONA_NONE.replace("none (RE-03)", "most (RE-03)"),
+         "scenarios.md": SCN_AGENT}, {"U095"})
+
+# U050 is about a screen's audience; a v5 product may have no screen at all.
+silent5("U050 silent under v5 when there is no screens.md",
+        {"capabilities.md": caps()}, {"U050"}, drop=("screens.md",))
+checks += 1
+_, got_w, _ = lint5({}, drop=("screens.md",), marker=False)
+if "U050" not in got_w:
+    failures.append("U050 must still fire on a v4 chain with no screens.md: the "
+                    "suppression belongs to v5 alone")
+
+# The opt-in, proven. Every planted v5 defect above, in one v4 tree: silent.
+V5_CODES = {f"U{n:03d}" for n in range(87, 96)}
+PLANTED = {"capabilities.md": caps(HUMAN_ONLY.replace("**Gate:** none", "**Gate:** maybe")),
+           "scenarios.md": SCN_AGENT.replace("ST-001, CAP-01", "ST-001"),
+           "screens.md": screens("- **Purpose:** p\n- **Status:** designed\n"),
+           "foundation.md": PERSONA_NONE}
+silent5("v5 rules stay silent on a chain that declares no contract",
+        PLANTED, V5_CODES, marker=False)
+silent5("v5 rules stay silent when the lowest marker is v4",
+        {**PLANTED, "foundation.md": "<!-- Managed with super-ux (ux-contract v4). -->\n"
+                                     + PERSONA_NONE,
+         "capabilities.md": V5_MARK + PLANTED["capabilities.md"]},
+        V5_CODES, marker=False)
+checks += 1
+_, got_w, _ = lint5(PLANTED)
+if not {"U088", "U091", "U092", "U094", "U095"} <= got_w:
+    failures.append(f"the same tree under v5 should fire the v5 codes; got {sorted(got_w)}")
+
+# The on-disk fixtures: a v4 chain exits 0 under --strict, and its v5 twin is
+# clean too. These are the trees the PR body runs the linter on by hand.
+FIXTURES = ROOT / "test" / "fixtures"
+for label, tree, want in (("contract-v4", FIXTURES / "contract-v4", 4),
+                          ("contract-v5", FIXTURES / "contract-v5", 5)):
+    checks += 1
+    ux_dir = tree / "docs" / "ux"
+    if ux_lint.contract_version(ux_dir) != want:
+        failures.append(f"{label}: declares v{ux_lint.contract_version(ux_dir)}, expected v{want}")
+    ux_lint.ERRORS.clear()
+    ux_lint.WARNS.clear()
+    argv, stdout = sys.argv, sys.stdout
+    sys.argv = ["ux_lint.py", str(ux_dir), "--strict"]
+    sys.stdout = io.StringIO()
+    try:
+        rc = ux_lint.main()
+    finally:
+        sys.argv, sys.stdout = argv, stdout
+    if rc != 0:
+        failures.append(f"{label}: --strict exits {rc}: {ux_lint.ERRORS + ux_lint.WARNS}")
+
+
+def doctor_on(ux_dir: Path) -> str:
+    out, stdout = io.StringIO(), sys.stdout
+    sys.stdout = out
+    try:
+        ux_doctor.report(ux_dir, ux_doctor.diagnose(ux_dir))
+    finally:
+        sys.stdout = stdout
+    return out.getvalue()
+
+
+checks += 1
+said = doctor_on(FIXTURES / "contract-v4" / "docs" / "ux")
+if "v4 -> v5" not in said or "problem" in said:
+    failures.append(f"doctor: a v4 chain is offered the v5 migration and counts no "
+                    f"problem for it; it said: {said!r}")
+checks += 1
+said = doctor_on(FIXTURES / "contract-v5" / "docs" / "ux")
+if "contract v5" not in said or "v4 -> v5" in said or "problem" in said:
+    failures.append(f"doctor: a v5 chain reports v5 with no migration; it said: {said!r}")
+
+
 if failures:
     print(f"FAIL ({len(failures)} of {checks} checks)")
     for f in failures:

@@ -69,8 +69,9 @@ a rejected branch still lets the tag through.
 ## UX scenarios — hard rule (super-ux)
 
 - `docs/ux/scenarios.md` is the source of truth for all user-facing
-  behavior; `docs/ux/foundation.md` (personas, JTBD, journeys, stories) and
-  `docs/ux/flows.md` (user flows) are the WHY and HOW layers scenarios
+  behavior; `docs/ux/foundation.md` (personas, actors, JTBD, journeys,
+  stories), `docs/ux/capabilities.md` (what people and agents can do,
+  contract v5) and `docs/ux/flows.md` (user flows) are the layers scenarios
   trace to.
 - Any change that touches user-facing behavior or interface MUST update, in
   the same change: `docs/ux/scenarios.md`; affected flows; the affected
@@ -79,9 +80,11 @@ a rejected branch still lets the tag through.
   links in `screens.md`. A screen whose code diverges from its record, or a
   stale Figma link, is drift — the exact thing this system prevents.
 - Any new feature or project STARTS with the chain: which job, which
-  journey stage, which story it serves → the flow → the screens and their
-  states → the scenarios. Validate against the existing base, get approval,
-  and only then write code.
+  journey stage, which story it serves → which capability and who performs
+  it (a person, an agent, an automation; contract v5) → the contract → the
+  flow → the screens and their states for the human lanes → the scenarios.
+  Validate against the existing base, get approval, and only then write
+  code.
 - Do NOT write interface code until that workflow is done — the chain is
   designed and approved for the change at hand, the affected scenarios and
   screens exist and are `validated`/`designed`, conflicts with existing

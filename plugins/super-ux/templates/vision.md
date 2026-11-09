@@ -1,6 +1,6 @@
 # <Product> — Vision
 
-<!-- Managed with super-ux (ux-contract v4). The layer above the chain. -->
+<!-- Managed with super-ux (ux-contract v5). The layer above the chain. -->
 
 <!--
   Owned by the `vision` skill (super-ux). Nine sections, these headings, in
@@ -39,8 +39,10 @@
 
 ## 4. The user's role
 
-<!-- What the user becomes. Not "the user clicks" — the user directs, judges,
-     decides. If it reads like operating any other tool, go deeper. -->
+<!-- What the user becomes. Not "the user clicks": the user directs, judges,
+     decides. If it reads like operating any other tool, go deeper. Say
+     which work the person keeps and which their agent or an automation does
+     for them; the person is where a gate or a decision needs them. -->
 
 ## 5. Principles
 
@@ -67,7 +69,9 @@
 
 <!-- Three to five questions any proposed feature must pass. These are what
      the hard rule in the instruction file actually runs. A stranger should be
-     able to reject a plausible feature with them. -->
+     able to reject a plausible feature with them. Include one for agents:
+     can an agent do this without a screen, and if a person must, which gate
+     or serving reason says so? -->
 
 1. <question>
 2. <question>

@@ -17,6 +17,9 @@ Initialize the UX chain, WHAT-IT-IS → WHY → HOW → WHAT-IT-DOES:
    reverse-engineering for an existing product. Get the layers approved.
    (Tiny project and the user explicitly wants to skip? Note it and go
    v1 mode — scenarios without Traces.)
+   On a new project (contract v5) the foundation includes the capabilities
+   layer: actors, and one `CAP-NN` per must/should story in
+   `docs/ux/capabilities.md`, before any flow.
 2. **Flows.** Invoke the `ux-flows` skill: Design (greenfield — task
    analysis → mermaid flows → screen states per story) or Reverse
    (existing code — reconstruct actual flows with evidence, tag

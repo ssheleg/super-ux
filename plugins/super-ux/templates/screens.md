@@ -4,7 +4,7 @@
 <!-- The line above puts this registry on format 2: the screen matrix
 (states, axes, a frame per state, a story per built state) is a lint gate.
 Keep it. -->
-<!-- Managed with super-ux (ux-contract v4). The design map: every screen and
+<!-- Managed with super-ux (ux-contract v5). The design map: every screen and
 state with its Figma frame, wireframe, code coverage, and related UX/UI
 resources. Update in the same change as any interface change; when Figma is
 enabled, update the frame and re-verify its link in the same change. A screen
@@ -44,11 +44,13 @@ the problem it can no longer fix. -->
 
 ## Screens
 
-<!-- One entry per screen (see ux-contract v4 for field rules):
+<!-- One entry per screen (see ux-contract v5 for field rules):
 
 ### SCR-01: <name>
 - **Used by:** <FLW-… and the step(s)>
 - **Purpose:** <the job step this screen serves>
+- **Fronts:** <CAP-… this screen fronts, or none>
+- **Why human:** <oversight | exception-queue | trust | presence | audience | manual | taste> (<evidence>)
 - **Elements:** <each element; mark the ONE primary action>
 - **States:** (every one that applies: default, loading, empty, error,
   offline, long-content, keyboard-up, first-run, product-specific ones)
@@ -69,5 +71,5 @@ the problem it can no longer fix. -->
 - **Coverage:** <file:line, or "none yet">
 - **Scenarios:** <SCN-… touching this screen>
 - **Resources:** <related components, shared assets, API/data deps, links>
-- **Status:** designed | built | drifted | retired
+- **Status:** designed | blocked | built | drifted | retired
 -->

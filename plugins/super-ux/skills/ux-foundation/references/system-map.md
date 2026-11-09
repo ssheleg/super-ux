@@ -7,6 +7,7 @@ unsure.
 ## Contents
 
 - [The pipeline](#the-pipeline)
+- [Contract v5: the design order and automation by default](#contract-v5-the-design-order-and-automation-by-default)
 - [Files in a target project (`docs/ux/`)](#files-in-a-target-project-docsux)
 - [The reference shelves: this map names them, and links none](#the-reference-shelves-this-map-names-them-and-links-none)
 - [Skills & the one entry point](#skills--the-one-entry-point)
@@ -29,6 +30,14 @@ Vision  →  Personas ─ JTBD ─ Journeys ─ Stories  →  Flows  →  Screen
 Each layer traces to the one above. Build forward for new work; fill
 backward (tagged `inferred`) for an existing product. UI code comes only
 after this chain is designed and approved (and, with Figma on, mocked up).
+Under contract v5 (opt-in; new projects start there) two layers sit between
+the stories and the flows, and the flows and screens after them are drawn
+for the human lanes only:
+
+```
+Stories  →  Capabilities  →  Contract  →  Logic  →  Automation  →  Human flows, screens  →  Scenarios
+            (capabilities.md) (the agent surface)   (CAP Automation) (flows.md, screens.md)   (scenarios.md, every channel)
+```
 
 **Two layers answer a question shaped like "what", and confusing them is the
 one mistake this map exists to prevent.** `vision.md` answers *what the
@@ -37,12 +46,37 @@ product is*: its essence, its principles, and what it refuses to become.
 feature can be perfectly scenario'd and still violate the anti-vision, which
 is why the alignment check runs before the chain, not inside it.
 
+## Contract v5: the design order and automation by default
+
+Two rules of the family's AI-native canon live here; the others are named in
+`scenario-format.md` (AN-1, AN-4) and `ux-design-principles.md` (AN-5), and
+the canon index is agent-stack's `agent-surface.md`.
+
+**AN-2, the design order.** Stories → capabilities → contract → logic →
+automation → human surfaces → look and words. The capabilities layer says
+what people and agents can do (`CAP-NN`); the contract is the schema-first
+source the agents and the interface both call, built by agent-stack's
+agent-interop; the logic is the spec. A human surface is designed only where
+a person is needed: a gate or a serving reason, with its evidence. A
+capability found while designing a later layer flows back up into
+`capabilities.md` in the same change, and a function that exists only behind
+a screen is a defect, a UI-only function.
+
+**AN-6, automation by default.** A capability with no gate, no serving
+reason and a determinable trigger is an automation, recorded in its
+`Automation:` field with its trigger, schedule and kill switch. Every
+automation is callable, observable and stoppable by an agent and by a
+person, and records what it did. Not where the law requires a person (the
+`legal` gate).
+
 ## Files in a target project (`docs/ux/`)
 
 | File | Layer | Owner skill | Holds |
 |------|-------|-------------|-------|
 | `vision.md` | what it IS | `vision` | essence, core idea, system behaviour, the user's role, principles, anti-vision, horizon, the one sentence, the alignment test |
-| `foundation.md` | WHY | `ux-foundation` | personas, JTBD, journeys, user stories, monetization, Figma on/off + file URL |
+| `foundation.md` | WHY | `ux-foundation` | personas, actors (v5), JTBD, journeys, user stories, monetization, Figma on/off + file URL |
+| `capabilities.md` | v5: what people and agents can do | `ux-foundation` | one `CAP-NN` per effect set: actors, roles, gate, tools, events, automation, the human surface and why |
+| `agent-panel.md` | v5, optional | `ux-foundation` | the agents an agent-tester walks the agent-channel scenarios as |
 | `flows.md` | HOW | `ux-flows` | task analysis + user-flow diagrams, referencing screens by `SCR-ID` |
 | `screens.md` | UI map | `ux-flows` | the design system block + every screen and state with Figma frame, wireframe, coverage, scenarios, resources |
 | `scenarios.md` | WHAT | `ux-scenarios` | use-case scenarios (source of truth for behavior) |
@@ -119,7 +153,9 @@ voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
 ## The four rules that keep agents in sync
 
 1. **Chain-first.** New feature/project starts with the chain (which job →
-   flow → screen → scenario), validated and approved, before any UI code.
+   flow → screen → scenario; under v5, which job → capability and who
+   performs it → contract → flows and screens for the human lanes →
+   scenarios), validated and approved, before any UI code.
 2. **Same-change.** Any interface/behavior change updates the affected
    layers in the SAME change: scenarios always; flows when navigation
    changes; `screens.md` whenever a screen changes; and, with Figma on, the

@@ -1,3 +1,58 @@
+## 0.67.0 (2026-11-09): contract v5, agents and capabilities (opt-in)
+
+Packet P-SU of the family run `2026-11-09-ai-native` (hub plan and design:
+`docs/evidence/plans/2026-11-09-ai-native.md`,
+`docs/evidence/specs/2026-11-09-ai-native-pipeline.md` in ssheleg/sshlg-skills).
+
+- **Contract v5, opt-in by marker.** `scenario-format.md` gains *Contract v5:
+  agents and capabilities*, the home of AN-1 (parity by story) and AN-4 (why a
+  person: gates and serving reasons, each with evidence): actors `A-NN` under
+  `## Actors`, persona `Agent use`, a journey `Performed by` column,
+  `docs/ux/capabilities.md` with one `CAP-NN` per effect set (`Traces`,
+  `Actors`, `Agent excluded`, `Roles`, `Gate`, `Tools`, `Emits`, `Data`,
+  `Automation`, `Human surface`, `Since`, `Status`), scenario `Channel`, screen
+  `Fronts` and `Why human`, and `docs/ux/agent-panel.md`. A chain is on v5 when
+  its headers carry `ux-contract v5`; the lowest marker decides, so a v4 chain
+  with one v5 seed stays on v4. v4 chains lint exactly as before.
+- **Nine lint codes, warnings, v5 only:** `U087` (a CAP field missing), `U088`
+  (a v5 value outside its enum), `U089` (a must/should story with no CAP),
+  `U090` (an agent CAP with no tools), `U091` (an agent-channel scenario citing
+  no CAP), `U092` (agents left out with no evidenced reason, or debt with no
+  board row), `U093` (a gate or serving reason with no evidence), `U094` (a
+  screen with no `Fronts` or `Why human`, or fronting an unknown CAP), `U095` (a
+  no-agent persona's must story served only by agent scenarios). Under v5 a
+  chain with no `screens.md` is not asked `U050`. Each code is planted both
+  ways in `test/ux_lint_test.py`; `test/fixtures/contract-v4` exits 0 under
+  `--strict` and `test/fixtures/contract-v5` is clean too. `validate.py`
+  compares the linter's `V5_ENUMS` with the contract's v5 declarations.
+- **Doctor:** `CURRENT = 5`, `HISTORY[5]`; v4 is supported (no problem
+  counted) and is offered the v4 to v5 migration: add actors, capabilities and
+  channels, then the marker; nothing else is required.
+- **Doctrine:** `system-map.md` carries AN-2 (the design order: stories,
+  capabilities, contract, logic, automation, human surfaces) and AN-6
+  (automation by default); `ux-design-principles.md` reorders the pipeline
+  (jobs, capabilities, contract, then flows and screens for the human lanes)
+  and is the home of AN-5 (the attention budget). The agent surface itself is
+  cited by raw URL to agent-stack's `agent-surface.md` and `operability.md`,
+  not restated.
+- **Templates:** the seeds `/ux init` writes carry `ux-contract v5`;
+  `foundation.md` gains `## Actors`, `Agent use` and `Performed by`; new
+  `capabilities.md` and `agent-panel.md`; `scenarios.md` gains `Channel`;
+  `screens.md` gains `Fronts`, `Why human` and the missing `blocked` status.
+- **Skills:** `ux-foundation` owns the capabilities layer (description 267 to
+  264 characters); `ux-scenarios` writes agent-channel steps; `ux-flows` designs
+  the human lanes and asks the Figma question at the first human surface;
+  `ux-audit` accepts an MCP or CLI call receipt as runtime evidence and checks
+  the one-contract proxy; `vision` §4 and §9 guidance ask what an agent can do
+  without a screen (nine sections unchanged); `copywriting` separates
+  agent-facing text from the `human_steps` a person reads. `/ux` routes agent
+  requests to the capabilities layer. The hard rule in `templates/claude-rule.md`
+  and `/ux-rule` (byte-equal) becomes foundation, capabilities, contract,
+  flows, screens, scenarios for human lanes.
+- **Drift fixed on the way (BN-22):** the screens template lacked `blocked`;
+  the linter's no-docs message named only `scenarios.md` although it accepts
+  `foundation.md` or `vision.md`.
+
 ## 0.66.3 (2026-10-27): route misses in Triggers, ux-scenarios names its subject first
 
 - **Route misses join ux-flows' `## Triggers`** (hub board row B-267): "users drop off" /

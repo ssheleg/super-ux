@@ -29,7 +29,7 @@ for an interactive flow preview, the bounded scenario graph in
 — declared first, walked second, and the preview raises no status; its
 walkthrough, coverage and handoff receipt in
 [prototype-walkthrough.md](references/prototype-walkthrough.md)
-(ux-contract v4, `flows.md` section) and
+(ux-contract v5, `flows.md` section) and
 [ux-design-principles.md](references/ux-design-principles.md) — read the
 principles doc before designing; it is the thinking playbook (task-analysis
 method, flow rules, PRN-01..24 heuristics, improvement procedure).
@@ -65,9 +65,11 @@ skill draws. Every step there is a screen in `screens.md` and a scenario in
 manufactured one) and the missing-answer branch included** — those two are the
 ones that get built and never recorded.
 
-**Position in the chain:** foundation (WHY) → **flows (HOW) + screens (UI
-map)** → scenarios (WHAT). Stories in, flows and screens out; `ux-scenarios`
-then covers every node and edge with scenarios. If foundation is missing on
+**Position in the chain:** foundation (WHY) → capabilities (v5) → **flows
+(HOW) + screens (UI map)** → scenarios (WHAT). Stories in, flows and screens
+out; `ux-scenarios` then covers every node and edge. **Under contract v5 this
+skill designs the human lanes only:** a capability with `Human surface: none`
+gets no screen, and every screen records `Fronts` and `Why human`. If foundation is missing on
 a non-trivial product, recommend `ux-foundation` first. The chain's opt-out
 is spoken: **"no scenarios"** / **«без сценариев»** from the operator
 declines it — design without the chain and say so.
@@ -111,7 +113,7 @@ Per story (or tight cluster):
 0. **No foundation? Say so, then design anyway — in a declared shape.** The
    steps below read "per story" and the practice pass builds its profile from
    `foundation.md`, but the commonest real brief is *"we know almost nothing"*,
-   and until now nothing said what to do with it. Recommend `ux-foundation`
+   and nothing else says what to do with it. Recommend `ux-foundation`
    first (that stands), and if the work proceeds without it, carry three things
    explicitly rather than improvising silently: a **provisional profile** table
    with each dimension's value and where it came from (`brief` / `inferred` /
@@ -120,9 +122,8 @@ Per story (or tight cluster):
    user's words, to be replaced with JTBD/ST ids when the foundation lands; and
    an **open decisions** list naming what each one would change. Screens whose
    spec depends on one of those decisions take `Status: blocked`, not
-   `designed`. A flow built this way is honest input for the next stage; a flow
-   built this way *without* the three blocks is a set of invented personas with
-   a diagram on top.
+   `designed`. Without the three blocks such a flow is invented personas with a
+   diagram on top.
 1. **Task analysis** (principles doc, method section): goal in the user's
    words → minimal user-visible micro-steps → cut/merge/default-away every
    step that doesn't serve the job → mark the first-value step and pull it
@@ -139,10 +140,8 @@ Per story (or tight cluster):
    question: *can the app perform this action at all*, and *does the app learn
    the outcome synchronously*. A "no" to the second is a **third branch** that
    claims neither outcome and reconciles later; drawing only success and failure
-   there ships a flow that cannot be built. BP-123 carried this wrong for a
-   release — it described web billing and was applied to any subscription, on a
-   platform where the app cannot cancel and cannot observe the result — so the
-   rule is here as well as in the practice.
+   there ships a flow that cannot be built (BP-123 once got this wrong, so the
+   rule lives here too).
    **Sweep shipped flows first, while there is still nothing to defend.**
    Search the journey by name and read the results for **step count, entry and
    exit states, decision points, friction, confirmation and recovery paths**.
@@ -217,8 +216,8 @@ Per story (or tight cluster):
    truth) — that is the `tooling-degraded` state below: an APPROVED text spec
    builds now, with `Deferred: frame sync` in the screen row, and when Figma
    returns the frames are synced and the rows updated WITHOUT re-running the
-   chain. Ask the Figma yes/no question once at the start and record it in
-   the foundation (one Figma file per surface).
+   chain. Ask the Figma yes/no question once, when the first human surface is
+   designed, and record it in the foundation (one Figma file per surface).
 7. **Practice pass** (mandatory, per
    [practice-selection.md](references/practice-selection.md)): build the
    product profile from the foundation, pull the mandatory sets + this
@@ -298,7 +297,8 @@ graph underneath: [`interactive-flow-prototypes.md`](references/interactive-flow
 ## The build gate (state this to the user plainly)
 
 Production interface code does not get written until this workflow is done: the chain
-(foundation → flows → screens → scenarios) is designed and approved, the
+(foundation → capabilities → contract → flows → screens → scenarios for human
+lanes) is designed and approved, the
 style pack is recorded, and — when Figma is enabled (default) — the UI is
 mocked up with every screen linked to its frame. When a user jumps straight
 to "build the screen", say so and run the workflow first; that ordering is

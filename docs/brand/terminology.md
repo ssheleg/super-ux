@@ -60,10 +60,10 @@ grounded before it is leaned on.
 
 | Term | Meaning |
 |---|---|
-| the chain | vision → foundation → flows → screens → scenarios, each tracing to the one above |
+| the chain | vision → foundation → (v5: capabilities →) flows → screens → scenarios, each tracing to the one above |
 | layer | one file in the chain, owned by exactly one skill |
 | trace | an ID reference upward, e.g. a scenario naming the story it serves |
 | orphan | a screen, flow or scenario nothing above it points to |
-| the contract | `ux-contract v4` — the field names and IDs every artifact obeys |
+| the contract | `ux-contract v5`: the field names and IDs every artifact obeys (v4 chains stay valid) |
 | style pack | the visual identity, owned by sheleg-design, recorded by reference |
 | register | a per-surface delta on the five voice axes, never a new voice |

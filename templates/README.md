@@ -6,14 +6,19 @@ sync with the code on every interface change.
 ## The pipeline
 
 ```
-Vision  →  Personas · JTBD · Journeys · Stories  →  Flows  →  Screens  →  Scenarios  →  Audits  →  Plans
-vision.md           foundation.md                  flows.md  screens.md  scenarios.md   audits/    plans/
+Vision  →  Personas · Actors · JTBD · Journeys · Stories  →  Capabilities  →  Flows  →  Screens  →  Scenarios  →  Audits  →  Plans
+vision.md           foundation.md                           capabilities.md  flows.md  screens.md  scenarios.md   audits/    plans/
 ```
+
+Flows and screens are drawn for the human lanes: a capability an agent or an
+automation performs needs no screen unless a person is needed there.
 
 | File | Holds |
 |------|-------|
 | `vision.md` | WHAT IT IS: essence, core idea, principles, the anti-vision, the alignment test. Optional layer; when present, new features are checked against it before anything is designed |
-| `foundation.md` | WHO & WHY: personas, jobs-to-be-done, journeys, user stories, monetization, Figma on/off + file URL |
+| `foundation.md` | WHO & WHY: personas, actors (the agents and systems acting for them), jobs-to-be-done, journeys, user stories, monetization, Figma on/off + file URL |
+| `capabilities.md` | WHAT PEOPLE AND AGENTS CAN DO: one `CAP-NN` per effect set, with its actors, gate, tools and the human surface that fronts it |
+| `agent-panel.md` | optional: the agents an agent-tester walks the agent-channel scenarios as |
 | `flows.md` | HOW: user-flow diagrams (screens, branches, error paths), referencing screens by `SCR-ID` |
 | `screens.md` | THE UI MAP: every screen and state with its Figma frame link, wireframe, code coverage, scenarios, resources |
 | `scenarios.md` | WHAT IT DOES: use-case scenarios — the source of truth for behavior |

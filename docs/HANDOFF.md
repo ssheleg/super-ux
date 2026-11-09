@@ -1,3 +1,29 @@
+## v0.67.0: contract v5, agents and capabilities, opt-in (2026-11-09)
+
+- **Objective.** Packet P-SU of the hub run `2026-11-09-ai-native`
+  ([plan](https://github.com/ssheleg/sshlg-skills/blob/feat/ai-native-1109/docs/evidence/plans/2026-11-09-ai-native.md),
+  [design](https://github.com/ssheleg/sshlg-skills/blob/feat/ai-native-1109/docs/evidence/specs/2026-11-09-ai-native-pipeline.md)):
+  super-ux models actors, capabilities, channels and why a person is needed, behind an opt-in
+  contract v5 that leaves every v4 chain green.
+- **Done.** The v5 section in `scenario-format.md` (AN-1, AN-4), AN-2 and AN-6 in
+  `system-map.md`, AN-5 in `ux-design-principles.md`; v5 templates plus `capabilities.md` and
+  `agent-panel.md`; lint codes U087..U095 (warnings, v5 only) and the U050 exception; doctor
+  `CURRENT = 5` with the migration named; skills, `/ux`, `/ux-init` and the hard rule; fixtures
+  `test/fixtures/contract-v4` and `contract-v5`. Evidence: [verification ledger](evidence/verification.md),
+  section v0.67.0.
+- **Decisions.** (1) The lowest `ux-contract vN` marker decides, as the doctor's `effective`
+  does, so one v5 seed in a v4 chain switches nothing on. (2) The doctor reads v4 as supported,
+  not behind: it names the migration and counts no problem. (3) `capabilities.md` is written by
+  `ux-foundation` when the layer is designed, never seeded by the installer or `/ux-rule`, which
+  would drop a v5 file into an existing v4 chain. (4) An absent `Channel` reads `human`. (5) The
+  v5 enum declarations use a colon, not a dash, so new contract text carries no em dash.
+- **Checks run.** `npm test` exit 0; `python3 test/ux_lint_test.py` OK (237 checks); four
+  linter mutations and one contract plant watched red, then restored.
+- **Open.** No eval case was added for the capabilities layer (P-SU did not list one); the
+  agent-stack homes cited by raw URL are written in parallel by P-AS and resolve once it merges.
+- **Next task.** Integration (hub plan, *Integration*): after agent-stack merges, review and merge
+  this PR, tag `v0.67.0`, watch the release, then the hub pins it.
+
 ## v0.66.3: route misses in Triggers, ux-scenarios names its subject first (2026-10-27)
 
 - **Done.** Hub board row B-267 (super-ux part): ux-flows' `## Triggers` gains "users drop off" /

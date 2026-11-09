@@ -1038,6 +1038,265 @@ def check_vision(ux: Path, vision: str) -> None:
                  f"the `vision` skill's step 4, or keep the edit deliberately")
 
 
+# --- Contract v5: agents and capabilities (opt-in) -------------------------
+#
+# v5 models who performs a story (a person, an agent acting for one, an
+# automation), the capabilities a story needs, and why a person is needed
+# where a screen exists. Every v4 chain stays valid: nothing below runs unless
+# the chain declares `ux-contract v5`, the marker form `doctor.py` already
+# reads. The LOWEST marker decides, as the doctor's `effective` does, so one
+# v5 seed dropped into a v4 chain does not switch it onto rules it never
+# opted into. Every finding here is a warning: the layer is new, and a gate
+# that failed builds on day one is the gate that gets switched off.
+CONTRACT_MARKER = re.compile(r"ux-contract v(\d+)")
+CONTRACT_FILES = ("vision.md", "foundation.md", "flows.md", "screens.md",
+                  "scenarios.md", "capabilities.md", "agent-panel.md")
+V5 = 5
+
+# The capability row, in the contract's order. One row is one effect set.
+CAP_FIELDS = ("Traces", "Actors", "Agent excluded", "Roles", "Gate", "Tools",
+              "Emits", "Data", "Automation", "Human surface", "Since", "Status")
+
+# Every v5 enum, keyed by (layer, field). `validate.py` compares this table
+# with the contract's v5 declarations, the same parity `STATUS_ENUMS` has.
+V5_ENUMS = {
+    ("CAP", "Actors"): ("human", "agent", "automation"),
+    ("CAP", "Agent excluded"): ("presence", "legal", "debt"),
+    ("CAP", "Gate"): ("none", "body", "approval", "legal"),
+    ("CAP", "Data"): ("public", "internal", "personal", "payment", "secret"),
+    ("CAP", "Status"): ("proposed", "specified", "exposed", "deprecated", "retired"),
+    ("A", "Kind"): ("agent", "system"),
+    ("P", "Agent use"): ("none", "some", "most"),
+    ("SCN", "Channel"): ("agent", "human", "both"),
+    ("SCR", "Why human"): ("oversight", "exception-queue", "trust", "presence",
+                           "audience", "manual", "taste"),
+}
+BOARD_ID = re.compile(r"\b[A-Z][A-Z0-9]*-\d+\b")
+
+
+def contract_version(ux: Path) -> int | None:
+    """The lowest `ux-contract vN` among the chain's files, read raw.
+
+    The marker lives in an HTML comment and `read()` strips comments, so the
+    head of each file is read here directly, as `doctor.py` reads it.
+    """
+    found = []
+    for name in CONTRACT_FILES:
+        try:
+            head = (ux / name).read_text(encoding="utf-8", errors="ignore")[:2000]
+        except OSError:
+            continue
+        m = CONTRACT_MARKER.search(head)
+        if m:
+            found.append(int(m.group(1)))
+    return min(found) if found else None
+
+
+def v5_field(body: str, name: str) -> str | None:
+    """A v5 field's value on one line; None when the field is absent."""
+    m = re.search(rf"\*\*{re.escape(name)}:\*\*[ \t]*([^\n]*)", body)
+    return None if m is None else m.group(1).strip()
+
+
+def v5_token(value: str) -> tuple[str, str]:
+    """`(first word, the rest)`: the enum value and the evidence beside it."""
+    m = re.match(r"\s*([A-Za-z][\w-]*)\s*(.*)$", value or "", re.DOTALL)
+    if m is None:
+        return ("", "")
+    return (m.group(1).lower(), m.group(2).strip())
+
+
+def evidenced(rest: str) -> bool:
+    """Does the text beside an enum value say anything? Brackets and
+    separators alone are not evidence."""
+    return stated(re.sub(r"[()\[\];:,.\s]+", " ", rest or "").strip() or None)
+
+
+def v5_enum(name: str, sid: str, field: str, value: str,
+            allowed: tuple[str, ...]) -> bool:
+    """Warn U088 on a value outside its enum; True when the value is legal."""
+    if value in allowed:
+        return True
+    warn(f"[U088] {name}: {sid} declares {field} '{value or '(nothing)'}', "
+         f"which is not one of {' | '.join(allowed)}. An unrecognised value "
+         f"reads as no value, and every v5 rule keyed on it stops applying")
+    return False
+
+
+def actors_of(value: str) -> list[str]:
+    """The actor kinds a CAP names, before any bracketed note."""
+    head = re.split(r"[(;]", value or "", maxsplit=1)[0]
+    return [a.strip().lower() for a in head.split(",") if a.strip()]
+
+
+def check_v5(foundation: str, scenarios: str, screens: str,
+             capabilities: str) -> None:
+    """The v5 layers: actors, capabilities, channels, and why a person.
+
+    The doctrine of each rule lives in `scenario-format.md`, section
+    "Contract v5: agents and capabilities"; this function only checks it.
+    """
+    caps = entry_blocks(capabilities, "CAP")
+    cap_ids = set(caps)
+    for prefix, name, text in (("CAP", "capabilities.md", capabilities),
+                               ("A", "foundation.md/actors", foundation)):
+        entry_ids = ids(text, prefix)
+        if entry_ids:
+            check_unique_and_gaps(entry_ids, name)
+        for sid, colon, title in entry_names(text, prefix):
+            if not (colon and title):
+                err(f"[U073] {name}: `### {sid}` carries no name: the contract's "
+                    f"header is `### {sid}: <short name>`")
+    if cap_ids:
+        idx = index_ids(capabilities, "CAP")
+        for missing in sorted(cap_ids - idx):
+            warn(f"[U003] capabilities.md: {missing} has no index row")
+        for ghost in sorted(idx - cap_ids):
+            err(f"[U004] capabilities.md: index lists {ghost} but no entry exists")
+
+    traced_by_caps: set[str] = set()
+    for cid, body in sorted(caps.items()):
+        status, _ = v5_token(v5_field(body, "Status") or "")
+        if status == "retired":
+            continue
+        for field in CAP_FIELDS:
+            if v5_field(body, field) is None:
+                warn(f"[U087] capabilities.md: {cid} is missing **{field}:**. The "
+                     f"row is {', '.join(CAP_FIELDS)}; `none` is a value, an "
+                     f"absent field is not")
+        traced_by_caps |= refs(v5_field(body, "Traces") or "", "ST")
+        if status:
+            v5_enum("capabilities.md", cid, "Status", status, V5_ENUMS[("CAP", "Status")])
+        actors = actors_of(v5_field(body, "Actors") or "")
+        for actor in actors:
+            v5_enum("capabilities.md", cid, "Actors", actor, V5_ENUMS[("CAP", "Actors")])
+        data, _ = v5_token(v5_field(body, "Data") or "")
+        if data:
+            v5_enum("capabilities.md", cid, "Data", data, V5_ENUMS[("CAP", "Data")])
+
+        tools = v5_field(body, "Tools")
+        if "agent" in actors and (not stated(tools) or v5_token(tools or "")[0] == "none"):
+            warn(f"[U090] capabilities.md: {cid} names agent among its Actors and no "
+                 f"**Tools:**. An agent reaches a capability through a tool id, and "
+                 f"one with none listed is a capability only a screen can reach")
+
+        excluded, why = v5_token(v5_field(body, "Agent excluded") or "")
+        if actors and "agent" not in actors:
+            if excluded in ("", "none"):
+                warn(f"[U092] capabilities.md: {cid} leaves agents out and names no "
+                     f"**Agent excluded:** reason (presence | legal | debt, with "
+                     f"evidence). Parity is by story: an exception is named per "
+                     f"capability or it is a gap")
+            elif v5_enum("capabilities.md", cid, "Agent excluded", excluded,
+                         V5_ENUMS[("CAP", "Agent excluded")]):
+                if excluded == "debt" and not BOARD_ID.search(why):
+                    warn(f"[U092] capabilities.md: {cid} records parity debt with "
+                         f"no board row. Debt is listed and on the board "
+                         f"(`debt (B-nnn)`), never hidden")
+                elif excluded != "debt" and not evidenced(why):
+                    warn(f"[U092] capabilities.md: {cid} excludes agents for "
+                         f"'{excluded}' and cites no evidence: a JTBD-, ST- or "
+                         f"RE- id, a policy or a decision")
+
+        gate, gate_why = v5_token(v5_field(body, "Gate") or "")
+        if gate and v5_enum("capabilities.md", cid, "Gate", gate,
+                            V5_ENUMS[("CAP", "Gate")]):
+            if gate != "none" and not evidenced(gate_why):
+                warn(f"[U093] capabilities.md: {cid} is gated '{gate}' and cites no "
+                     f"evidence: the policy, the decision or the law that puts a "
+                     f"person there. No product-level waiver exists")
+
+        reason_m = re.search(r"Why human:\s*(.*)", v5_field(body, "Human surface") or "")
+        if reason_m:
+            reason, reason_why = v5_token(reason_m.group(1))
+            if v5_enum("capabilities.md", cid, "Why human", reason,
+                       V5_ENUMS[("SCR", "Why human")]) and not evidenced(reason_why):
+                warn(f"[U093] capabilities.md: {cid} serves a person for "
+                     f"'{reason}' and cites no evidence beside it")
+
+    # AN-1, structurally: every must/should story has a capability tracing to
+    # it, and the capability's row names any exclusion.
+    for sid, body in sorted(entry_blocks(foundation, "ST").items()):
+        if declared_status(body) == "dropped":
+            continue
+        if not re.search(r"\*\*Priority:\*\*\s*(must|should)", body, re.IGNORECASE):
+            continue
+        if sid not in traced_by_caps:
+            warn(f"[U089] foundation.md: {sid} (must/should) has no capability "
+                 f"tracing to it in capabilities.md. Parity is by story: name the "
+                 f"CAP that serves it, and any exclusion in that CAP's row")
+
+    for aid, body in sorted(entry_blocks(foundation, "A").items()):
+        kind, _ = v5_token(v5_field(body, "Kind") or "")
+        if kind:
+            v5_enum("foundation.md", aid, "Kind", kind, V5_ENUMS[("A", "Kind")])
+
+    # Channel: an absent field reads as `human`, the scenario every v4 chain
+    # already wrote. An agent-channel scenario is the contract's acceptance
+    # test, so it names the capability it accepts.
+    scn_channel: dict[str, str] = {}
+    scn_traces: dict[str, set[str]] = {}
+    for sid, body in sorted(entry_blocks(scenarios, "SCN").items()):
+        channel, _ = v5_token(v5_field(body, "Channel") or "human")
+        scn_traces[sid] = refs(v5_field(body, "Traces") or body, "ST")
+        if not v5_enum("scenarios.md", sid, "Channel", channel,
+                       V5_ENUMS[("SCN", "Channel")]):
+            continue
+        scn_channel[sid] = channel
+        if declared_status(body) == "retired":
+            continue
+        if channel in ("agent", "both") and not refs(body, "CAP"):
+            warn(f"[U091] scenarios.md: {sid} is an {channel}-channel scenario and "
+                 f"cites no CAP in its Traces. An agent step calls a capability, "
+                 f"and the scenario is that capability's acceptance test")
+
+    for sid, body in sorted(screen_blocks(screens).items()):
+        if declared_status(body) == "retired":
+            continue
+        fronts = v5_field(body, "Fronts")
+        why_value = v5_field(body, "Why human")
+        missing = [f for f, v in (("Fronts", fronts), ("Why human", why_value))
+                   if not stated(v)]
+        if missing:
+            warn(f"[U094] screens.md: {sid} has no **{':** or **'.join(missing)}:**. "
+                 f"A screen fronts capabilities (`Fronts: CAP-NN`, or `none`) and "
+                 f"says why a person is needed there")
+        for ghost in sorted(refs(fronts or "", "CAP") - cap_ids):
+            warn(f"[U094] screens.md: {sid} fronts {ghost}, which capabilities.md "
+                 f"does not define")
+        if stated(why_value):
+            reason, reason_why = v5_token(why_value)
+            if v5_enum("screens.md", sid, "Why human", reason,
+                       V5_ENUMS[("SCR", "Why human")]) and not evidenced(reason_why):
+                warn(f"[U093] screens.md: {sid} serves a person for '{reason}' and "
+                     f"cites no evidence beside it: a JTBD-, ST- or RE- id, a "
+                     f"policy, a decision or the typed error that routes here")
+
+    # A persona whose people use no agent still gets a whole human path for
+    # every must story: the audience decides the human path's size.
+    jobs = entry_blocks(foundation, "JTBD")
+    for pid, body in sorted(entry_blocks(foundation, "P").items()):
+        use_value = v5_field(body, "Agent use")
+        if use_value is None:
+            continue
+        use, _ = v5_token(use_value)
+        if not v5_enum("foundation.md", pid, "Agent use", use,
+                       V5_ENUMS[("P", "Agent use")]) or use != "none":
+            continue
+        for st, sbody in sorted(entry_blocks(foundation, "ST").items()):
+            if not re.search(r"\*\*Priority:\*\*\s*must", sbody, re.IGNORECASE):
+                continue
+            via_jobs = any(pid in refs(v5_field(jobs.get(j, ""), "Personas") or "", "P")
+                           for j in refs(sbody, "JTBD"))
+            if pid not in refs(sbody, "P") and not via_jobs:
+                continue
+            serving = [s for s, t in scn_traces.items() if st in t and s in scn_channel]
+            if serving and not any(scn_channel[s] in ("human", "both") for s in serving):
+                warn(f"[U095] foundation.md: {pid} declares Agent use: none and "
+                     f"must story {st} has only agent-channel scenarios. People "
+                     f"who use no agent need the whole human path for it")
+
+
 def check_links(ux: Path) -> None:
     link_re = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
     for md in sorted(ux.rglob("*.md")):
@@ -1055,7 +1314,8 @@ def main() -> int:
     strict = "--strict" in sys.argv[1:]
     ux = find_ux_dir(args[0] if args else None)
     if ux is None:
-        print("no UX docs found (docs/ux/scenarios.md). Run /ux to set up.")
+        print("no UX docs found (docs/ux/ with scenarios.md, foundation.md or "
+              "vision.md). Run /ux to set up.")
         return 2
 
     vision = read(ux / "vision.md")
@@ -1063,6 +1323,8 @@ def main() -> int:
     flows = read(ux / "flows.md")
     screens = read(ux / "screens.md")
     scenarios = read(ux / "scenarios.md")
+    capabilities = read(ux / "capabilities.md")
+    v5 = (contract_version(ux) or 0) >= V5
 
     # Cited paths are project-relative, so they resolve against the tree the
     # ux directory sits in — the same derivation `check_links` already uses.
@@ -1263,9 +1525,14 @@ def main() -> int:
     check_jobs(foundation, scenarios, flows, screens)
     check_journey_owners(foundation)
     check_vision(ux, vision)
-    check_web_surface(screens, flows)
+    # Under v5 a product may have no human surface at all, so a chain with no
+    # `screens.md` has no screen to ask the web question about.
+    if not (v5 and not (ux / "screens.md").exists()):
+        check_web_surface(screens, flows)
     check_onboarding(flows, ux, project_root)
     check_art_direction(flows, ux, project_root)
+    if v5:
+        check_v5(foundation, scenarios, screens, capabilities)
     check_links(ux)
 
     # --- Report ---

@@ -13,8 +13,9 @@ twice.
    ## UX scenarios — hard rule (super-ux)
 
    - `docs/ux/scenarios.md` is the source of truth for all user-facing
-     behavior; `docs/ux/foundation.md` (personas, JTBD, journeys, stories) and
-     `docs/ux/flows.md` (user flows) are the WHY and HOW layers scenarios
+     behavior; `docs/ux/foundation.md` (personas, actors, JTBD, journeys,
+     stories), `docs/ux/capabilities.md` (what people and agents can do,
+     contract v5) and `docs/ux/flows.md` (user flows) are the layers scenarios
      trace to.
    - Any change that touches user-facing behavior or interface MUST update, in
      the same change: `docs/ux/scenarios.md`; affected flows; the affected
@@ -23,13 +24,16 @@ twice.
      links in `screens.md`. A screen whose code diverges from its record, or a
      stale Figma link, is drift — the exact thing this system prevents.
    - Any new feature or project STARTS with the chain: which job does it
-     serve, which journey stage, which story — then flows and scenarios,
-     validated against the existing base, approved.
-   - **Do NOT write interface code until the UX workflow is done first:** the
-     foundation → flows → screens → scenarios chain is designed and approved,
-     and — when Figma is enabled (default) — the UI is mocked up in Figma with
-     every screen linked to its frame. Building UI before this is the exact
-     mistake super-ux exists to prevent.
+     serve, which journey stage, which story, which capability and who
+     performs it (a person, an agent, an automation); then flows and
+     scenarios, validated against the existing base, approved.
+   - **Do NOT write interface code until the UX workflow is done first:**
+     foundation → capabilities → contract → flows → screens → scenarios for
+     human lanes, designed and approved (capabilities and contract under
+     contract v5), and, when Figma is enabled (default), the UI mocked up in
+     Figma with every screen linked to its frame. A screen is designed where a
+     person is needed; every other capability stays reachable by agents.
+     Building UI before this is the exact mistake super-ux exists to prevent.
    - Visual identity is ONE locked style pack, recorded in `docs/ux/screens.md`
      → Design system and obeyed by every Figma frame and every built screen —
      picked with the **sheleg-design** companion skill when the project has no
