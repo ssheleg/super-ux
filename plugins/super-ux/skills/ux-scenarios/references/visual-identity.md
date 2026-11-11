@@ -69,17 +69,9 @@ after frames exist:
    (`npx sheleg-design-skill --check-record <file>`), run it before the
    frames go to approval; a version without it → the record check is
    `NOT_RUN`, said in the approval request, not skipped in silence.
-3. **Not installed?** Recommend it once, plainly, and continue either way —
-   text-only/platform-default design stays valid:
-   ```
-   # Claude Code (adds the /sheleg-design command):
-   /plugin marketplace add ssheleg/sheleg-design-skill
-   /plugin install sheleg-design@sheleg-design-skill
-   # or drop the bundle into this project (any agent):
-   npx sheleg-design-skill
-   # or via the skills CLI (70+ agents):
-   npx skills add ssheleg/sheleg-design-skill
-   ```
+3. **Not installed?** Recommend it once, plainly, with the install commands
+   in `system-map.md` → Companions, and continue either way:
+   text-only/platform-default design stays valid.
    Never block the chain on it, never install it without the user's word,
    and never re-ask once the user has declined — record the decision as
    `Style pack: none — platform defaults` and move on. `none` declines a

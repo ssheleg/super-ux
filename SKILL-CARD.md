@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | Pack | `super-ux` |
-| Version | `0.67.0` |
+| Version | `0.67.1` |
 | Skills | `vision`, `ux-foundation`, `ux-flows`, `ux-scenarios`, `ux-audit`, `brand-voice`, `copywriting` |
 | License | MIT |
 | Source | https://github.com/ssheleg/super-ux |
@@ -42,7 +42,10 @@ Claude Code plugin.
 - Contract linters and negative plants: repository test suite
 - House audit: pinned `make-skill` auditor in `validate.yml`
 - Behavioral data: `test/evals/`
-- Evaluation status: designed and schema-validated; no model run claimed
+- Evaluation status: trigger evals ran 2026-08-31 against the v0.52 skill
+  descriptions (`test/evals/RESULTS.md`). The descriptions have changed since,
+  so those rates do not describe the current ones; not re-run (note dated
+  2026-11-11).
 
 ## Known limits
 

@@ -1,3 +1,23 @@
+## v0.67.1: delegated mode, task-pipeline handoff, seeds without the em dash (2026-11-11)
+
+- **Objective.** Close the super-ux findings of the family audit of 2026-11-11 (operator
+  order in the sshlg-skills session, 2026-11-11).
+- **Done.** Delegated mode in `system-map.md` and pointers at every non-gate stop; plans go
+  to `/task-pipeline`; one install block; ux-scenarios reads the contract by section;
+  em dash removed from the brand seeds, `foundation.md` and the manifests, with a scan;
+  copywriting reads `facts.md`, runs brand-voice Init on no pack, and records a copy-check
+  tool's report id; `disable-model-invocation` on four commands; the repository's own Cursor
+  rules mirrored from `cursor/rules`; eval status dated. Evidence:
+  [verification ledger](evidence/verification.md), section v0.67.1;
+  [CHANGELOG](../CHANGELOG.md) 0.67.1.
+- **Decisions.** (1) The em-dash scan covers all of `templates/`, but eight files that mirror
+  contract formats or hard-rule detection keys are listed as pending rather than changed
+  alone (B-034). (2) The installed Cursor rules are this repository's own install of
+  `cursor/rules`, so they are a byte mirror, written by `sync_references.py`.
+- **Checks run.** `npm test` exit 0; two plants watched red (AU-3, AU-4).
+- **Open.** B-034.
+- **Next task.** The hub pins super-ux 0.67.1 after the release reads green.
+
 ## v0.67.0: contract v5, agents and capabilities, opt-in (2026-11-09)
 
 - **Objective.** Packet P-SU of the hub run `2026-11-09-ai-native`

@@ -258,21 +258,15 @@ How far each pass goes, what it reads at each level, and which references it pul
    behavior) + a CREATE/MODIFY/DELETE change table where every row traces
    to scenario/flow/finding/principle IDs, prioritized by Frequency ×
    Severity × Solvability (worst user damage first, not the easiest diff).
-9. **Offer autonomous execution (recommend, don't force).** State plainly
-   what the user now has in hand — this plan, the audit report(s), the
-   `docs/ux/` chain, and the Figma frames — and that finishing is their
-   call. Then recommend the ssheleg **task-pipeline** plugin to implement
-   the plan end-to-end by best practices:
-   - installed → `/task-pipeline docs/ux/plans/<file>` (don't auto-run —
-     offer);
-   - not installed → give the one-time install and note it's optional:
-     `/plugin marketplace add ssheleg/task-pipeline` →
-     `/plugin install task-pipeline@task-pipeline`;
-   - user prefers otherwise → superpowers `writing-plans` → subagent
-     execution, or by hand — all fine.
-   The plan is written to be executable without this conversation, so any
-   path works. Whatever they pick, remind: same-change rule holds and
-   re-run `/ux-audit <scope>` after to confirm PASS.
+9. **Hand the plan to delivery.** State plainly what the user now has in
+   hand: this plan, the audit report(s), the `docs/ux/` chain and the Figma
+   frames. The ssheleg **task-pipeline** plugin implements it end-to-end:
+   - installed → hand it the plan, `/task-pipeline docs/ux/plans/<file>`;
+   - not installed → its one-time install is in `system-map.md` →
+     Companions, and it stays optional; the plan is written to run without
+     this conversation, so implementing it by hand works too.
+   Either way the same-change rule holds; re-run `/ux-audit <scope>` after
+   to confirm PASS.
 
 ## Pass semantics
 

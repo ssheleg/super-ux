@@ -1,12 +1,14 @@
 ---
 description: Design, reverse-engineer or improve user flows, screen states and mockups
 argument-hint: '[story/feature to design | "improve" | what changed]'
+disable-model-invocation: true
 ---
 
 Invoke the `ux-flows` skill.
 
 If this is design/improve work and the foundation has no Figma choice
-recorded, ask once whether to mock up in Figma (default yes); when enabled,
+recorded, ask once whether to mock up in Figma (default yes; delegated
+mode in the system map takes the default); when enabled,
 mirror each screen into a Figma frame applying the visual-craft practices
 and link every screen row to its frame.
 

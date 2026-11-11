@@ -53,9 +53,9 @@ to-do list, and the surface that needs rebuilding gets patched forever.
    CREATE/MODIFY/DELETE change table, every row traced to
    scenario/flow/finding IDs, prioritized Frequency × Severity ×
    Solvability. Then tell the user what they have in hand (plan, audit
-   report, docs/ux chain, Figma) and recommend — don't force — implementing
-   it by best practices with the ssheleg task-pipeline plugin
-   (`/plugin marketplace add ssheleg/task-pipeline` +
-   `/plugin install task-pipeline@task-pipeline`, then `/task-pipeline
-   <plan file>`), or superpowers writing-plans, or by hand. The plan is
-   executable without the conversation, so any path works.
+   report, docs/ux chain, Figma) and hand the plan to the ssheleg
+   task-pipeline plugin when it is installed (`/task-pipeline <plan
+   file>`); otherwise its optional install is
+   `/plugin marketplace add ssheleg/task-pipeline` +
+   `/plugin install task-pipeline@task-pipeline`, or implement by hand. The
+   plan is executable without the conversation.

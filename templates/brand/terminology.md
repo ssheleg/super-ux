@@ -5,7 +5,7 @@ Contract: brand-contract v1
 The dictionary the linter reads. Column one of **Product terms** and
 **Banned** drives `B010` and `B011`; **Entity and tier names** drives `B012`.
 
-## Product terms — always
+## Product terms: always
 
 Where the product has its own word, the generic one is a defect, not a
 synonym.
@@ -14,7 +14,7 @@ synonym.
 |---|---|---|
 | <Run> | <Execution, Job> | <what the product performs> |
 
-## Entity and tier names — exact spelling
+## Entity and tier names: exact spelling
 
 One spelling, everywhere: interface, marketing, billing, support, docs.
 

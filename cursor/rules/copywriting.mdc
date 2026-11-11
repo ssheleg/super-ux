@@ -11,10 +11,10 @@ finish a button is how a product ends up with six voices.
 
 ## First action, every time
 
-Read the pack: `docs/brand/voice.md`, `terminology.md`, and the
-`channels.md` record for the surface being written. **No pack? Stop and run
-`/brand-init`.** Guessing the voice and being wrong costs more than the
-pause.
+Read the pack: `docs/brand/voice.md`, `terminology.md`, `facts.md`, and
+the `channels.md` record for the surface being written. **No pack? Run
+`/brand-init`, then continue.** Guessing the voice and being wrong costs
+more than the pause.
 
 Ownership is by file: `brand-voice` owns voice, terms, facts, channels and
 locale policy. Missing terms or facts are reported, never invented. This pass

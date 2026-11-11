@@ -1,6 +1,7 @@
 ---
 description: Build or update personas, jobs, journeys and stories in docs/ux/foundation.md
 argument-hint: "[what changed or what to explore]"
+disable-model-invocation: true
 ---
 
 Invoke the `ux-foundation` skill.

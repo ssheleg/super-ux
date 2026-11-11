@@ -2,6 +2,11 @@
 
 **Status: authored, schema-validated, executed 2026-08-31 against two models.**
 
+> **Dated note, 2026-11-11:** these runs used the v0.52 skill descriptions.
+> The descriptions were rewritten afterwards (routed triggers, 2026-10-20 and
+> later), so the rates below predate the current descriptions and do not
+> describe them. They were not re-run.
+
 CI still proves only that the files are shaped correctly and that the validator
 catches a planted invalid trigger class — it does not run an agent session. The
 rows below are dated runs; their method and its limits are stated under

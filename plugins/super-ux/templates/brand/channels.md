@@ -3,7 +3,7 @@ Contract: brand-contract v1
 # Channels
 
 One record per surface. `Register` is deltas against the five axes in
-`voice.md` — a register moves the axes, never the invariants.
+`voice.md`: a register moves the axes, never the invariants.
 
 `Forbidden` always carries both halves, even when one is `none`. Platform
 physics and brand choice written on one line become indistinguishable within

@@ -11,9 +11,10 @@ license: MIT
 > After changes, resolve and run the brand linter as described below.
 
 **First action, every time: read the brand pack.** `docs/brand/voice.md`,
-`terminology.md`, and the `channels.md` record for the surface being written.
+`terminology.md`, `facts.md`, and the `channels.md` record for the surface
+being written: each one that exists.
 
-**No pack? Stop and hand off to `brand-voice`.** Do not improvise a voice.
+**No pack? Run `brand-voice` Init, then continue.** Do not improvise a voice.
 Guessing it and being wrong costs more than the pause, and a product whose
 copy was invented surface by surface is exactly the drift this layer exists
 to remove.
@@ -97,7 +98,8 @@ who chose the setting.
 3. Write. Every claim traces to `facts.md`. Every product term comes from
    `terminology.md`.
 4. Deliver the copy first, then the reasoning. For headlines and CTAs give
-   two or three options with what each trades away.
+   two or three options with what each trades away; under delegated mode
+   (`system-map.md`) ship the strongest and list the others with the reason.
 5. For interface strings, add or update the `strings.md` row — key,
    `file:line`, scenario, `Status: proposed`.
 6. **Run the humanization pass** under the Humanize guards below, then print
@@ -222,13 +224,14 @@ guards govern the pass wherever it runs, and they are not optional:
   the flag needs an update, not a retry that quietly drops the gate.
 - **A tone-of-voice checker sweep, beside the linter, never instead of it.**
   Gate on the tool in the session, not on config: when a voice-check MCP tool
-  is present (one exposing `*.check` and `*.voices.list`), run it on each
-  public text you wrote with the text's `locale`, the project's saved voice as
+  is present (one exposing `*.check` and `*.voices.list`, for example
+  Copylot's `copylot_check`), run it before delivery on every string you
+  wrote, in every locale it ships in, with that `locale`, the project's saved voice as
   `voiceRef` when its voice list has one, and the `register` and `format` its
   schema offers. The target is `register: web`
   with `format: web-page` for a page; until the schema lists them, use
   `register: marketing` (`ad` or `store` on those surfaces), omit `format`,
-  and say the web-page pack was not available. Report the report id and
+  and say the web-page pack was not available. Record the report id and
   address or reject each finding: they are advice, like `B060`. With no
   tool, print `voice checker: not connected, brand_lint only` and continue.
 - Report scanned surfaces, remaining warnings and the exact command/exit code.

@@ -75,7 +75,8 @@ Announce which one you are running.
    store listing, recent posts. The current voice is data even when nobody
    chose it.
 3. **Propose one pack with reasoning, plus one alternative.** Name why the
-   runner-up loses. Let the user pick.
+   runner-up loses. Let the user pick; under delegated mode (`system-map.md`)
+   take the stronger one and record why.
 4. **Seed `docs/brand/`** from this skill's own `templates/brand/`, and fill the
    `Sources:` block first — nothing else can be checked until the linter
    knows where the project keeps its text.
@@ -84,11 +85,12 @@ Announce which one you are running.
    scenario it serves. For a large codebase, use available read-only subagents
    in parallel, one area each; without delegation, inspect the same areas
    sequentially and keep the same evidence requirements.
-6. **Ask which humanization pass this project wants**, and write the answer to
-   `voice.md`'s `Humanization pass:` field. `own` is the default and the only one
-   that reads this pack's registers and facts; `npx sshlg-skills humanizers` shows
-   what else is installed and how to install what is not. Ask once — the field
-   exists so nobody is asked twice, and it selects a pass, never a verdict.
+6. **Ask which humanization pass this project wants** (under delegated mode,
+   take `own`), and write the answer to `voice.md`'s `Humanization pass:` field.
+   `own` is the default and the only one that reads this pack's registers and
+   facts; `npx sshlg-skills humanizers` shows what else is installed and how to
+   install what is not. Ask once: the field exists so nobody is asked twice,
+   and it selects a pass, never a verdict.
 7. Everything starts `Status: draft`.
 
 ## Calibrate
@@ -112,7 +114,8 @@ The pack is a starting position; this is where it becomes the product's own.
   grammatical Russian dash where no rewrite reads naturally survives
   ([ai-tells.md](references/ai-tells.md) AT-06, `B062`, `B067`).
 
-Present section by section for approval. Approved moves `draft` →
+Present section by section for approval (delegated mode: record
+`Approved-by: agent (delegated)` and continue). Approved moves `draft` →
 `validated`.
 
 ## Update

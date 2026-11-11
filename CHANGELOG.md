@@ -1,3 +1,48 @@
+## 0.67.1 (2026-11-11): delegated mode, task-pipeline handoff, seeds without the em dash
+
+From the family audit of 2026-11-11.
+
+- **Delegated mode.** `system-map.md` gains *Delegated mode: who takes a
+  decision*: when the host's instructions delegate decisions, a stop that is
+  not a gate takes the recorded decision or the documented default, has the
+  pick judged by a second, different model where the host provides one,
+  records it (`Approved-by: agent (delegated)`) and continues; trial or first
+  versions show the variants and wait; without delegation every stop asks as
+  before. brand-voice (pack pick, humanization pass, section approval),
+  ux-foundation (layer approval), ux-flows (2-up pick, web surfaces question),
+  copywriting (headline options), `/ux-init` (vision question) and
+  `/ux-flows` (Figma question) point to it in one clause.
+- **Plans go to task-pipeline.** ux-audit step 9, `/ux` option 14,
+  `flow-improve.md` and the plan template hand the fix plan to
+  `/task-pipeline` when it is installed; the superpowers `writing-plans`
+  branch is gone.
+- **One install block.** The sheleg-design and task-pipeline install commands
+  live in `system-map.md` → Companions; `/ux`, `visual-identity.md` and
+  ux-flows point to it.
+- **ux-scenarios reads less.** Editing a scenario reads the contract's
+  Contents and the touched section; a full read only for a new scenarios
+  file. The body names its non-goal (implementation is task-pipeline's).
+- **Seeds without the em dash.** `templates/brand/` (22), `templates/foundation.md`
+  (6, the journey example in `scenario-format.md` with it) and the manifest
+  description. `validate_seed_no_em_dash` scans all of `templates/` and the
+  manifests; eight templates that mirror contract formats or hard-rule keys
+  are listed as pending (board B-034).
+- **copywriting** reads `facts.md` beside voice, terminology and channels; with
+  no pack it runs brand-voice Init and continues; a copy-check MCP tool such
+  as Copylot's `copylot_check` runs on every string in every shipped locale,
+  with its report id recorded (`/copy` step 6).
+- **Commands that share a skill's name** (`/ux-audit`, `/ux-flows`,
+  `/ux-foundation`, `/vision`) carry `disable-model-invocation: true`: people
+  type them, and the model now sees the skill's own description instead of
+  the command's (checked with `claude -p --plugin-dir` on Claude Code
+  2.1.299, 2026-11-11).
+- **Smaller fixes.** ux-flows no longer names the retired Lazyweb MCP and says
+  a missing reference server means the sweep did not run; `seo-aeo-safety.md`
+  drops the "until 0.28 is installed" sentence; `.cursor/rules` is mirrored
+  from the shipped `cursor/rules` by `sync_references.py` and checked by
+  `validate_cursor_self_install`; `SKILL-CARD.md` and `test/evals/RESULTS.md`
+  say the 2026-08-31 eval rates predate the current descriptions.
+
 ## 0.67.0 (2026-11-09): contract v5, agents and capabilities (opt-in)
 
 Packet P-SU of the family run `2026-11-09-ai-native` (hub plan and design:

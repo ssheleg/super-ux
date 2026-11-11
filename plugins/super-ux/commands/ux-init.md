@@ -5,7 +5,8 @@ description: Initialize the full UX chain for this project, from vision to scena
 Initialize the UX chain, WHAT-IT-IS → WHY → HOW → WHAT-IT-DOES:
 
 0. **Vision (offer, never assume).** If `docs/ux/vision.md` is missing, ask
-   once whether the product's direction is settled. Settled → say so and go
+   once whether the product's direction is settled (delegated mode in the
+   system map: take the recorded answer, else run `vision`). Settled → say so and go
    to 1. Not settled, or the answer is "we keep arguing about scope" →
    invoke the `vision` skill first: the anti-vision is what later stops a
    feature that every persona would happily use and the product should not

@@ -1,6 +1,7 @@
 ---
 description: Write docs/ux/vision.md and install the vision-alignment rule
 argument-hint: "[optional: what the product is, in one line]"
+disable-model-invocation: true
 ---
 
 Run the `vision` skill for this project.

@@ -1,9 +1,9 @@
 Contract: brand-contract v1
 
-# docs/brand/ — how this product speaks
+# docs/brand/: how this product speaks
 
 `docs/ux/` decides **what the product does**. This folder decides **how it
-speaks** — in the interface, on the landing page, in the store listing, in a
+speaks**: in the interface, on the landing page, in the store listing, in a
 post. One voice, many registers.
 
 Owned by the `brand-voice` skill. Written by `copywriting`. Checked by
@@ -13,7 +13,7 @@ Owned by the `brand-voice` skill. Written by `copywriting`. Checked by
 |---|---|
 | `voice.md` | the identity: pack, five axes, narrative, invariants |
 | `terminology.md` | our words, banned words, entity and tier names |
-| `facts.md` | canonical numbers and proof — the only source of a figure |
+| `facts.md` | canonical numbers and proof, the only source of a figure |
 | `channels.md` | one record per surface: register, limits, bans |
 | `copy-brief.md` | current marketing task inputs; unknowns stay explicit |
 | `strings.md` | interface string registry → `file:line` → scenario |
@@ -23,7 +23,7 @@ Owned by the `brand-voice` skill. Written by `copywriting`. Checked by
 
 **Fill this in before anything else.** The linter scans nothing outside these
 paths, and refuses to report a clean run over a surface it never read
-(`B006` for no block, `B009` for an unmatched glob). Delete the keys this project does not have — a declared-but-absent
+(`B006` for no block, `B009` for an unmatched glob). Delete the keys this project does not have: a declared-but-absent
 source is worse than an omitted one.
 
 ```
@@ -41,7 +41,7 @@ no-title-period rule a required gate, run the resolved brand linter with
 `--fail-on B063`; default warnings remain advisory. The placeholder source
 patterns above must be replaced before the first real lint run.
 
-`ui` and `marketing` also classify findings — several checks apply to only
+`ui` and `marketing` also classify findings: several checks apply to only
 one of the two.
 
 ## The hard rule

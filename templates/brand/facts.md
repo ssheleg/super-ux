@@ -13,7 +13,7 @@ A missing fact is reported, never invented to close a gap.
 | <what the number counts> | <448> | <api/catalog.json> | <2026-08-05> | <2026-11-05> | <yes> |
 | <internal figure> | <$3.10> | <billing export> | <2026-08-05> | <2026-11-05> | <no> |
 
-`Public: no` marks figures that exist and must never be quoted — internal
+`Public: no` marks figures that exist and must never be quoted: internal
 margins, unreleased counts, anything under embargo. The linter treats
 quoting one as the same failure as quoting a number that does not exist.
 
@@ -28,7 +28,7 @@ dated, and re-checked.
 
 ## Required disclaimers
 
-Text that must appear alongside specific claims — regulatory, contractual, or
+Text that must appear alongside specific claims: regulatory, contractual, or
 promised. Locale differences live in `locales/<code>.md`.
 
 | Claim it attaches to | Required text |

@@ -30,11 +30,9 @@ figma-integration reference).
 the director record; record the pack + its token file. A brief that leaves
 the look open gets directions before frames: one key screen in one state,
 the human picks on a 2-up sheet, then the rest. Not installed →
-offer the one-time install once (`/plugin marketplace add
-ssheleg/sheleg-design-skill` + `/plugin install
-sheleg-design@sheleg-design-skill`, or `npx sheleg-design-skill` in the
-project) and continue on platform defaults either way — recommend, don't
-force. Division of labor: the visual-identity reference.
+offer the one-time install once (the system map → Companions) and continue
+on platform defaults either way: recommend, don't force. Division of
+labor: the visual-identity reference.
 
 **The second reader, same moment:** if the task touches a page a search or an
 AI answer engine will read — a landing, pricing, docs, a blog — check
@@ -201,12 +199,10 @@ user pick (multiple allowed). Full catalog:
     latest audit/Improve results: target interface per screen +
     CREATE/MODIFY/DELETE change table, every row traced, prioritized
     Frequency × Severity × Solvability. Then say what the user has in hand
-    (plan, audit report, `docs/ux/` chain, Figma) and recommend — don't
-    force — implementing it autonomously by best practices with the ssheleg
-    **task-pipeline** plugin: installed → `/task-pipeline <plan file>`; not
-    installed (optional one-time) → `/plugin marketplace add
-    ssheleg/task-pipeline` + `/plugin install task-pipeline@task-pipeline`;
-    or superpowers writing-plans / by hand — user's call.
+    (plan, audit report, `docs/ux/` chain, Figma) and hand the plan to the
+    ssheleg **task-pipeline** plugin: installed → `/task-pipeline <plan
+    file>`; not installed → its optional one-time install is in the system
+    map → Companions, or implement by hand.
 15. **Nothing** — everything green; rerun `/ux` after the next change.
 
 Recommend exactly one action as the default (mark it "recommended"), based

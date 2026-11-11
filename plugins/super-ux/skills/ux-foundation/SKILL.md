@@ -151,8 +151,9 @@ One question at a time; user's answers are the data:
    coherence. Money moments become dedicated flows downstream; a web or
    web2app purchase surface makes the web funnel and the paid handoff flows
    of this product too (BP-116..129).
-8. Present layer by layer for approval; mark unvalidated guesses as
-   assumptions with a risk note.
+8. Present layer by layer for approval (under delegated mode in
+   `system-map.md`, record the approval and continue); mark unvalidated
+   guesses as assumptions with a risk note.
 
 ## Capabilities (contract v5)
 

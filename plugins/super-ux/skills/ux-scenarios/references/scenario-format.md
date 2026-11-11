@@ -283,7 +283,7 @@ you?"), grounded in data/observation, not invented traits.
 One journey per persona × job that matters:
 
 ```markdown
-### JRN-01: <persona> — <job> (JTBD-01)
+### JRN-01: <persona>, <job> (JTBD-01)
 - **Owner:** unknown
 | # | Stage | User action | Touchpoint | Emotion (1-5) | Pain | Opportunity |
 |---|-------|------------|------------|---------------|------|-------------|
@@ -1116,8 +1116,7 @@ plugin runs this plan through a 9-stage gated pipeline:
 ```
 
 Already installed → just run the `/task-pipeline` line. No task-pipeline and
-you'd rather not install it → superpowers `writing-plans` →
-subagent-driven execution, or implement by hand. Either way, keep the
+you'd rather not install it → implement by hand. Either way, keep the
 same-change rule: each change updates its scenario (and `screens.md` / Figma)
 as it lands, then re-run `/ux-audit <scope>` to confirm PASS.
 ````
