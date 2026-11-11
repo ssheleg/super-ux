@@ -320,6 +320,73 @@ def validate_cursor_rules() -> None:
             check(bool(fm.get("description")), f"{rel}: agent-requested rule needs a description")
 
 
+def validate_cursor_self_install() -> None:
+    """`.cursor/rules/` is this repository's own install of the shipped
+    `cursor/rules/` (the installer copies the files byte for byte), so the two
+    must be identical. Audit 2026-11-11 found five of eight drifted: this
+    project's Cursor sessions read rules older than the ones it ships.
+    `test/sync_references.py` rewrites the copy."""
+    src, dst = ROOT / "cursor/rules", ROOT / ".cursor/rules"
+    if not dst.is_dir():
+        return
+    shipped = {p.name for p in src.glob("*.mdc")}
+    installed = {p.name for p in dst.glob("*.mdc")}
+    check(shipped == installed,
+          f".cursor/rules: holds {sorted(installed ^ shipped)} that cursor/rules does not "
+          "match; run python3 test/sync_references.py")
+    for name in sorted(shipped & installed):
+        check((src / name).read_bytes() == (dst / name).read_bytes(),
+              f".cursor/rules/{name}: differs from the shipped cursor/rules/{name}; "
+              "run python3 test/sync_references.py")
+
+
+# Seeds land in target projects as their own documents, and the brand contract
+# bans the em dash in new text (ai-tells.md AT-06, owner decision 2026-10-18).
+# Audit 2026-11-11: 22 in templates/brand/, more in foundation.md and the
+# manifest description. The scan covers all of templates/ and both manifests;
+# the files below still carry one and are listed with the reason, so the list
+# can only shrink (a listed file that comes clean fails until it is removed).
+EM_DASH = "\u2014"
+EM_DASH_PENDING = {
+    # Hard-rule texts: the headings are the keys installed projects and
+    # ux_lint.py detect the rule by, and each text has byte-identical embedded
+    # copies (HARD_RULES). Changing them is its own migration.
+    "claude-rule.md", "vision-rule.md",
+    # These mirror formats spelled out in scenario-format.md (titles, the
+    # audit verdict line, Style pack: none, field placeholders); they move
+    # together with the contract, not alone.
+    "vision.md", "audit-report.md", "screens.md", "flows.md", "scenarios.md",
+    "README.md",
+}
+
+
+def em_dash_lines(text: str) -> list[int]:
+    """1-based line numbers carrying U+2014. Pure, so it is self-tested."""
+    return [i for i, line in enumerate(text.splitlines(), 1) if EM_DASH in line]
+
+
+def validate_seed_no_em_dash() -> None:
+    for sample, want in (("a \u2014 b", [1]), ("a: b\nc, d", []), ("x\ny \u2014", [2])):
+        check(em_dash_lines(sample) == want, f"em-dash self-test: {sample!r} gave "
+              f"{em_dash_lines(sample)}, expected {want}")
+    tpl = ROOT / "templates"
+    files = sorted(p for p in tpl.rglob("*") if p.is_file())
+    check(len(files) > 10, f"templates/: the em-dash scan walked {len(files)} files")
+    for path in files:
+        rel = path.relative_to(tpl).as_posix()
+        hits = em_dash_lines(path.read_text(encoding="utf-8"))
+        if rel in EM_DASH_PENDING:
+            check(bool(hits), f"templates/{rel}: carries no em dash any more; remove it "
+                  "from EM_DASH_PENDING in test/validate.py so it stays clean")
+            continue
+        check(not hits, f"templates/{rel}: em dash (U+2014) on line(s) {hits}; seeds "
+              "become project documents and AT-06 bans it in new text")
+    for rel in ("plugins/super-ux/.claude-plugin/plugin.json",
+                ".claude-plugin/marketplace.json", "package.json"):
+        hits = em_dash_lines(read(ROOT / rel) or "")
+        check(not hits, f"{rel}: em dash (U+2014) on line(s) {hits}")
+
+
 def validate_templates() -> None:
     for name in ("scenarios.md", "audit-report.md", "claude-rule.md", "vision-rule.md", "vision.md", "foundation.md", "flows.md", "screens.md", "README.md"):
         path = ROOT / "templates" / name
@@ -2575,6 +2642,8 @@ def main() -> int:
     validate_skills()
     validate_commands()
     validate_cursor_rules()
+    validate_cursor_self_install()
+    validate_seed_no_em_dash()
     validate_templates()
     validate_hard_rule_copies()
     validate_linter()

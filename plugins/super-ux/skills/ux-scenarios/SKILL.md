@@ -15,11 +15,15 @@ license: MIT
 AI-generated interfaces go bad when UI is built without a model of user
 behavior. This skill keeps one: `docs/ux/scenarios.md` in the target project
 is the source of truth for everything the user can do, see, and hit — every
-feature, every button, every state, every error, every result.
+feature, every button, every state, every error, every result. Not for
+implementing it: building what a scenario describes goes through
+**task-pipeline**.
 
 **Format contract:** [scenario-format.md](references/scenario-format.md)
-(ux-contract v5; a v4 chain stays valid). Read it before writing or editing scenarios. Never deviate
-from its field names, ID rules, statuses, or checklists.
+(ux-contract v5; a v4 chain stays valid). Writing a new scenarios file:
+read it in full. Editing one: read its Contents (at the top), then only the
+section for the field you touch. Never deviate from its field names, ID
+rules, statuses, or checklists.
 
 **The WHY and HOW layers:** when `docs/ux/foundation.md` exists (personas,
 JTBD, journeys, stories — `ux-foundation` skill) and/or `docs/ux/flows.md`

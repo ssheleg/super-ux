@@ -12,6 +12,7 @@ unsure.
 - [The reference shelves: this map names them, and links none](#the-reference-shelves-this-map-names-them-and-links-none)
 - [Skills & the one entry point](#skills--the-one-entry-point)
 - [The four rules that keep agents in sync](#the-four-rules-that-keep-agents-in-sync)
+- [Delegated mode: who takes a decision](#delegated-mode-who-takes-a-decision)
 - [Companions (recommended, never forced)](#companions-recommended-never-forced)
 - [When entering mid-project](#when-entering-mid-project)
 
@@ -167,6 +168,30 @@ voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
    run `python3 docs/ux/lint.py` (or `/ux-lint`). It must pass; wire it into
    the project's CI/pre-commit so drift can't merge.
 
+## Delegated mode: who takes a decision
+
+Several steps in these skills stop for a person: pick a voice pack, approve
+a layer, pick a direction on a 2-up sheet, say whether the product has web
+surfaces, choose Figma or text only, choose the humanization pass. Only a
+gate needs the person (a sign-in, a payment, a consent screen, a typed
+secret, a decision recorded as the operator's own). Every other stop depends
+on what the host's instructions say:
+
+- **Delegated** (the operator ordered the work done autonomously or to the
+  end, or the host's instructions carry a standing delegation): take the
+  recorded decision, else the default this pack documents for that step,
+  else the safest reversible option. Where the host provides a second,
+  different model, have it judge the pick against the same brief before you
+  accept it. Record the pick and its reason where the decision is kept, with
+  `Approved-by: agent (delegated)` on an approval, and continue. A layer
+  approved this way moves `draft` to `validated` like any other.
+- **Trial or first versions ordered:** show the variants at each stop, with
+  references, and wait for the operator's picks.
+- **No delegation:** the step asks, presents or offers exactly as written.
+
+Each such stop names this section in one clause; its own default stays the
+one written there.
+
 ## Companions (recommended, never forced)
 
 - **sheleg-design** carries the visual identity: one locked style pack (palette,
@@ -175,11 +200,25 @@ voice, deltas per surface). Craft: `ui-copy.md`, `marketing-copy.md`,
   recorded once in `screens.md` → Design system. The protocol lives in
   `visual-identity.md`, carried by the skills that draw.
 - **task-pipeline** implements a finished UX plan end-to-end (spec → plan →
-  subagent build → tests → deploy → docs). Offered after audits and Improve
-  passes.
+  subagent build → tests → deploy → docs). Installed → hand it the plan
+  (`/task-pipeline docs/ux/plans/<file>`) after audits and Improve passes.
 
 Both are offers, not dependencies: one recommendation with its one-time
-install, then the user's answer stands.
+install, then the user's answer stands. The install commands live here and
+nowhere else:
+
+```
+# sheleg-design, Claude Code (adds the /sheleg-design command):
+/plugin marketplace add ssheleg/sheleg-design-skill
+/plugin install sheleg-design@sheleg-design-skill
+# or drop the bundle into the project (any agent):
+npx sheleg-design-skill
+# or via the skills CLI (70+ agents):
+npx skills add ssheleg/sheleg-design-skill
+# task-pipeline, Claude Code:
+/plugin marketplace add ssheleg/task-pipeline
+/plugin install task-pipeline@task-pipeline
+```
 
 ## When entering mid-project
 

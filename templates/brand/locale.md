@@ -5,13 +5,13 @@ Address form: <Sie>
 Length coefficient: <1.30>
 Humor: <-1 from base>
 Never translated: <product name, entity names, tier names>
-Keywords: <own research — see below>
+Keywords: <own research, see below>
 Reviewed by: <name of someone who reads this language daily, or `unreviewed`>
 
 # Locale delta
 
 Copy this file to `locales/<code>.md`, one per declared locale. The invariant
-half of the voice does not appear here — it is in `voice.md` and holds in
+half of the voice does not appear here: it is in `voice.md` and holds in
 every language. This file carries only what is decided again.
 
 ## Address form
@@ -51,7 +51,7 @@ a missing one is a defect even when parity is otherwise complete.
 
 ## Length notes
 
-Surfaces where the coefficient bites hardest in this locale — usually
+Surfaces where the coefficient bites hardest in this locale, usually
 buttons, tab labels, store title and subtitle. Recorded here so the
 constraint reaches the primary-locale original, where it can still be
 designed around.

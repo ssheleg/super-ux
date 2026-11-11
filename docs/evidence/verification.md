@@ -8,6 +8,20 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.67.1: delegated mode, task-pipeline handoff, seeds without the em dash (2026-11-11)
+
+Branch `fix/audit-1111`, the family audit of 2026-11-11. Every `planted` below was a
+mutation applied to the working tree, run, watched red, and reverted.
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| AU-1 | Delegated mode in `system-map.md`; one-clause pointers at the stops in brand-voice, ux-foundation, ux-flows, copywriting, `/ux-init`, `/ux-flows` | `python3 test/sync_references.py`, then `python3 test/validate.py` (seven copies byte-equal, Contents anchors resolve) | never (text) |
+| AU-2 | Fix plans go to `/task-pipeline`; no superpowers branch | a search for `superpowers` under `plugins/` and both rule folders prints nothing | never (text) |
+| AU-3 | No em dash in `templates/` (eight files pending, B-034) or the manifests | `validate_seed_no_em_dash`: an em dash planted in `templates/brand/voice.md` turned `validate.py` red, then passed restored | **planted** |
+| AU-4 | The repository's own Cursor rules equal the shipped `cursor/rules` | `validate_cursor_self_install`: one byte changed in the installed `vision.mdc` turned `validate.py` red; `sync_references.py` restored it | **planted** |
+| AU-5 | `disable-model-invocation: true` on the four commands that share a skill's name | Claude Code 2.1.299, `claude -p --plugin-dir` on a scratch plugin: a command without the flag hid its same-named skill's description; with the flag the skill's description was listed | **observed** |
+| AU-6 | 0.67.1 in the four version places and `SKILL-CARD.md` | `validate_manifests` green | never |
+
 ## Release candidate: v0.67.0: contract v5, agents and capabilities (2026-11-09)
 
 Branch `feat/ai-native-1109`, packet P-SU of the hub run `2026-11-09-ai-native`. Every

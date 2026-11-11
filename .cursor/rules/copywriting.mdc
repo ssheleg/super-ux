@@ -1,5 +1,5 @@
 ---
-description: "Write or rewrite any text a user reads (interface strings, errors, empty states, landing and pricing pages, posts, changelogs, store listings, ads, email): apply when asked to write copy, rewrite a headline or CTA, fix microcopy, or when a draft reads machine-made"
+description: "Write or rewrite any text a user reads (interface strings, errors, empty states, landing and pricing pages, posts and captions, short-video scripts and hooks, changelogs, store listings, ads, email): apply when asked to write copy, rewrite a headline or CTA, fix microcopy, or when a draft reads machine-made"
 alwaysApply: false
 ---
 
@@ -11,16 +11,26 @@ finish a button is how a product ends up with six voices.
 
 ## First action, every time
 
-Read the pack: `docs/brand/voice.md`, `terminology.md`, and the
-`channels.md` record for the surface being written. **No pack? Stop and run
-`/brand-init`.** Guessing the voice and being wrong costs more than the
-pause.
+Read the pack: `docs/brand/voice.md`, `terminology.md`, `facts.md`, and
+the `channels.md` record for the surface being written. **No pack? Run
+`/brand-init`, then continue.** Guessing the voice and being wrong costs
+more than the pause.
 
-**Never write to `docs/brand/`.** A term missing from the dictionary, or a
-number with no row in `facts.md`, is **reported** — never invented to finish
-the sentence. Adding it is `brand-voice`'s decision, not this pass's.
+Ownership is by file: `brand-voice` owns voice, terms, facts, channels and
+locale policy. Missing terms or facts are reported, never invented. This pass
+owns product text and `strings.md` rows (`Status: proposed`); claim coordinated
+files before editing. A file living in `docs/brand/` does not forbid the edit.
+
+For marketing writing only, use the copywriting skill’s `marketing-copy.md`
+→ Before writing contract for the current brief; keep unknown inputs explicit.
+Other tasks do not load this brief.
 
 ## Rules that hold in every voice
+
+- **No decorative full stop in headings or labels**, even when inline markup
+  or line breaks split the title. “Your agents. Your tools.” is still a title.
+  Keep questions, ellipses, abbreviations, versions, URLs and paragraph punctuation.
+  Apply a project's explicit hero/caption policy to those additional roles.
 
 - **Every figure comes from `facts.md`.** No sourced fact, no number. Never
   fabricate a statistic, a quote, or an expert.
@@ -44,9 +54,25 @@ Could this sentence sit unchanged on a competitor's page? Then it says
 nothing. Rewrite it until it could not.
 
 Machine-made tells to strip: tricolons that add nothing, "seamless /
-effortless / unlock / elevate / robust", em-dash cadence in every paragraph,
-"it's not just X, it's Y", hedges stacked two deep, and a closing sentence
-that summarizes what was just said.
+effortless / unlock / elevate / robust", "it's not just X, it's Y", hedges
+stacked two deep, and a closing sentence that summarizes what was just said.
+
+**No em dash (U+2014) in text you write, in any language** (owner decision,
+2026-10-18). A hard ban, not a count: no substitute either (`--`, an en dash
+or a spaced hyphen doing a dash's job). Use a full stop, a comma, a colon or
+brackets, or rewrite. The rare exception is a dash Russian grammar needs where
+no rewrite reads naturally; quotations, code, commands and paths keep theirs.
+
+## Short video
+
+A hook is three things at once, about one thing: frame 0, on-screen text of
+ten words or fewer, and the first spoken line. The body pays the promise
+before the middle. Write the angle first ("for [persona], who wants
+[desire], we show [proof]"), time the script by reading it aloud (never
+convert a word count into another language), and give every figure in the
+hook its `facts.md` row. `B044` filters weak hooks; it is a filter, never a
+predictor of which hook wins. A caption fits the feed window and makes one
+ask (`B045`, `B046`).
 
 ## Localization
 
@@ -56,10 +82,15 @@ lags the primary says so rather than pretending to be current.
 
 ## Check
 
-```bash
-python3 docs/brand/lint.py
-```
+Resolve the actual linter: use `docs/brand/lint.py` if present, otherwise locate
+`brand_lint.py` in the installed super-ux scripts directory and pass the project's
+brand directory. If neither exists, state the missing tool and manual coverage.
+Confirm Sources patterns match the touched files and copy projections retain
+heading roles. Inspect rendered output and generators; static checks cannot
+resolve external CSS or runtime text.
 
-Exit 0 clean **or warnings only**, 1 warnings under `--strict`, 2 any error. That is the policy `docs/ux/lint.py` has always had, and one pack cannot hold two opposite meanings for a warning: this linter returned 1 on warnings alone until 2026-08-20, so 13 of its 39 codes turned a build red while printing `0 error(s), 1 warning(s)`. Clean means *checkable*, not *good* —
-tone drift, unproven claims and a voice that overshot its declared failure
-mode are judged by `/ux-audit copy`.
+Run the resolved script with `--fail-on B063` when title punctuation must block.
+An older script rejecting the flag needs updating, not a retry that drops the gate.
+Exit 0 means clean or advisory warnings; selected warnings exit 1; errors exit 2.
+`--strict` selects every warning. Report actual surfaces, warnings and command.
+Tone, grounding and voice still require `/ux-audit copy`.

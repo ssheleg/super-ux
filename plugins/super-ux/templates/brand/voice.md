@@ -2,7 +2,7 @@ Contract: brand-contract v1
 Voice pack: <pack id from voice-packs.md, or `custom`>
 Locales: <en (primary)>
 Locale parity threshold: 80%
-Derived-from: <P-NN, JTBD-NN from docs/ux/foundation.md — or `inferred`>
+Derived-from: <P-NN, JTBD-NN from docs/ux/foundation.md, or `inferred`>
 Status: draft
 Last calibrated: <YYYY-MM-DD>
 Humanization: on                    # on | off; on is the default, off needs a reason below
@@ -30,7 +30,7 @@ against exactly these five.
 
 ```
 Hero:         <who the reader is, in the role this product meets them in>
-Enemy:        <the state of the world that costs them — not a competitor>
+Enemy:        <the state of the world that costs them, not a competitor>
 Product role: <instrument | guide | weapon>
 Promise:      <one line, checkable against a row in facts.md>
 ```

@@ -1,7 +1,7 @@
 ---
 name: ux-flows
 description: 'Use when designing how users move through a product: flows, screen states, wireframes, Figma mockups, funnels, paywalls. Triggers: "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты". Not for the visual system (sheleg-design). Refusal phrase "no scenarios" / «без сценариев».'
-compatibility: Any agent with file read/write - flow diagrams are mermaid text and need no renderer. Optional MCPs are used only when present in the session - Figma for mockups, Refero/Mobbin/Lazyweb for reference screens; absent, the skill proceeds without them and says so. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only.
+compatibility: Any agent with file read/write - flow diagrams are mermaid text and need no renderer. Optional MCPs are used only when present in the session - Figma for mockups, Refero/Mobbin for reference screens; absent, the skill proceeds without them and says so. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only.
 license: MIT
 ---
 
@@ -45,12 +45,12 @@ obey, via the **sheleg-design** companion):
 [visual-identity.md](references/visual-identity.md).
 
 **Real flows off the shelf, before you invent one:** if the session exposes a
-reference server — **Refero** (`mcp__refero__*`), **Mobbin** (`mcp__mobbin__*`)
-or **Lazyweb** (`mcp__lazyweb__*`) — sweep it in step 2. **Refero** gives each
+reference server, **Refero** (`mcp__refero__*`) or **Mobbin**
+(`mcp__mobbin__*`), sweep it in step 2. **Refero** gives each
 step as *structure* (goal, action, system response), the shape this skill
 draws; **Mobbin** gives a *preview image*, which is how you judge whether it
 reads. **Gate on the tools present in the session, not on the config.** None
-present → offer the one-time install once and continue from the stories.
+present → say the sweep did not run and continue from the stories.
 
 **A paid-acquisition funnel has a second shelf, and it is public:** the
 competitor funnels running right now behind the ads in your category.
@@ -133,15 +133,11 @@ Per story (or tight cluster):
 2. **Draw the flow** (mermaid, node conventions from the contract): every
    decision an explicit branch; every error edge lands on recovery; all
    entry points enumerated; happy path ≤5 steps or justified.
-   **Check what the platform permits before you draw a node it owns.** Where a
-   step belongs to the operating system or a store rather than to you — store
-   billing, a permission prompt, a share sheet, biometrics, a system settings
-   deep link — two questions decide the diagram and neither is a design
-   question: *can the app perform this action at all*, and *does the app learn
-   the outcome synchronously*. A "no" to the second is a **third branch** that
-   claims neither outcome and reconciles later; drawing only success and failure
-   there ships a flow that cannot be built (BP-123 once got this wrong, so the
-   rule lives here too).
+   **Check what the platform permits before you draw a node it owns** (store
+   billing, a permission prompt, a share sheet, biometrics, a settings deep
+   link): *can the app perform it at all*, and *does it learn the outcome
+   synchronously*? A "no" to the second is a **third branch** that claims
+   neither outcome and reconciles later.
    **Sweep shipped flows first, while there is still nothing to defend.**
    Search the journey by name and read the results for **step count, entry and
    exit states, decision points, friction, confirmation and recovery paths**.
@@ -185,10 +181,12 @@ Per story (or tight cluster):
    defaults, and keeps the director record; this skill keeps no pack list.
    Underdetermined brief → directions before frames: one key screen in one
    state, two directions only when the fork is real, the human picks on a
-   2-up mini sheet, then the rest. Companion absent → offer the install once
+   2-up mini sheet (or delegated mode, `system-map.md`), then the rest.
+   Companion absent → offer its install (`system-map.md` → Companions) once
    and continue on platform defaults; `none` keeps the slop-marker floor.
    Never invent a palette, type pairing, or motion per screen.
-5. **Settle the second reader, in the same breath** — ask once, plainly:
+5. **Settle the second reader, in the same breath:** ask once, plainly
+   (delegated mode: answer from the product's own surfaces):
    *does this product have pages a search engine or an AI answer engine will
    read — a landing, pricing, docs, a blog?* Record the answer in
    `screens.md` → Web surfaces as `yes` or `no`; `no` is a complete answer.

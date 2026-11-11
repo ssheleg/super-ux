@@ -4,9 +4,9 @@ description: Write or edit copy for a named surface in the recorded voice
 
 Run the `copywriting` skill.
 
-**First action: read the brand pack** — `docs/brand/voice.md`,
-`terminology.md`, and the `channels.md` record for the surface. No pack →
-stop and route to `/brand-init`. Do not improvise a voice.
+**First action: read the brand pack:** `docs/brand/voice.md`,
+`terminology.md`, `facts.md`, and the `channels.md` record for the surface.
+No pack → run `/brand-init`, then continue. Do not improvise a voice.
 
 Pick the mode from what the user asked:
 
@@ -31,6 +31,9 @@ Then:
    Preserve heading roles in Sources and copy projections; inspect rendered copy
    and generators. Use `--fail-on B063` for a required no-title-period gate and
    report scanned surfaces, warnings and the exact command.
+6. When a copy-check MCP tool for this catalogue is in the session (for
+   example Copylot's `copylot_check`), run it on every string in every
+   shipped locale before delivery and record its report id.
 
 **Report, never invent.** A term missing from the dictionary or a number with
 no row in `facts.md` is named as missing. No fabricated statistics, quotes or

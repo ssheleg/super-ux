@@ -168,9 +168,8 @@ launch) has one home: the brief mode of the **seo-aeo-audit** companion,
 [`references/build-time.md`](https://github.com/ssheleg/seo-aeo-audit/blob/main/plugins/seo-aeo-audit/skills/seo-aeo-audit/references/build-time.md),
 which ships with seo-aeo-audit 0.28. Every brief item there is the inverse
 of a check the audit runs, so the two cannot drift apart the way a copy
-here would. Until 0.28 is installed, run `/seo-aeo-audit` against the built
-page; `copywriting`'s `landing-pages.md` (LP-17, LP-18) says what must
-exist in the markup.
+here would. `copywriting`'s `landing-pages.md` (LP-17, LP-18) says what
+must exist in the markup.
 
 One rule stays here because writers ask for it: **do not add `FAQPage` or
 `HowTo` markup to win a rich result.** Google removed HowTo rich results in

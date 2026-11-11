@@ -97,6 +97,27 @@ def mirror_templates(needed, dest):
     return changed
 
 
+def mirror_cursor_rules():
+    """`.cursor/rules/` is this repository's own install of `cursor/rules/`
+    (the installer copies byte for byte); keep it identical (audit 2026-11-11)."""
+    src = os.path.join(ROOT, "cursor", "rules")
+    dst = os.path.join(ROOT, ".cursor", "rules")
+    if not os.path.isdir(dst):
+        return 0
+    changed = 0
+    shipped = sorted(f for f in os.listdir(src) if f.endswith(".mdc"))
+    for name in shipped:
+        s, d = os.path.join(src, name), os.path.join(dst, name)
+        if not os.path.exists(d) or open(s, "rb").read() != open(d, "rb").read():
+            shutil.copyfile(s, d)
+            changed += 1
+    for stale in sorted(f for f in os.listdir(dst) if f.endswith(".mdc") and f not in shipped):
+        os.remove(os.path.join(dst, stale))
+        changed += 1
+    print(f".cursor/rules: {len(shipped)} rule(s) mirrored from cursor/rules")
+    return changed
+
+
 def main():
     available = {f for f in os.listdir(SRC) if f.endswith(".md")}
     changed = 0
@@ -130,6 +151,7 @@ def main():
         print(f"{skill}: {len(needed)} contract(s) shipped")
     changed += mirror_templates(_files_under(TEMPLATES), PLUGIN_TEMPLATES)
     print(f"plugin: full templates/ tree shipped ({len(_files_under(PLUGIN_TEMPLATES))} file(s))")
+    changed += mirror_cursor_rules()
     print(f"sync complete ({changed} file(s) written/removed)")
     return 0
 

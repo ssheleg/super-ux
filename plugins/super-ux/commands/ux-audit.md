@@ -1,6 +1,7 @@
 ---
 description: Audit the codebase against scenarios and flows at quick, standard or deep depth
 argument-hint: "[all | feature:<name> | SCN-010..SCN-020 | coverage | practices | heuristics | copy | benchmark:<competitor>] [quick|deep]"
+disable-model-invocation: true
 ---
 
 Invoke the `ux-audit` skill.

@@ -35,7 +35,7 @@ outside systems. People stay in Personas.
 
 ## Customer journeys
 
-<!-- ### JRN-01: <persona> — <job> (JTBD-01)
+<!-- ### JRN-01: <persona>, <job> (JTBD-01)
 - **Owner:** unknown
 | # | Stage | User action | Performed by | Touchpoint | Emotion (1-5) | Pain | Opportunity |
 |---|-------|------------|--------------|------------|---------------|------|-------------|
@@ -45,10 +45,10 @@ Performed by: the P- and A- ids that do this stage.
 ## Monetization
 
 <!-- When the product earns money (choose with data, BP-067..070):
-- **Model:** hard paywall | freemium | hybrid | trial (type, length) — and why
+- **Model:** hard paywall | freemium | hybrid | trial (type, length), and why
 - **Value metric:** <what the paid tier meters>
 - **Free boundary:** <what stays free, where the visible limit sits>
-- **Purchase surface:** in-app (IAP) | web checkout | web2app (web funnel -> app) — BP-030/BP-078/BP-127, and which storefronts
+- **Purchase surface:** in-app (IAP) | web checkout | web2app (web funnel -> app); BP-030/BP-078/BP-127, and which storefronts
 - **Money moments:** <paywall placement, upgrade triggers, checkout, failed payment, cancel, rating prompts, winback>
 - **Acquisition coherence:** <the one story ad -> landing/listing -> onboarding tells>
 -->
@@ -57,9 +57,9 @@ Performed by: the P- and A- ids that do this stage.
 
 <!-- Two dimensions the practice-selection profile reads; record them once,
 even when the answer is "none":
-- **Personalization:** none | rule-based | inferred/model-driven — BP-143/BP-144 (what gets asked when, and how a wrong inference is corrected)
-- **Engagement mechanics:** none | streaks/tiers | points/badges/leaderboards — BP-141/BP-142 (which traced job each mechanic reinforces, and the recovery path when progress is lost)
-- **Accessibility regime:** none stated | EAA (EU) | ADA (US) | both — BP-138, with the owner
+- **Personalization:** none | rule-based | inferred/model-driven; BP-143/BP-144 (what gets asked when, and how a wrong inference is corrected)
+- **Engagement mechanics:** none | streaks/tiers | points/badges/leaderboards; BP-141/BP-142 (which traced job each mechanic reinforces, and the recovery path when progress is lost)
+- **Accessibility regime:** none stated | EAA (EU) | ADA (US) | both; BP-138, with the owner
 -->
 
 ## Design tooling
