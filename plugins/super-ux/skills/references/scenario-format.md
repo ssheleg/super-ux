@@ -1139,8 +1139,8 @@ truth and are updated by the implementation, same-change rule.
 
 A screen's `Actions:` table lists every action a person can take on it, and is
 the list the design-tester checks a frame against. It replaces `Elements:`,
-which stays readable as a legacy field. The rules it carries (UIM-01 to UIM-08,
-UIM-13, UIM-14 and UIM-29) come from the research report
+which stays readable as a legacy field. The rules it carries (UIM-01 to UIM-14,
+UIM-29 and UIM-31 to UIM-34) come from the research report
 https://github.com/ssheleg/sheleg-design-skill/tree/main/docs/reports/2026-11-23-ui-guidelines ; the look of each row (sizes,
 spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
 
@@ -1159,7 +1159,8 @@ A `State: <name>` line before a second table gives the rows of another state,
 only where the visible set differs (idle and running, for instance).
 
 **Counting (UIM-04).** Per state, count the `primary` and `secondary` rows,
-minus `exit` rows (at most three exits show: Back or Close, Undo, Redo). Tab-bar
+minus `exit` rows (at most three exits show: Back or Close, Undo, Redo; a
+fourth is `U100`). Tab-bar
 destinations are navigation and not counted; a repeating collection counts once
 per kind of action; a status banner with one recovery action is a state; a
 disclosure entry is one secondary action; an iPad inspector shows `hidden` rows
@@ -1179,6 +1180,22 @@ into labelled groups, and inactive items are dimmed, never removed.
 marks one option as recommended or current, shows at most five before "Show
 more", previews each in place before "Use", compares two at a time on a phone
 and up to four on a tablet, and restores the previous choice in one tap.
+
+**State, undo, help and empty states (UIM-09 to UIM-12).** While recording or
+playback runs, the screen says so in words with elapsed time or a level, and the
+control that started it became the stop control in the same place; routine edits
+are undoable and never confirmed (a confirmation is for an `irreversible` row
+only, states the consequence and labels its buttons with the outcome); no tour
+or overlay blocks the screen on first run, and a hint sits next to the control
+it explains; empty, loading and error states each say what is happening, why,
+and offer one next step. The state matrix above carries these states.
+
+**Labels in the map.** A label is the on-screen text in quotes (straight,
+guillemet or typographic). A row with neither a quoted word of three or more
+characters nor an allowed glyph shows nothing a person can read (`U104`); a
+single letter or an abbreviation is a glyph. A menu button keeps its menu mark
+(a chevron) at every width, or it reads as a tab. A `hint` or `receipt` row may
+repeat the labels of the rows it points at.
 
 **Words, consequences, receipts, now and next (UIM-31 to UIM-34).**
 - *Words before count (UIM-31).* When labelled controls do not fit with their
@@ -1281,12 +1298,12 @@ here — the meaning of a rule never lives only in its source.
 | U097 | W / E (format 2) | a state of the action map has zero or several `primary` rows, or its primary is `rare` or `irreversible` |
 | U098 | W / E (format 2) | an action-map row names no `SCN-` id and is not `exit` |
 | U099 | W / E (format 2) | a scenario listed in the screen's `Scenarios:` has no action-map row, or the list is empty |
-| U100 | W / E (format 2) | a state shows more than five counted visible actions |
+| U100 | W / E (format 2) | a state shows more than five counted visible actions, or more than three visible exits |
 | U101 | W / E (format 2) | a row's tier or depth does not fit its frequency, or its path is deeper than two |
 | U102 | W / E (format 2) | a row is reached only by a gesture, or a `hidden` row has no quoted label path |
-| U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More" or ellipsis |
-| U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set |
+| U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More", "Ещё" or ellipsis (with or without a trailing "…") |
+| U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set, or a visible row shows no readable word |
 | U105 | W / E (format 2) | a row has no profile, the primary is `standard`, or more than three actions are `performance` |
-| U106 | W / E (format 2) | within one screen (any state) a quoted label names two different actions |
+| U106 | W / E (format 2) | within one screen (any state) a quoted label names two different actions; `hint` and `receipt` rows may repeat labels |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |

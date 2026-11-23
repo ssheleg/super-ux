@@ -1578,6 +1578,34 @@ case("U106 one label for two actions in two states",
      {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
       "  state: running\n" + AM_HEAD + '  | Stop the click | "Tap tempo" | stops | SCN-001 | every visit (assumed) | primary | visible | performance |\n' + "- **Scenarios:**")},
      warns={"U106"})
+# Review round 2 (2026-11-23): generic overflow with an ellipsis, hint and
+# receipt rows repeating labels, typographic quotes, Russian gestures, `;` and `>`
+# inside a quoted label, the three-exit cap, a label that is one letter.
+def often_behind(path):
+    return amap(AM_ROWS[:4] + [AM_ROWS[4].replace("rare (assumed)", "often (assumed)").replace('"4/4, Wood" > "Sound"', path)] + AM_ROWS[5:])
+case("U103 'More…' is a generic overflow", often_behind('"More…"'), warns={"U103"})
+case("U103 «Ещё…» is a generic overflow", often_behind("«Ещё…»"), warns={"U103"})
+silent("U103 «Ещё вайбы» is a named container", often_behind("«Ещё вайбы»"), {"U103"})
+silent("U106 a hint row may repeat a label it points at",
+       amap(AM_ROWS + ['| Explain sound | "Click sound", "Got it" | `hint` points at the sound sheet | SCN-002 | rare (assumed) | secondary | visible | standard |']),
+       {"U106"})
+silent("U102 typographic quotes name a path",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "“4/4, Wood” > “Sound”")] + AM_ROWS[5:]),
+       {"U102"})
+case("U102 a Russian gesture-only path",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "долгое нажатие")] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("U102 a semicolon inside a quoted label is text",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"Tonality; scale"')] + AM_ROWS[5:]),
+       {"U102", "U101"})
+case("U100 four visible exits",
+     amap(AM_ROWS + ['| Close | glyph:close | closes | exit | rare | secondary | visible | standard |',
+                     '| Undo | glyph:undo | undoes | exit | often | secondary | visible | standard |',
+                     '| Redo | glyph:redo | redoes | exit | rare | secondary | visible | standard |']),
+     warns={"U100"})
+case("U104 a one-letter label is a glyph",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"S"')] + AM_ROWS[4:]),
+     warns={"U104"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

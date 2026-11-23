@@ -1316,11 +1316,17 @@ ACTION_PERFORMANCE_CAP = 3
 ALLOWED_GLYPHS = {"back", "close", "play", "pause", "stop", "plus", "minus",
                   "search", "share", "trash", "gear", "ellipsis", "undo", "redo"}
 GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
-                           r"hold|shake|two[- ]finger)\b", re.IGNORECASE)
+                           r"hold|shake|two[- ]finger)\b|"
+                           r"(долг\w*\s+нажат\w*|двойн\w*\s+(?:тап|нажат)\w*|"
+                           r"свайп\w*|щип\w*|перетаск\w*|удержан\w*)", re.IGNORECASE)
 # A container whose whole label is generic: "More", an ellipsis, three dots.
 GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
-                  "glyph:ellipsis", "ellipsis"}
-QUOTED = re.compile(r'"[^"]*"|«[^»]*»')
+                  "glyph:ellipsis", "ellipsis", "more options", "options", "other",
+                  "ещё действия", "еще действия", "действия", "другое", "опции"}
+# Straight, guillemet and typographic quotes all mark on-screen text.
+QUOTED = re.compile('"[^"]*"|«[^»]*»|“[^”]*”|„[^“”]*[“”]')
+QUOTE_CHARS = '"«»“”„ '
+MAX_EXITS = 3
 JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # Rows that are not counted toward the budget (counting rules 9 to 11): placing a
 # cursor or playhead by tapping content, a transient recovery chip or receipt,
@@ -1388,14 +1394,36 @@ def _freq(row: dict[str, str]) -> str:
     return raw.split("(")[0].strip()
 
 
+def _mask(text: str) -> tuple[str, list[str]]:
+    """Quoted labels replaced by placeholders, so `;` or `>` inside a label is text."""
+    kept: list[str] = []
+
+    def keep(m: re.Match) -> str:
+        kept.append(m.group(0))
+        return f"\x00{len(kept) - 1}\x00"
+    return QUOTED.sub(keep, text), kept
+
+
+def _unmask(text: str, kept: list[str]) -> str:
+    return re.sub(r"\x00(\d+)\x00", lambda m: kept[int(m.group(1))], text)
+
+
 def _path(reached: str) -> tuple[str, str]:
     """(the path before any accelerator, the accelerators after `also:`)."""
-    parts = re.split(r";|\balso:", reached, maxsplit=1)
-    return parts[0].strip(), (parts[1].strip() if len(parts) > 1 else "")
+    masked, kept = _mask(reached)
+    parts = re.split(r";|\balso:", masked, maxsplit=1)
+    return (_unmask(parts[0], kept).strip(),
+            _unmask(parts[1], kept).strip() if len(parts) > 1 else "")
 
 
 def _segments(path: str) -> list[str]:
-    return [seg.strip() for seg in re.split(r">|›", path) if seg.strip()]
+    masked, kept = _mask(path)
+    return [_unmask(seg, kept).strip() for seg in re.split(r">|›", masked) if seg.strip()]
+
+
+def _generic(segment: str) -> bool:
+    raw = segment.strip(QUOTE_CHARS).lower()
+    return raw in GENERIC_LABELS or raw.rstrip(".… :").strip() in GENERIC_LABELS
 
 
 def _depth(reached: str) -> int:
@@ -1442,6 +1470,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                        f"primary action that is not rare and not irreversible; "
                        f"found {detail}")
             counted = 0
+            exits = 0
             for row in rows:
                 name = row.get("action", "?")
                 scen = row.get("scenario", "")
@@ -1452,6 +1481,8 @@ def check_action_map(screens: str, gated: bool) -> None:
                 path, accel = _path(reached)
                 bare = QUOTED.sub("", path)
                 is_exit = scen.strip().lower() == "exit"
+                if is_exit and tier in ("primary", "secondary"):
+                    exits += 1
                 served |= refs(scen, "SCN")
                 if not refs(scen, "SCN") and not is_exit:
                     report(f"[U098] screens.md: {sid}: action \"{name}\" serves no "
@@ -1480,21 +1511,28 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"by a gesture or by an unnamed path; add a visible "
                            f"control or a quoted label path, and keep the gesture "
                            f"after also:")
-                generic = any(seg.strip('"«» ').lower() in GENERIC_LABELS
-                              for seg in _segments(path))
+                generic = any(_generic(seg) for seg in _segments(path))
                 if freq in ("every visit", "often") and depth >= 1 and generic:
                     report(f"[U103] screens.md: {sid}: {freq} action \"{name}\" is "
                            f"behind a generic overflow; show it or put it in a "
                            f"named container")
                 label = row.get("label or glyph", "")
-                if not QUOTED.search(label):
-                    for glyph in re.findall(r"glyph:([a-z-]+)", label.lower()):
+                words = [q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)]
+                glyphs = re.findall(r"glyph:([a-z-]+)", label.lower())
+                if not any(len(w) > 2 for w in words):
+                    for glyph in glyphs:
                         if glyph not in ALLOWED_GLYPHS:
                             report(f"[U104] screens.md: {sid}: \"{name}\" uses glyph "
                                    f"\"{glyph}\" without a text label; allowed "
                                    f"icon-only glyphs: {', '.join(sorted(ALLOWED_GLYPHS))}")
-                for quoted in QUOTED.findall(label):
-                    word = quoted.strip('"«» ').lower()
+                    if not glyphs and not is_exit and not uncounted and tier != "hidden":
+                        report(f"[U104] screens.md: {sid}: \"{name}\" shows no word a "
+                               f"person can read (a letter or an abbreviation is a glyph); "
+                               f"quote its on-screen label or use an allowed glyph")
+                hint_like = re.search(r"`(hint|receipt)`|^\s*(hint|receipt)\s*:",
+                                      row.get("what it does", ""), re.IGNORECASE)
+                for quoted in ([] if hint_like else QUOTED.findall(label)):
+                    word = quoted.strip(QUOTE_CHARS).lower()
                     other = labels.setdefault(word, name)
                     if other != name:
                         report(f"[U106] screens.md: {sid}: label \"{word}\" names two "
@@ -1509,6 +1547,9 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"standard; it takes the frequent or performance profile")
                 if profile == "performance":
                     perf.add(name.lower())
+            if exits > MAX_EXITS:
+                report(f"[U100] screens.md: {sid} state {state}: {exits} visible exits; "
+                       f"at most {MAX_EXITS} (Back or Close, Undo, Redo)")
             if counted > ACTION_BUDGET:
                 report(f"[U100] screens.md: {sid} state {state}: {counted} visible "
                        f"actions, budget is {ACTION_BUDGET}; move the least frequent "
