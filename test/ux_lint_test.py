@@ -1682,6 +1682,17 @@ case("U101 an exit three containers deep",
 silent("action map: a note in the Tier and Profile cells",
        amap(AM_ROWS[:3] + [AM_ROWS[3].replace("| secondary | visible | frequent |", "| secondary (toolbar) | visible | frequent (corner) |")] + AM_ROWS[4:]),
        {"U101", "U105"})
+# Review round 8 (2026-11-23): a visible entry that holds only rare actions.
+silent("U101 a visible settings entry holding only rare rows",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace("often (assumed)", "rare (assumed)")] + AM_ROWS[4:]),
+       {"U101"})
+silent("U101 an icon-only entry named by glyph",
+       amap(AM_ROWS + ['| Open settings | glyph:gear | opens the settings sheet | SCN-002 | rare (assumed) | secondary | visible | standard |',
+                       '| Change font size | "Font size" | sets the size | SCN-002 | rare (assumed) | hidden | glyph:gear | standard |']),
+       {"U101"})
+case("U101 a rare visible row that opens nothing",
+     amap(AM_ROWS + ['| Show tips | "Tips" | shows tips | SCN-002 | rare (assumed) | secondary | visible | standard |']),
+     warns={"U101"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

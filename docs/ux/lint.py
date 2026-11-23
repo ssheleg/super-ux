@@ -1488,6 +1488,18 @@ def check_action_map(screens: str, gated: bool) -> None:
         served: set[str] = set()
         perf: set[str] = set()
         labels: dict[str, str] = {}
+        # A disclosure entry is the row whose label or glyph opens another row's
+        # path; its own frequency is not held against depth (it is counted).
+        openers = {_segments(_path(r.get("reached by", ""))[0])[0].strip(QUOTE_CHARS).lower()
+                   for rs in states.values() for r in rs
+                   if _depth(r.get("reached by", "")) >= 1}
+
+        def is_entry(row: dict[str, str]) -> bool:
+            label = row.get("label or glyph", "").lower()
+            marks = {q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)}
+            marks |= {f"glyph:{g}" for g in re.findall(r"glyph:([a-z.-]+)", label)}
+            return bool(marks & openers)
+
         for state, rows in states.items():
             primaries = [r for r in rows if r.get("tier", "").lower() == "primary"]
             bad = [r for r in primaries if _freq(r) == "rare"
@@ -1528,7 +1540,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                 if depth > 2:
                     report(f"[U101] screens.md: {sid}: \"{name}\" sits at depth {depth}; "
                            f"no row is deeper than 2")
-                elif is_exit or uncounted:
+                elif is_exit or uncounted or (depth == 0 and is_entry(row)):
                     pass
                 elif tier not in ACTION_TIERS or allowed is None:
                     report(f"[U101] screens.md: {sid}: \"{name}\" needs a tier "

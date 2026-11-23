@@ -1147,7 +1147,7 @@ spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
 | Column | Allowed content |
 |---|---|
 | Action | A verb phrase, unique on the screen. Several controls for one parameter are one action (minus, plus and "Tap tempo" are "Set tempo"), at most three controls plus the value itself |
-| Label or glyph | The exact on-screen text in quotes, `glyph:<name>`, or both. Icon-only is allowed for `back`, `close`, `play`, `pause`, `stop` (beside a state label), `plus`, `minus`, `search`, `share`, `trash`, `gear`, `ellipsis`, `undo`, `redo`; a badge or dot is explained by words on the same screen |
+| Label or glyph | The exact on-screen text in quotes, `glyph:<name>`, or both. Icon-only is allowed for `back`, `close`, `play`, `pause`, `stop` (beside a state label), `plus` and `minus` (around a visible value), `search`, `share`, `trash`, `gear`, `ellipsis`, `undo` and `redo` (as a pair); a badge or dot is explained by words on the same screen |
 | What it does | The outcome in one clause. Flags: `irreversible` (cannot be undone), `variants` (opens a choice among alternatives), `generates` (a model creates or replaces content), `spends` (uses quota, money, a take or a generation), and the uncounted kinds `position` (tapping content places a cursor or playhead), `recovery` and `receipt` (transient chips), `hint` (a message whose buttons repeat existing rows), `tab` (a tab-bar destination) |
 | Scenario | One or more `SCN-` ids, or `exit` for Back, Close, Cancel, Undo and Redo |
 | Frequency | `every visit`, `often` or `rare`, then `(data)` or `(assumed)` |
@@ -1198,8 +1198,9 @@ and offer one next step. The state matrix above carries these states.
 cell, or bare as the cell's first word (`tab opens Home`, `receipt: Undo in
 words`); the same word elsewhere in prose is not the flag. A control that
 changes in place between states (Start that becomes Stop) keeps one action name
-in every state, so it is one action. A disclosure entry takes the highest
-frequency among what it holds.
+in every state, so it is one action. A disclosure entry is the visible row whose
+label or glyph opens another row's path; it is counted, and its own frequency is
+not held against depth (a gear that holds only rare settings stays visible).
 
 **Labels in the map.** A label is the on-screen text in double quotes
 (straight or typographic) or guillemets; single quotes are not read, because a
@@ -1223,12 +1224,12 @@ label (`"More" (top bar)`).
 - *Words before count (UIM-31).* When labelled controls do not fit with their
   words at the smallest width or the largest standard text size, fewer controls
   show and the rest move into a named menu; a control never keeps its place by
-  losing its label. Within one screen a word names one action (`U106`).
+  losing its label; only a glyph from the allowed set may drop the word beside it. Within one screen a word names one action (`U106`).
 - *Consequence line (UIM-32).* A row flagged `generates`, `spends`,
   `irreversible` or `variants` shows one plain line, at most 60 characters,
   saying what changes or what is kept, before the tap; a primary that spends
-  says what in one line above it; a disabled control states its reason or is
-  not shown.
+  says what in one line above it; a disabled control stays in place, dimmed,
+  and states its reason.
 - *One change, one receipt, one undo (UIM-33).* After a change made from a
   menu, a sheet, an agent or a `generates` row, a receipt line names the change
   and offers Undo in words; one Undo restores the whole change. A `generates`
