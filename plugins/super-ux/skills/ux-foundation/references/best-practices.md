@@ -497,7 +497,7 @@ restates a figure from it, because it states none.
 
 #### BP-051: Never gesture-only for critical actions
 - **Do:** gestures are accelerators, not the only path: every gesture-reachable action has a visible alternative; gesture hints (chevrons, swipe affordances) where gestures matter.
-- **Why:** gestures are invisible — users must know, remember, and execute them; hidden-only interactions kill discoverability. On a screen with an action map, `U102` enforces it: a gesture follows `also:` beside a visible path.
+- **Why:** gestures are invisible: users must know, remember, and execute them; hidden-only interactions kill discoverability. On a screen with an action map, `U102` enforces it: a gesture follows `also:` beside a visible path.
 - **Apply when:** swipe-to-delete, pull-to-refresh, long-press menus, custom gestures.
 - **Tags:** mobile, navigation, friction-reduction, accessibility
 - **Source:** [NNg]

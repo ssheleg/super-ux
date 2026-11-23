@@ -1693,6 +1693,13 @@ silent("U101 an icon-only entry named by glyph",
 case("U101 a rare visible row that opens nothing",
      amap(AM_ROWS + ['| Show tips | "Tips" | shows tips | SCN-002 | rare (assumed) | secondary | visible | standard |']),
      warns={"U101"})
+# Review round 10 (2026-11-23): more gesture words; glyph names with underscores.
+for gesture in ("long tap on \"Start\"", "удерживать «Старт»", "проведите вниз по «Старт»", "тап двумя пальцами по «Старт»"):
+    case(f"U102 gesture-only path: {gesture}",
+         amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', gesture)] + AM_ROWS[5:]),
+         warns={"U102"})
+case("U104 a snake_case glyph outside the set",
+     amap(AM_ROWS[:5] + [AM_ROWS[5].replace("glyph:back", "glyph:close_fullscreen")]), warns={"U104"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

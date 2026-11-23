@@ -1318,7 +1318,9 @@ ALLOWED_GLYPHS = {"back", "close", "play", "pause", "stop", "plus", "minus",
 GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
                            r"hold|shake|two[- ]finger)\b|"
                            r"(долг\w*\s+нажат\w*|двойн\w*\s+(?:тап|нажат)\w*|"
-                           r"свайп\w*|щип\w*|перетаск\w*|удержан\w*|смахн\w*|потян\w*)|\bpull\b", re.IGNORECASE)
+                           r"свайп\w*|щип\w*|перетаск\w*|удержан\w*|удержива\w*|зажа\w*|зажм\w*|смахн\w*|потян\w*|"
+                           r"провед\w*|проведи\w*|долг\w*\s+тап\w*|двумя\s+пальц\w*)|"
+                           r"\b(pull|long[- ]tap|force[- ]touch|triple[- ]tap|three[- ]finger|slide)\b", re.IGNORECASE)
 # A container whose whole label is generic: "More", an ellipsis, three dots.
 GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
                   "glyph:ellipsis", "ellipsis", "more options", "options", "other",
@@ -1497,7 +1499,7 @@ def check_action_map(screens: str, gated: bool) -> None:
         def is_entry(row: dict[str, str]) -> bool:
             label = row.get("label or glyph", "").lower()
             marks = {q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)}
-            marks |= {f"glyph:{g}" for g in re.findall(r"glyph:([a-z.-]+)", label)}
+            marks |= {f"glyph:{g}" for g in re.findall(r"glyph:([a-z0-9._-]+)", label)}
             return bool(marks & openers)
 
         for state, rows in states.items():
@@ -1568,7 +1570,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"named container")
                 label = row.get("label or glyph", "")
                 words = [q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)]
-                glyphs = re.findall(r"glyph:([a-z.-]+)", label.lower())
+                glyphs = re.findall(r"glyph:([a-z0-9._-]+)", label.lower())
                 if not any(len(w) > 2 or w.lower() in SHORT_WORDS for w in words):
                     for glyph in glyphs:
                         if glyph not in ALLOWED_GLYPHS:

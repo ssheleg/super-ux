@@ -1166,7 +1166,9 @@ in a path is named by its glyph (`glyph:ellipsis > "Delete draft"`).
 minus `exit` rows (at most three exits show: Back or Close, Undo, Redo; a
 fourth is `U100`). Tab-bar
 destinations are navigation and not counted; a repeating collection counts once
-per kind of action; a status banner with one recovery action is a state; a
+per kind of action (a list of settings is one row, "Change a setting", whose
+label is each setting's name and whose frequency is how often a visit changes
+any of them); a status banner with one recovery action is a state; a
 disclosure entry is one secondary action; an iPad inspector shows `hidden` rows
 open without counting them; rows flagged `position`, `recovery`, `receipt` or
 `hint` are not counted, though each still needs a row, words that say what it

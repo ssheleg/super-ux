@@ -274,7 +274,7 @@ Heuristic (`PRN-NN`) and practice (`BP-NNN`) findings are suggestions —
 opportunities, never blockers; they don't change scenario verdicts, unless
 the violation breaks a scenario (then it's a normal finding on that
 scenario). Practices are opportunities selected by the protocol, not a
-style gate. On a screen whose action map fails `U097` to `U103`, an overload,
+style gate. On a screen whose action map fails `U097` to `U106`, an overload,
 labelling or findability finding counts as a scenario finding.
 
 ## Live pass and visual drift

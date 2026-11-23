@@ -19,7 +19,7 @@
 - **Open (planned in the doctrine's change list, not in this PR).** S5 `component-guidelines.md` rows (glyph set,
   variants, iPad menu bar), S6 the `mobile-ipados` platform value in `practice-selection.md`, S8 the IS-01 link in
   `internal-screens.md`. The linter does not read UIM-32 to UIM-34 (consequence lines, receipts, now and next):
-  the design-tester checks them on frames.
+  they are writing rules in the contract, read by review; a design-tester check for them is open.
 - **Next task.** After the trial, merge and release as a minor version; then the sshlg-skills pin.
 
 ## v0.67.1: delegated mode, task-pipeline handoff, seeds without the em dash (2026-11-11)
