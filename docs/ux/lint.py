@@ -1527,7 +1527,8 @@ def check_action_map(screens: str, gated: bool) -> None:
                 path, accel = _path(reached)
                 bare = QUOTED.sub("", path)
                 is_exit = scen.strip().lower() == "exit"
-                if is_exit and tier in ("primary", "secondary"):
+                if is_exit and tier in ("primary", "secondary") and \
+                        not has_flag(row.get("what it does", ""), *UNCOUNTED):
                     exits += 1
                 served |= refs(scen, "SCN")
                 if not refs(scen, "SCN") and not is_exit:
@@ -1555,8 +1556,10 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"hidden rows sit behind a container")
                 visible_path = path.lower().startswith("visible")
                 bare = re.sub(r"\([^)]*\)", "", bare)
+                # An empty path with only an accelerator is gesture-only, whatever
+                # words the accelerator uses.
                 gesture_only = (not visible_path and GESTURE_WORDS.search(bare)) or \
-                    (not path and GESTURE_WORDS.search(accel))
+                    (not path and bool(accel))
                 unnamed = tier == "hidden" and not _named(path)
                 if gesture_only or unnamed:
                     report(f"[U102] screens.md: {sid}: \"{name}\" is reachable only "

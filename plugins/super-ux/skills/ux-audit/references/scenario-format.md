@@ -1164,7 +1164,7 @@ in a path is named by its glyph (`glyph:ellipsis > "Delete draft"`).
 
 **Counting (UIM-04).** Per state, count the `primary` and `secondary` rows,
 minus `exit` rows (at most three exits show: Back or Close, Undo, Redo; a
-fourth is `U100`). Tab-bar
+fourth is `U100`; a `receipt` row's Undo is not one of them). Tab-bar
 destinations are navigation and not counted; a repeating collection counts once
 per kind of action (a list of settings is one row, "Change a setting", whose
 label is each setting's name and whose frequency is how often a visit changes

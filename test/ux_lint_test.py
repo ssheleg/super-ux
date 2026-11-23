@@ -1487,7 +1487,7 @@ def amap(rows=None, purpose="Keep time at a chosen tempo (JTBD-001)",
 
 
 AM_CODES = {f"U{n:03d}" for n in range(96, 107)}
-silent("action map: a clean map fires none of U096..U105", amap(), AM_CODES)
+silent("action map: a clean map fires none of U096..U106", amap(), AM_CODES)
 silent("action map: a screen without Actions is not read",
        {"screens.md": MINIMAL["screens.md"] + "\n## Screens\n\n### SCR-01: X\n"
         "- **Purpose:** p\n- **Status:** designed\n"}, AM_CODES)
@@ -1700,6 +1700,16 @@ for gesture in ("long tap on \"Start\"", "удерживать «Старт»", 
          warns={"U102"})
 case("U104 a snake_case glyph outside the set",
      amap(AM_ROWS[:5] + [AM_ROWS[5].replace("glyph:back", "glyph:close_fullscreen")]), warns={"U104"})
+# Review round 11 (2026-11-23): an accelerator-only path is gesture-only in any
+# words; a receipt Undo marked exit does not count toward the exit cap.
+case("U102 an accelerator-only path in plain words",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('| hidden | "4/4, Wood" > "Sound" |', '| secondary | also: tap twice on the line |')] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("U100 a receipt Undo marked exit is not a fourth exit",
+       amap(AM_ROWS + ['| Undo | glyph:undo | undoes | exit | often | secondary | visible | standard |',
+                       '| Redo | glyph:redo | redoes | exit | rare | secondary | visible | standard |',
+                       '| Undo the change | "Undo" | receipt: names the change | exit | rare | secondary | visible | standard |']),
+       {"U100"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],
