@@ -1,4 +1,4 @@
-## Unreleased: the action map (U096 to U106) and the novice in the test panel
+## 0.68.0 (2026-11-23): the action map (U096 to U106) and the novice in the test panel
 
 Operator order 2026-11-23 00:47 Europe/Warsaw (Telegram, relayed by the Fabric CEO, request dcc725be): simple, grouped screens with few actions that a user new to the app understands, checked by the pipeline. Research: https://github.com/ssheleg/sheleg-design-skill/tree/main/docs/reports/2026-11-23-ui-guidelines
 

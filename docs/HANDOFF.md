@@ -1,4 +1,4 @@
-## Unreleased: the action map and the novice walk (2026-11-23)
+## v0.68.0: the action map and the novice walk (2026-11-23)
 
 - **Objective.** The operator's order of 2026-11-23 00:47 (request dcc725be): screens that are beautiful and
   simple, grouped, with few actions, clear to a user new to the app but not stupid, and a pipeline that checks it.
@@ -20,7 +20,7 @@
   variants, iPad menu bar), S6 the `mobile-ipados` platform value in `practice-selection.md`, S8 the IS-01 link in
   `internal-screens.md`. The linter does not read UIM-32 to UIM-34 (consequence lines, receipts, now and next):
   they are writing rules in the contract, read by review; a design-tester check for them is open.
-- **Next task.** After the trial, merge and release as a minor version; then the sshlg-skills pin.
+- **Next task.** After merge: tag `v0.68.0` (annotated) on the merge commit, watch the release, then the sshlg-skills pin bump.
 
 ## v0.67.1: delegated mode, task-pipeline handoff, seeds without the em dash (2026-11-11)
 

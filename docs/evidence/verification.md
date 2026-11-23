@@ -8,6 +8,16 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.68.0: the action map and the novice walk (2026-11-23)
+
+Branch `feat/ui-mechanics-2026-11-23` (PR #67), the operator's order of 2026-11-23 (request dcc725be).
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| UIM-1 | `ux_lint.py` U096 to U106 over a screen's `Actions:` table; warnings on format 1, errors on format 2 | `python3 test/ux_lint_test.py` OK (312 checks): each code has a firing case and the clean map fires none; regression cases from thirteen blind review rounds | yes: six round-1 cases failed on the previous linter before the fix |
+| UIM-2 | Contract section "The action map" with flags, labels, counting and depth rules; templates `screens.md` and `test-panel.md` (experience level, Novice walk) | `python3 test/sync_references.py`, then `python3 test/validate.py` OK (5773 checks) | never (text) |
+| UIM-3 | Two consecutive blind review rounds (12 and 13) found no blocker in classes a to f | the review transcripts are on the operator machine; the findings they left are backlog rows | n/a |
+
 ## Release candidate: v0.67.1: delegated mode, task-pipeline handoff, seeds without the em dash (2026-11-11)
 
 Branch `fix/audit-1111`, the family audit of 2026-11-11. Every `planted` below was a
