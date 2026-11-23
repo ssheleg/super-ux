@@ -1539,8 +1539,8 @@ case("U105 four performance actions",
      warns={"U105"})
 case("U105 a row with no profile",
      amap(AM_ROWS[:5] + [AM_ROWS[5].replace("| standard |", "| |")]), warns={"U105"})
-case("U106 one label for two actions",
-     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"Click sound"', '"Tap tempo"')] + AM_ROWS[5:]),
+case("U106 one label for two visible actions",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"Tap tempo"')] + AM_ROWS[4:]),
      warns={"U106"})
 silent("U100 a content-position row is not counted",
        amap(AM_ROWS + ['| Move the playhead | lyric lines | position: sets where play starts | SCN-001 | every visit (assumed) | secondary | visible | standard |',
@@ -1637,6 +1637,26 @@ silent("action map: a state line written as a heading or in italics",
 case("U101 an arrow-separated path counts its containers",
      amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"A" → "B" → "C"')] + AM_ROWS[5:]),
      warns={"U101"})
+# Review round 5 (2026-11-23): bare flags, a read-out repeating the value its
+# sheet lists, notes in paths, short real words, a passive loading state.
+silent("U100 bare tab flags are read",
+       amap(AM_ROWS + ['| Go to %s | "%s" | tab | SCN-001 | rare (data) | secondary | visible | standard |' % (n, n)
+                       for n in ("Home", "Library", "Search", "Profile")]),
+       {"U100", "U101"})
+silent("U106 a read-out may show the value its sheet lists",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"Sound", "Wood"')]
+            + [AM_ROWS[4].replace('"Click sound"', '"Wood", "Clave"').replace('"4/4, Wood" > "Sound"', '"Sound"')] + AM_ROWS[5:]),
+       {"U106"})
+silent("U103 and U102 ignore a parenthetical note on a path segment",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"Sort" (pull-down) > "Newest"')] + AM_ROWS[5:]),
+       {"U102"})
+case("U103 reads a generic overflow with a note",
+     often_behind('"More" (top bar)'), warns={"U103"})
+silent("U104 'OK' is a word", amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"OK"')] + AM_ROWS[4:]), {"U104"})
+silent("U097 a passive loading state with only an exit",
+       {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
+        "  State: loading\n" + AM_HEAD + '  | Cancel | "Cancel" | stops loading | exit | rare | secondary | visible | standard |\n- **Scenarios:**')},
+       {"U097"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

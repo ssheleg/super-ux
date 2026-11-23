@@ -1329,13 +1329,16 @@ GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
 QUOTED = re.compile('"[^"]*"|«[^»]*»|“[^”]*”|„[^“”]*[“”]')
 QUOTE_CHARS = '"«»“”„ '
 MAX_EXITS = 3
+# Real words under three characters that are not abbreviations.
+SHORT_WORDS = {"ok", "go", "да", "нет", "ок", "no", "yes"}
 JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # Rows that are not counted toward the budget (counting rules 9 to 11): placing a
 # cursor or playhead by tapping content, a transient recovery chip or receipt,
 # and a hint whose buttons repeat existing rows. They still need a row. The flag
-# is written as `position` in backticks or as a leading `position:`, never read
-# out of ordinary prose ("moves the card to a new position").
-UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint|tab)`|^\s*(position|recovery|receipt|hint|tab)\s*:",
+# is written as `position` in backticks, or bare as the first word of the cell
+# (`tab`, `receipt: Undo in words`), never read out of ordinary prose ("moves the
+# card to a new position").
+UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint|tab)`|^\s*(position|recovery|receipt|hint|tab)\b(?!\s+\w+\s+\w)",
                              re.IGNORECASE)
 STATE_LINE = re.compile(r"^(?:#+\s+)?(?:[-*]\s+)?[*_]*state:[*_]*\s*(.+?)\s*$", re.IGNORECASE)
 
@@ -1424,6 +1427,8 @@ def _path(reached: str) -> tuple[str, str]:
 
 def _segments(path: str) -> list[str]:
     masked, kept = _mask(path)
+    # A parenthetical note on a segment ("More" (top bar)) is not part of its label.
+    masked = re.sub(r"\([^)\x00]*\)", "", masked)
     return [_unmask(seg, kept).strip() for seg in re.split(r">|›|→", masked) if seg.strip()]
 
 
@@ -1475,7 +1480,10 @@ def check_action_map(screens: str, gated: bool) -> None:
             primaries = [r for r in rows if r.get("tier", "").lower() == "primary"]
             bad = [r for r in primaries if _freq(r) == "rare"
                    or "irreversible" in r.get("what it does", "").lower()]
-            if len(primaries) != 1 or bad:
+            passive = not primaries and all(
+                r.get("scenario", "").strip().lower() == "exit"
+                or UNCOUNTED_FLAGS.search(r.get("what it does", "")) for r in rows)
+            if (len(primaries) != 1 and not passive) or bad:
                 detail = (f"{len(primaries)} primary rows" if len(primaries) != 1
                           else f"'{bad[0].get('action', '?')}' is rare or irreversible")
                 report(f"[U097] screens.md: {sid} state {state}: expected exactly one "
@@ -1517,6 +1525,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"{allowed[0]} to {allowed[1]}, never over 2, and only "
                            f"hidden rows sit behind a container")
                 visible_path = path.lower().startswith("visible")
+                bare = re.sub(r"\([^)]*\)", "", bare)
                 gesture_only = (not visible_path and GESTURE_WORDS.search(bare)) or \
                     (not path and GESTURE_WORDS.search(accel))
                 unnamed = tier == "hidden" and not _named(path)
@@ -1533,7 +1542,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                 label = row.get("label or glyph", "")
                 words = [q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)]
                 glyphs = re.findall(r"glyph:([a-z-]+)", label.lower())
-                if not any(len(w) > 2 for w in words):
+                if not any(len(w) > 2 or w.lower() in SHORT_WORDS for w in words):
                     for glyph in glyphs:
                         if glyph not in ALLOWED_GLYPHS:
                             report(f"[U104] screens.md: {sid}: \"{name}\" uses glyph "
@@ -1547,7 +1556,10 @@ def check_action_map(screens: str, gated: bool) -> None:
                                       row.get("what it does", ""), re.IGNORECASE)
                 for quoted in ([] if hint_like else QUOTED.findall(label)):
                     word = quoted.strip(QUOTE_CHARS).lower()
-                    other = labels.setdefault(word, name)
+                    # A word names one action among those shown together: the
+                    # visible rows of the screen, or the rows of one container.
+                    scope = "visible" if depth == 0 else path.lower()
+                    other = labels.setdefault((scope, word), name)
                     if other.lower() != name.lower():
                         report(f"[U106] screens.md: {sid}: label \"{word}\" names two "
                                f"actions (\"{other}\" and \"{name}\"); within one "

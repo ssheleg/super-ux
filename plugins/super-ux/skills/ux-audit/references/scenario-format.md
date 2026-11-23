@@ -1194,15 +1194,24 @@ or overlay blocks the screen on first run, and a hint sits next to the control
 it explains; empty, loading and error states each say what is happening, why,
 and offer one next step. The state matrix above carries these states.
 
+**Flags.** A flag in "What it does" is its word in backticks anywhere in the
+cell, or bare as the cell's first word (`tab`, `receipt: Undo in words`).
+
 **Labels in the map.** A label is the on-screen text in double quotes
 (straight or typographic) or guillemets; single quotes are not read, because a
 label may hold an apostrophe. A row with neither a quoted word of three or more
 characters nor an allowed glyph shows nothing a person can read (`U104`): a
-single letter or a two-letter abbreviation is a glyph. Whether a longer
+single letter or a two-letter abbreviation is a glyph; short real words
+(OK, Go, Да, Нет) are words. Whether a longer
 abbreviation or a term ("BPM") reads to a novice is the Novice walk's question
 (finding `label`), not the linter's. A menu button keeps its menu mark
 (a chevron) at every width, or it reads as a tab. A `hint`, `receipt` or
-`recovery` row may repeat the labels of the rows it points at.
+`recovery` row may repeat the labels of the rows it points at. A word names one
+action among those shown together: the visible rows of the screen, or the rows
+inside one container; a read-out may show the value its sheet lists (`U106`). A
+state whose rows are all exits or uncounted (loading with Cancel) needs no
+primary. A note on a path segment goes in parentheses and is not read as its
+label (`"More" (top bar)`).
 
 **Words, consequences, receipts, now and next (UIM-31 to UIM-34).**
 - *Words before count (UIM-31).* When labelled controls do not fit with their
@@ -1311,6 +1320,6 @@ here — the meaning of a rule never lives only in its source.
 | U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More", "Ещё" or ellipsis (with or without a trailing "…") |
 | U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set, or a visible row shows no quoted word of three or more characters |
 | U105 | W / E (format 2) | a row has no profile, the primary is `standard`, or more than three actions are `performance` |
-| U106 | W / E (format 2) | within one screen (any state) a quoted label names two different actions; `hint`, `receipt` and `recovery` rows may repeat labels |
+| U106 | W / E (format 2) | a quoted label names two different actions among the visible rows of the screen (any state) or inside one container; `hint`, `receipt` and `recovery` rows may repeat labels |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |
