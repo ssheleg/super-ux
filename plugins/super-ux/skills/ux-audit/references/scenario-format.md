@@ -1212,7 +1212,9 @@ abbreviation or a term ("BPM") reads to a novice is the Novice walk's question
 (a chevron) at every width, or it reads as a tab. A `hint`, `receipt` or
 `recovery` row may repeat the labels of the rows it points at. A word names one
 action among those shown together: the visible rows of the screen, or the rows
-inside one container; a read-out may show the value its sheet lists (`U106`). A
+inside one container; a read-out may show the value its sheet lists (`U106`).
+Two controls that each become "Stop" in their own state are two actions with
+one word, so name the second one's stop differently ("Stop playback"). A
 state whose rows are all exits or uncounted (loading with Cancel) needs no
 primary. A note on a path segment goes in parentheses and is not read as its
 label (`"More" (top bar)`).

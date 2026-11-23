@@ -1672,6 +1672,16 @@ silent("U097 'irreversible' in prose is not the flag",
 case("U097 the bare irreversible flag on a primary",
      amap([AM_ROWS[0].replace("starts the click", "irreversible: deletes the take")] + AM_ROWS[1:]),
      warns={"U097"})
+# Review round 7 (2026-11-23): readable words and the depth cap hold for
+# exits and uncounted rows too; notes in the Tier and Profile cells.
+case("U104 an exit with a one-letter label",
+     amap(AM_ROWS[:5] + [AM_ROWS[5].replace("glyph:back", '"X"')]), warns={"U104"})
+case("U101 an exit three containers deep",
+     amap(AM_ROWS + ['| Cancel export | "Cancel" | closes | exit | rare | hidden | "Share" > "Export" > "Advanced" | standard |']),
+     warns={"U101"})
+silent("action map: a note in the Tier and Profile cells",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace("| secondary | visible | frequent |", "| secondary (toolbar) | visible | frequent (corner) |")] + AM_ROWS[4:]),
+       {"U101", "U105"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

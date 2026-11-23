@@ -1400,6 +1400,9 @@ def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
         for col in ("scenario", "tier", "frequency", "profile", "reached by"):
             if col in row:
                 row[col] = row[col].replace("`", "")
+        for col in ("tier", "profile"):
+            if col in row:
+                row[col] = re.sub(r"\s*\([^)]*\)", "", row[col]).strip()
         states.setdefault(state, []).append(row)
     return states
 
@@ -1522,7 +1525,10 @@ def check_action_map(screens: str, gated: bool) -> None:
                 allowed = {"every visit": (0, 0), "often": (0, 1),
                            "rare": (1, 2)}.get(freq)
                 tier_ok = (tier == "hidden") == (depth >= 1)
-                if is_exit or uncounted:
+                if depth > 2:
+                    report(f"[U101] screens.md: {sid}: \"{name}\" sits at depth {depth}; "
+                           f"no row is deeper than 2")
+                elif is_exit or uncounted:
                     pass
                 elif tier not in ACTION_TIERS or allowed is None:
                     report(f"[U101] screens.md: {sid}: \"{name}\" needs a tier "
@@ -1557,7 +1563,8 @@ def check_action_map(screens: str, gated: bool) -> None:
                             report(f"[U104] screens.md: {sid}: \"{name}\" uses glyph "
                                    f"\"{glyph}\" without a text label; allowed "
                                    f"icon-only glyphs: {', '.join(sorted(ALLOWED_GLYPHS))}")
-                    if not glyphs and not is_exit and not uncounted and tier != "hidden":
+                    if not glyphs and tier != "hidden" and \
+                            not has_flag(row.get("what it does", ""), "position"):
                         report(f"[U104] screens.md: {sid}: \"{name}\" shows no word a "
                                f"person can read (a letter or an abbreviation is a glyph); "
                                f"quote its on-screen label or use an allowed glyph")
