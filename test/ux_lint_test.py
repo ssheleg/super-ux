@@ -1626,6 +1626,17 @@ silent("action map: backticked exit and tier cells read as their words",
 silent("U102 a visible row with a held accelerator note is visible",
        amap(AM_ROWS[:1] + [AM_ROWS[1].replace("| visible |", "| visible (hold to repeat) |")] + AM_ROWS[2:]),
        {"U102"})
+# Review round 4 (2026-11-23): more overflow spellings, state lines as a
+# heading or in italics, the arrow separator, action names compared without case.
+case("U103 'More actions' is a generic overflow", often_behind('"More actions"'), warns={"U103"})
+case("U103 middle dots are a generic overflow", often_behind('"···"'), warns={"U103"})
+silent("action map: a state line written as a heading or in italics",
+       {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
+        "  #### State: running\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n  *State: paused*\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n- **Scenarios:**")},
+       {"U097", "U098", "U101", "U105"})
+case("U101 an arrow-separated path counts its containers",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"A" → "B" → "C"')] + AM_ROWS[5:]),
+     warns={"U101"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

@@ -1157,7 +1157,9 @@ spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
 
 A `State: <name>` line before a second table gives the rows of another state,
 only where the visible set differs (idle and running, for instance); that table
-lists every row of its state, not only the changed ones. An icon-only container
+lists every row of its state, not only the changed ones. The map describes the
+compact layout: a regular-width inspector shows `hidden` rows open and is not a
+state of its own. An icon-only container
 in a path is named by its glyph (`glyph:ellipsis > "Delete draft"`).
 
 **Counting (UIM-04).** Per state, count the `primary` and `secondary` rows,
@@ -1192,12 +1194,15 @@ or overlay blocks the screen on first run, and a hint sits next to the control
 it explains; empty, loading and error states each say what is happening, why,
 and offer one next step. The state matrix above carries these states.
 
-**Labels in the map.** A label is the on-screen text in quotes (straight,
-guillemet or typographic). A row with neither a quoted word of three or more
-characters nor an allowed glyph shows nothing a person can read (`U104`); a
-single letter or an abbreviation is a glyph. A menu button keeps its menu mark
-(a chevron) at every width, or it reads as a tab. A `hint` or `receipt` row may
-repeat the labels of the rows it points at.
+**Labels in the map.** A label is the on-screen text in double quotes
+(straight or typographic) or guillemets; single quotes are not read, because a
+label may hold an apostrophe. A row with neither a quoted word of three or more
+characters nor an allowed glyph shows nothing a person can read (`U104`): a
+single letter or a two-letter abbreviation is a glyph. Whether a longer
+abbreviation or a term ("BPM") reads to a novice is the Novice walk's question
+(finding `label`), not the linter's. A menu button keeps its menu mark
+(a chevron) at every width, or it reads as a tab. A `hint`, `receipt` or
+`recovery` row may repeat the labels of the rows it points at.
 
 **Words, consequences, receipts, now and next (UIM-31 to UIM-34).**
 - *Words before count (UIM-31).* When labelled controls do not fit with their
@@ -1304,8 +1309,8 @@ here — the meaning of a rule never lives only in its source.
 | U101 | W / E (format 2) | a row's tier or depth does not fit its frequency, or its path is deeper than two |
 | U102 | W / E (format 2) | a row is reached only by a gesture, or a `hidden` row has no quoted label path |
 | U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More", "Ещё" or ellipsis (with or without a trailing "…") |
-| U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set, or a visible row shows no readable word |
+| U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set, or a visible row shows no quoted word of three or more characters |
 | U105 | W / E (format 2) | a row has no profile, the primary is `standard`, or more than three actions are `performance` |
-| U106 | W / E (format 2) | within one screen (any state) a quoted label names two different actions; `hint` and `receipt` rows may repeat labels |
+| U106 | W / E (format 2) | within one screen (any state) a quoted label names two different actions; `hint`, `receipt` and `recovery` rows may repeat labels |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |

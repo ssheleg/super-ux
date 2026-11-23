@@ -1323,7 +1323,8 @@ GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
 GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
                   "glyph:ellipsis", "ellipsis", "more options", "options", "other",
                   "ещё действия", "еще действия", "действия", "другое", "опции", "больше",
-                  "\u22ee", "\ufe19", "glyph:more", "more options"}
+                  "\u22ee", "\ufe19", "glyph:more", "more options", "more actions",
+                  "other actions", "\u00b7\u00b7\u00b7", "glyph:ellipsis-circle"}
 # Straight, guillemet and typographic quotes all mark on-screen text.
 QUOTED = re.compile('"[^"]*"|«[^»]*»|“[^”]*”|„[^“”]*[“”]')
 QUOTE_CHARS = '"«»“”„ '
@@ -1336,7 +1337,7 @@ JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # out of ordinary prose ("moves the card to a new position").
 UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint|tab)`|^\s*(position|recovery|receipt|hint|tab)\s*:",
                              re.IGNORECASE)
-STATE_LINE = re.compile(r"^(?:[-*]\s+)?(?:\*\*)?state:(?:\*\*)?\s*(.+?)\s*$", re.IGNORECASE)
+STATE_LINE = re.compile(r"^(?:#+\s+)?(?:[-*]\s+)?[*_]*state:[*_]*\s*(.+?)\s*$", re.IGNORECASE)
 
 
 def _cells(text: str) -> list[str]:
@@ -1371,7 +1372,7 @@ def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
             continue
         st = STATE_LINE.match(text)
         if st:
-            state, header = st.group(1).strip("*").strip().lower(), None
+            state, header = st.group(1).strip("*_ ").lower(), None
             continue
         if FIELD_START.match(line) or text.startswith("#"):
             break
@@ -1423,7 +1424,7 @@ def _path(reached: str) -> tuple[str, str]:
 
 def _segments(path: str) -> list[str]:
     masked, kept = _mask(path)
-    return [_unmask(seg, kept).strip() for seg in re.split(r">|›", masked) if seg.strip()]
+    return [_unmask(seg, kept).strip() for seg in re.split(r">|›|→", masked) if seg.strip()]
 
 
 def _generic(segment: str) -> bool:
@@ -1547,7 +1548,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                 for quoted in ([] if hint_like else QUOTED.findall(label)):
                     word = quoted.strip(QUOTE_CHARS).lower()
                     other = labels.setdefault(word, name)
-                    if other != name:
+                    if other.lower() != name.lower():
                         report(f"[U106] screens.md: {sid}: label \"{word}\" names two "
                                f"actions (\"{other}\" and \"{name}\"); within one "
                                f"screen a word names one action")
