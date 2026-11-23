@@ -1324,13 +1324,14 @@ GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
                   "glyph:ellipsis", "ellipsis", "more options", "options", "other",
                   "ещё действия", "еще действия", "действия", "другое", "опции", "больше",
                   "\u22ee", "\ufe19", "glyph:more", "more options", "more actions",
-                  "other actions", "\u00b7\u00b7\u00b7", "glyph:ellipsis-circle"}
+                  "other actions", "\u00b7\u00b7\u00b7", "glyph:ellipsis-circle",
+                  "glyph:ellipsis.circle"}
 # Straight, guillemet and typographic quotes all mark on-screen text.
 QUOTED = re.compile('"[^"]*"|«[^»]*»|“[^”]*”|„[^“”]*[“”]')
 QUOTE_CHARS = '"«»“”„ '
 MAX_EXITS = 3
 # Real words under three characters that are not abbreviations.
-SHORT_WORDS = {"ok", "go", "да", "нет", "ок", "no", "yes"}
+SHORT_WORDS = {"ok", "go", "on", "up", "off", "no", "yes", "да", "нет", "ок", "вкл"}
 JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # Rows that are not counted toward the budget (counting rules 9 to 11): placing a
 # cursor or playhead by tapping content, a transient recovery chip or receipt,
@@ -1338,8 +1339,16 @@ JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # is written as `position` in backticks, or bare as the first word of the cell
 # (`tab`, `receipt: Undo in words`), never read out of ordinary prose ("moves the
 # card to a new position").
-UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint|tab)`|^\s*(position|recovery|receipt|hint|tab)\b(?!\s+\w+\s+\w)",
-                             re.IGNORECASE)
+UNCOUNTED = ("position", "recovery", "receipt", "hint", "tab")
+
+
+def has_flag(cell: str, *names: str) -> bool:
+    """A flag is its word in backticks anywhere in the cell, or the cell's first word."""
+    low = cell.lower()
+    if any(f"`{n}`" in low for n in names):
+        return True
+    first = re.match(r"\s*`?([a-z]+)", low)
+    return bool(first) and first.group(1) in names
 STATE_LINE = re.compile(r"^(?:#+\s+)?(?:[-*]\s+)?[*_]*state:[*_]*\s*(.+?)\s*$", re.IGNORECASE)
 
 
@@ -1479,10 +1488,10 @@ def check_action_map(screens: str, gated: bool) -> None:
         for state, rows in states.items():
             primaries = [r for r in rows if r.get("tier", "").lower() == "primary"]
             bad = [r for r in primaries if _freq(r) == "rare"
-                   or "irreversible" in r.get("what it does", "").lower()]
+                   or has_flag(r.get("what it does", ""), "irreversible")]
             passive = not primaries and all(
                 r.get("scenario", "").strip().lower() == "exit"
-                or UNCOUNTED_FLAGS.search(r.get("what it does", "")) for r in rows)
+                or has_flag(r.get("what it does", ""), *UNCOUNTED) for r in rows)
             if (len(primaries) != 1 and not passive) or bad:
                 detail = (f"{len(primaries)} primary rows" if len(primaries) != 1
                           else f"'{bad[0].get('action', '?')}' is rare or irreversible")
@@ -1507,7 +1516,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                 if not refs(scen, "SCN") and not is_exit:
                     report(f"[U098] screens.md: {sid}: action \"{name}\" serves no "
                            f"scenario; give it a SCN- id, mark it exit, or remove it")
-                uncounted = bool(UNCOUNTED_FLAGS.search(row.get("what it does", "")))
+                uncounted = has_flag(row.get("what it does", ""), *UNCOUNTED)
                 if tier in ("primary", "secondary") and not is_exit and not uncounted:
                     counted += 1
                 allowed = {"every visit": (0, 0), "often": (0, 1),
@@ -1541,7 +1550,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"named container")
                 label = row.get("label or glyph", "")
                 words = [q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)]
-                glyphs = re.findall(r"glyph:([a-z-]+)", label.lower())
+                glyphs = re.findall(r"glyph:([a-z.-]+)", label.lower())
                 if not any(len(w) > 2 or w.lower() in SHORT_WORDS for w in words):
                     for glyph in glyphs:
                         if glyph not in ALLOWED_GLYPHS:
@@ -1552,13 +1561,13 @@ def check_action_map(screens: str, gated: bool) -> None:
                         report(f"[U104] screens.md: {sid}: \"{name}\" shows no word a "
                                f"person can read (a letter or an abbreviation is a glyph); "
                                f"quote its on-screen label or use an allowed glyph")
-                hint_like = re.search(r"`(hint|receipt|recovery)`|^\s*(hint|receipt|recovery)\s*:",
-                                      row.get("what it does", ""), re.IGNORECASE)
+                hint_like = has_flag(row.get("what it does", ""), "hint", "receipt", "recovery")
                 for quoted in ([] if hint_like else QUOTED.findall(label)):
                     word = quoted.strip(QUOTE_CHARS).lower()
                     # A word names one action among those shown together: the
                     # visible rows of the screen, or the rows of one container.
-                    scope = "visible" if depth == 0 else path.lower()
+                    scope = ("visible" if depth == 0 else
+                             " > ".join(seg.strip(QUOTE_CHARS).lower() for seg in _segments(path)))
                     other = labels.setdefault((scope, word), name)
                     if other.lower() != name.lower():
                         report(f"[U106] screens.md: {sid}: label \"{word}\" names two "

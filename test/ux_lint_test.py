@@ -1657,6 +1657,21 @@ silent("U097 a passive loading state with only an exit",
        {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
         "  State: loading\n" + AM_HEAD + '  | Cancel | "Cancel" | stops loading | exit | rare | secondary | visible | standard |\n- **Scenarios:**')},
        {"U097"})
+# Review round 6 (2026-11-23): one flag reader for counting, the U106
+# exemption and irreversible; container scope ignores notes.
+silent("U100 a bare tab flag followed by prose is read",
+       amap(AM_ROWS + ['| Go to %s | "%s" | tab opens %s | SCN-001 | often (data) | secondary | visible | standard |' % (n, n, n)
+                       for n in ("Home", "Library", "Search", "Profile")]),
+       {"U100"})
+silent("U106 a bare hint repeating a visible label",
+       amap(AM_ROWS + ['| First-run tip | "Tap Start to begin", "Start" | hint its button repeats Start | SCN-001 | rare (assumed) | secondary | visible | standard |']),
+       {"U106"})
+silent("U097 'irreversible' in prose is not the flag",
+       amap([AM_ROWS[0].replace("starts the click", "starts the click; nothing irreversible")] + AM_ROWS[1:]),
+       {"U097"})
+case("U097 the bare irreversible flag on a primary",
+     amap([AM_ROWS[0].replace("starts the click", "irreversible: deletes the take")] + AM_ROWS[1:]),
+     warns={"U097"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

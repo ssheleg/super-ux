@@ -1195,14 +1195,18 @@ it explains; empty, loading and error states each say what is happening, why,
 and offer one next step. The state matrix above carries these states.
 
 **Flags.** A flag in "What it does" is its word in backticks anywhere in the
-cell, or bare as the cell's first word (`tab`, `receipt: Undo in words`).
+cell, or bare as the cell's first word (`tab opens Home`, `receipt: Undo in
+words`); the same word elsewhere in prose is not the flag. A control that
+changes in place between states (Start that becomes Stop) keeps one action name
+in every state, so it is one action. A disclosure entry takes the highest
+frequency among what it holds.
 
 **Labels in the map.** A label is the on-screen text in double quotes
 (straight or typographic) or guillemets; single quotes are not read, because a
 label may hold an apostrophe. A row with neither a quoted word of three or more
 characters nor an allowed glyph shows nothing a person can read (`U104`): a
 single letter or a two-letter abbreviation is a glyph; short real words
-(OK, Go, Да, Нет) are words. Whether a longer
+(OK, Go, On, Up, Да, Нет) are words. Whether a longer
 abbreviation or a term ("BPM") reads to a novice is the Novice walk's question
 (finding `label`), not the linter's. A menu button keeps its menu mark
 (a chevron) at every width, or it reads as a tab. A `hint`, `receipt` or
