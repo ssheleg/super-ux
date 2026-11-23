@@ -11,7 +11,7 @@ Every portrait keeps these eight lines, in this form, so `design_gate.py panel` 
 The `retention` line opens with `local` or `tourist`, and the panel carries at least two of
 each (see the note at the end). The `needs` line opens with the portrait's experience with
 this kind of app: `novice`, `regular` or `expert`. The panel carries at least two novices and
-one expert; at least one novice is skilled in the domain (a guitarist new to this metronome),
+one expert (`design_gate.py panel` enforces it once any portrait names a level, and warns before); at least one novice is skilled in the domain (a guitarist new to this metronome),
 which is what tests "new, not stupid". When the product targets a tablet, at least one
 portrait's `needs` names it.
 
@@ -70,6 +70,7 @@ led to it; an answer without visible evidence is a guess and counts as a fail.
 | 3.3 | You made a mistake a moment ago. How do you take it back? | an undo path found | `no-undo` |
 
 A fail by either novice is a fail for the screen. The expert runs a counter-check: no
-`often` action costs more taps than before the change, and every gesture accelerator still
-works (finding `slower`). The panel is a model playing a person: before a flagship release,
+`every visit` action costs more taps than before the change, an `often` action costs at most
+one more and only when it moved into a named container, the preview step of a `generates`
+row is not a slowdown, and every gesture accelerator still works (finding `slower`). The panel is a model playing a person: before a flagship release,
 repeat tests 1 and 3 with three to five real first-time users.

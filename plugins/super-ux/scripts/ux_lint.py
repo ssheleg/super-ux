@@ -1318,11 +1318,12 @@ ALLOWED_GLYPHS = {"back", "close", "play", "pause", "stop", "plus", "minus",
 GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
                            r"hold|shake|two[- ]finger)\b|"
                            r"(долг\w*\s+нажат\w*|двойн\w*\s+(?:тап|нажат)\w*|"
-                           r"свайп\w*|щип\w*|перетаск\w*|удержан\w*)", re.IGNORECASE)
+                           r"свайп\w*|щип\w*|перетаск\w*|удержан\w*|смахн\w*|потян\w*)|\bpull\b", re.IGNORECASE)
 # A container whose whole label is generic: "More", an ellipsis, three dots.
 GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
                   "glyph:ellipsis", "ellipsis", "more options", "options", "other",
-                  "ещё действия", "еще действия", "действия", "другое", "опции"}
+                  "ещё действия", "еще действия", "действия", "другое", "опции", "больше",
+                  "\u22ee", "\ufe19", "glyph:more", "more options"}
 # Straight, guillemet and typographic quotes all mark on-screen text.
 QUOTED = re.compile('"[^"]*"|«[^»]*»|“[^”]*”|„[^“”]*[“”]')
 QUOTE_CHARS = '"«»“”„ '
@@ -1333,7 +1334,7 @@ JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # and a hint whose buttons repeat existing rows. They still need a row. The flag
 # is written as `position` in backticks or as a leading `position:`, never read
 # out of ordinary prose ("moves the card to a new position").
-UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint)`|^\s*(position|recovery|receipt|hint)\s*:",
+UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint|tab)`|^\s*(position|recovery|receipt|hint|tab)\s*:",
                              re.IGNORECASE)
 STATE_LINE = re.compile(r"^(?:[-*]\s+)?(?:\*\*)?state:(?:\*\*)?\s*(.+?)\s*$", re.IGNORECASE)
 
@@ -1382,7 +1383,11 @@ def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
         if header is None:
             header = [c.lower() for c in cells]
             continue
-        states.setdefault(state, []).append(dict(zip(header, cells)))
+        row = dict(zip(header, cells))
+        for col in ("scenario", "tier", "frequency", "profile", "reached by"):
+            if col in row:
+                row[col] = row[col].replace("`", "")
+        states.setdefault(state, []).append(row)
     return states
 
 
@@ -1423,7 +1428,13 @@ def _segments(path: str) -> list[str]:
 
 def _generic(segment: str) -> bool:
     raw = segment.strip(QUOTE_CHARS).lower()
-    return raw in GENERIC_LABELS or raw.rstrip(".… :").strip() in GENERIC_LABELS
+    bare = raw.rstrip(".\u2026 :\u25be\u2304\u02c5").strip(QUOTE_CHARS).strip()
+    return raw in GENERIC_LABELS or bare in GENERIC_LABELS
+
+
+def _named(path: str) -> bool:
+    """A path names its containers: quoted labels, or icon-only containers by glyph."""
+    return bool(QUOTED.search(path)) or bool(re.search(r"glyph:[a-z-]+", path.lower()))
 
 
 def _depth(reached: str) -> int:
@@ -1504,8 +1515,10 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"{tier} and depth {depth}; allowed depth is "
                            f"{allowed[0]} to {allowed[1]}, never over 2, and only "
                            f"hidden rows sit behind a container")
-                gesture_only = GESTURE_WORDS.search(bare) or (not path and GESTURE_WORDS.search(accel))
-                unnamed = tier == "hidden" and not QUOTED.search(path)
+                visible_path = path.lower().startswith("visible")
+                gesture_only = (not visible_path and GESTURE_WORDS.search(bare)) or \
+                    (not path and GESTURE_WORDS.search(accel))
+                unnamed = tier == "hidden" and not _named(path)
                 if gesture_only or unnamed:
                     report(f"[U102] screens.md: {sid}: \"{name}\" is reachable only "
                            f"by a gesture or by an unnamed path; add a visible "
@@ -1529,7 +1542,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                         report(f"[U104] screens.md: {sid}: \"{name}\" shows no word a "
                                f"person can read (a letter or an abbreviation is a glyph); "
                                f"quote its on-screen label or use an allowed glyph")
-                hint_like = re.search(r"`(hint|receipt)`|^\s*(hint|receipt)\s*:",
+                hint_like = re.search(r"`(hint|receipt|recovery)`|^\s*(hint|receipt|recovery)\s*:",
                                       row.get("what it does", ""), re.IGNORECASE)
                 for quoted in ([] if hint_like else QUOTED.findall(label)):
                     word = quoted.strip(QUOTE_CHARS).lower()

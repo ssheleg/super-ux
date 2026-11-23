@@ -1606,6 +1606,26 @@ case("U100 four visible exits",
 case("U104 a one-letter label is a glyph",
      amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"S"')] + AM_ROWS[4:]),
      warns={"U104"})
+# Review round 3 (2026-11-23): an icon-only container named by glyph, tab-bar
+# rows, the vertical ellipsis, pull gestures, "More ▾", backticked cells.
+silent("U102 a rare row inside an icon-only overflow named by glyph",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "glyph:ellipsis")] + AM_ROWS[5:], fmt=2),
+       {"U102", "U101"})
+silent("U100 tab-bar destinations are not counted",
+       amap(AM_ROWS + ['| Go to %s | "%s" | `tab` destination | SCN-001 | rare (assumed) | secondary | visible | standard |' % (n, n)
+                       for n in ("Home", "Library", "Search", "Profile")]),
+       {"U100", "U101"})
+case("U103 the vertical ellipsis is a generic overflow", often_behind('"⋮"'), warns={"U103"})
+case("U103 'More ▾' is a generic overflow", often_behind('"More ▾"'), warns={"U103"})
+case("U102 pull down as the only path",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "pull down")] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("action map: backticked exit and tier cells read as their words",
+       amap(AM_ROWS[:5] + [AM_ROWS[5].replace("| exit |", "| `exit` |").replace("| secondary |", "| `secondary` |")]),
+       {"U097", "U098", "U101"})
+silent("U102 a visible row with a held accelerator note is visible",
+       amap(AM_ROWS[:1] + [AM_ROWS[1].replace("| visible |", "| visible (hold to repeat) |")] + AM_ROWS[2:]),
+       {"U102"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

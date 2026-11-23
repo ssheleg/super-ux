@@ -1148,7 +1148,7 @@ spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
 |---|---|
 | Action | A verb phrase, unique on the screen. Several controls for one parameter are one action (minus, plus and "Tap tempo" are "Set tempo"), at most three controls plus the value itself |
 | Label or glyph | The exact on-screen text in quotes, `glyph:<name>`, or both. Icon-only is allowed for `back`, `close`, `play`, `pause`, `stop` (beside a state label), `plus`, `minus`, `search`, `share`, `trash`, `gear`, `ellipsis`, `undo`, `redo`; a badge or dot is explained by words on the same screen |
-| What it does | The outcome in one clause. Flags: `irreversible` (cannot be undone), `variants` (opens a choice among alternatives), `generates` (a model creates or replaces content), `spends` (uses quota, money, a take or a generation), and the uncounted kinds `position` (tapping content places a cursor or playhead), `recovery` and `receipt` (transient chips), `hint` (a message whose buttons repeat existing rows) |
+| What it does | The outcome in one clause. Flags: `irreversible` (cannot be undone), `variants` (opens a choice among alternatives), `generates` (a model creates or replaces content), `spends` (uses quota, money, a take or a generation), and the uncounted kinds `position` (tapping content places a cursor or playhead), `recovery` and `receipt` (transient chips), `hint` (a message whose buttons repeat existing rows), `tab` (a tab-bar destination) |
 | Scenario | One or more `SCN-` ids, or `exit` for Back, Close, Cancel, Undo and Redo |
 | Frequency | `every visit`, `often` or `rare`, then `(data)` or `(assumed)` |
 | Tier | `primary`, `secondary` or `hidden` |
@@ -1156,7 +1156,9 @@ spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
 | Profile | `standard`, `frequent` or `performance` (sheleg-design, UIM-18) |
 
 A `State: <name>` line before a second table gives the rows of another state,
-only where the visible set differs (idle and running, for instance).
+only where the visible set differs (idle and running, for instance); that table
+lists every row of its state, not only the changed ones. An icon-only container
+in a path is named by its glyph (`glyph:ellipsis > "Delete draft"`).
 
 **Counting (UIM-04).** Per state, count the `primary` and `secondary` rows,
 minus `exit` rows (at most three exits show: Back or Close, Undo, Redo; a
