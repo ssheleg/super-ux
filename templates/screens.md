@@ -48,10 +48,13 @@ the problem it can no longer fix. -->
 
 ### SCR-01: <name>
 - **Used by:** <FLW-… and the step(s)>
-- **Purpose:** <the job step this screen serves>
+- **Purpose:** <one verb phrase for the one job, with its id: JTBD-NN or ST-NNN>
 - **Fronts:** <CAP-… this screen fronts, or none>
 - **Why human:** <oversight | exception-queue | trust | presence | audience | manual | taste> (<evidence>)
-- **Elements:** <each element; mark the ONE primary action>
+- **Actions:** (the action map: every action, its scenario, frequency, tier, path, profile)
+  | Action | Label or glyph | What it does | Scenario | Frequency | Tier | Reached by | Profile |
+  |---|---|---|---|---|---|---|---|
+  | <verb phrase> | "<on-screen text>" | <outcome> | SCN-… | every visit (assumed) | primary | visible | frequent |
 - **States:** (every one that applies: default, loading, empty, error,
   offline, long-content, keyboard-up, first-run, product-specific ones)
   | State | Trigger | Figma frame | Story | Behavior |

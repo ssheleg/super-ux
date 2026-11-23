@@ -1459,6 +1459,263 @@ if "contract v5" not in said or "v4 -> v5" in said or "problem" in said:
     failures.append(f"doctor: a v5 chain reports v5 with no migration; it said: {said!r}")
 
 
+# --- The action map, U096..U106 (UIM rules, 2026-11-23) ---
+# Each code fires on one planted defect in an otherwise clean map and stays
+# silent on the clean map; a screen without `Actions:` is never read.
+AM_HEAD = ("  | Action | Label or glyph | What it does | Scenario | Frequency | Tier | "
+           "Reached by | Profile |\n  |---|---|---|---|---|---|---|---|\n")
+AM_ROWS = [
+    '| Start or stop the click | "Start" | starts the click | SCN-001 | every visit (assumed) | primary | visible | performance |',
+    '| Change tempo | glyph:minus, glyph:plus | steps the tempo | SCN-001 | every visit (assumed) | secondary | visible | performance |',
+    '| Set tempo by tapping | "Tap tempo" | sets the tempo | SCN-002 | often (assumed) | secondary | visible | performance |',
+    '| Open rhythm and sound | "4/4, Wood" | opens the sheet | SCN-002 | often (assumed) | secondary | visible | frequent |',
+    '| Choose click sound | "Click sound" | variants | SCN-002 | rare (assumed) | hidden | "4/4, Wood" > "Sound" | frequent |',
+    '| Go back | glyph:back | leaves | exit | every visit | secondary | visible | standard |',
+]
+
+
+def amap(rows=None, purpose="Keep time at a chosen tempo (JTBD-001)",
+         scenarios="SCN-001, SCN-002", fmt: int | None = None) -> dict:
+    body = "\n".join("  " + r for r in (AM_ROWS if rows is None else rows)) + "\n"
+    marker = f"<!-- screens-format: {fmt} -->\n" if fmt else ""
+    return {"screens.md": (marker + MINIMAL["screens.md"] + "\n## Screens\n\n"
+                           "### SCR-01: Metronome\n"
+                           f"- **Purpose:** {purpose}\n"
+                           "- **Actions:**\n" + AM_HEAD + body +
+                           f"- **Scenarios:** {scenarios}\n"
+                           "- **Status:** designed\n")}
+
+
+AM_CODES = {f"U{n:03d}" for n in range(96, 107)}
+silent("action map: a clean map fires none of U096..U106", amap(), AM_CODES)
+silent("action map: a screen without Actions is not read",
+       {"screens.md": MINIMAL["screens.md"] + "\n## Screens\n\n### SCR-01: X\n"
+        "- **Purpose:** p\n- **Status:** designed\n"}, AM_CODES)
+case("U096 Purpose with no job id", amap(purpose="Keep time"), warns={"U096"})
+case("U096 Purpose with two job ids", amap(purpose="Do JTBD-001 and JTBD-002"),
+     warns={"U096"})
+case("U097 two primary rows",
+     amap([AM_ROWS[0], AM_ROWS[1].replace("| secondary |", "| primary |")] + AM_ROWS[2:]),
+     warns={"U097"})
+case("U097 a rare primary",
+     amap([AM_ROWS[0].replace("every visit (assumed)", "rare (assumed)")] + AM_ROWS[1:]),
+     warns={"U097"})
+case("U098 a row that serves no scenario",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace("SCN-002", "none")] + AM_ROWS[4:]),
+     warns={"U098"})
+case("U099 a listed scenario with no row", amap(scenarios="SCN-001, SCN-002, SCN-003"),
+     warns={"U099"})
+case("U099 an empty Scenarios field", amap(scenarios=""), warns={"U099"})
+case("U100 six counted visible actions",
+     amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
+                     '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |']),
+     warns={"U100"})
+case("U101 a rare action on the first layer",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('| hidden | "4/4, Wood" > "Sound" |', "| secondary | visible |")] + AM_ROWS[5:]),
+     warns={"U101"})
+case("U101 a path three containers deep",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"A" > "B" > "C"')] + AM_ROWS[5:]),
+     warns={"U101"})
+case("U102 a gesture-only path",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "long press")] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("U102 a gesture kept as an accelerator is fine",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"4/4, Wood" > "Sound"; also: long press')] + AM_ROWS[5:]),
+       {"U102"})
+case("U103 an often action behind More",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace("rare (assumed)", "often (assumed)").replace('"4/4, Wood" > "Sound"', '"More" > "Sound"')] + AM_ROWS[5:]),
+     warns={"U103"})
+case("U104 an icon outside the allowed set",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', "glyph:sparkles")] + AM_ROWS[4:]),
+     warns={"U104"})
+silent("U104 the same icon with a text label is fine",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', 'glyph:sparkles "Ideas"')] + AM_ROWS[4:]),
+       {"U104"})
+case("U105 a standard primary",
+     amap([AM_ROWS[0].replace("| performance |", "| standard |")] + AM_ROWS[1:]),
+     warns={"U105"})
+case("U105 four performance actions",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace("| frequent |", "| performance |")] + AM_ROWS[4:]),
+     warns={"U105"})
+case("U105 a row with no profile",
+     amap(AM_ROWS[:5] + [AM_ROWS[5].replace("| standard |", "| |")]), warns={"U105"})
+case("U106 one label for two visible actions",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"Tap tempo"')] + AM_ROWS[4:]),
+     warns={"U106"})
+silent("U100 a content-position row is not counted",
+       amap(AM_ROWS + ['| Move the playhead | lyric lines | position: sets where play starts | SCN-001 | every visit (assumed) | secondary | visible | standard |',
+                       '| Return to the current line | "Back to the line" | `recovery` chip | SCN-001 | rare (assumed) | secondary | visible | standard |']),
+       {"U100", "U101"})
+# Review round 1 (2026-11-23, a blind unit reader's plants): each was a false
+# fire or a miss, and each is pinned here.
+RU_HIDDEN = '| Выбрать звук | «Звук» | выбор | SCN-002 | rare (assumed) | hidden | «Ритм» > «Звук» | frequent |'
+silent("U102 a Russian path in guillemets is a named path",
+       amap(AM_ROWS[:4] + [RU_HIDDEN] + AM_ROWS[5:], fmt=2), AM_CODES)
+silent("action map: a pipe inside backticks stays in its cell",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace("opens the sheet", "applies `a|b` to the list")] + AM_ROWS[4:]),
+       AM_CODES)
+case("U102 a path that is only an accelerator",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "also: long press")] + AM_ROWS[5:]),
+     warns={"U102"})
+case("U100 prose words do not switch counting off",
+     amap(AM_ROWS + ['| Move card | "Move" | moves the card to a new position | SCN-002 | often (assumed) | secondary | visible | frequent |',
+                     '| Tempo help | "Help" | opens a hint about tempo | SCN-002 | often (assumed) | secondary | visible | frequent |']),
+     warns={"U100"})
+silent("U103 an ellipsis inside a named label is not a generic overflow",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace("rare (assumed)", "often (assumed)").replace('"4/4, Wood" > "Sound"', '"Export…"')] + AM_ROWS[5:]),
+       {"U103", "U102"})
+silent("U102 a gesture word inside a quoted label is a label",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"On hold" > "Volume"')] + AM_ROWS[5:]),
+       {"U102"})
+silent("U101 visible with a note is depth 0",
+       amap([AM_ROWS[0].replace("| visible |", "| visible (toolbar) |")] + AM_ROWS[1:]), {"U101"})
+TWO_STATES = ("  State: count in\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n"
+              "  **State:** count down\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n")
+silent("action map: two multi-word states, one bold, each with one primary",
+       {"screens.md": amap()["screens.md"].replace("- **Scenarios:**", TWO_STATES + "- **Scenarios:**")},
+       {"U097", "U098", "U101", "U105"})
+case("U106 one label for two actions in two states",
+     {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
+      "  state: running\n" + AM_HEAD + '  | Stop the click | "Tap tempo" | stops | SCN-001 | every visit (assumed) | primary | visible | performance |\n' + "- **Scenarios:**")},
+     warns={"U106"})
+# Review round 2 (2026-11-23): generic overflow with an ellipsis, hint and
+# receipt rows repeating labels, typographic quotes, Russian gestures, `;` and `>`
+# inside a quoted label, the three-exit cap, a label that is one letter.
+def often_behind(path):
+    return amap(AM_ROWS[:4] + [AM_ROWS[4].replace("rare (assumed)", "often (assumed)").replace('"4/4, Wood" > "Sound"', path)] + AM_ROWS[5:])
+case("U103 'More…' is a generic overflow", often_behind('"More…"'), warns={"U103"})
+case("U103 «Ещё…» is a generic overflow", often_behind("«Ещё…»"), warns={"U103"})
+silent("U103 «Ещё вайбы» is a named container", often_behind("«Ещё вайбы»"), {"U103"})
+silent("U106 a hint row may repeat a label it points at",
+       amap(AM_ROWS + ['| Explain sound | "Click sound", "Got it" | `hint` points at the sound sheet | SCN-002 | rare (assumed) | secondary | visible | standard |']),
+       {"U106"})
+silent("U102 typographic quotes name a path",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "“4/4, Wood” > “Sound”")] + AM_ROWS[5:]),
+       {"U102"})
+case("U102 a Russian gesture-only path",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "долгое нажатие")] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("U102 a semicolon inside a quoted label is text",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"Tonality; scale"')] + AM_ROWS[5:]),
+       {"U102", "U101"})
+case("U100 four visible exits",
+     amap(AM_ROWS + ['| Close | glyph:close | closes | exit | rare | secondary | visible | standard |',
+                     '| Undo | glyph:undo | undoes | exit | often | secondary | visible | standard |',
+                     '| Redo | glyph:redo | redoes | exit | rare | secondary | visible | standard |']),
+     warns={"U100"})
+case("U104 a one-letter label is a glyph",
+     amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"S"')] + AM_ROWS[4:]),
+     warns={"U104"})
+# Review round 3 (2026-11-23): an icon-only container named by glyph, tab-bar
+# rows, the vertical ellipsis, pull gestures, "More ▾", backticked cells.
+silent("U102 a rare row inside an icon-only overflow named by glyph",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "glyph:ellipsis")] + AM_ROWS[5:], fmt=2),
+       {"U102", "U101"})
+silent("U100 tab-bar destinations are not counted",
+       amap(AM_ROWS + ['| Go to %s | "%s" | `tab` destination | SCN-001 | rare (assumed) | secondary | visible | standard |' % (n, n)
+                       for n in ("Home", "Library", "Search", "Profile")]),
+       {"U100", "U101"})
+case("U103 the vertical ellipsis is a generic overflow", often_behind('"⋮"'), warns={"U103"})
+case("U103 'More ▾' is a generic overflow", often_behind('"More ▾"'), warns={"U103"})
+case("U102 pull down as the only path",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "pull down")] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("action map: backticked exit and tier cells read as their words",
+       amap(AM_ROWS[:5] + [AM_ROWS[5].replace("| exit |", "| `exit` |").replace("| secondary |", "| `secondary` |")]),
+       {"U097", "U098", "U101"})
+silent("U102 a visible row with a held accelerator note is visible",
+       amap(AM_ROWS[:1] + [AM_ROWS[1].replace("| visible |", "| visible (hold to repeat) |")] + AM_ROWS[2:]),
+       {"U102"})
+# Review round 4 (2026-11-23): more overflow spellings, state lines as a
+# heading or in italics, the arrow separator, action names compared without case.
+case("U103 'More actions' is a generic overflow", often_behind('"More actions"'), warns={"U103"})
+case("U103 middle dots are a generic overflow", often_behind('"···"'), warns={"U103"})
+silent("action map: a state line written as a heading or in italics",
+       {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
+        "  #### State: running\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n  *State: paused*\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n- **Scenarios:**")},
+       {"U097", "U098", "U101", "U105"})
+case("U101 an arrow-separated path counts its containers",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"A" → "B" → "C"')] + AM_ROWS[5:]),
+     warns={"U101"})
+# Review round 5 (2026-11-23): bare flags, a read-out repeating the value its
+# sheet lists, notes in paths, short real words, a passive loading state.
+silent("U100 bare tab flags are read",
+       amap(AM_ROWS + ['| Go to %s | "%s" | tab | SCN-001 | rare (data) | secondary | visible | standard |' % (n, n)
+                       for n in ("Home", "Library", "Search", "Profile")]),
+       {"U100", "U101"})
+silent("U106 a read-out may show the value its sheet lists",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"Sound", "Wood"')]
+            + [AM_ROWS[4].replace('"Click sound"', '"Wood", "Clave"').replace('"4/4, Wood" > "Sound"', '"Sound"')] + AM_ROWS[5:]),
+       {"U106"})
+silent("U103 and U102 ignore a parenthetical note on a path segment",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"Sort" (pull-down) > "Newest"')] + AM_ROWS[5:]),
+       {"U102"})
+case("U103 reads a generic overflow with a note",
+     often_behind('"More" (top bar)'), warns={"U103"})
+silent("U104 'OK' is a word", amap(AM_ROWS[:3] + [AM_ROWS[3].replace('"4/4, Wood"', '"OK"')] + AM_ROWS[4:]), {"U104"})
+silent("U097 a passive loading state with only an exit",
+       {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
+        "  State: loading\n" + AM_HEAD + '  | Cancel | "Cancel" | stops loading | exit | rare | secondary | visible | standard |\n- **Scenarios:**')},
+       {"U097"})
+# Review round 6 (2026-11-23): one flag reader for counting, the U106
+# exemption and irreversible; container scope ignores notes.
+silent("U100 a bare tab flag followed by prose is read",
+       amap(AM_ROWS + ['| Go to %s | "%s" | tab opens %s | SCN-001 | often (data) | secondary | visible | standard |' % (n, n, n)
+                       for n in ("Home", "Library", "Search", "Profile")]),
+       {"U100"})
+silent("U106 a bare hint repeating a visible label",
+       amap(AM_ROWS + ['| First-run tip | "Tap Start to begin", "Start" | hint its button repeats Start | SCN-001 | rare (assumed) | secondary | visible | standard |']),
+       {"U106"})
+silent("U097 'irreversible' in prose is not the flag",
+       amap([AM_ROWS[0].replace("starts the click", "starts the click; nothing irreversible")] + AM_ROWS[1:]),
+       {"U097"})
+case("U097 the bare irreversible flag on a primary",
+     amap([AM_ROWS[0].replace("starts the click", "irreversible: deletes the take")] + AM_ROWS[1:]),
+     warns={"U097"})
+# Review round 7 (2026-11-23): readable words and the depth cap hold for
+# exits and uncounted rows too; notes in the Tier and Profile cells.
+case("U104 an exit with a one-letter label",
+     amap(AM_ROWS[:5] + [AM_ROWS[5].replace("glyph:back", '"X"')]), warns={"U104"})
+case("U101 an exit three containers deep",
+     amap(AM_ROWS + ['| Cancel export | "Cancel" | closes | exit | rare | hidden | "Share" > "Export" > "Advanced" | standard |']),
+     warns={"U101"})
+silent("action map: a note in the Tier and Profile cells",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace("| secondary | visible | frequent |", "| secondary (toolbar) | visible | frequent (corner) |")] + AM_ROWS[4:]),
+       {"U101", "U105"})
+# Review round 8 (2026-11-23): a visible entry that holds only rare actions.
+silent("U101 a visible settings entry holding only rare rows",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace("often (assumed)", "rare (assumed)")] + AM_ROWS[4:]),
+       {"U101"})
+silent("U101 an icon-only entry named by glyph",
+       amap(AM_ROWS + ['| Open settings | glyph:gear | opens the settings sheet | SCN-002 | rare (assumed) | secondary | visible | standard |',
+                       '| Change font size | "Font size" | sets the size | SCN-002 | rare (assumed) | hidden | glyph:gear | standard |']),
+       {"U101"})
+case("U101 a rare visible row that opens nothing",
+     amap(AM_ROWS + ['| Show tips | "Tips" | shows tips | SCN-002 | rare (assumed) | secondary | visible | standard |']),
+     warns={"U101"})
+# Review round 10 (2026-11-23): more gesture words; glyph names with underscores.
+for gesture in ("long tap on \"Start\"", "удерживать «Старт»", "проведите вниз по «Старт»", "тап двумя пальцами по «Старт»"):
+    case(f"U102 gesture-only path: {gesture}",
+         amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', gesture)] + AM_ROWS[5:]),
+         warns={"U102"})
+case("U104 a snake_case glyph outside the set",
+     amap(AM_ROWS[:5] + [AM_ROWS[5].replace("glyph:back", "glyph:close_fullscreen")]), warns={"U104"})
+# Review round 11 (2026-11-23): an accelerator-only path is gesture-only in any
+# words; a receipt Undo marked exit does not count toward the exit cap.
+case("U102 an accelerator-only path in plain words",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('| hidden | "4/4, Wood" > "Sound" |', '| secondary | also: tap twice on the line |')] + AM_ROWS[5:]),
+     warns={"U102"})
+silent("U100 a receipt Undo marked exit is not a fourth exit",
+       amap(AM_ROWS + ['| Undo | glyph:undo | undoes | exit | often | secondary | visible | standard |',
+                       '| Redo | glyph:redo | redoes | exit | rare | secondary | visible | standard |',
+                       '| Undo the change | "Undo" | receipt: names the change | exit | rare | secondary | visible | standard |']),
+       {"U100"})
+case("U100 is an error on a format-2 registry",
+     {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
+                        '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],
+             fmt=2)}, errors={"U100"})
+
+
 if failures:
     print(f"FAIL ({len(failures)} of {checks} checks)")
     for f in failures:

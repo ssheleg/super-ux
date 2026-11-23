@@ -508,8 +508,13 @@ one entry per screen.
 
 ### SCR-01: Welcome
 - **Used by:** FLW-01 (step 1)
-- **Purpose:** <the job step this screen serves>
-- **Elements:** <each element; mark the ONE primary action>
+- **Purpose:** <one verb phrase for the one job this screen serves, with its id: JTBD-NN or ST-NNN>
+- **Elements:** <each element; mark the ONE primary action> (legacy: the Actions table below replaces it)
+- **Actions:** (the action map; see "The action map" below)
+  | Action | Label or glyph | What it does | Scenario | Frequency | Tier | Reached by | Profile |
+  |---|---|---|---|---|---|---|---|
+  | Start | "Get started" | opens the first step | SCN-001 | every visit (assumed) | primary | visible | frequent |
+  | Read the terms | "Terms" | opens the terms sheet | SCN-002 | rare (assumed) | hidden | "About" | standard |
 - **States:**
   | State | Trigger | Figma frame | Story | Behavior |
   |-------|---------|-------------|-------|----------|
@@ -1129,6 +1134,120 @@ truth and are updated by the implementation, same-change rule.
 
 ---
 
+
+## The action map (U096 to U106)
+
+A screen's `Actions:` table lists every action a person can take on it, and is
+the list the design-tester checks a frame against. It replaces `Elements:`,
+which stays readable as a legacy field. The rules it carries (UIM-01 to UIM-14,
+UIM-29 and UIM-31 to UIM-34) come from the research report
+https://github.com/ssheleg/sheleg-design-skill/tree/main/docs/reports/2026-11-23-ui-guidelines ; the look of each row (sizes,
+spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
+
+| Column | Allowed content |
+|---|---|
+| Action | A verb phrase, unique on the screen. Several controls for one parameter are one action (minus, plus and "Tap tempo" are "Set tempo"), at most three controls plus the value itself |
+| Label or glyph | The exact on-screen text in quotes, `glyph:<name>`, or both. Icon-only is allowed for `back`, `close`, `play`, `pause`, `stop` (beside a state label), `plus` and `minus` (around a visible value), `search`, `share`, `trash`, `gear`, `ellipsis`, `undo` and `redo` (as a pair); a badge or dot is explained by words on the same screen |
+| What it does | The outcome in one clause. Flags: `irreversible` (cannot be undone), `variants` (opens a choice among alternatives), `generates` (a model creates or replaces content), `spends` (uses quota, money, a take or a generation), and the uncounted kinds `position` (tapping content places a cursor or playhead), `recovery` and `receipt` (transient chips), `hint` (a message whose buttons repeat existing rows), `tab` (a tab-bar destination) |
+| Scenario | One or more `SCN-` ids, or `exit` for Back, Close, Cancel, Undo and Redo |
+| Frequency | `every visit`, `often` or `rare`, then `(data)` or `(assumed)` |
+| Tier | `primary`, `secondary` or `hidden` |
+| Reached by | `visible`, or a path of the quoted labels of the containers that must be opened, in order (`"Rhythm and sound" > "Show more"`); depth is the number of segments. List only containers: a group heading inside an open sheet is not one, a segment or "Show more" that hides options is. Gestures follow `also:` as accelerators, never as the only path |
+| Profile | `standard`, `frequent` or `performance` (sheleg-design, UIM-18) |
+
+A `State: <name>` line before a second table gives the rows of another state,
+only where the visible set differs (idle and running, for instance); that table
+lists every row of its state, not only the changed ones. The map describes the
+compact layout: a regular-width inspector shows `hidden` rows open and is not a
+state of its own. An icon-only container
+in a path is named by its glyph (`glyph:ellipsis > "Delete draft"`).
+
+**Counting (UIM-04).** Per state, count the `primary` and `secondary` rows,
+minus `exit` rows (at most three exits show: Back or Close, Undo, Redo; a
+fourth is `U100`; a `receipt` row's Undo is not one of them). Tab-bar
+destinations are navigation and not counted; a repeating collection counts once
+per kind of action (a list of settings is one row, "Change a setting", whose
+label is each setting's name and whose frequency is how often a visit changes
+any of them); a status banner with one recovery action is a state; a
+disclosure entry is one secondary action; an iPad inspector shows `hidden` rows
+open without counting them; rows flagged `position`, `recovery`, `receipt` or
+`hint` are not counted, though each still needs a row, words that say what it
+does and, for `position`, a full-size path to the same place. The result is at most **5**, with exactly one
+`primary`. Five is a house default: no platform states a per-screen number;
+Apple's three toolbar groups and five tabs anchor it.
+
+**Depth by frequency (UIM-05).** `every visit` is visible; `often` is visible or
+one step away; `rare` is one or two steps away; nothing is deeper than two
+(NN/g, Progressive Disclosure). No `every visit` or `often` action sits behind a
+generic "More" or ellipsis (UIM-06); a menu of more than five items is split
+into labelled groups, and inactive items are dimmed, never removed.
+
+**Variants (UIM-13, UIM-14).** A row flagged `variants` opens a choice that
+marks one option as recommended or current, shows at most five before "Show
+more", previews each in place before "Use", compares two at a time on a phone
+and up to four on a tablet, and restores the previous choice in one tap.
+
+**State, undo, help and empty states (UIM-09 to UIM-12).** While recording or
+playback runs, the screen says so in words with elapsed time or a level, and the
+control that started it became the stop control in the same place; routine edits
+are undoable and never confirmed (a confirmation is for an `irreversible` row
+only, states the consequence and labels its buttons with the outcome); no tour
+or overlay blocks the screen on first run, and a hint sits next to the control
+it explains; empty, loading and error states each say what is happening, why,
+and offer one next step. The state matrix above carries these states.
+
+**Flags.** A flag in "What it does" is its word in backticks anywhere in the
+cell, or bare as the cell's first word (`tab opens Home`, `receipt: Undo in
+words`); the same word elsewhere in prose is not the flag. A control that
+changes in place between states (Start that becomes Stop) keeps one action name
+in every state, so it is one action. A disclosure entry is the visible row whose
+label or glyph opens another row's path; it is counted, and its own frequency is
+not held against depth (a gear that holds only rare settings stays visible).
+
+**Labels in the map.** A label is the on-screen text in double quotes
+(straight or typographic) or guillemets; single quotes are not read, because a
+label may hold an apostrophe. A row with neither a quoted word of three or more
+characters nor an allowed glyph shows nothing a person can read (`U104`): a
+single letter or a two-letter abbreviation is a glyph; short real words
+(OK, Go, On, Up, Да, Нет) are words. Whether a longer
+abbreviation or a term ("BPM") reads to a novice is the Novice walk's question
+(finding `label`), not the linter's. A menu button keeps its menu mark
+(a chevron) at every width, or it reads as a tab. A `hint`, `receipt` or
+`recovery` row may repeat the labels of the rows it points at. A word names one
+action among those shown together: the visible rows of the screen, or the rows
+inside one container; a read-out may show the value its sheet lists (`U106`).
+Two controls that each become "Stop" in their own state are two actions with
+one word, so name the second one's stop differently ("Stop playback"). A
+state whose rows are all exits or uncounted (loading with Cancel) needs no
+primary. A note on a path segment goes in parentheses and is not read as its
+label (`"More" (top bar)`).
+
+**Words, consequences, receipts, now and next (UIM-31 to UIM-34).**
+- *Words before count (UIM-31).* When labelled controls do not fit with their
+  words at the smallest width or the largest standard text size, fewer controls
+  show and the rest move into a named menu; a control never keeps its place by
+  losing its label; only a glyph from the allowed set may drop the word beside it. Within one screen a word names one action (`U106`).
+- *Consequence line (UIM-32).* A row flagged `generates`, `spends`,
+  `irreversible` or `variants` shows one plain line, at most 60 characters,
+  saying what changes or what is kept, before the tap; a primary that spends
+  says what in one line above it; a disabled control stays in place, dimmed,
+  and states its reason.
+- *One change, one receipt, one undo (UIM-33).* After a change made from a
+  menu, a sheet, an agent or a `generates` row, a receipt line names the change
+  and offers Undo in words; one Undo restores the whole change. A `generates`
+  row returns two or three candidates plus the unchanged work marked as
+  current, and the work does not change before "Use".
+- *Now and next (UIM-34).* On a screen whose content advances in time, exactly
+  one item is marked as current in every state, rest included; the next one is
+  visible; a coming change is counted down in the unit the user performs in
+  (beats, bars, lines), never in seconds alone.
+
+**Platform `mobile-ipados` (UIM-29).** On iPadOS every row appears as a menu-bar
+command, ordered by frequency, dimmed when inactive and never removed.
+
+The codes `U096` to `U106` read only screens that carry `Actions:`, so a registry adopts the map
+screen by screen. They are warnings on a format-1 registry and errors on format 2.
+
 ## Linter codes — what `docs/ux/lint.py` can say
 
 Every message the linter emits carries a stable code, so a rule can be
@@ -1200,5 +1319,16 @@ here — the meaning of a rule never lives only in its source.
 | U093 | W (v5) | a gate other than `none`, or a serving reason, cites no evidence beside it |
 | U094 | W (v5) | a screen has no `Fronts` or no `Why human`, or fronts a capability `capabilities.md` does not define |
 | U095 | W (v5) | a persona with `Agent use: none` has a `must` story served only by agent-channel scenarios |
+| U096 | W / E (format 2) | a screen with `Actions:` has a Purpose that names no job id or more than one |
+| U097 | W / E (format 2) | a state of the action map has zero or several `primary` rows, or its primary is `rare` or `irreversible` |
+| U098 | W / E (format 2) | an action-map row names no `SCN-` id and is not `exit` |
+| U099 | W / E (format 2) | a scenario listed in the screen's `Scenarios:` has no action-map row, or the list is empty |
+| U100 | W / E (format 2) | a state shows more than five counted visible actions, or more than three visible exits |
+| U101 | W / E (format 2) | a row's tier or depth does not fit its frequency, or its path is deeper than two |
+| U102 | W / E (format 2) | a row is reached only by a gesture, or a `hidden` row has no quoted label path |
+| U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More", "Ещё" or ellipsis (with or without a trailing "…") |
+| U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set, or a visible row shows no quoted word of three or more characters |
+| U105 | W / E (format 2) | a row has no profile, the primary is `standard`, or more than three actions are `performance` |
+| U106 | W / E (format 2) | a quoted label names two different actions among the visible rows of the screen (any state) or inside one container; `hint`, `receipt` and `recovery` rows may repeat labels |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |

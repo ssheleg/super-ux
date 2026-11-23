@@ -1297,6 +1297,329 @@ def check_v5(foundation: str, scenarios: str, screens: str,
                      f"who use no agent need the whole human path for it")
 
 
+# --- The action map (UIM rules, research 2026-11-23) ---
+# A screen that carries `**Actions:**` is held to its own map: one job, one
+# primary per state, at most five counted visible actions, depth by frequency,
+# no gesture-only path, no essential action behind a generic "More", labels a
+# novice can read and a target profile per row. A screen without the field is
+# not checked here, so an existing registry opts in screen by screen.
+# Severity follows the registry's format: warnings on format 1, errors on 2.
+ACTION_COLUMNS = ("action", "label or glyph", "what it does", "scenario",
+                  "frequency", "tier", "reached by", "profile")
+ACTION_TIERS = ("primary", "secondary", "hidden")
+ACTION_FREQUENCIES = ("every visit", "often", "rare")
+ACTION_PROFILES = ("standard", "frequent", "performance")
+ACTION_BUDGET = 5
+ACTION_PERFORMANCE_CAP = 3
+# Icon-only glyphs a person new to the app reads without a label (UIM-08).
+# `stop` is allowed beside a state label; a bare record dot never is.
+ALLOWED_GLYPHS = {"back", "close", "play", "pause", "stop", "plus", "minus",
+                  "search", "share", "trash", "gear", "ellipsis", "undo", "redo"}
+GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
+                           r"hold|shake|two[- ]finger)\b|"
+                           r"(долг\w*\s+нажат\w*|двойн\w*\s+(?:тап|нажат)\w*|"
+                           r"свайп\w*|щип\w*|перетаск\w*|удержан\w*|удержива\w*|зажа\w*|зажм\w*|смахн\w*|потян\w*|"
+                           r"провед\w*|проведи\w*|долг\w*\s+тап\w*|двумя\s+пальц\w*)|"
+                           r"\b(pull|long[- ]tap|force[- ]touch|triple[- ]tap|three[- ]finger|slide)\b", re.IGNORECASE)
+# A container whose whole label is generic: "More", an ellipsis, three dots.
+GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
+                  "glyph:ellipsis", "ellipsis", "more options", "options", "other",
+                  "ещё действия", "еще действия", "действия", "другое", "опции", "больше",
+                  "\u22ee", "\ufe19", "glyph:more", "more options", "more actions",
+                  "other actions", "\u00b7\u00b7\u00b7", "glyph:ellipsis-circle",
+                  "glyph:ellipsis.circle"}
+# Straight, guillemet and typographic quotes all mark on-screen text.
+QUOTED = re.compile('"[^"]*"|«[^»]*»|“[^”]*”|„[^“”]*[“”]')
+QUOTE_CHARS = '"«»“”„ '
+MAX_EXITS = 3
+# Real words under three characters that are not abbreviations.
+SHORT_WORDS = {"ok", "go", "on", "up", "off", "no", "yes", "да", "нет", "ок", "вкл"}
+JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
+# Rows that are not counted toward the budget (counting rules 9 to 11): placing a
+# cursor or playhead by tapping content, a transient recovery chip or receipt,
+# and a hint whose buttons repeat existing rows. They still need a row. The flag
+# is written as `position` in backticks, or bare as the first word of the cell
+# (`tab`, `receipt: Undo in words`), never read out of ordinary prose ("moves the
+# card to a new position").
+UNCOUNTED = ("position", "recovery", "receipt", "hint", "tab")
+
+
+def has_flag(cell: str, *names: str) -> bool:
+    """A flag is its word in backticks anywhere in the cell, or the cell's first word."""
+    low = cell.lower()
+    if any(f"`{n}`" in low for n in names):
+        return True
+    first = re.match(r"\s*`?([a-z]+)", low)
+    return bool(first) and first.group(1) in names
+STATE_LINE = re.compile(r"^(?:#+\s+)?(?:[-*]\s+)?[*_]*state:[*_]*\s*(.+?)\s*$", re.IGNORECASE)
+
+
+def _cells(text: str) -> list[str]:
+    """Split a table row on `|` outside backtick spans."""
+    out, cur, tick = [], [], False
+    for ch in text.strip().strip("|"):
+        if ch == "`":
+            tick = not tick
+        if ch == "|" and not tick:
+            out.append("".join(cur).strip())
+            cur = []
+        else:
+            cur.append(ch)
+    out.append("".join(cur).strip())
+    return out
+
+
+def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
+    """The `Actions:` table of a screen, rows grouped by `State:` line.
+
+    `None` when the screen has no `Actions:` field. A row is a dict keyed by the
+    lower-cased header; rows before any `State:` line belong to `default`.
+    """
+    m = re.search(r"\*\*Actions:\*\*", body)
+    if m is None:
+        return None
+    states: dict[str, list[dict[str, str]]] = {}
+    state, header = "default", None
+    for line in body[m.end():].splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        st = STATE_LINE.match(text)
+        if st:
+            state, header = st.group(1).strip("*_ ").lower(), None
+            continue
+        if FIELD_START.match(line) or text.startswith("#"):
+            break
+        if not text.startswith("|"):
+            continue
+        cells = _cells(text)
+        if all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+            continue
+        if header is None:
+            header = [c.lower() for c in cells]
+            continue
+        row = dict(zip(header, cells))
+        for col in ("scenario", "tier", "frequency", "profile", "reached by"):
+            if col in row:
+                row[col] = row[col].replace("`", "")
+        for col in ("tier", "profile"):
+            if col in row:
+                row[col] = re.sub(r"\s*\([^)]*\)", "", row[col]).strip()
+        states.setdefault(state, []).append(row)
+    return states
+
+
+def _freq(row: dict[str, str]) -> str:
+    raw = row.get("frequency", "").lower()
+    for f in ACTION_FREQUENCIES:
+        if raw.startswith(f):
+            return f
+    return raw.split("(")[0].strip()
+
+
+def _mask(text: str) -> tuple[str, list[str]]:
+    """Quoted labels replaced by placeholders, so `;` or `>` inside a label is text."""
+    kept: list[str] = []
+
+    def keep(m: re.Match) -> str:
+        kept.append(m.group(0))
+        return f"\x00{len(kept) - 1}\x00"
+    return QUOTED.sub(keep, text), kept
+
+
+def _unmask(text: str, kept: list[str]) -> str:
+    return re.sub(r"\x00(\d+)\x00", lambda m: kept[int(m.group(1))], text)
+
+
+def _path(reached: str) -> tuple[str, str]:
+    """(the path before any accelerator, the accelerators after `also:`)."""
+    masked, kept = _mask(reached)
+    parts = re.split(r";|\balso:", masked, maxsplit=1)
+    return (_unmask(parts[0], kept).strip(),
+            _unmask(parts[1], kept).strip() if len(parts) > 1 else "")
+
+
+def _segments(path: str) -> list[str]:
+    masked, kept = _mask(path)
+    # A parenthetical note on a segment ("More" (top bar)) is not part of its label.
+    masked = re.sub(r"\([^)\x00]*\)", "", masked)
+    return [_unmask(seg, kept).strip() for seg in re.split(r">|›|→", masked) if seg.strip()]
+
+
+def _generic(segment: str) -> bool:
+    raw = segment.strip(QUOTE_CHARS).lower()
+    bare = raw.rstrip(".\u2026 :\u25be\u2304\u02c5").strip(QUOTE_CHARS).strip()
+    return raw in GENERIC_LABELS or bare in GENERIC_LABELS
+
+
+def _named(path: str) -> bool:
+    """A path names its containers: quoted labels, or icon-only containers by glyph."""
+    return bool(QUOTED.search(path)) or bool(re.search(r"glyph:[a-z-]+", path.lower()))
+
+
+def _depth(reached: str) -> int:
+    """Containers that must be opened; a path lists only those (no group headings)."""
+    path, _ = _path(reached)
+    if path.lower().startswith("visible"):
+        return 0
+    return len(_segments(path))
+
+
+def check_action_map(screens: str, gated: bool) -> None:
+    def report(msg: str) -> None:
+        if gated:
+            err(msg)
+        else:
+            warn(msg + FORMAT_HINT)
+
+    for sid, body in sorted(screen_blocks(screens).items()):
+        if declared_status(body) == "retired":
+            continue
+        states = action_rows(body)
+        if states is None:
+            continue
+        purpose = v5_field(body, "Purpose") or ""
+        jobs = set(JOB_ID.findall(purpose))
+        if len(jobs) != 1:
+            report(f"[U096] screens.md: {sid}: Purpose must name exactly one job "
+                   f"(one verb phrase, one ST- or JTBD- id); found {len(jobs)}")
+        listed = refs(v5_field(body, "Scenarios") or "", "SCN")
+        if not listed:
+            report(f"[U099] screens.md: {sid}: Scenarios is empty, so the action "
+                   f"map has nothing to serve; list the SCN- ids this screen carries")
+        served: set[str] = set()
+        perf: set[str] = set()
+        labels: dict[str, str] = {}
+        # A disclosure entry is the row whose label or glyph opens another row's
+        # path; its own frequency is not held against depth (it is counted).
+        openers = {_segments(_path(r.get("reached by", ""))[0])[0].strip(QUOTE_CHARS).lower()
+                   for rs in states.values() for r in rs
+                   if _depth(r.get("reached by", "")) >= 1}
+
+        def is_entry(row: dict[str, str]) -> bool:
+            label = row.get("label or glyph", "").lower()
+            marks = {q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)}
+            marks |= {f"glyph:{g}" for g in re.findall(r"glyph:([a-z0-9._-]+)", label)}
+            return bool(marks & openers)
+
+        for state, rows in states.items():
+            primaries = [r for r in rows if r.get("tier", "").lower() == "primary"]
+            bad = [r for r in primaries if _freq(r) == "rare"
+                   or has_flag(r.get("what it does", ""), "irreversible")]
+            passive = not primaries and all(
+                r.get("scenario", "").strip().lower() == "exit"
+                or has_flag(r.get("what it does", ""), *UNCOUNTED) for r in rows)
+            if (len(primaries) != 1 and not passive) or bad:
+                detail = (f"{len(primaries)} primary rows" if len(primaries) != 1
+                          else f"'{bad[0].get('action', '?')}' is rare or irreversible")
+                report(f"[U097] screens.md: {sid} state {state}: expected exactly one "
+                       f"primary action that is not rare and not irreversible; "
+                       f"found {detail}")
+            counted = 0
+            exits = 0
+            for row in rows:
+                name = row.get("action", "?")
+                scen = row.get("scenario", "")
+                tier = row.get("tier", "").lower()
+                freq = _freq(row)
+                reached = row.get("reached by", "")
+                depth = _depth(reached)
+                path, accel = _path(reached)
+                bare = QUOTED.sub("", path)
+                is_exit = scen.strip().lower() == "exit"
+                if is_exit and tier in ("primary", "secondary") and \
+                        not has_flag(row.get("what it does", ""), *UNCOUNTED):
+                    exits += 1
+                served |= refs(scen, "SCN")
+                if not refs(scen, "SCN") and not is_exit:
+                    report(f"[U098] screens.md: {sid}: action \"{name}\" serves no "
+                           f"scenario; give it a SCN- id, mark it exit, or remove it")
+                uncounted = has_flag(row.get("what it does", ""), *UNCOUNTED)
+                if tier in ("primary", "secondary") and not is_exit and not uncounted:
+                    counted += 1
+                allowed = {"every visit": (0, 0), "often": (0, 1),
+                           "rare": (1, 2)}.get(freq)
+                tier_ok = (tier == "hidden") == (depth >= 1)
+                if depth > 2:
+                    report(f"[U101] screens.md: {sid}: \"{name}\" sits at depth {depth}; "
+                           f"no row is deeper than 2")
+                elif is_exit or uncounted or (depth == 0 and is_entry(row)):
+                    pass
+                elif tier not in ACTION_TIERS or allowed is None:
+                    report(f"[U101] screens.md: {sid}: \"{name}\" needs a tier "
+                           f"({', '.join(ACTION_TIERS)}) and a frequency "
+                           f"({', '.join(ACTION_FREQUENCIES)})")
+                elif depth > 2 or not allowed[0] <= depth <= allowed[1] or not tier_ok:
+                    report(f"[U101] screens.md: {sid}: \"{name}\" is {freq} at tier "
+                           f"{tier} and depth {depth}; allowed depth is "
+                           f"{allowed[0]} to {allowed[1]}, never over 2, and only "
+                           f"hidden rows sit behind a container")
+                visible_path = path.lower().startswith("visible")
+                bare = re.sub(r"\([^)]*\)", "", bare)
+                # An empty path with only an accelerator is gesture-only, whatever
+                # words the accelerator uses.
+                gesture_only = (not visible_path and GESTURE_WORDS.search(bare)) or \
+                    (not path and bool(accel))
+                unnamed = tier == "hidden" and not _named(path)
+                if gesture_only or unnamed:
+                    report(f"[U102] screens.md: {sid}: \"{name}\" is reachable only "
+                           f"by a gesture or by an unnamed path; add a visible "
+                           f"control or a quoted label path, and keep the gesture "
+                           f"after also:")
+                generic = any(_generic(seg) for seg in _segments(path))
+                if freq in ("every visit", "often") and depth >= 1 and generic:
+                    report(f"[U103] screens.md: {sid}: {freq} action \"{name}\" is "
+                           f"behind a generic overflow; show it or put it in a "
+                           f"named container")
+                label = row.get("label or glyph", "")
+                words = [q.strip(QUOTE_CHARS) for q in QUOTED.findall(label)]
+                glyphs = re.findall(r"glyph:([a-z0-9._-]+)", label.lower())
+                if not any(len(w) > 2 or w.lower() in SHORT_WORDS for w in words):
+                    for glyph in glyphs:
+                        if glyph not in ALLOWED_GLYPHS:
+                            report(f"[U104] screens.md: {sid}: \"{name}\" uses glyph "
+                                   f"\"{glyph}\" without a text label; allowed "
+                                   f"icon-only glyphs: {', '.join(sorted(ALLOWED_GLYPHS))}")
+                    if not glyphs and tier != "hidden" and \
+                            not has_flag(row.get("what it does", ""), "position"):
+                        report(f"[U104] screens.md: {sid}: \"{name}\" shows no word a "
+                               f"person can read (a letter or an abbreviation is a glyph); "
+                               f"quote its on-screen label or use an allowed glyph")
+                hint_like = has_flag(row.get("what it does", ""), "hint", "receipt", "recovery")
+                for quoted in ([] if hint_like else QUOTED.findall(label)):
+                    word = quoted.strip(QUOTE_CHARS).lower()
+                    # A word names one action among those shown together: the
+                    # visible rows of the screen, or the rows of one container.
+                    scope = ("visible" if depth == 0 else
+                             " > ".join(seg.strip(QUOTE_CHARS).lower() for seg in _segments(path)))
+                    other = labels.setdefault((scope, word), name)
+                    if other.lower() != name.lower():
+                        report(f"[U106] screens.md: {sid}: label \"{word}\" names two "
+                               f"actions (\"{other}\" and \"{name}\"); within one "
+                               f"screen a word names one action")
+                profile = row.get("profile", "").lower().strip()
+                if profile not in ACTION_PROFILES:
+                    report(f"[U105] screens.md: {sid}: \"{name}\" has no profile "
+                           f"({', '.join(ACTION_PROFILES)})")
+                elif tier == "primary" and profile == "standard":
+                    report(f"[U105] screens.md: {sid}: the primary \"{name}\" is "
+                           f"standard; it takes the frequent or performance profile")
+                if profile == "performance":
+                    perf.add(name.lower())
+            if exits > MAX_EXITS:
+                report(f"[U100] screens.md: {sid} state {state}: {exits} visible exits; "
+                       f"at most {MAX_EXITS} (Back or Close, Undo, Redo)")
+            if counted > ACTION_BUDGET:
+                report(f"[U100] screens.md: {sid} state {state}: {counted} visible "
+                       f"actions, budget is {ACTION_BUDGET}; move the least frequent "
+                       f"to the hidden tier")
+        if len(perf) > ACTION_PERFORMANCE_CAP:
+            report(f"[U105] screens.md: {sid}: {len(perf)} performance actions; at "
+                   f"most {ACTION_PERFORMANCE_CAP} per screen")
+        for scn in sorted(listed - served):
+            report(f"[U099] screens.md: {sid}: scenario {scn} has no row in the "
+                   f"action map")
+
 def check_links(ux: Path) -> None:
     link_re = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
     for md in sorted(ux.rglob("*.md")):
@@ -1533,6 +1856,8 @@ def main() -> int:
     check_art_direction(flows, ux, project_root)
     if v5:
         check_v5(foundation, scenarios, screens, capabilities)
+    if (ux / "screens.md").exists():
+        check_action_map(screens, screens_format(ux / "screens.md") >= 2)
     check_links(ux)
 
     # --- Report ---
