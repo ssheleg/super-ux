@@ -228,7 +228,8 @@ keyboard only, a second locale, a slow connection). At least two portraits are *
 (high engagement, connected data, arrived through a friend) and at least two are **tourists**
 (low engagement, arrived through an ad or a discount), marked at the start of the retention
 line: lifetime value rests on the first, churn comes mostly from the second (the split is in
-[`references/funnel-research.md`](references/funnel-research.md), *Your own numbers*). Each portrait carries its features,
+[`references/funnel-research.md`](references/funnel-research.md), *Your own numbers*). The `needs` line opens with `novice`, `regular` or `expert`: at least two **novices** (new to
+this kind of app, not slow) and one expert, plus a tablet when the product targets one. Each portrait carries its features,
 two to four composite scenarios by `SCR-` id, its activation funnel and its retention loop,
 and a basis line: `evidence RE-NN` or `hypothesis`. The panel is a test instrument: the
 quality bar above still holds, so a hypothesis portrait decides what to test, never what to

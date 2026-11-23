@@ -1297,6 +1297,195 @@ def check_v5(foundation: str, scenarios: str, screens: str,
                      f"who use no agent need the whole human path for it")
 
 
+# --- The action map (UIM rules, research 2026-11-23) ---
+# A screen that carries `**Actions:**` is held to its own map: one job, one
+# primary per state, at most five counted visible actions, depth by frequency,
+# no gesture-only path, no essential action behind a generic "More", labels a
+# novice can read and a target profile per row. A screen without the field is
+# not checked here, so an existing registry opts in screen by screen.
+# Severity follows the registry's format: warnings on format 1, errors on 2.
+ACTION_COLUMNS = ("action", "label or glyph", "what it does", "scenario",
+                  "frequency", "tier", "reached by", "profile")
+ACTION_TIERS = ("primary", "secondary", "hidden")
+ACTION_FREQUENCIES = ("every visit", "often", "rare")
+ACTION_PROFILES = ("standard", "frequent", "performance")
+ACTION_BUDGET = 5
+ACTION_PERFORMANCE_CAP = 3
+# Icon-only glyphs a person new to the app reads without a label (UIM-08).
+# `stop` is allowed beside a state label; a bare record dot never is.
+ALLOWED_GLYPHS = {"back", "close", "play", "pause", "stop", "plus", "minus",
+                  "search", "share", "trash", "gear", "ellipsis", "undo", "redo"}
+GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
+                           r"hold|shake|two[- ]finger)\b", re.IGNORECASE)
+GENERIC_OVERFLOW = re.compile(r"(\"more\"|\bmore\b|…|\.\.\.|ellipsis|•••)",
+                              re.IGNORECASE)
+JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
+# Rows that are not counted toward the budget (counting rules 9 to 11): placing a
+# cursor or playhead by tapping content, a transient recovery chip or receipt,
+# and a hint whose buttons repeat existing rows. They still need a row.
+UNCOUNTED_FLAGS = re.compile(r"\b(position|recovery|receipt|hint)\b", re.IGNORECASE)
+
+
+def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
+    """The `Actions:` table of a screen, rows grouped by `State:` line.
+
+    `None` when the screen has no `Actions:` field. A row is a dict keyed by the
+    lower-cased header; rows before any `State:` line belong to `default`.
+    """
+    m = re.search(r"\*\*Actions:\*\*", body)
+    if m is None:
+        return None
+    states: dict[str, list[dict[str, str]]] = {}
+    state, header = "default", None
+    for line in body[m.end():].splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        if FIELD_START.match(line) or text.startswith("#"):
+            break
+        st = re.match(r"^(?:[-*]\s+)?State:\s*(\S+)", text)
+        if st:
+            state, header = st.group(1).lower(), None
+            continue
+        if not text.startswith("|"):
+            continue
+        cells = [c.strip() for c in text.strip("|").split("|")]
+        if all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+            continue
+        if header is None:
+            header = [c.lower() for c in cells]
+            continue
+        states.setdefault(state, []).append(dict(zip(header, cells)))
+    return states
+
+
+def _freq(row: dict[str, str]) -> str:
+    raw = row.get("frequency", "").lower()
+    for f in ACTION_FREQUENCIES:
+        if raw.startswith(f):
+            return f
+    return raw.split("(")[0].strip()
+
+
+def _depth(reached: str) -> int:
+    path = re.split(r";|\balso:", reached, maxsplit=1)[0].strip().lower()
+    if not path or path == "visible":
+        return 0
+    return path.count(">") + 1
+
+
+def check_action_map(screens: str, gated: bool) -> None:
+    def report(msg: str) -> None:
+        if gated:
+            err(msg)
+        else:
+            warn(msg + FORMAT_HINT)
+
+    for sid, body in sorted(screen_blocks(screens).items()):
+        if declared_status(body) == "retired":
+            continue
+        states = action_rows(body)
+        if states is None:
+            continue
+        purpose = v5_field(body, "Purpose") or ""
+        jobs = set(JOB_ID.findall(purpose))
+        if len(jobs) != 1:
+            report(f"[U096] screens.md: {sid}: Purpose must name exactly one job "
+                   f"(one verb phrase, one ST- or JTBD- id); found {len(jobs)}")
+        listed = refs(v5_field(body, "Scenarios") or "", "SCN")
+        if not listed:
+            report(f"[U099] screens.md: {sid}: Scenarios is empty, so the action "
+                   f"map has nothing to serve; list the SCN- ids this screen carries")
+        served: set[str] = set()
+        perf: set[str] = set()
+        for state, rows in states.items():
+            primaries = [r for r in rows if r.get("tier", "").lower() == "primary"]
+            bad = [r for r in primaries if _freq(r) == "rare"
+                   or "irreversible" in r.get("what it does", "").lower()]
+            if len(primaries) != 1 or bad:
+                detail = (f"{len(primaries)} primary rows" if len(primaries) != 1
+                          else f"'{bad[0].get('action', '?')}' is rare or irreversible")
+                report(f"[U097] screens.md: {sid} state {state}: expected exactly one "
+                       f"primary action that is not rare and not irreversible; "
+                       f"found {detail}")
+            counted = 0
+            for row in rows:
+                name = row.get("action", "?")
+                scen = row.get("scenario", "")
+                tier = row.get("tier", "").lower()
+                freq = _freq(row)
+                reached = row.get("reached by", "")
+                depth = _depth(reached)
+                is_exit = scen.strip().lower() == "exit"
+                served |= refs(scen, "SCN")
+                if not refs(scen, "SCN") and not is_exit:
+                    report(f"[U098] screens.md: {sid}: action \"{name}\" serves no "
+                           f"scenario; give it a SCN- id, mark it exit, or remove it")
+                uncounted = bool(UNCOUNTED_FLAGS.search(row.get("what it does", "")))
+                if tier in ("primary", "secondary") and not is_exit and not uncounted:
+                    counted += 1
+                allowed = {"every visit": (0, 0), "often": (0, 1),
+                           "rare": (1, 2)}.get(freq)
+                tier_ok = (tier == "hidden") == (depth >= 1)
+                if is_exit or uncounted:
+                    pass
+                elif tier not in ACTION_TIERS or allowed is None:
+                    report(f"[U101] screens.md: {sid}: \"{name}\" needs a tier "
+                           f"({', '.join(ACTION_TIERS)}) and a frequency "
+                           f"({', '.join(ACTION_FREQUENCIES)})")
+                elif depth > 2 or not allowed[0] <= depth <= allowed[1] or not tier_ok:
+                    report(f"[U101] screens.md: {sid}: \"{name}\" is {freq} at tier "
+                           f"{tier} and depth {depth}; allowed depth is "
+                           f"{allowed[0]} to {allowed[1]}, never over 2, and only "
+                           f"hidden rows sit behind a container")
+                path = re.split(r";|\balso:", reached, maxsplit=1)[0]
+                if GESTURE_WORDS.search(path) or (tier == "hidden" and '"' not in path):
+                    report(f"[U102] screens.md: {sid}: \"{name}\" is reachable only "
+                           f"by a gesture or by an unnamed path; add a visible "
+                           f"control or a quoted label path, and keep the gesture "
+                           f"after also:")
+                if freq in ("every visit", "often") and depth >= 1 \
+                        and GENERIC_OVERFLOW.search(path):
+                    report(f"[U103] screens.md: {sid}: {freq} action \"{name}\" is "
+                           f"behind a generic overflow; show it or put it in a "
+                           f"named container")
+                label = row.get("label or glyph", "")
+                if '"' not in label and "«" not in label:
+                    for glyph in re.findall(r"glyph:([a-z-]+)", label.lower()):
+                        if glyph not in ALLOWED_GLYPHS:
+                            report(f"[U104] screens.md: {sid}: \"{name}\" uses glyph "
+                                   f"\"{glyph}\" without a text label; allowed "
+                                   f"icon-only glyphs: {', '.join(sorted(ALLOWED_GLYPHS))}")
+                profile = row.get("profile", "").lower().strip()
+                if profile not in ACTION_PROFILES:
+                    report(f"[U105] screens.md: {sid}: \"{name}\" has no profile "
+                           f"({', '.join(ACTION_PROFILES)})")
+                elif tier == "primary" and profile == "standard":
+                    report(f"[U105] screens.md: {sid}: the primary \"{name}\" is "
+                           f"standard; it takes the frequent or performance profile")
+                if profile == "performance":
+                    perf.add(name.lower())
+            labels: dict[str, str] = {}
+            for row in rows:
+                for word in re.findall(r'"([^"]+)"|\u00ab([^\u00bb]+)\u00bb', row.get("label or glyph", "")):
+                    word = (word[0] or word[1]).strip().lower()
+                    other = labels.setdefault(word, row.get("action", "?"))
+                    if other != row.get("action", "?"):
+                        report(f"[U106] screens.md: {sid} state {state}: label \"{word}\" "
+                               f"names two actions (\"{other}\" and \"{row.get('action', '?')}\"); "
+                               f"within one screen a word names one action")
+            if counted > ACTION_BUDGET:
+                report(f"[U100] screens.md: {sid} state {state}: {counted} visible "
+                       f"actions, budget is {ACTION_BUDGET}; move the least frequent "
+                       f"to the hidden tier")
+        if len(perf) > ACTION_PERFORMANCE_CAP:
+            report(f"[U105] screens.md: {sid}: {len(perf)} performance actions; at "
+                   f"most {ACTION_PERFORMANCE_CAP} per screen")
+        for scn in sorted(listed - served):
+            report(f"[U099] screens.md: {sid}: scenario {scn} has no row in the "
+                   f"action map")
+
+
 def check_links(ux: Path) -> None:
     link_re = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
     for md in sorted(ux.rglob("*.md")):
@@ -1533,6 +1722,8 @@ def main() -> int:
     check_art_direction(flows, ux, project_root)
     if v5:
         check_v5(foundation, scenarios, screens, capabilities)
+    if (ux / "screens.md").exists():
+        check_action_map(screens, screens_format(ux / "screens.md") >= 2)
     check_links(ux)
 
     # --- Report ---

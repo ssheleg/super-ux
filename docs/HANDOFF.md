@@ -1,3 +1,22 @@
+## Unreleased: the action map and the novice walk (2026-11-23)
+
+- **Objective.** The operator's order of 2026-11-23 00:47 (request dcc725be): screens that are beautiful and
+  simple, grouped, with few actions, clear to a user new to the app but not stupid, and a pipeline that checks it.
+- **Siblings.** sheleg-design, super-ux and task-pipeline branches `feat/ui-mechanics-2026-11-23`, one PR each.
+  Research and doctrine: sheleg-design `docs/reports/2026-11-23-ui-guidelines/` (README, guidelines.md,
+  doctrine.md). Private material (captures, audits, trial plans of the two apps) stays in those apps' repos and
+  in `~/DATA/_artifacts/ui-mechanics-2026-11-23/` on the operator machine.
+- **Trial run.** Two app teams took the rules: the Dissy session builds wave-3 mockups of «Текст и бит» on the
+  target action map (due 2026-11-25), the PlaySing session builds the metronome after into 0.9.0 (estimate
+  2026-12-04). The after scorecards close when their captures arrive.
+- **Release.** Hold the merge and tags until the trial's first after captures are read (the operator: release
+  the skills after the trial, from 2026-11-27); then merge super-ux, sheleg-design, task-pipeline in that order,
+  tag, publish, bump the sshlg-skills pins and update the local install.
+- **Done here.** `scenario-format.md` *The action map*, lint U096 to U106 with fixtures, templates
+  (screens, test panel with the Novice walk), BP-049 to BP-051, ux-flows, ux-foundation, ux-audit lines.
+  Gate: `npm test` exit 0 on the branch.
+- **Next task.** After the trial, merge and release as a minor version; then the sshlg-skills pin.
+
 ## v0.67.1: delegated mode, task-pipeline handoff, seeds without the em dash (2026-11-11)
 
 - **Objective.** Close the super-ux findings of the family audit of 2026-11-11 (operator

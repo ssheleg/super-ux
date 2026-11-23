@@ -483,21 +483,21 @@ restates a figure from it, because it states none.
 
 #### BP-049: Primary actions in the thumb zone
 - **Do:** put primary destinations and actions in a bottom tab bar (3–5 items, icon + label); keep destructive/rare actions out of the easy-reach zone.
-- **Why:** one-handed grip reaches bottom-center comfortably, top corners poorly (Hoober's grip research); bottom placement cuts interaction cost.
+- **Why:** people reach the whole screen and lose accuracy at the edges and corners (Hoober's grip research: about 7 mm targets at the centre, about 12 mm in the corners); bottom placement cuts interaction cost. The popular thumb-zone chart is not a reason to hide a top control: the checkable form is sheleg-design UIM-20 (`MOBILE_SURFACES.md`, *Control profiles and spacing*).
 - **Apply when:** any mobile app navigation or primary-action placement.
 - **Tags:** mobile, navigation, friction-reduction, engagement
 - **Source:** [NNg]/[M3]/[HIG]
 
 #### BP-050: Tap targets — platform sizes, WCAG floor
 - **Do:** 44×44 pt (iOS) / 48×48 dp (Android) for interactive elements; never below 24×24 CSS px or equivalent spacing (WCAG 2.2 SC 2.5.8, Level AA).
-- **Why:** small targets cause mis-taps and are an accessibility failure, not a style choice.
+- **Why:** small targets cause mis-taps and are an accessibility failure, not a style choice. Above the floor, an action map row names its profile (standard 44 pt, frequent 60 pt, performance 72 pt for controls used with an instrument in the hands): sheleg-design UIM-18.
 - **Apply when:** every interactive element; audits check the floor.
 - **Tags:** mobile, web, accessibility, friction-reduction
 - **Source:** [HIG]/[M3]/[WCAG]
 
 #### BP-051: Never gesture-only for critical actions
 - **Do:** gestures are accelerators, not the only path: every gesture-reachable action has a visible alternative; gesture hints (chevrons, swipe affordances) where gestures matter.
-- **Why:** gestures are invisible — users must know, remember, and execute them; hidden-only interactions kill discoverability.
+- **Why:** gestures are invisible — users must know, remember, and execute them; hidden-only interactions kill discoverability. On a screen with an action map, `U102` enforces it: a gesture follows `also:` beside a visible path.
 - **Apply when:** swipe-to-delete, pull-to-refresh, long-press menus, custom gestures.
 - **Tags:** mobile, navigation, friction-reduction, accessibility
 - **Source:** [NNg]

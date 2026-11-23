@@ -166,7 +166,7 @@ Per story (or tight cluster):
    (or updates) its `SCR-NN` entry — its states (default, loading, empty,
    error, offline, long-content, keyboard-up, first-run: those that apply)
    with per-state behavior, its axes (viewport, theme, text, locale; the
-   Design system default unless it differs), elements with one primary action, coverage,
+   Design system default unless it differs), the action map (one primary), coverage,
    scenarios, resources; the flow's Screens-traversed table just lists the
    SCR-IDs and states it uses. Fill the Design system block once (Figma
    library, token/component/asset locations). Choose each element's control

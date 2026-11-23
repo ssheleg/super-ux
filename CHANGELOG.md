@@ -1,3 +1,20 @@
+## Unreleased: the action map (U096 to U106) and the novice in the test panel
+
+Operator order 2026-11-23 00:47 Europe/Warsaw (Telegram, relayed by the Fabric CEO, request dcc725be): simple, grouped screens with few actions that a user new to the app understands, checked by the pipeline. Research: https://github.com/ssheleg/sheleg-design-skill/tree/main/docs/reports/2026-11-23-ui-guidelines
+
+- **The action map.** A screen's `Actions:` table (action, label or glyph, what it does with flags, scenario,
+  frequency, tier, reached by, profile) replaces `Elements:`, which stays readable. `scenario-format.md`
+  *The action map* holds the counting rules (at most five counted visible actions, one primary), depth by
+  frequency (never over two), no essential action behind a generic "More", the allowed icon-only glyphs,
+  variants (preview in place, compare, switch back), words before count, the consequence line, one change
+  one receipt one undo, now and next (UIM-01 to UIM-14, UIM-29, UIM-31 to UIM-34).
+- **`ux_lint.py` U096 to U106**, read only on screens that carry `Actions:` (warnings on format 1, errors on
+  format 2); each code has a firing case and a clean twin in `test/ux_lint_test.py`.
+- **Test panel.** The `needs` line opens with `novice`, `regular` or `expert`; at least two novices and one
+  expert; the *Novice walk* (first ten seconds, find it, state) with its pass rules and findings.
+- BP-049, BP-050 and BP-051 link to the checkable forms; ux-flows registers the action map; ux-audit counts
+  overload findings on a failing map as scenario findings.
+
 ## 0.67.1 (2026-11-11): delegated mode, task-pipeline handoff, seeds without the em dash
 
 From the family audit of 2026-11-11.
