@@ -1459,7 +1459,7 @@ if "contract v5" not in said or "v4 -> v5" in said or "problem" in said:
     failures.append(f"doctor: a v5 chain reports v5 with no migration; it said: {said!r}")
 
 
-# --- The action map, U096..U105 (UIM rules, 2026-11-23) ---
+# --- The action map, U096..U106 (UIM rules, 2026-11-23) ---
 # Each code fires on one planted defect in an otherwise clean map and stays
 # silent on the clean map; a screen without `Actions:` is never read.
 AM_HEAD = ("  | Action | Label or glyph | What it does | Scenario | Frequency | Tier | "
@@ -1544,8 +1544,40 @@ case("U106 one label for two actions",
      warns={"U106"})
 silent("U100 a content-position row is not counted",
        amap(AM_ROWS + ['| Move the playhead | lyric lines | position: sets where play starts | SCN-001 | every visit (assumed) | secondary | visible | standard |',
-                       '| Return to the current line | "Back to the line" | recovery chip | SCN-001 | rare (assumed) | secondary | visible | standard |']),
+                       '| Return to the current line | "Back to the line" | `recovery` chip | SCN-001 | rare (assumed) | secondary | visible | standard |']),
        {"U100", "U101"})
+# Review round 1 (2026-11-23, a blind unit reader's plants): each was a false
+# fire or a miss, and each is pinned here.
+RU_HIDDEN = '| Выбрать звук | «Звук» | выбор | SCN-002 | rare (assumed) | hidden | «Ритм» > «Звук» | frequent |'
+silent("U102 a Russian path in guillemets is a named path",
+       amap(AM_ROWS[:4] + [RU_HIDDEN] + AM_ROWS[5:], fmt=2), AM_CODES)
+silent("action map: a pipe inside backticks stays in its cell",
+       amap(AM_ROWS[:3] + [AM_ROWS[3].replace("opens the sheet", "applies `a|b` to the list")] + AM_ROWS[4:]),
+       AM_CODES)
+case("U102 a path that is only an accelerator",
+     amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', "also: long press")] + AM_ROWS[5:]),
+     warns={"U102"})
+case("U100 prose words do not switch counting off",
+     amap(AM_ROWS + ['| Move card | "Move" | moves the card to a new position | SCN-002 | often (assumed) | secondary | visible | frequent |',
+                     '| Tempo help | "Help" | opens a hint about tempo | SCN-002 | often (assumed) | secondary | visible | frequent |']),
+     warns={"U100"})
+silent("U103 an ellipsis inside a named label is not a generic overflow",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace("rare (assumed)", "often (assumed)").replace('"4/4, Wood" > "Sound"', '"Export…"')] + AM_ROWS[5:]),
+       {"U103", "U102"})
+silent("U102 a gesture word inside a quoted label is a label",
+       amap(AM_ROWS[:4] + [AM_ROWS[4].replace('"4/4, Wood" > "Sound"', '"On hold" > "Volume"')] + AM_ROWS[5:]),
+       {"U102"})
+silent("U101 visible with a note is depth 0",
+       amap([AM_ROWS[0].replace("| visible |", "| visible (toolbar) |")] + AM_ROWS[1:]), {"U101"})
+TWO_STATES = ("  State: count in\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n"
+              "  **State:** count down\n" + AM_HEAD + "  " + AM_ROWS[0] + "\n")
+silent("action map: two multi-word states, one bold, each with one primary",
+       {"screens.md": amap()["screens.md"].replace("- **Scenarios:**", TWO_STATES + "- **Scenarios:**")},
+       {"U097", "U098", "U101", "U105"})
+case("U106 one label for two actions in two states",
+     {"screens.md": amap()["screens.md"].replace("- **Scenarios:**",
+      "  state: running\n" + AM_HEAD + '  | Stop the click | "Tap tempo" | stops | SCN-001 | every visit (assumed) | primary | visible | performance |\n' + "- **Scenarios:**")},
+     warns={"U106"})
 case("U100 is an error on a format-2 registry",
      {**amap(AM_ROWS + ['| Mute | "Sound" | mutes | SCN-002 | often (assumed) | secondary | visible | frequent |',
                         '| Accent | "Accent" | accents | SCN-002 | often (assumed) | secondary | visible | frequent |'],

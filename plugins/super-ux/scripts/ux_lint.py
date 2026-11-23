@@ -1317,13 +1317,34 @@ ALLOWED_GLYPHS = {"back", "close", "play", "pause", "stop", "plus", "minus",
                   "search", "share", "trash", "gear", "ellipsis", "undo", "redo"}
 GESTURE_WORDS = re.compile(r"\b(long[- ]press|double[- ]tap|swipe|pinch|drag|"
                            r"hold|shake|two[- ]finger)\b", re.IGNORECASE)
-GENERIC_OVERFLOW = re.compile(r"(\"more\"|\bmore\b|…|\.\.\.|ellipsis|•••)",
-                              re.IGNORECASE)
+# A container whose whole label is generic: "More", an ellipsis, three dots.
+GENERIC_LABELS = {"more", "ещё", "еще", "…", "...", "⋯", "•••",
+                  "glyph:ellipsis", "ellipsis"}
+QUOTED = re.compile(r'"[^"]*"|«[^»]*»')
 JOB_ID = re.compile(r"\b(?:JTBD|ST)-\d+\b")
 # Rows that are not counted toward the budget (counting rules 9 to 11): placing a
 # cursor or playhead by tapping content, a transient recovery chip or receipt,
-# and a hint whose buttons repeat existing rows. They still need a row.
-UNCOUNTED_FLAGS = re.compile(r"\b(position|recovery|receipt|hint)\b", re.IGNORECASE)
+# and a hint whose buttons repeat existing rows. They still need a row. The flag
+# is written as `position` in backticks or as a leading `position:`, never read
+# out of ordinary prose ("moves the card to a new position").
+UNCOUNTED_FLAGS = re.compile(r"`(position|recovery|receipt|hint)`|^\s*(position|recovery|receipt|hint)\s*:",
+                             re.IGNORECASE)
+STATE_LINE = re.compile(r"^(?:[-*]\s+)?(?:\*\*)?state:(?:\*\*)?\s*(.+?)\s*$", re.IGNORECASE)
+
+
+def _cells(text: str) -> list[str]:
+    """Split a table row on `|` outside backtick spans."""
+    out, cur, tick = [], [], False
+    for ch in text.strip().strip("|"):
+        if ch == "`":
+            tick = not tick
+        if ch == "|" and not tick:
+            out.append("".join(cur).strip())
+            cur = []
+        else:
+            cur.append(ch)
+    out.append("".join(cur).strip())
+    return out
 
 
 def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
@@ -1341,15 +1362,15 @@ def action_rows(body: str) -> dict[str, list[dict[str, str]]] | None:
         text = line.strip()
         if not text:
             continue
+        st = STATE_LINE.match(text)
+        if st:
+            state, header = st.group(1).strip("*").strip().lower(), None
+            continue
         if FIELD_START.match(line) or text.startswith("#"):
             break
-        st = re.match(r"^(?:[-*]\s+)?State:\s*(\S+)", text)
-        if st:
-            state, header = st.group(1).lower(), None
-            continue
         if not text.startswith("|"):
             continue
-        cells = [c.strip() for c in text.strip("|").split("|")]
+        cells = _cells(text)
         if all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
             continue
         if header is None:
@@ -1367,11 +1388,22 @@ def _freq(row: dict[str, str]) -> str:
     return raw.split("(")[0].strip()
 
 
+def _path(reached: str) -> tuple[str, str]:
+    """(the path before any accelerator, the accelerators after `also:`)."""
+    parts = re.split(r";|\balso:", reached, maxsplit=1)
+    return parts[0].strip(), (parts[1].strip() if len(parts) > 1 else "")
+
+
+def _segments(path: str) -> list[str]:
+    return [seg.strip() for seg in re.split(r">|›", path) if seg.strip()]
+
+
 def _depth(reached: str) -> int:
-    path = re.split(r";|\balso:", reached, maxsplit=1)[0].strip().lower()
-    if not path or path == "visible":
+    """Containers that must be opened; a path lists only those (no group headings)."""
+    path, _ = _path(reached)
+    if path.lower().startswith("visible"):
         return 0
-    return path.count(">") + 1
+    return len(_segments(path))
 
 
 def check_action_map(screens: str, gated: bool) -> None:
@@ -1398,6 +1430,7 @@ def check_action_map(screens: str, gated: bool) -> None:
                    f"map has nothing to serve; list the SCN- ids this screen carries")
         served: set[str] = set()
         perf: set[str] = set()
+        labels: dict[str, str] = {}
         for state, rows in states.items():
             primaries = [r for r in rows if r.get("tier", "").lower() == "primary"]
             bad = [r for r in primaries if _freq(r) == "rare"
@@ -1416,6 +1449,8 @@ def check_action_map(screens: str, gated: bool) -> None:
                 freq = _freq(row)
                 reached = row.get("reached by", "")
                 depth = _depth(reached)
+                path, accel = _path(reached)
+                bare = QUOTED.sub("", path)
                 is_exit = scen.strip().lower() == "exit"
                 served |= refs(scen, "SCN")
                 if not refs(scen, "SCN") and not is_exit:
@@ -1438,24 +1473,33 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"{tier} and depth {depth}; allowed depth is "
                            f"{allowed[0]} to {allowed[1]}, never over 2, and only "
                            f"hidden rows sit behind a container")
-                path = re.split(r";|\balso:", reached, maxsplit=1)[0]
-                if GESTURE_WORDS.search(path) or (tier == "hidden" and '"' not in path):
+                gesture_only = GESTURE_WORDS.search(bare) or (not path and GESTURE_WORDS.search(accel))
+                unnamed = tier == "hidden" and not QUOTED.search(path)
+                if gesture_only or unnamed:
                     report(f"[U102] screens.md: {sid}: \"{name}\" is reachable only "
                            f"by a gesture or by an unnamed path; add a visible "
                            f"control or a quoted label path, and keep the gesture "
                            f"after also:")
-                if freq in ("every visit", "often") and depth >= 1 \
-                        and GENERIC_OVERFLOW.search(path):
+                generic = any(seg.strip('"«» ').lower() in GENERIC_LABELS
+                              for seg in _segments(path))
+                if freq in ("every visit", "often") and depth >= 1 and generic:
                     report(f"[U103] screens.md: {sid}: {freq} action \"{name}\" is "
                            f"behind a generic overflow; show it or put it in a "
                            f"named container")
                 label = row.get("label or glyph", "")
-                if '"' not in label and "«" not in label:
+                if not QUOTED.search(label):
                     for glyph in re.findall(r"glyph:([a-z-]+)", label.lower()):
                         if glyph not in ALLOWED_GLYPHS:
                             report(f"[U104] screens.md: {sid}: \"{name}\" uses glyph "
                                    f"\"{glyph}\" without a text label; allowed "
                                    f"icon-only glyphs: {', '.join(sorted(ALLOWED_GLYPHS))}")
+                for quoted in QUOTED.findall(label):
+                    word = quoted.strip('"«» ').lower()
+                    other = labels.setdefault(word, name)
+                    if other != name:
+                        report(f"[U106] screens.md: {sid}: label \"{word}\" names two "
+                               f"actions (\"{other}\" and \"{name}\"); within one "
+                               f"screen a word names one action")
                 profile = row.get("profile", "").lower().strip()
                 if profile not in ACTION_PROFILES:
                     report(f"[U105] screens.md: {sid}: \"{name}\" has no profile "
@@ -1465,15 +1509,6 @@ def check_action_map(screens: str, gated: bool) -> None:
                            f"standard; it takes the frequent or performance profile")
                 if profile == "performance":
                     perf.add(name.lower())
-            labels: dict[str, str] = {}
-            for row in rows:
-                for word in re.findall(r'"([^"]+)"|\u00ab([^\u00bb]+)\u00bb', row.get("label or glyph", "")):
-                    word = (word[0] or word[1]).strip().lower()
-                    other = labels.setdefault(word, row.get("action", "?"))
-                    if other != row.get("action", "?"):
-                        report(f"[U106] screens.md: {sid} state {state}: label \"{word}\" "
-                               f"names two actions (\"{other}\" and \"{row.get('action', '?')}\"); "
-                               f"within one screen a word names one action")
             if counted > ACTION_BUDGET:
                 report(f"[U100] screens.md: {sid} state {state}: {counted} visible "
                        f"actions, budget is {ACTION_BUDGET}; move the least frequent "
@@ -1484,7 +1519,6 @@ def check_action_map(screens: str, gated: bool) -> None:
         for scn in sorted(listed - served):
             report(f"[U099] screens.md: {sid}: scenario {scn} has no row in the "
                    f"action map")
-
 
 def check_links(ux: Path) -> None:
     link_re = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")

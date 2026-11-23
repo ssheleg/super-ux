@@ -514,6 +514,7 @@ one entry per screen.
   | Action | Label or glyph | What it does | Scenario | Frequency | Tier | Reached by | Profile |
   |---|---|---|---|---|---|---|---|
   | Start | "Get started" | opens the first step | SCN-001 | every visit (assumed) | primary | visible | frequent |
+  | Read the terms | "Terms" | opens the terms sheet | SCN-002 | rare (assumed) | hidden | "About" | standard |
 - **States:**
   | State | Trigger | Figma frame | Story | Behavior |
   |-------|---------|-------------|-------|----------|
@@ -1151,7 +1152,7 @@ spacing, grouping) is sheleg-design's `MOBILE_SURFACES.md`.
 | Scenario | One or more `SCN-` ids, or `exit` for Back, Close, Cancel, Undo and Redo |
 | Frequency | `every visit`, `often` or `rare`, then `(data)` or `(assumed)` |
 | Tier | `primary`, `secondary` or `hidden` |
-| Reached by | `visible`, or a path of quoted labels (`"Rhythm and sound" > "Meter"`); depth is the number of containers that must be opened (a group heading inside an open sheet is not one; a segment or "Show more" that hides options is). Gestures follow `also:` as accelerators, never as the only path |
+| Reached by | `visible`, or a path of the quoted labels of the containers that must be opened, in order (`"Rhythm and sound" > "Show more"`); depth is the number of segments. List only containers: a group heading inside an open sheet is not one, a segment or "Show more" that hides options is. Gestures follow `also:` as accelerators, never as the only path |
 | Profile | `standard`, `frequent` or `performance` (sheleg-design, UIM-18) |
 
 A `State: <name>` line before a second table gives the rows of another state,
@@ -1286,6 +1287,6 @@ here — the meaning of a rule never lives only in its source.
 | U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More" or ellipsis |
 | U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set |
 | U105 | W / E (format 2) | a row has no profile, the primary is `standard`, or more than three actions are `performance` |
-| U106 | W / E (format 2) | within one state a quoted label names two different actions |
+| U106 | W / E (format 2) | within one screen (any state) a quoted label names two different actions |
 | U077 | W | the vision alignment rule installed in a project's instruction file differs from the one this version ships |
 | U076 | W | `vision.md` is still the seeded template: every section is a heading with nothing under it, so the alignment rule is arbitrating against a blank document |
