@@ -239,7 +239,7 @@ demand English prose for the parser's sake.
 ## 9. The alignment test
 ```
 
-A Russian vision writes `## 6. Анти-видение` and passes; a vision that OMITS
+A Russian vision writes «`## 6. Анти-видение`» and passes; a vision that OMITS
 section 6 fails (`U030`), whatever language the others are in — the id is the
 number, the language is free.
 
@@ -1209,7 +1209,7 @@ not held against depth (a gear that holds only rare settings stays visible).
 label may hold an apostrophe. A row with neither a quoted word of three or more
 characters nor an allowed glyph shows nothing a person can read (`U104`): a
 single letter or a two-letter abbreviation is a glyph; short real words
-(OK, Go, On, Up, Да, Нет) are words. Whether a longer
+(OK, Go, On, Up, «Да», «Нет») are words. Whether a longer
 abbreviation or a term ("BPM") reads to a novice is the Novice walk's question
 (finding `label`), not the linter's. A menu button keeps its menu mark
 (a chevron) at every width, or it reads as a tab. A `hint`, `receipt` or
@@ -1326,7 +1326,7 @@ here — the meaning of a rule never lives only in its source.
 | U100 | W / E (format 2) | a state shows more than five counted visible actions, or more than three visible exits |
 | U101 | W / E (format 2) | a row's tier or depth does not fit its frequency, or its path is deeper than two |
 | U102 | W / E (format 2) | a row is reached only by a gesture, or a `hidden` row has no quoted label path |
-| U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More", "Ещё" or ellipsis (with or without a trailing "…") |
+| U103 | W / E (format 2) | an `every visit` or `often` row sits behind a generic "More", «Ещё» or ellipsis (with or without a trailing "…") |
 | U104 | W / E (format 2) | an icon-only label uses a glyph outside the allowed set, or a visible row shows no quoted word of three or more characters |
 | U105 | W / E (format 2) | a row has no profile, the primary is `standard`, or more than three actions are `performance` |
 | U106 | W / E (format 2) | a quoted label names two different actions among the visible rows of the screen (any state) or inside one container; `hint`, `receipt` and `recovery` rows may repeat labels |

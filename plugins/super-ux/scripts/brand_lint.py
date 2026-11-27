@@ -1966,7 +1966,7 @@ DASH_CONJ_RE = re.compile(
 )
 
 # Locales whose orthography requires a dash between subject and predicate
-# when the verb is absent (<<Москва — столица>>). Deliberately short: a
+# when the verb is absent («Москва — столица»). Deliberately short: a
 # language belongs here only when the construction is a rule of its
 # orthography rather than a stylistic option, and a wrong entry silently
 # switches the strict check off for a whole language.

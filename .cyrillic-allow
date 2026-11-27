@@ -1,0 +1,13 @@
+# English-docs scanner exceptions (order 72185b98). One glob per line; the comment above
+# each glob is its reason. Dated records stay as written until wave 4 (translation, or an
+# English summary on top).
+# Dated record: release history (wave 4).
+CHANGELOG.md
+# Dated records: backlog, specs, plans and verification receipts (wave 4).
+docs/evidence/**
+# Dated records: research corpora and landing studies, many quoting Russian sources (wave 4).
+docs/research/**
+# Generated output of graphify, rebuilt from the sources; never edited by hand.
+graphify-out/**
+# Test input: a Russian-language vision document the linter must accept (user content, not docs).
+test/audit_regressions/fix-ux-07.01.py

@@ -1,6 +1,6 @@
 ---
 name: ux-foundation
-description: 'Use when defining who uses a product and why (docs/ux/foundation.md): personas, actors, JTBD, journeys, stories, capabilities, churn. Triggers: "jtbd" / "джобы", "customer journey" / "карта пути", "персоны", "ретеншн", "отток". Not for flows or screens (ux-flows).'
+description: 'Use when defining who uses a product and why (docs/ux/foundation.md): personas, actors, JTBD, journeys, stories, capabilities, churn. Triggers: "jtbd" / «джобы», "customer journey" / «карта пути», «персоны», «ретеншн», «отток». Not for flows or screens (ux-flows).'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install. The Figma on/off choice recorded in step 5 needs no tooling of its own - the Figma MCP matters downstream, in ux-flows.
 license: MIT
 ---
@@ -30,7 +30,7 @@ chain and say so, never drop it silently.
 
 The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
 
-"jtbd" / "джобы", "customer journey" / "карта пути", "user story" / "юзер стори", "personas" / "персоны", "who is this for", "user retention" / "ретеншн", "churn" / "отток", new product discovery.
+"jtbd" / «джобы», "customer journey" / «карта пути», "user story" / «юзер стори», "personas" / «персоны», "who is this for", "user retention" / «ретеншн», "churn" / «отток», new product discovery.
 
 ## Quality bars (non-negotiable)
 

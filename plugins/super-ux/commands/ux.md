@@ -56,23 +56,23 @@ Routing table (user's words → action from the menu below):
 
 | User says (any language) | Route to |
 |---|---|
-| "new product", "from scratch" / "стартуем проект", "с нуля" | 1 then 2 then 4 then 6 (vision first, then the chain) |
-| "what are we even building", "product vision", "where is this going" / "видение", "что мы вообще строим", "куда идём" | 1 |
-| "new feature", "I want to add X" / "новая фича", "хочу добавить X" | 7 (validate idea vs chain — and vs the anti-vision if `vision.md` exists) then 4/6 for the new parts |
-| "the UX is bad", "clunky", improve, redesign / "UX плохой", "неудобно" | 5 (Improve) |
-| "agents should be able to do it", "AI-native", "API for agents", "every function for agents" / "доступно агентам", "агенты должны уметь", "API для агентов" | 3 (capabilities: actors and `CAP-NN` rows in `capabilities.md`, contract v5), then 4 for the human lanes only; the agent surface itself is built with agent-stack |
-| "check everything works", audit, "run the scenarios" / "проверь что всё работает", "прогони по сценариям" | 8 |
-| "what is missing", gaps, coverage / "чего не хватает" | 9 |
-| "what do best practices say" / "как лучше по практикам" | 10 |
-| "the copy is inconsistent", "tone of voice", "how should this sound" / "текстовка разная везде", "тон оф войс" | 11 |
-| "write the button/error/landing/post" / "напиши текст", "перепиши", "заголовок", "лендинг" | 12 |
-| "does the copy match the brand" / "проверь тексты по бренду" | 13 |
-| "what to fix first", plan / "что чинить в первую очередь", "план" | 14 |
-| "the funnel", "pricing page", "checkout", "we need to make money from this" / "воронка", "монетизация", "прайсинг", "оплата" | 4 — a funnel is a flow with screens. The purchase surface in `foundation.md` routes the practice set (`BP-116..123` web, `BP-124..129` web2app); then 12 for its copy |
-| "design it", "how should it look", "the visuals", "pick a style" / "дизайн", "как это выглядит", "стиль", "визуал" | 4, with the visual identity settled first — the **sheleg-design** companion picks the style pack and `screens.md` → Design system records it. Not a taste conversation per screen |
-| "will Google/ChatGPT find it", "SEO", "the landing must be findable" / "SEO", "чтобы находилось", "поисковики", "нейронки" | 4 — the `Web surface:` block is designed with the screen; the **seo-aeo-audit** companion checks the live page afterwards. Never the other way round |
-| "mobile app", "iOS/Android", "which platform" / "мобильное приложение", "айос", "андроид", "приложение" | 2 first — `Platform` in `foundation.md` is what routes `BP-049..054` and the platform component rules; then 4 |
-| "don't know", "just take a look" / "просто посмотри" | run 1–3 of Inspect, recommend from state |
+| "new product", "from scratch" / «стартуем проект», «с нуля» | 1 then 2 then 4 then 6 (vision first, then the chain) |
+| "what are we even building", "product vision", "where is this going" / «видение», «что мы вообще строим», «куда идём» | 1 |
+| "new feature", "I want to add X" / «новая фича», «хочу добавить X» | 7 (validate idea vs chain — and vs the anti-vision if `vision.md` exists) then 4/6 for the new parts |
+| "the UX is bad", "clunky", improve, redesign / «UX плохой», «неудобно» | 5 (Improve) |
+| "agents should be able to do it", "AI-native", "API for agents", "every function for agents" / «доступно агентам», «агенты должны уметь», «API для агентов» | 3 (capabilities: actors and `CAP-NN` rows in `capabilities.md`, contract v5), then 4 for the human lanes only; the agent surface itself is built with agent-stack |
+| "check everything works", audit, "run the scenarios" / «проверь что всё работает», «прогони по сценариям» | 8 |
+| "what is missing", gaps, coverage / «чего не хватает» | 9 |
+| "what do best practices say" / «как лучше по практикам» | 10 |
+| "the copy is inconsistent", "tone of voice", "how should this sound" / «текстовка разная везде», «тон оф войс» | 11 |
+| "write the button/error/landing/post" / «напиши текст», «перепиши», «заголовок», «лендинг» | 12 |
+| "does the copy match the brand" / «проверь тексты по бренду» | 13 |
+| "what to fix first", plan / «что чинить в первую очередь», «план» | 14 |
+| "the funnel", "pricing page", "checkout", "we need to make money from this" / «воронка», «монетизация», «прайсинг», «оплата» | 4 — a funnel is a flow with screens. The purchase surface in `foundation.md` routes the practice set (`BP-116..123` web, `BP-124..129` web2app); then 12 for its copy |
+| "design it", "how should it look", "the visuals", "pick a style" / «дизайн», «как это выглядит», «стиль», «визуал» | 4, with the visual identity settled first — the **sheleg-design** companion picks the style pack and `screens.md` → Design system records it. Not a taste conversation per screen |
+| "will Google/ChatGPT find it", "SEO", "the landing must be findable" / "SEO", «чтобы находилось», «поисковики», «нейронки» | 4 — the `Web surface:` block is designed with the screen; the **seo-aeo-audit** companion checks the live page afterwards. Never the other way round |
+| "mobile app", "iOS/Android", "which platform" / «мобильное приложение», «айос», «андроид», «приложение» | 2 first — `Platform` in `foundation.md` is what routes `BP-049..054` and the platform component rules; then 4 |
+| "don't know", "just take a look" / «просто посмотри» | run 1–3 of Inspect, recommend from state |
 
 Three layers sit outside the chain and are reached only from here, so never
 answer from the chain alone: **vision** (what the product is and refuses to
@@ -210,6 +210,6 @@ on the state: no vision and the user is starting or steering the product →
 1; no foundation → 2; stories without flows → 4; flows without scenarios →
 6; drafts pending → validate/review; never audited or stale → 8; user-facing
 text with no `docs/brand/` → 11; open findings → 14; user said "the UX is
-bad" / "UX плохой" → 5; user said the copy is inconsistent → 11.
+bad" / «UX плохой» → 5; user said the copy is inconsistent → 11.
 
 Additional context from the user: $ARGUMENTS

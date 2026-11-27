@@ -17,13 +17,13 @@ Never ask the user to choose between skills or files.
 
 | User says (any language) | Route to |
 |---|---|
-| "we have no tone of voice", "define how we sound" / "нужен тон оф войс" | 1 (Init) |
-| "write X", "post for X", "landing copy" / "напиши текст", "пост" | 5 (Write) |
-| "the copy is inconsistent" / "текстовка везде разная" | 4 then 6 |
-| "check everything" / "проверь всё" | 4 (lint) then 6 (audit) |
-| "we changed pricing / renamed a tier" / "переименовали тариф" | 3 (Update) |
-| "this sounds like AI" / "звучит как нейросеть" | 5, Humanize mode |
-| "don't know" / "просто посмотри" | run 1–3 of Inspect, recommend from state |
+| "we have no tone of voice", "define how we sound" / «нужен тон оф войс» | 1 (Init) |
+| "write X", "post for X", "landing copy" / «напиши текст», «пост» | 5 (Write) |
+| "the copy is inconsistent" / «текстовка везде разная» | 4 then 6 |
+| "check everything" / «проверь всё» | 4 (lint) then 6 (audit) |
+| "we changed pricing / renamed a tier" / «переименовали тариф» | 3 (Update) |
+| "this sounds like AI" / «звучит как нейросеть» | 5, Humanize mode |
+| "don't know" / «просто посмотри» | run 1–3 of Inspect, recommend from state |
 
 ## 1. Inspect state
 

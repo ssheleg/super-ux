@@ -1,6 +1,6 @@
 ---
 name: ux-audit
-description: 'Use when verifying the codebase against the UX scenario base (batched, evidence-backed, report in docs/ux/audits/). Triggers: "ux audit" / "UX-аудит", "run the scenarios" / "прогони по сценариям". Not for a whole-project audit (project-audit) or editing scenarios (ux-scenarios).'
+description: 'Use when verifying the codebase against the UX scenario base (batched, evidence-backed, report in docs/ux/audits/). Triggers: "ux audit" / «UX-аудит», "run the scenarios" / «прогони по сценариям». Not for a whole-project audit (project-audit) or editing scenarios (ux-scenarios).'
 compatibility: Any agent that can search the codebase and cite file:line evidence. The linters it reads (python3 docs/ux/lint.py and python3 docs/brand/lint.py, seeded by this pack) need python3 3.9+, stdlib only. With the Figma MCP connected the frames themselves are confirmed; without it only the recorded frame links are checked, and that limit is stated in the report.
 license: MIT
 ---
@@ -53,7 +53,7 @@ nodes/edges are findings on the traced scenarios.
 
 The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
 
-"ux audit" / "UX-аудит", "run the scenarios" / "прогони по сценариям", "check all buttons/states/errors", pre-release UX verification, scenario compliance check.
+"ux audit" / «UX-аудит», "run the scenarios" / «прогони по сценариям», "check all buttons/states/errors", pre-release UX verification, scenario compliance check.
 
 ## Copy scope (`copy`)
 

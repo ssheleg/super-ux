@@ -41,17 +41,17 @@ JavaScript shell; a summary of the raw HTML misreads it):
   table said 50).
 - **RuStore disagrees with itself on the name.** The
   [publication help page](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/app-publication)
-  says "не более 30 символов"; the
+  says «не более 30 символов»; the
   [ASO recommendations](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/aso-recommendations)
-  say "до 50 символов", and the
+  say «до 50 символов», and the
   [publishing API](https://www.rustore.ru/help/en/work-with-rustore-api/api-upload-publication-app/create-draft-version)
   accepts `appName` up to 50. Write the name to 30: it passes every page.
   The same API gives short 80, full 4000, `whatsNew` 5000; the help page gives
   up to 5 search tags.
 - [RuStore app requirements §6.4](https://www.rustore.ru/help/developers/publishing-and-verifying-apps/requirement-apps):
   the name, descriptions and version history must not carry clickbait —
-  "лучший", "единственный", "запрещённый", "секретный", "самый" and the like —
-  and "официальный" must be provable. A name or listing that breaks this can be
+  «лучший», «единственный», «запрещённый», «секретный», «самый» and the like —
+  and «официальный» must be provable. A name or listing that breaks this can be
   refused at moderation.
 - [Meta Horizon app metadata](https://developers.meta.com/horizon/resources/publish-app-metadata/)
   (updated 2025-08-20): Name 40, Short description 500, Long description 1500.
