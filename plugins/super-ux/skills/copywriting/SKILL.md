@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: 'Use when writing text a user reads: UI strings, landings, store listings, posts, ads, email. Triggers: "напиши текст", "App Store description" / "описание для App Store", "video hook" / "хук ролика". Not for the voice (brand-voice) or look (sheleg-design). Refusal phrase "no brand" / «без бренда».'
+description: 'Use when writing text a user reads: UI strings, landings, store listings, posts, ads, email. Triggers: «напиши текст», "App Store description" / «описание для App Store», "video hook" / «хук ролика». Not for the voice (brand-voice) or look (sheleg-design). Refusal phrase "no brand" / «без бренда».'
 compatibility: Any agent with file read/write. The closing lint (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
@@ -39,7 +39,7 @@ and facts stay untouched in the same pass.
 
 The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
 
-"write copy" / "напиши текст", "App Store description" / "описание для App Store", "store listing" / "описание в сторе", "rewrite this" / "перепиши", "headline" / "заголовок", "CTA" / "кнопка", "microcopy" / "микрокопия", "error text" / "текст ошибки", "this sounds like AI" / "звучит как нейросеть", "post for X" / "пост в твиттер", "reel script" / "сценарий рилса", "video hook" / "хук ролика", "build a landing page" / "сделай лендинг" (the copy for it; the visual layer is sheleg-design's).
+"write copy" / «напиши текст», "App Store description" / «описание для App Store», "store listing" / «описание в сторе», "rewrite this" / «перепиши», "headline" / «заголовок», "CTA" / «кнопка», "microcopy" / «микрокопия», "error text" / «текст ошибки», "this sounds like AI" / «звучит как нейросеть», "post for X" / «пост в твиттер», "reel script" / «сценарий рилса», "video hook" / «хук ролика», "build a landing page" / «сделай лендинг» (the copy for it; the visual layer is sheleg-design's).
 
 ## References
 

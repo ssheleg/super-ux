@@ -276,7 +276,7 @@ delegated to sheleg-design, Code Connect upkeep, and routing words for
   `FIGMA_BRIDGE.md#token-tiers` resolve on its `main` only once
   sheleg-design PR #41 merges (the heading is on its head `532a6b2`).
 - The umbrella's selector cannot route the new phrases yet: "add a screen",
-  "добавь экран", "макеты", "App Store description", "описание для App Store"
+  «добавь экран», «макеты», "App Store description", «описание для App Store»
   return no route on `sshlg-skills` `origin/main`. Its completeness fixture will
   fail on the re-pin until `lib/triggers.js` gains them in the same change.
 - Next task: review the PR, then release per `CONTRIBUTING.md` → Releasing.

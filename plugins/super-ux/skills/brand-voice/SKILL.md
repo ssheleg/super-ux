@@ -1,6 +1,6 @@
 ---
 name: brand-voice
-description: 'Use when defining or checking how a product speaks: tone of voice, terminology, canonical facts, register. Triggers: "tone of voice" / "тон оф войс", "brand voice" / "голос бренда", "брендбук", "наша терминология". Not for writing the text (copywriting). Refusal phrase "no brand" / «без бренда».'
+description: 'Use when defining or checking how a product speaks: tone of voice, terminology, canonical facts, register. Triggers: "tone of voice" / «тон оф войс», "brand voice" / «голос бренда», «брендбук», «наша терминология». Not for writing the text (copywriting). Refusal phrase "no brand" / «без бренда».'
 compatibility: Any agent with file read/write. The consistency check (python3 docs/brand/lint.py, seeded by this pack) needs python3 3.9+, stdlib only - nothing to pip install.
 license: MIT
 ---
@@ -27,7 +27,7 @@ archetypes, each with a declared failure mode. The register model:
 
 The phrases that route to this skill, in English and Russian. The description keeps only the strongest of them so the skill listing stays inside its budget (2026-10-20); the family routing hook matches this list.
 
-"tone of voice" / "тон оф войс", "brand voice" / "голос бренда", "brandbook" / "брендбук", "our terminology" / "наша терминология", "how should this sound" / "как это должно звучать", "the copy is inconsistent" / "текстовка разная везде", starting any marketing surface, onboarding a product into docs/brand/.
+"tone of voice" / «тон оф войс», "brand voice" / «голос бренда», "brandbook" / «брендбук», "our terminology" / «наша терминология», "how should this sound" / «как это должно звучать», "the copy is inconsistent" / «текстовка разная везде», starting any marketing surface, onboarding a product into docs/brand/.
 
 ## Invoked with no task → status, then one next action
 

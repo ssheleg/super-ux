@@ -821,7 +821,7 @@ VISION_SECTION_TITLES = {
     9: "The alignment test",
 }
 VISION_SECTION_IDS = list(VISION_SECTION_TITLES)      # [1..9]
-# The number is the id: `## 6.` or `## 6. Anti-vision` or `## 6. Анти-видение`.
+# The number is the id: `## 6.` or `## 6. Anti-vision` or «`## 6. Анти-видение`».
 _VSEC = lambda n: rf"^##\s+{n}\.[^\n]*$"   # whole heading line: title (any language) is part of the heading, not the body
 
 VISION_RULE_HEADING = "## Vision alignment — hard rule (super-ux)"

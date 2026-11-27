@@ -1,6 +1,6 @@
 ---
 name: ux-flows
-description: 'Use when designing how users move through a product: flows, screen states, wireframes, Figma mockups, funnels, paywalls. Triggers: "юзер флоу", "add a screen" / "добавь экран", "mockups" / "макеты". Not for the visual system (sheleg-design). Refusal phrase "no scenarios" / «без сценариев».'
+description: 'Use when designing how users move through a product: flows, screen states, wireframes, Figma mockups, funnels, paywalls. Triggers: «юзер флоу», "add a screen" / «добавь экран», "mockups" / «макеты». Not for the visual system (sheleg-design). Refusal phrase "no scenarios" / «без сценариев».'
 compatibility: Any agent with file read/write - flow diagrams are mermaid text and need no renderer. Optional MCPs are used only when present in the session - Figma for mockups, Refero/Mobbin for reference screens; absent, the skill proceeds without them and says so. The closing lint (python3 docs/ux/lint.py, seeded by this pack) needs python3 3.9+, stdlib only.
 license: MIT
 ---
@@ -93,9 +93,9 @@ the screen's own tap rate.
 
 ## Triggers
 
-Also routed here (2026-10-20, moved from the description): "mockup" / "мокап", "design a screen" / "нарисуй дизайн", "wireframe" / "вайрфрейм", "screen flow" / "флоу экранов", "user path" / "поток пользователя", "improve UX" / "улучши UX", "fix UX" / "почини UX", "onboarding" / "онбординг", "activation funnel" / "активация", "reference screens" / "референсы", "task analysis", "redesign flow", "user flow" / "юзер флоу", "funnel" / "воронка", "paywall" / "пейволл".
+Also routed here (2026-10-20, moved from the description): "mockup" / «мокап», "design a screen" / «нарисуй дизайн», "wireframe" / «вайрфрейм», "screen flow" / «флоу экранов», "user path" / «поток пользователя», "improve UX" / «улучши UX», "fix UX" / «почини UX», "onboarding" / «онбординг», "activation funnel" / «активация», "reference screens" / «референсы», "task analysis", "redesign flow", "user flow" / «юзер флоу», "funnel" / «воронка», "paywall" / «пейволл».
 
-Also routed here (2026-10-27, hub B-267): "users drop off" / "пользователи отваливаются", "referral program" / "реферальная программа", "A/B test" / "a/b тест".
+Also routed here (2026-10-27, hub B-267): "users drop off" / «пользователи отваливаются», "referral program" / «реферальная программа», "A/B test" / «a/b тест».
 
 ## Choosing a workflow
 

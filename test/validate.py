@@ -2537,9 +2537,9 @@ def _token_tier_restatements(text: str) -> list[str]:
 # harness listings cut a long description short. FP-9: the bare hook trigger that
 # 0.58.3 narrowed stays narrowed.
 DESCRIPTION_PHRASES = {
-    "ux-flows": ('"add a screen" / "добавь экран"', '"mockups" / "макеты"'),
-    "copywriting": ('"App Store description" / "описание для App Store"',
-                    '"video hook" / "хук ролика"'),
+    "ux-flows": ('"add a screen" / «добавь экран»', '"mockups" / «макеты»'),
+    "copywriting": ('"App Store description" / «описание для App Store»',
+                    '"video hook" / «хук ролика»'),
 }
 TRIGGERS_WITHIN = 300
 BARE_HOOK = re.compile(r'["«](?:hook|хук|hooks|хуки)["»]', re.I)
