@@ -1,3 +1,12 @@
+## 0.69.1 (2026-11-28): AT-17 names the exceptions its checker found
+
+Porting AT-17 into Copylot (board request 976e4a2f) showed four texts the 0.69.0 forms held that devalue nothing.
+
+- **The reader's own item or state** passes: "Your export is not ready yet", «Ваш браузер не поддерживается», "Not yet a
+  member?", «Ещё нет аккаунта?».
+- **A selling absence** passes: "no hidden fees", «у нас нет рекламы»; «у нас нет» counts only with «пока» or «ещё».
+- **The legal register** is not checked for AT-17: a legal text states limits exactly.
+
 ## 0.69.0 (2026-11-28): AT-17, no devaluation in public text
 
 Owner's rule, 2026-11-28 14:22 UTC (Telegram, relayed by the Fabric CEO, board request 976e4a2f; agents database rule
