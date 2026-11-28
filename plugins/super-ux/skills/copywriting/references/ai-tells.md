@@ -17,8 +17,10 @@ destroys meaning while improving rhythm.
 
 
 Used by the `Humanize` mode of `copywriting` and by `B060`, `B062`, `B063`,
-`B066` and `B067` in `brand_lint.py`. Voice, once the generic is gone, comes from
-[voice-packs.md](voice-packs.md) via the project's `voice.md`.
+`B066` and `B067` in `brand_lint.py`. AT-17 is checked by Copylot
+(`copylot_check`, rule `at-17-devaluation`), which reads this table. Voice,
+once the generic is gone, comes from [voice-packs.md](voice-packs.md) via the
+project's `voice.md`.
 
 Every marker carries an id. A rule set that cannot be enumerated cannot have
 coverage computed over it, and four of these are now mechanical checks whose
@@ -75,6 +77,7 @@ policy**, not an AI-tell: a word the brand forbids is the brand's decision, in
 | AT-14 | Symmetrical headings | S3 | judgement |
 | AT-15 | Over-signposting | S3 | judgement |
 | AT-16 | Invisible characters | S2 | `B066` |
+| AT-17 | Devaluation: saying outward that something is not ready | S1 | Copylot `at-17-devaluation` |
 
 ### AT-01. Vocabulary, S1
 
@@ -268,6 +271,67 @@ so that each has a fixture asserting silence:
 
 `B066` reads the raw source files, so an HTML entity such as `&nbsp;`, which
 someone typed on purpose, is not reported; a literal character is.
+
+### AT-17. Devaluation: saying outward that something is not ready, S1
+
+Public text says that something is not ready, not yet available, unfinished,
+or that we cannot do it. The owner's rule (2026-11-28, agents database rule R54,
+decision D-115): «когда мы говорим с публикой, мы не сообщаем, что у нас
+что-то не готово. Мы либо об этом не говорим, либо говорим, что разработка
+идёт и будет скоро». A reader hears «not ready» as «they have nothing», and the
+work loses its value even when it is good. This is a voice rule rather than a
+machine-drafting habit, but models produce it by reflex when they hedge, so it
+is numbered here and checked by the same engine. **Unlike the advisory markers,
+one instance in public text is a fix before delivery**, as with AT-06.
+
+The forms, in both languages:
+
+| Kind | English | Russian |
+|---|---|---|
+| readiness | "is not ready", "isn't available yet", "not yet", "unfinished", "only a prototype" | «пока не готово», «ещё не доступно», «не доделано», «не реализовано», «пока не работает» |
+| inability | "we can't", "we are unable to", "we don't know how to" | «мы не можем», «не умеем», «не сможем», «не получится» |
+| absence | "we don't support X yet", "there is no X yet" | «у нас пока нет», «ещё нет», «у нас нет» |
+
+**The fix, in this order.** Leave it out: a page, a reply or a listing says
+what the product does and is silent on what it does not do yet. Where the
+reader needs to know (they asked, or they would otherwise wait for it), say it
+is in development and coming soon: "in development and coming soon", «в
+разработке, скоро будет». **Never claim a readiness that is not there**: the
+fix is never "available", "ready" or «готово» for something that is not, and
+the facts in `facts.md` still bind (AT-05 and `B030` from the other side). A
+sentence with no clean positive form is left out, not reworded into a promise.
+
+| Before | After |
+|---|---|
+| "Android is not ready yet." | "Android is in development and coming soon." or nothing |
+| "We can't export to PDF." | leave it out, or "PDF export is in development and coming soon." |
+| «Оплата картой пока не готова.» | «Оплата картой в разработке, скоро будет.» или ничего |
+| «У нас пока нет тёмной темы.» | не упоминать, или «Тёмная тема в разработке, скоро будет.» |
+| "It is not possible to pay twice." | "You pay once." (a legitimate negative, said positively) |
+
+**What is not this marker.**
+
+- A guarantee about the person's own data is not a lack: "we can't read your
+  messages", «мы не храним ваши данные», «не можем видеть ваши переписки».
+  An inability followed by a protective verb (see, read, store, share, sell,
+  track) and the reader's own object passes. So does an eager "we can't wait".
+- Internal text keeps the honest status: a report to the team, the owner, the
+  organization's administrator or the founders says exactly what is not ready.
+  The rule is about the public, never about hiding status from our own people.
+  A checker is told the audience (`internal`) or is not run on internal text.
+- A quotation keeps its words, as for every marker here.
+
+**Stealth voices.** A brand whose public voice says nothing of its stage at all
+(a stealth project, an organization that does not present itself as a
+startup) leaves even "coming soon", "in development", "beta", «скоро» and «в
+разработке» out, and the only fix is omission. The brand records this in
+`voice.md`; it is a tightening of AT-17, never a loosening.
+
+The lexical check is the second line of defence. A paraphrase it does not know
+("that part is still on the roadmap") passes it, so the writer's own reading
+is the first. Examples and the deterministic reference implementation: the
+agents database pattern `patterns/no-devaluation` 1.0.0 (`no_devaluation.py`,
+its tests and its `SYSTEM_RULE` prompt line in English and Russian).
 
 ## The dash rule in full
 

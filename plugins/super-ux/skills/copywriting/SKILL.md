@@ -193,6 +193,13 @@ guards govern the pass wherever it runs, and they are not optional:
   When restoring historical copy, reapply the current project punctuation policy;
   an old exact-text snapshot is not an intentional exception.
 
+- **No devaluation in public text** (owner rule, 2026-11-28). Never tell a
+  reader outside the organization that something is not ready, not yet
+  available, unfinished, or that we cannot: leave it out, or say it is in
+  development and coming soon («в разработке, скоро будет»). Never claim a
+  readiness that is not there. A guarantee about the reader's data («мы не
+  храним ваши данные») is not a lack, and internal reports keep the honest
+  status. [ai-tells.md](references/ai-tells.md) AT-17; Copylot checks it.
 - **No fabricated facts, statistics, quotes or experts.** Not for a deadline,
   not for a benchmark, not because a placeholder would look better. Refuse,
   say why, offer to find a real one.
