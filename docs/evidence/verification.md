@@ -8,6 +8,16 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.69.0: AT-17, no devaluation in public text (2026-11-28)
+
+Branch `feat/at-17-no-devaluation`, the owner's rule of 2026-11-28 (board request 976e4a2f; agents database R54, D-115).
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| ND-1 | `ai-tells.md` AT-17: table row and section, English and Russian forms, fix, what is not the marker, stealth voices | `python3 test/sync_references.py`, then `python3 test/validate.py` OK (5774 checks): four copies byte-equal | **planted**: the `### AT-17.` heading renamed with its row left turned `validate.py` red (`AT-17 has a table row and no ### AT-17. section`), then passed restored |
+| ND-2 | copywriting Non-negotiables and the Cursor rule name AT-17 | `validate.py` green; the em dash check on the new text prints nothing | never (text) |
+| ND-3 | 0.69.0 in the four version places and `SKILL-CARD.md` | `validate_manifests` green | never |
+
 ## Release candidate: v0.68.0: the action map and the novice walk (2026-11-23)
 
 Branch `feat/ui-mechanics-2026-11-23` (PR #67), the operator's order of 2026-11-23 (request dcc725be).

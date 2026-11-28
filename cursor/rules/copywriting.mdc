@@ -63,6 +63,13 @@ or a spaced hyphen doing a dash's job). Use a full stop, a comma, a colon or
 brackets, or rewrite. The rare exception is a dash Russian grammar needs where
 no rewrite reads naturally; quotations, code, commands and paths keep theirs.
 
+**No devaluation in public text** (owner rule, 2026-11-28, AT-17). Never tell
+a reader outside the organization that something is not ready, not yet
+available, unfinished, or that we cannot: leave it out, or say it is in
+development and coming soon («в разработке, скоро будет»). Never claim a
+readiness that is not there. A guarantee about the reader's data is not a
+lack; internal reports keep the honest status.
+
 ## Short video
 
 A hook is three things at once, about one thing: frame 0, on-screen text of

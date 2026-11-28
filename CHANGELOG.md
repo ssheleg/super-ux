@@ -1,3 +1,19 @@
+## 0.69.0 (2026-11-28): AT-17, no devaluation in public text
+
+Owner's rule, 2026-11-28 14:22 UTC (Telegram, relayed by the Fabric CEO, board request 976e4a2f; agents database rule
+R54, R33 O32, decision D-115): when we speak to the public we never say that something is not ready; we leave it out or
+say it is in development and coming soon.
+
+- **`ai-tells.md` AT-17**, *Devaluation: saying outward that something is not ready*, S1, the next marker after
+  AT-16, in English and Russian: the readiness, inability and absence forms («not ready», «not yet», «we can't»,
+  «пока не готово», «ещё не умеем», «не можем», «пока нет»), the fix (leave it out, or «in development and coming
+  soon», «в разработке, скоро будет»; never a claim of readiness that is not there), what is not the marker (a
+  guarantee about the reader's data, an eager "we can't wait", internal reports, quotations) and the stealth voice that
+  leaves even «coming soon» out. Unlike the advisory markers, one instance in public text is a fix before delivery.
+  Checked by Copylot (`at-17-devaluation`); examples and the reference implementation are the agents database pattern
+  `no-devaluation` 1.0.0.
+- **copywriting** lists it under Non-negotiables, and so does the Cursor rule.
+
 ## 0.68.0 (2026-11-23): the action map (U096 to U106) and the novice in the test panel
 
 Operator order 2026-11-23 00:47 Europe/Warsaw (Telegram, relayed by the Fabric CEO, request dcc725be): simple, grouped screens with few actions that a user new to the app understands, checked by the pipeline. Research: https://github.com/ssheleg/sheleg-design-skill/tree/main/docs/reports/2026-11-23-ui-guidelines
