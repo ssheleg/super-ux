@@ -8,6 +8,15 @@ tick beside it.
 `Watched` values: `planted` (a defect was introduced and the check caught it,
 in this run), `observed` (it caught a real defect at some point), `never`.
 
+## Release candidate: v0.69.1: AT-17 names the exceptions its checker found (2026-11-28)
+
+Branch `fix/at-17-exceptions`, from porting AT-17 into Copylot (board request 976e4a2f).
+
+| REQ | What changes | Evidence | Watched |
+|---|---|---|---|
+| ND-4 | AT-17 «What is not this marker»: the reader's own item or state, a selling absence, the legal register; «у нас нет» only with a time word | `python3 test/sync_references.py`, then `python3 test/validate.py` green; Copylot's AT-17 tests hold each exception as a fixture asserting silence | never (text) |
+| ND-5 | 0.69.1 in the four version places and `SKILL-CARD.md` | `validate_manifests` green | never |
+
 ## Release candidate: v0.69.0: AT-17, no devaluation in public text (2026-11-28)
 
 Branch `feat/at-17-no-devaluation`, the owner's rule of 2026-11-28 (board request 976e4a2f; agents database R54, D-115).

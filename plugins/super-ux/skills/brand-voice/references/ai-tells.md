@@ -290,7 +290,7 @@ The forms, in both languages:
 |---|---|---|
 | readiness | "is not ready", "isn't available yet", "not yet", "unfinished", "only a prototype" | «пока не готово», «ещё не доступно», «не доделано», «не реализовано», «пока не работает» |
 | inability | "we can't", "we are unable to", "we don't know how to" | «мы не можем», «не умеем», «не сможем», «не получится» |
-| absence | "we don't support X yet", "there is no X yet" | «у нас пока нет», «ещё нет», «у нас нет» |
+| absence | "we don't support X yet", "there is no X yet" | «у нас пока нет», «ещё нет» |
 
 **The fix, in this order.** Leave it out: a page, a reply or a listing says
 what the product does and is silent on what it does not do yet. Where the
@@ -315,6 +315,14 @@ sentence with no clean positive form is left out, not reworded into a promise.
   messages", «мы не храним ваши данные», «не можем видеть ваши переписки».
   An inability followed by a protective verb (see, read, store, share, sell,
   track) and the reader's own object passes. So does an eager "we can't wait".
+- The reader's own item or state is not a lack of ours: "Your export is not
+  ready yet", «Ваш браузер не поддерживается», "Not yet a member?", «Ещё нет
+  аккаунта?». A second-person word before the phrase in its sentence, or the
+  reader's account or membership right after it, passes.
+- An absence that is a selling point is not a lack: "no hidden fees", «у нас
+  нет рекламы». «У нас нет» counts only with a time word («пока», «ещё»).
+- A legal text states limits exactly ("we cannot guarantee uninterrupted
+  access"); the legal register is not checked for this marker.
 - Internal text keeps the honest status: a report to the team, the owner, the
   organization's administrator or the founders says exactly what is not ready.
   The rule is about the public, never about hiding status from our own people.
